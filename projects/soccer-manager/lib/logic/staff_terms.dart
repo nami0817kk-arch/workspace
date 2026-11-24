@@ -89,10 +89,16 @@ class StaffTermsEngine {
   static double _perWeek(StaffTerms t) =>
       t.weeklyWage + t.signingBonus / (52 * max(1, t.years));
 
-  /// 提示 [offer] への返事。週俸は要求の9割を割ると断る。年数が望みから
+  /// 週俸の下限: 要求の9割。ただし年俸を整数(5部の物差しの万円)で持つ
+  /// ので、要求が10未満の人は9割に切り上げると要求と同じになり、1つも
+  /// 下げられなかった(第6段の残り)。要求より1つ下までは必ず話を聞く。
+  static int minWage(int askWeekly) =>
+      max(1, min((askWeekly * 0.9).ceil(), askWeekly - 1));
+
+  /// 提示 [offer] への返事。週俸は [minWage] を割ると断る。年数が望みから
   /// 1年ずれるごとに、求める値打ちが5%上がる。
   static StaffReply reply(StaffTerms ask, StaffTerms offer) {
-    final minWage = (ask.weeklyWage * 0.9).ceil();
+    final minWage = StaffTermsEngine.minWage(ask.weeklyWage);
     if (offer.weeklyWage < minWage) {
       return StaffReply(StaffReplyKind.wageLow,
           shortWeekly: minWage - offer.weeklyWage);

@@ -110,7 +110,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     // 5つあったタブを3つにまとめた(2026-11-24)。
-    for (final t in ['お金を作る', '方針と投資']) {
+    for (final t in ['お金を集める', '事業と規則']) {
       await tester.tap(find.text(t));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: '$tのタブ');

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../logic/transfer_window.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/contract_engine.dart';
 import '../logic/investment_engine.dart';
 import '../logic/loan_engine.dart';
-import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
@@ -18,12 +16,13 @@ import '../widgets/auto_columns.dart';
 import '../widgets/owner_career_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
-import '../widgets/project_card.dart';
+import '../widgets/business_card.dart';
 import '../widgets/proposal_card.dart';
 import '../widgets/risk_card.dart';
 import '../widgets/place_link.dart';
 import '../widgets/owner_wealth_card.dart';
 import '../logic/todo_advisor.dart';
+import '../logic/sponsor_slots.dart';
 import '../widgets/shell_nav.dart';
 import '../widgets/todo_list.dart';
 import '../widgets/rules_card.dart';
@@ -40,7 +39,7 @@ import '../widgets/disabled_reason.dart';
 class FinanceScreen extends StatelessWidget {
   const FinanceScreen({super.key, this.embedded = false, this.initialTab = 0});
 
-  /// タブの数(概要・お金を作る・方針と投資)。
+  /// タブの数(概要・お金を集める・事業と規則)。
   static const int tabCount = 3;
 
   /// 最初に開くタブ(単独で開くとき)。番号は [TodoPlaces] と同じ。
@@ -53,21 +52,6 @@ class FinanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final save = gameState.save!;
-    final team = gameState.userTeam;
-    // 大きな数字は1年あたり(1節あたりの額 × 1季の節の数)で見せる
-    // (2026-11-22「週報ではなくて年報に」)。
-    final md = gameState.matchdaysPerSeason;
-    // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
-    final income = gameState.projectedMatchdayIncome * md;
-    final weeklyBill = gameState.weeklyWageBill;
-    final hasLoan = gameState.bankLoans.isNotEmpty;
-    // 支出は人件費・運営費・返済の合計。以前は真ん中の列に人件費と返済
-    // だけを出し、収支からは運営費も引いていたので、収入−支出が収支と
-    // 合わなかった(2026-11-23)。
-    final expenses = gameState.annualExpenseForecast;
-    final net = gameState.annualNetForecast;
-
-    final loanPlayers = team.players.where((p) => p.isLoan).toList();
 
     return DefaultTabController(
       length: tabCount,
@@ -87,215 +71,92 @@ class FinanceScreen extends StatelessWidget {
               embedded
                   ? todoTabMarks(context, TodoMenu.finance, tabCount)
                   : const [],
+          // 2026-11-25 の第7段: 「方針と投資」を「事業と規則」に改めた。
+          // 方針はオーナー室へ移り(第2段)、投資案件は事業になり、財務規則と
+          // 顧問・定期預金(本当の投資)をここに集めた。
           tabs: [
             Tr.pick('概要', 'Overview'),
-            Tr.pick('お金を作る', 'Raise money'),
-            Tr.pick('方針と投資', 'Policy & projects'),
+            Tr.pick('お金を集める', 'Raise money'),
+            Tr.pick('事業と規則', 'Business & rules'),
           ],
         ),
         drawer: const QuickAccessDrawer(),
         body: TabBarView(
           children: [
+            // 概要: 今年のお金だけ。押す所(提案の承認・営業の強化・予算の
+            // 配り方)を上に置き、数字はその下(2026-11-25 の第7段)。
             ResponsiveBody(
               // 広い画面(iPad の横向きなど)では2列に並べる。
               child: AutoColumns(
                 children: [
-                  // 監督からの提案(承認待ち)は先頭に。「やること」の行や
-                  // タブの印からここへ来たとき、開いてすぐ見つかるように
-                  // (以前はお金の暦の下で、スクロールしないと見えなかった)。
-                  // 提案が無ければ何も出ない。
+                  // 監督からの提案(承認待ち)は先頭に。提案が無ければ何も出ない。
                   const ProposalCard(),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 文章ではなく、週の数字を3つ大きく並べる。資金の
-                          // 額は上の段に出ているので、ここには出さない
-                          // (横画面では埋め込みのため。2026-11-21)。
-                          if (!EmbeddedInShell.of(context))
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Text(
-                                Tr.pick('資金: ${formatMoney(save.budget)}',
-                                    'Funds: ${formatMoney(save.budget)}'),
-                                style: Theme.of(context).textTheme.titleLarge,
+                  const _RuleAlertLink(),
+                  const RewardFundsCard(),
+                  const _YearMoneyCard(),
+                  const BudgetPlanCard(),
+                  const _PolicyLine(),
+                  const _MoneyCalendarCard(),
+                  if (save.pendingInstallments.isNotEmpty)
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
+                                style: Theme.of(context).textTheme.titleMedium),
+                            for (final inst in save.pendingInstallments)
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                onTap: inst.playerId == null
+                                    ? null
+                                    : () => _openPlayer(context, inst.playerId!),
+                                title: Text(inst.description),
+                                subtitle: Text(inst.annual
+                                    ? Tr.pick('残り${inst.weeksRemaining}回(季の締めに払う)',
+                                        '${Tr.plural(inst.weeksRemaining, 'payment')} left (at each season end)')
+                                    : Tr.pick('残り${inst.weeksRemaining}週',
+                                        '${Tr.plural(inst.weeksRemaining, 'week')} left')),
+                                trailing: Text(inst.annual
+                                    ? Tr.pick('-${formatMoney(inst.weeklyAmount)}/年',
+                                        '-${formatMoney(inst.weeklyAmount)} a year')
+                                    : Tr.pick('-${formatMoney(inst.weeklyAmount)}/週',
+                                        '-${formatMoney(inst.weeklyAmount)} per week')),
                               ),
-                            ),
-                          TitleWithHelp(
-                            title: Tr.pick('1年あたりのお金(見込み)', 'Money per year (forecast)'),
-                            style: Theme.of(context).textTheme.titleSmall,
-                            help: Tr.pick(
-                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、支出は人件費(選手とスタッフの年俸)・施設の運営費・融資の返済です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。',
-                                'Income is gate, sponsorship, merchandise and broadcasting together. Spending is wages (players and staff), the running costs of your facilities and any loan repayments.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season.'),
-                          ),
-                          // 列の頭をそろえ、列の間をあける。英語では3つの
-                          // 金額がくっついて1つの数に見えていた(2026-11-23)。
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _BigFigure(
-                                label: Tr.pick('収入', 'Income'),
-                                value: '+${formatMoney(income)}',
-                              ),
-                              _BigFigure(
-                                key: const ValueKey('finance-expenses'),
-                                label: hasLoan
-                                    ? Tr.pick('人件費・運営費・返済',
-                                        'Wages, costs & loan')
-                                    : Tr.pick('人件費・運営費', 'Wages & costs'),
-                                value: '-${formatMoney(expenses)}',
-                              ),
-                              _BigFigure(
-                                label: Tr.pick('収支', 'Balance'),
-                                value:
-                                    '${net >= 0 ? '+' : ''}${formatMoney(net)}',
-                                color: net >= 0
-                                    ? SemanticColors.positive(context)
-                                    : SemanticColors.negative(context),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          _CashFlowBar(
-                            income: income,
-                            expenses: expenses,
-                          ),
-                          const SizedBox(height: 12),
-                          // 理事会が設定する週給予算。上限を超える新規獲得は
-                          // ブロックされるため、残り枠を常に確認できるようにする。
-                          Builder(builder: (context) {
-                            final cap = gameState.wageBudgetCap;
-                            final usage = cap > 0
-                                ? (weeklyBill / cap).clamp(0.0, 1.0)
-                                : 0.0;
-                            final over = weeklyBill > cap;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  Tr.pick(
-                                      '給与予算(理事会設定・年額): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? '(超過中: 新規獲得は不可)' : ''}',
-                                      "Wage budget set by the board (a year): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? ' (over budget: no new signings)' : ''}"),
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: over
-                                        ? SemanticColors.negative(context)
-                                        : null,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(3),
-                                  child: LinearProgressIndicator(
-                                    value: usage,
-                                    minHeight: 6,
-                                    color: over
-                                        ? SemanticColors.negative(context)
-                                        : null,
-                                    // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.surfaceContainerHighest,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const _MoneyCalendarCard(),
-                  const RewardFundsCard(),
-                  const BudgetPlanCard(),
-                  if (save.pendingInstallments.isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    for (final inst in save.pendingInstallments)
-                      Card(
-                        margin: const EdgeInsets.only(bottom: 6),
-                        child: ListTile(
-                          onTap: inst.playerId == null
-                              ? null
-                              : () => _openPlayer(context, inst.playerId!),
-                          title: Text(inst.description),
-                          subtitle: Text(inst.annual
-                              ? Tr.pick('残り${inst.weeksRemaining}回(季の締めに払う)',
-                                  '${Tr.plural(inst.weeksRemaining, 'payment')} left (at each season end)')
-                              : Tr.pick('残り${inst.weeksRemaining}週',
-                                  '${Tr.plural(inst.weeksRemaining, 'week')} left')),
-                          trailing: Text(inst.annual
-                              ? Tr.pick('-${formatMoney(inst.weeklyAmount)}/年',
-                                  '-${formatMoney(inst.weeklyAmount)} a year')
-                              : Tr.pick('-${formatMoney(inst.weeklyAmount)}/週',
-                                  '-${formatMoney(inst.weeklyAmount)} per week')),
-                        ),
-                      ),
-                  ],
-                  if (loanPlayers.isNotEmpty) ...[
-                    const SizedBox(height: 16),
-                    Text(Tr.pick('ローン加入中の選手', 'Players on loan at your club'),
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    for (final p in loanPlayers)
-                      Card(
-                        margin: const EdgeInsets.only(bottom: 6),
-                        child: ListTile(
-                          onTap: () => _openPlayer(context, p.id),
-                          title: Text(p.name),
-                          subtitle: Text(Tr.pick(
-                              '${p.position.label} / 年俸 ${formatMoney(annualFromWeekly(p.wage))}',
-                              '${p.position.label} / salary ${formatMoney(annualFromWeekly(p.wage))}')),
-                          trailing: Text(p.loanEndDate != null
-                              ? Tr.pick(
-                                  '${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}まで',
-                                  'until ${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}')
-                              : Tr.pick('残り${p.loanWeeksRemaining}週',
-                                  '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
-                        ),
-                      ),
-                  ],
                   // 契約の更新の操作は「選手 > 登録と契約」の1か所。経営の
                   // 概要からの入口(「契約状況は『登録と契約』へ」の札)は
-                  // 利用者と決めて外した(2026-11-25「不要」)。
+                  // 利用者と決めて外した(2026-11-25「不要」)。ローンで
+                  // 来ている選手の一覧も、今年のお金ではないので外した
+                  // (スカッドの表に「ローン加入中」の印がある)。
                 ],
               ),
             ),
-            // お金を作る: 外から入るお金(スポンサー・命名権と放映権)を先に、
-            // 借りる・預ける・資本の手を後に。答えを待つ話(スポンサーの
-            // 候補・枠ごとの提示・命名権)が、開いてすぐ見える位置に来る。
+            // お金を集める: 3つの手に分けて並べる(2026-11-25 の第7段)。
+            // ①稼ぐ(スポンサー・命名権) ②借りる(銀行・社債) ③出資を
+            // 受ける(オーナー・株主)。定期預金はお金を増やす投資なので、
+            // 「事業と規則」の投資の札へ移した。
             ResponsiveBody(
               child: AutoColumns(
                 children: [
-                  TitleWithHelp(
-                    title: Tr.pick('スポンサー契約', 'Sponsorship'),
-                    help: Tr.pick('1年の額が大きいほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
-                        'The more it pays a year, the shorter the deal. Choose which offer to take.'),
-                  ),
-                  _SponsorSection(gameState: gameState),
-                  const SponsorSlotsCard(),
+                  const _FundingSummary(),
+                  _GroupHeading(
+                      Tr.pick('稼ぐ: スポンサーと命名権', 'Earn: sponsors and naming rights')),
+                  SponsorSlotsCard(
+                      chest: _SponsorSection(gameState: gameState)),
                   const MediaDealsCard(),
-                  TitleWithHelp(
-                    title: Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
-                    help: Tr.pick('スタジアムの規模・オーナーの評判が高いほど、借りられる上限が上がります。',
-                        'A bigger stadium and a better reputation raise how much you can borrow.'),
-                  ),
+                  _GroupHeading(Tr.pick('借りる: 銀行の融資', 'Borrow: bank loans')),
                   _LoanSection(gameState: gameState),
-                  const SizedBox(height: 12),
-                  TitleWithHelp(
-                    title: Tr.pick('資金運用（定期預金）', 'Invest (fixed deposit)'),
-                    help: Tr.pick('満期まで引き出せない代わりに、満期のときにまとまった利息を受け取れます。',
-                        'Locked away until it matures, and pays a lump of interest when it does.'),
-                  ),
-                  _InvestmentSection(gameState: gameState),
-                  const EquityCard(),
+                  _GroupHeading(
+                      Tr.pick('出資を受ける: オーナーと株主', 'Bring in capital: you and shareholders')),
                   // オーナーの財布(出資・貸す/返してもらう)。以前は
                   // 「オーナー室 > オーナーと世界」にあった。
                   const OwnerWealthCard(),
+                  const EquityCard(),
                   PlaceLink(
                     key: const ValueKey('finance-to-owner-finance-works'),
                     icon: Icons.work_outline,
@@ -308,18 +169,34 @@ class FinanceScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // 方針と投資: 季をまたいで効く決めごと。
+            // 事業と規則: 財務規則(違反の「やること」の行き先)を先頭に、
+            // 事業・顧問・投資・備え・景気・5か年計画。
             ResponsiveBody(
               child: AutoColumns(
                 children: [
-                  // クラブの方針は、オーナー室の「文化と方針」へ移した
-                  // (2026-11-25。文化と方針を1枚に)。
-                  const FiveYearPlanCard(),
-                  const ProjectCard(),
-                  const AdvisorCard(),
-                  const RiskCard(),
                   const RulesCard(),
+                  const BusinessCard(),
+                  const AdvisorCard(),
+                  Card(
+                    key: const ValueKey('finance-investments'),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleWithHelp(
+                            title: Tr.pick('投資(定期預金)', 'Investments (fixed deposits)'),
+                            help: Tr.pick('資金を預けて増やします。満期まで引き出せない代わりに、満期のときにまとまった利息を受け取れます。',
+                                'Put money away to grow it. Locked until it matures, and pays a lump of interest when it does.'),
+                          ),
+                          _InvestmentSection(gameState: gameState),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const RiskCard(),
                   const EconomyCard(),
+                  const FiveYearPlanCard(),
                 ],
               ),
             ),
@@ -333,6 +210,256 @@ class FinanceScreen extends StatelessWidget {
   void _openPlayer(BuildContext context, String playerId) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => PlayerDetailScreen(playerId: playerId)),
+    );
+  }
+}
+
+/// 「お金を集める」の手のまとまりの見出し。
+class _GroupHeading extends StatelessWidget {
+  const _GroupHeading(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
+        child: Text(text,
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold)),
+      );
+}
+
+/// お金を集める手の、いま使える量を3つ並べる(稼ぐ・借りる・出資)。
+class _FundingSummary extends StatelessWidget {
+  const _FundingSummary();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final save = gs.save!;
+    final offers = (save.sponsorDeal == null
+            ? gs.pendingSponsorOffers.length
+            : 0) +
+        SponsorSlot.values
+            .where((s) => gs.slotSponsor(s) == null && gs.slotSponsorOffer(s) != null)
+            .length +
+        (save.namingDeal == null && save.pendingNamingOffers.isNotEmpty ? 1 : 0);
+    return Card(
+      key: const ValueKey('funding-summary'),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('いま集められるお金', 'What you can raise now'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _BigFigure(
+                  label: Tr.pick('返事を待つ契約', 'Offers waiting'),
+                  value: Tr.pick('$offers件', '$offers'),
+                  color: offers > 0 ? SemanticColors.positive(context) : null,
+                ),
+                _BigFigure(
+                  label: Tr.pick('借りられる額', 'You can borrow'),
+                  value: formatMoney(gs.maxLoanAmount),
+                ),
+                _BigFigure(
+                  label: Tr.pick('オーナーの個人資産', 'Your own wealth'),
+                  value: formatMoney(gs.ownerWealth),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 財務規則に注意・違反があるときだけ出す入口(押すと「事業と規則」へ)。
+/// 違反は状況の必須の「やること」にも出る。
+class _RuleAlertLink extends StatelessWidget {
+  const _RuleAlertLink();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final bad = gs.ruleReport.statuses.where((s) => s.level >= 1).toList();
+    if (bad.isEmpty) return const SizedBox.shrink();
+    final breach = bad.any((s) => s.level >= 2);
+    return PlaceLink(
+      key: const ValueKey('finance-rule-alert'),
+      icon: breach ? Icons.gavel : Icons.warning_amber_outlined,
+      title: breach
+          ? Tr.pick('財務規則に違反しています', 'You are breaking the financial rules')
+          : Tr.pick('財務規則の上限に近づいています', 'You are close to a financial rule limit'),
+      note: [
+        for (final s in bad) '${s.label}: ${s.gap ?? s.detail}',
+      ].join(Tr.pick('・', ' • ')),
+      place: TodoPlaces.financeRules,
+    );
+  }
+}
+
+/// クラブの方針(オフシーズンだけ変えられる)を1行で。押すとオーナー室の
+/// 「文化と方針」へ。
+class _PolicyLine extends StatelessWidget {
+  const _PolicyLine();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    return PlaceLink(
+      key: const ValueKey('finance-policy-line'),
+      icon: gs.canChangeClubPolicy ? Icons.tune : Icons.lock_clock_outlined,
+      title: gs.canChangeClubPolicy
+          ? Tr.pick('方針: ${gs.nextClubPolicy.label}(開幕前まで変えられます)',
+              'Policy: ${gs.nextClubPolicy.label} (can change until kick-off)')
+          : Tr.pick('方針: ${gs.clubPolicy.label}(変えられるのは来季の開幕前)',
+              'Policy: ${gs.clubPolicy.label} (can change before next season)'),
+      note: '',
+      place: TodoPlaces.ownerWorld,
+    );
+  }
+}
+
+/// 今年のお金(収入・支出・収支、季末の資金の見込み、給与予算)。
+class _YearMoneyCard extends StatelessWidget {
+  const _YearMoneyCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final save = gameState.save!;
+    // 大きな数字は1年あたり(1節あたりの額 × 1季の節の数)で見せる
+    // (2026-11-22「週報ではなくて年報に」)。
+    final md = gameState.matchdaysPerSeason;
+    // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
+    final income = gameState.projectedMatchdayIncome * md;
+    final weeklyBill = gameState.weeklyWageBill;
+    final hasLoan = gameState.bankLoans.isNotEmpty;
+    // 支出は人件費・運営費・返済の合計。以前は真ん中の列に人件費と返済
+    // だけを出し、収支からは運営費も引いていたので、収入−支出が収支と
+    // 合わなかった(2026-11-23)。
+    final expenses = gameState.annualExpenseForecast;
+    final net = gameState.annualNetForecast;
+    // 季末の資金の見込み: 今の資金に、残りの節のぶんの収支を足す。
+    final uid = save.userTeamId;
+    final played = save.league.fixtures
+        .where((f) =>
+            f.result != null && (f.homeTeamId == uid || f.awayTeamId == uid))
+        .length;
+    final left = (md - played).clamp(0, md);
+    final seasonEnd =
+        save.budget + (md <= 0 ? 0 : (net * left / md).round());
+    return Card(
+      key: const ValueKey('finance-year-money'),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 文章ではなく、数字を3つ大きく並べる。資金の額は上の段に出て
+            // いるので、ここには出さない(横画面では埋め込みのため。2026-11-21)。
+            if (!EmbeddedInShell.of(context))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  Tr.pick('資金: ${formatMoney(save.budget)}',
+                      'Funds: ${formatMoney(save.budget)}'),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            TitleWithHelp(
+              title: Tr.pick('今年のお金(見込み)', "This year's money (forecast)"),
+              style: Theme.of(context).textTheme.titleSmall,
+              help: Tr.pick(
+                  '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、支出は人件費(選手とスタッフの年俸)・施設の運営費・融資の返済です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。季末の資金は、今の資金に残りの$left節ぶんの収支を足した見込みです。',
+                  'Income is gate, sponsorship, merchandise and broadcasting together. Spending is wages (players and staff), the running costs of your facilities and any loan repayments.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season. Funds at season end adds the balance of the $left matchdays left to what you have now.'),
+            ),
+            // 列の頭をそろえ、列の間をあける。英語では3つの金額がくっついて
+            // 1つの数に見えていた(2026-11-23)。
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _BigFigure(
+                  label: Tr.pick('収入', 'Income'),
+                  value: '+${formatMoney(income)}',
+                ),
+                _BigFigure(
+                  key: const ValueKey('finance-expenses'),
+                  label: hasLoan
+                      ? Tr.pick('人件費・運営費・返済', 'Wages, costs & loan')
+                      : Tr.pick('人件費・運営費', 'Wages & costs'),
+                  value: '-${formatMoney(expenses)}',
+                ),
+                _BigFigure(
+                  label: Tr.pick('収支', 'Balance'),
+                  value: '${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                  color: net >= 0
+                      ? SemanticColors.positive(context)
+                      : SemanticColors.negative(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _CashFlowBar(income: income, expenses: expenses),
+            const SizedBox(height: 8),
+            Text(
+              Tr.pick('季末の資金(見込み): ${formatMoney(seasonEnd)}',
+                  'Funds at season end (forecast): ${formatMoney(seasonEnd)}'),
+              key: const ValueKey('finance-season-end'),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: seasonEnd < 0 ? SemanticColors.negative(context) : null,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // 理事会が設定する給与予算。上限を超える新規獲得はブロックされる
+            // ため、残り枠を常に確認できるようにする。超えていれば状況の
+            // 必須の「やること」にも出る(2026-11-25 の第7段)。
+            Builder(builder: (context) {
+              final cap = gameState.wageBudgetCap;
+              final usage =
+                  cap > 0 ? (weeklyBill / cap).clamp(0.0, 1.0) : 0.0;
+              final over = weeklyBill > cap;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Tr.pick(
+                        '給与予算(理事会設定・年額): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? '(超過中: 新規獲得は不可)' : ''}',
+                        "Wage budget set by the board (a year): ${formatMoney(annualFromWeekly(weeklyBill))} / ${formatMoney(annualFromWeekly(cap))}${over ? ' (over budget: no new signings)' : ''}"),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: over ? SemanticColors.negative(context) : null,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: LinearProgressIndicator(
+                      value: usage,
+                      minHeight: 6,
+                      color: over ? SemanticColors.negative(context) : null,
+                      // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -461,6 +588,7 @@ class _CashFlowBar extends StatelessWidget {
   }
 }
 
+/// 胸のスポンサー(契約中・提示・なし)。「スポンサー契約」の札の先頭に入る。
 class _SponsorSection extends StatelessWidget {
   final GameState gameState;
 
@@ -470,51 +598,59 @@ class _SponsorSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final deal = gameState.save!.sponsorDeal;
     final offers = gameState.pendingSponsorOffers;
+    final md = gameState.matchdaysPerSeason;
+    final head = Text(Tr.pick('胸', 'Shirt'),
+        style: const TextStyle(fontWeight: FontWeight.bold));
 
     if (deal != null) {
-      return Card(
-        child: ListTile(
-          leading: const Icon(Icons.handshake),
-          title: Text(deal.name),
-          subtitle: Text(ContractEngine.yearsShortLabel(deal.yearsRemaining)),
-          trailing: Text(
-            Tr.pick(
-                '+${formatMoney(deal.weeklyIncome * gameState.matchdaysPerSeason)}/年',
-                '+${formatMoney(deal.weeklyIncome * gameState.matchdaysPerSeason)} a year'),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          head,
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: const Icon(Icons.handshake),
+            title: Text(deal.name),
+            subtitle:
+                Text(ContractEngine.yearsShortLabel(deal.yearsRemaining)),
+            trailing: Text(
+              Tr.pick('+${formatMoney(deal.weeklyIncome * md)}/年',
+                  '+${formatMoney(deal.weeklyIncome * md)} a year'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
+        ],
       );
     }
 
     if (offers.isEmpty) {
-      return Card(
-        child: ListTile(
-          leading: const Icon(Icons.hourglass_empty),
-          title: Text(Tr.pick('現在スポンサーはついていません', 'You have no sponsor')),
-        ),
-      );
+      return Text(Tr.pick('胸: 空き(次の季の始めに提示が来ます)',
+          'Shirt: empty (offers come next season)'));
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(Tr.pick('胸: 提示が${offers.length}件。1つ選んで結びます',
+                'Shirt: ${Tr.plural(offers.length, 'offer')}. Pick one to sign'),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         for (int i = 0; i < offers.length; i++)
-          Card(
-            margin: const EdgeInsets.only(bottom: 6),
-            child: ListTile(
-              leading: const Icon(Icons.handshake_outlined),
-              title: Text(offers[i].name),
-              subtitle: Text(
-                Tr.pick(
-                    '契約期間: ${ContractEngine.yearsShortLabel(offers[i].yearsRemaining)}',
-                    'Length: ${ContractEngine.yearsShortLabel(offers[i].yearsRemaining)}'),
-              ),
-              trailing: FilledButton(
-                onPressed: () => _choose(context, i),
-                child: Text(Tr.pick(
-                    '+${formatMoney(offers[i].weeklyIncome * gameState.matchdaysPerSeason)}/年',
-                    '+${formatMoney(offers[i].weeklyIncome * gameState.matchdaysPerSeason)} a year')),
-              ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: const Icon(Icons.handshake_outlined),
+            title: Text(offers[i].name),
+            subtitle: Text(
+              Tr.pick(
+                  '契約期間: ${ContractEngine.yearsShortLabel(offers[i].yearsRemaining)}',
+                  'Length: ${ContractEngine.yearsShortLabel(offers[i].yearsRemaining)}'),
+            ),
+            trailing: FilledButton(
+              onPressed: () => _choose(context, i),
+              child: Text(Tr.pick(
+                  '+${formatMoney(offers[i].weeklyIncome * md)}/年',
+                  '+${formatMoney(offers[i].weeklyIncome * md)} a year')),
             ),
           ),
       ],

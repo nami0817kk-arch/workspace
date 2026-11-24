@@ -55,11 +55,13 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
     });
   }
 
-  /// 週俸の刻み(要求の5%)。
+  /// 週俸の刻み(要求の5%。年俸は整数で持つので最小1)。
   int get _wageStep => max(1, (_ask.weeklyWage * 0.05).round());
 
-  /// サイン料の刻み(要求の4分の1)。
-  int get _bonusStep => max(1, (_ask.signingBonus / 4).round());
+  /// サイン料の刻み(要求の8分の1)。年俸の低い人は年俸を1つ下げると
+  /// 2割近く動くので、その分をサイン料で細かく埋められるようにする
+  /// (以前は4分の1刻みで、低年俸の人とは数回で決裂した)。
+  int get _bonusStep => max(1, (_ask.signingBonus / 8).round());
 
   @override
   Widget build(BuildContext context) {
