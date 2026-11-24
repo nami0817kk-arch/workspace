@@ -604,18 +604,19 @@
     return pc0.apply(this, arguments);
   };
   // ホームの「やり残し」の欄
-  YA.todoCard = function (w) {
+  YA.todoCard = function (w, max, bare) {
+    max = max || 3;
     const list = YA.todoList(w);
     if (!list.length) return null;
     const h = H();
     const app = YA._ui.app;
     const when = (x) => x.tag || (x.left <= 0 ? '今週まで' : `あと${x.left + 1}週`);
     return h('div', { class: 'card todo', style: 'padding:5px 8px;background:#fff8e1;border-color:#f0d58a;box-shadow:none;flex:none' },
-      h('div', { class: 'row', style: 'gap:5px' }, h('b', { style: 'font-size:12px;color:#7a5a00' }, 'やり残し'), h('span', { class: 'sub', style: 'font-size:11px' }, '押すとその画面へ')),
-      h('div', { style: 'display:flex;flex-direction:column;gap:3px;margin-top:3px' }, list.slice(0, 3).map((x) => h('button', { class: 'pitem', 'data-todo': x.id, style: 'min-height:34px;padding:3px 6px;gap:5px;background:#fff', onclick: () => { x.go(app); rer(); } },
+      bare ? null : h('div', { class: 'row', style: 'gap:5px' }, h('b', { style: 'font-size:12px;color:#7a5a00' }, 'やり残し'), h('span', { class: 'sub', style: 'font-size:11px' }, '押すとその画面へ')),
+      h('div', { style: 'display:flex;flex-direction:column;gap:3px;margin-top:3px' }, list.slice(0, max).map((x) => h('button', { class: 'pitem', 'data-todo': x.id, style: 'min-height:34px;padding:3px 6px;gap:5px;background:#fff', onclick: () => { x.go(app); rer(); } },
         h('span', { class: 'grow', style: 'font-size:12px;text-align:left;line-height:1.35' }, x.t),
         h('span', { class: 'chip', style: 'flex:none;font-size:11px;' + (x.hard && x.left <= 0 ? 'background:#d63a3a;color:#fff' : 'background:#eef2f8;color:#5b6a85') }, when(x))))),
-      list.length > 3 ? h('div', { class: 'sub', style: 'font-size:11px;margin-top:2px' }, `ほか${list.length - 3}件`) : null);
+      list.length > max ? h('div', { class: 'sub', style: 'font-size:11px;margin-top:2px' }, `ほか${list.length - max}件`) : null);
   };
   // 「次の週へ」の前の確かめ：この週で締め切られるものが残っていたら、一度だけ止める
   YA.todoGate = function (w, go) {

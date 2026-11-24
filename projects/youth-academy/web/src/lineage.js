@@ -398,15 +398,5 @@
   }
   YA.views = YA.views || {};
   YA.views.lineage = viewLineage;
-  // ホームの右列に系譜の小窓を足す
-  const homeBase = YA.views.home;
-  if (homeBase && !homeBase._lin) {
-    const home2 = function (main) {
-      homeBase(main);
-      const right = main.querySelector('.card.pbody[style*="210px"]');
-      if (right && U().app.w) right.append(YA.lineageMiniCard(U().app.w));
-    };
-    home2._lin = true;
-    YA.views.home = home2;
-  }
+  // 次の実績の小窓（YA.lineageMiniCard）は 2026-11-25 にホームから外した（ホームは「今週やること」に絞る）。記録の画面へ移す
 })();
