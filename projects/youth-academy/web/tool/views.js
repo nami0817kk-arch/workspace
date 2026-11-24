@@ -195,18 +195,26 @@ async function clearEvents() {
   ok(!!goHome && goHome.style.minHeight === '42px' && goHome.style.fontSize === '14px' && !btn('週を進める'), 'ホームの「この週で行く」（42px・14px、ほかの言い方が無い）');
   // 練習
   rail('練習');
-  // 練習は1枚（決定143）：7マス・チームの重点・疲れの高い子・見込みと「この週で行く」
-  ok(['月', '火', '水', '木', '金', '土', '日'].every((x) => txt().includes(x)) && txt().includes('チームの重点') && txt().includes('この週の見込み') && !!btn('この週で行く'), '練習の1枚');
+  // 2026-11-25 練習は FM 寄りの小タブ 予定・チーム・個人・コーチ。下の帯（見込みと「この週で行く」）はいつも出す
+  const ttab = (n) => { const b = [...d.querySelectorAll('#main .ttabs button')].find((x) => x.textContent.trim() === n); if (b) b.click(); return !!b; };
+  ok(['予定', 'チーム', '個人', 'コーチ'].every((n) => [...d.querySelectorAll('#main .ttabs button')].some((b) => b.textContent.trim() === n)), '練習の小タブ4つ');
+  ok(['月', '火', '水', '木', '金', '土', '日'].every((x) => txt().includes(x)) && txt().includes('見込み') && txt().includes('この週の見込み') && !!btn('この週で行く'), '練習の予定（7日・見込み・この週で行く）');
   ok(!!d.querySelector('[data-int-legend]') && d.querySelector('[data-int-legend]').textContent.includes('強さ'), '練習の●の説明（2026-11-21 品質）');
   {
     const go = btn('この週で行く');
-    ok(go.style.minHeight === '42px' && go.style.fontSize === '14px' && parseInt(go.style.marginLeft, 10) >= 12, '練習の「この週で行く」はホームと同じ大きさで、「選手ごとに細かく」と間がある');
+    ok(go.style.minHeight === '42px' && go.style.fontSize === '14px' && parseInt(go.style.marginLeft, 10) >= 12, '練習の「この週で行く」はホームと同じ大きさで、ほかのボタンと間がある');
     const same = [...d.querySelectorAll('#main button')].find((b) => b.textContent === '先週と同じ');
     ok(!A.w.lastPlan && same && same.disabled && /まだ先週の練習がありません/.test(same.dataset.why || ''), '最初の週の「先週と同じ」は押せず、理由が出る');
     ok(![...d.querySelectorAll('#main button.card')].some((b) => b.title), '練習の曜日のマスに長押しの説明（title）を使わない');
   }
+  ttab('チーム');
+  ok(txt().includes('チームの重点'), 'チームの小タブに重点');
   btn('攻撃の形').click();
   ok(A.w.plan.teamFocus === '攻撃の形', 'チームの重点を選べる');
+  { const rt = d.querySelector('[data-train-right]'); ok(!!rt && [...rt.querySelectorAll('.h')].some((x) => x.textContent.startsWith('戦術理解の内訳')), '戦術理解の欄はチームの小タブ'); }
+  ttab('コーチ');
+  ok(txt().includes('練習のコーチ') && txt().includes('技術コーチ') && txt().includes('腕前'), 'コーチの小タブにスタッフと腕前');
+  ttab('予定');
   const dayBtns = [...d.querySelectorAll('#main button.card')];
   ok(dayBtns.length === 5, '曜日のカード');
   dayBtns[0].click();
@@ -214,7 +222,7 @@ async function clearEvents() {
   btn('フィジカル').click();
   ok(txt().includes('フィジカル'), 'メニューを替えられる');
   btn('おまかせ').click();
-  btn('選手ごとに細かく').click();
+  ttab('個人');
   ok(txt().includes('重点にする能力'), '選手ごとの表');
   { const same = [...d.querySelectorAll('#main button')].find((b) => b.textContent === '先週と同じ'); ok(same && same.disabled && !!same.dataset.why, '細かい画面の「先週と同じ」も最初の週は押せず理由が出る'); }
   btn('疲れた子を休ます').click();
@@ -223,10 +231,8 @@ async function clearEvents() {
   focusBtn.click();
   ok(txt().includes('重点（今の値）'), '重点の選択');
   btn('閉じる').click();
-  btn('← 1枚の画面へ').click();
-  ok(txt().includes('チームの重点'), '1枚の画面へ戻れる');
-  // 2026-11-16 画面の点検：戦術理解の欄は右の欄（スクロールする）の中。main に直に足すと曜日の欄に重なっていた
-  { const rt = d.querySelector('[data-train-right]'); ok(!!rt && [...rt.querySelectorAll('.h')].some((x) => x.textContent.startsWith('戦術理解の内訳')), '戦術理解の欄は練習の右の欄に入る'); }
+  ttab('予定');
+  ok(txt().includes('今週の予定'), '予定の小タブへ戻れる');
   // 選手
   rail('選手');
   { const hd = d.querySelector('#main .plhead'); ok(!!hd && ['印', '位置', '名前', '学年', '総合', '調子', '疲れ', '今季', '今週'].every((x) => hd.textContent.includes(x)) && /伸び|将来/.test(hd.textContent), '選手一覧は全面で10列の見出し（2026-11-25）'); }
@@ -684,6 +690,7 @@ async function clearEvents() {
     btn('名前', d.querySelector('.settabs')).click();
     ok(txt().includes('名前の書き換え'), '設定に名前の書き換え');
     rail('練習');
+    { const b = [...d.querySelectorAll('#main .ttabs button')].find((x) => x.textContent.trim() === '予定'); if (b) b.click(); }
     ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
     ok(!!A.w.lastPlan && !!btn('先週と同じ'), '週を進めたあとは「先週と同じ」を押せる');
     rail('ほか');
