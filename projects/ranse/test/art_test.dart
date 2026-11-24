@@ -31,6 +31,21 @@ void main() {
     }
   });
 
+  // 2026-11-25 に足した絵（まとめ役が Gemini で作って置く）。置かれるまでこの二つは落ちる。
+  test('住まいの絵がすべて置いてある', () {
+    for (final h in kHomeArts) {
+      expect(File(homeArtPath(h)).existsSync(), isTrue, reason: homeArtPath(h));
+    }
+  });
+
+  test('歴史の大事件の絵がすべて置いてある', () {
+    for (final e in kEventScenes.keys) {
+      final path = sceneArtPath('$kEventArtHead$e');
+      expect(path, 'assets/images/event_$e.jpg');
+      expect(File(path).existsSync(), isTrue, reason: path);
+    }
+  });
+
   test('岐路には場面の絵が付き、この年の心がけには付かない。絵は場面に合わせて散らばる', () {
     final seen = <String, int>{};
     var scenes = 0, withArt = 0;
@@ -48,7 +63,9 @@ void main() {
           scenes++;
           if (p.art != null) {
             withArt++;
-            expect(kSceneArts, contains(p.art), reason: p.title);
+            // 大事件の岐路は event_<名>（無ければ場面の絵に落ちる）。
+            final fb = artFallback(p.art!);
+            expect(kSceneArts, contains(fb ?? p.art), reason: p.title);
             seen[p.art!] = (seen[p.art!] ?? 0) + 1;
           }
         }

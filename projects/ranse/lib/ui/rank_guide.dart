@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../engine/data.dart';
 import '../engine/game.dart';
+import '../engine/off_ladder.dart';
 import 'theme.dart';
 
 /// 位の解説（2026-11-24、ユーザー「位がよくわからない時がある。解説ページ作れる？」）。
@@ -35,12 +36,26 @@ const kRankNotesF = <String>[
   '女の身で一国を治める主。',
 ];
 
-/// 位の段の外の暮らし。
-const kOffLadderNotes = <(String, String)>[
-  ('僧・尼', '仏門に入った身。位は上がらないが、寺の務めや修行の道がある。住持になることも。'),
-  ('商人', '商いの道を選んだ身。銭と人の縁で身を立てる。御用商人になることも。'),
-  ('忍び・流れ者・野盗', '主家に縛られず野に生きる身。里の務めや旅の暮らしがある。'),
+/// 位の段の外の暮らしの一言。鍵は `kOffLadders` の鍵（段を持たない暮らしは別の鍵）。
+const kOffLadderNotes = <String, String>{
+  'merchant': '商いの道を選んだ身と、町人の家の者。銭と人の縁で身を立てる。',
+  'priest': '仏門に入った身。武家の位は上がらないが、寺の務めと修行で段が上がる。',
+  'nun': '仏門に入った女性。寺の務めと講で段が上がる。',
+  'ninja': '忍びの里に生きる身。里の務めと信で段が上がる。',
+  'bandit': '山の一味に加わった身。腕と度胸で段が上がる。',
+  'wanderer': '故郷を捨てて諸国を流れる身。腕や目で食う口を得て、名が通る。',
+  'craft': '弟子入りして技で生きる身。年季と腕で段が上がる。',
+  'kawara': '河原に暮らす身。庭や芸の腕で名を上げる道がある。',
+  'sea': '浜に生きる漁民（男）。網と船で段が上がる。',
+  'mountain': '山に生きる者（男）。山の品と掟で段が上がる。',
+  'farm': '村で田を作る百姓（男）。田と寄合の信で段が上がる。仕官すれば武家の位へ移る。',
+};
+
+/// 段を持たない暮らし。
+const kOffLadderOthers = <(String, String)>[
+  ('抜け忍', '里を抜けた忍び。追手から逃れて暮らす身に、段はない。'),
   ('隠居', '家督を譲り、務めを離れた身。'),
+  ('村や浜の女性', '奉公に上がれば、奥向きの位（下女から）を上がっていく。'),
 ];
 
 void showRankGuide(BuildContext context, Game g) {
@@ -72,7 +87,9 @@ class RankGuide extends StatelessWidget {
     final female = l.female;
     final names = female ? kRanksF : kRanksM;
     final notes = female ? kRankNotesF : kRankNotesM;
+    final off = offLadder(g);
     final onLadder =
+        off == null &&
         !g.isChild &&
         !(l.rank == 0 &&
             (g.hasFlag('priesthood') ||
@@ -109,6 +126,8 @@ class RankGuide extends StatelessWidget {
               ? 'いまは幼少期。十五になると、生まれに応じた身分から大人の人生が始まる。'
               : onLadder
               ? 'いまの位は「${g.rankName()}」。下の表の朱の印がいまの段。'
+              : off != null
+              ? 'いまは「${g.rankName()}」。武家の位の外で、${off.def.title}の「${off.name}」にいる（下の「段の外の暮らし」）。'
               : 'いまは「${g.rankName()}」。位の段の外を歩んでいる（下の「段の外の暮らし」）。',
           style: const TextStyle(fontSize: 13.5, height: 1.6),
         ),
@@ -136,7 +155,21 @@ class RankGuide extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _head('段の外の暮らし'),
-        for (final (name, note) in kOffLadderNotes)
+        const _Para('商人・僧・忍び・流れ者・村の暮らしには、武家の位とは別の段がある。どの岐路でどう選んだか、何を身につけたかで上がり、下がることはない。'),
+        const SizedBox(height: 8),
+        // いまの暮らしの段を先に。
+        for (final e in [
+          if (off != null) MapEntry(off.kind, kOffLadders[off.kind]!),
+          for (final e in kOffLadders.entries)
+            if (e.key != off?.kind) e,
+        ])
+          _OffLadderBox(
+            def: e.value,
+            note: kOffLadderNotes[e.key] ?? '',
+            current: off?.kind == e.key ? off : null,
+          ),
+        const SizedBox(height: 4),
+        for (final (name, note) in kOffLadderOthers)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text.rich(
@@ -187,6 +220,97 @@ class RankGuide extends StatelessWidget {
       9 => female ? 'この位になるには　当主として国を治める' : 'この位になるには　天下の勢力の半ばを握る',
       _ => null,
     };
+  }
+}
+
+/// 段の外の暮らしの梯子ひとつ。いまの暮らしなら、いまの段に印を付け、次の段へ上がる道しるべを出す。
+class _OffLadderBox extends StatelessWidget {
+  const _OffLadderBox({required this.def, required this.note, this.current});
+  final OffLadderDef def;
+  final String note;
+  final OffLadder? current;
+
+  @override
+  Widget build(BuildContext context) {
+    final cur = current;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+      decoration: BoxDecoration(
+        color: cur != null ? Pal.accent.withValues(alpha: .08) : Pal.panel,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: cur != null ? Pal.accent : Pal.line,
+          width: cur != null ? 1.6 : 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            def.title,
+            style: TextStyle(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w700,
+              color: cur != null ? Pal.accent : Pal.ink,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(note, style: const TextStyle(fontSize: 12.5, height: 1.5)),
+          const SizedBox(height: 4),
+          Text.rich(
+            TextSpan(
+              children: [
+                for (var i = 0; i < def.steps.length; i++) ...[
+                  if (i > 0)
+                    const TextSpan(
+                      text: ' → ',
+                      style: TextStyle(color: Pal.muted),
+                    ),
+                  TextSpan(
+                    text: def.steps[i],
+                    style: cur != null && cur.step == i
+                        ? const TextStyle(
+                            color: Pal.accent,
+                            fontWeight: FontWeight.w700,
+                          )
+                        : null,
+                  ),
+                ],
+              ],
+            ),
+            style: const TextStyle(fontSize: 13, height: 1.5, color: Pal.ink),
+          ),
+          if (cur != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                cur.atTop
+                    ? 'いまここ　${cur.name}。${cur.guide}。'
+                    : 'いまここ　${cur.name}。${cur.nextName}へは　${cur.guide}。',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Pal.accent,
+                  height: 1.45,
+                ),
+              ),
+            )
+          else
+            for (var i = 0; i < def.hints.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  '${def.steps[i + 1]}へ　${def.hints[i]}',
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    color: Pal.muted,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+        ],
+      ),
+    );
   }
 }
 

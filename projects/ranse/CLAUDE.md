@@ -2258,3 +2258,46 @@ CI の Web 版で画面を見る仕組み。
 - 画面のテスト（`play_screens_test.dart`）は手元で回せていない（CI 未確認）。
 - 遊び方は年の途中からは開けない（タイトルからだけ）。遊ぶ画面の上の帯は担当Bが触るので、そこに入口は足していない。
 - 下剋上の誘いの印は、無作為の選び方では3000人生で2回しか出ない（城主まで上がる人生が少ない）。人が選べば増える見込み。
+## 段の外の暮らしの段（2026-11-25、項目24）
+
+武家と奥の女性には十段の位があるのに、商人・僧・忍び・流れ者・村の暮らしは立ち位置のカードに「身分の段の外」と一行出るだけだった（ユーザーが決めた作り込みの項目）。
+**新しい出世の仕組みは作らず**、これまでの岐路が立てた旗と歳から段を決める（`lib/engine/off_ladder.dart`。`offLadder(g)`・`offLadderKind`・`offLadderStep`。乱数は使わない）。
+- 梯子（`kOffLadders`、11）: 商い 振り売り→店持ち→大店→御用商人／僧 小僧→僧→住持→高僧／尼 見習いの尼→尼→庵主→名の聞こえた尼／忍び 下忍→中忍→上忍→里の頭／
+  山の一味 手下→一味の古株→一味の頭／流れ者 流れ者→渡り者→名の通った渡り者／職人 弟子→職人→親方→名工／河原 河原の者→庭者・芸の者→名のある者／
+  浜（漁民の男）網子→漁師→船持ち→網元／山（山の民の男）山の若い衆→一人前の山の者→山の衆の年寄／村（百姓の男）小百姓→本百姓→組頭→庄屋・名主。
+- 見る旗（どれも消されない旗だけなので、同じ暮らしのあいだ段は下がらない）: 商い `way_merchant`・`tf_rakuichi_held`・町人の家は三十で店持ち／`sp_shop_*`・`tf_norenwake`・`off_oodana`／`goyo`。
+  僧 二十か `tm_` の旗／`abbot`／`abbot`＋`tm_rongi_praised`・`tm_ko_praised`・`tm_shuron_win`・`tm_shiso_peace`・`tm_retreat_peak`。
+  忍び `sh_trust`・`sh_ezu`・`sh_henso_master`・`sh_herb_*`・`sh_saved_comrade`／`sh_lord_*`・`sh_found_traitor`・`sh_iga_led`・`sh_n_elder`／`sh_n_heir`。
+  野 三十か用心棒・陣借り・賭場・関・一座などの `sh_` の旗／`sh_band_head`（流れ者は `sh_jingari_won`・`sh_yojin_fought`・`sh_ochi_repaid`）。
+  職人 二十八か `cr_kurabe_yielded` ほか／`craftsman`・`cr_kurabe_won`・`cr_deshi_*`／`cr_goyo_done`・`cr_mei_cut`・`cr_mei_sign`。河原 `cr_niwa_*`・`cr_gei_*`・`cr_kawa_*`。
+  浜 二十五か `cr_ami_*` など／`cr_fune_*`／`off_amimoto`・`shoya`。山 二十五か `cr_sato_*` など／五十か `cr_okite_*`・`shoya`。
+  村 三十か `ox`・`sp_field_1`・`sp_genin`／`tf_so_role`・`tf_genmen_won`・`off_kumigashira`／`shoya`・`tf_murauke`。
+- **使わない人**: 子ども・位に就いた人（武家と奥）・隠居・抜け忍・浪人・村と浜と山の女性（奉公で奥の位へ上がる道があるので、いままでどおり奥の段）。仏門は先に見る（出家で位は外れる）。
+- 段を上がる道が薄かった三つに、きっかけの岐路を足した（一生に一度。`buildOffLadderScenes`、`game.dart` で `buildShadowLifeScenes` のあとに登録。`kOffLadderSceneAt` が出る段）:
+  組頭の役（`ol_kumigashira`、本百姓の男・30〜65）／網元の跡（`ol_amimoto`、船持ち・35〜70）／売りに出た大店（`ol_oodana`、店持ちで銭40以上・28〜65。蓄えの大半を払う）。
+  政60・魅60の手に `via`。新しい `mark()` は3つで最期の条件の文字と重ならない（`audit_endings.py` は既知の3件のまま）。`die()` は無い。
+- 画面: 立ち位置のカードの段の帯をその暮らしの梯子にし、身分の横に（段の名）、「次の目当て　〇〇まで　道しるべ」を出す。上の一行（`StandingStrip`）は「段 n／m」。
+  位の解説の「段の外の暮らし」に11の梯子を並べ、いまの暮らしを先頭に朱で囲み、いまの段と次の段への道しるべを出す（ほかの梯子は段ごとの道しるべ）。抜け忍・隠居・村の女性は一言（`kOffLadderOthers`）。
+- テスト `test/off_ladder_test.dart`: 表（段三つ以上・道しるべの数・数字なし・頼まれた名）／旗ごとの段／使わない人／600人生で同じ暮らしのあいだ段が下がらない・位に就けば消える・足した岐路は手前の段の人に出て匂わせがあり数字なし／登録。
+- 実測（手元、男に置き換えた生まれ400人生ずつ・仕官と奉公を探さない選び方。三十歳以上でその暮らしにいた人の最高段。大店の岐路を足す前の測り）: 村 本百姓101・組頭23・庄屋23（組頭の役は30回）／
+  浜 漁師54・船持ち12・網元15（網元の跡は4回）／山 一人前14・年寄80／町人の家 振り売り133・店持ち40・大店7・御用1（このあと町人の家は三十で店持ちにし、大店の岐路を足した）／
+  忍び 下忍54・中忍37・上忍14・頭1／河原 0段12・1段42・2段15／職人（元服で弟子入り）職人56・親方45・名工77／野盗 古株144・頭18／流れ者 渡り者144・名の通った17／僧 僧142・住持22・高僧23。
+- 釣り合い（手を加えない3000人生・ランダムと考えて選ぶを半々、同じ種で足す前と比べた）: 成人 2105 → 2105、城主以上 33.2% → 33.3%、1人生の選択 53.2 → 53.2、享年の平均 30.30 → 30.31。
+- 気がかり: 女性の村・浜・山の暮らしには梯子を出していない（奥の段のまま）。忍びの里の頭・御用商人はいまも稀。`rankName` は変えていない（段の名はカードと解説にだけ出る）。
+
+## 住まいの絵と大事件の絵（2026-11-25、項目22・26）
+
+- **住まいの絵**（項目22）: 立ち位置のカードの左上に、今の住まいの小さな絵（64×48）を出す。どれにするかは `scene_art.dart` の `homeArtFor(g)`（乱数なし）:
+  仏門→寺／城主より上・奥に仕える女性→城／位のある侍→侍屋敷／商いの道・町人の家・職人・浪人→町家／野の道・忍び・河原者・山の民→山里の小屋／ほか→百姓家。子どもは生まれの家で。
+  絵は `assets/images/home_{farm,town,samurai,castle,temple,wild}.jpg`（幅960の JPEG、まとめ役が Gemini で作る）。無い間は `errorBuilder` で地の色の箱。pubspec の assets は `assets/images/` のフォルダ指定なので足すものはない。
+- **大事件の絵**（項目26）: `scene_art.dart` の `kEventScenes`（事件 → 岐路の id）に当たる岐路は、`sceneArtFor` が `event_<事件>` を返す。八つ:
+  桶狭間（`okehazama`・`h_c_okehazama`・`h_r_okehazama`・`h_x_okehazama_warn`）／川中島（`h_kawanakajima`・`h_c_kawanakajima`）／長篠（`h_nagashino`・`h_c_nagashino`・`h_r_nagashino`）／
+  本能寺（`honnoji`・`h_c_honnoji`・`h_r_honnoji`・`h_x_honnoji_warn`）／関ヶ原（`h_sekigahara`）／大坂（`pc_osaka_ronin`・`pc_osaka_jin`・`pc_osaka_toyotomi`・`pc_osaka_natsu`）／
+  比叡山（`hiei`・`h_c_hiei`・`h_r_hiei`）／島原（`pc_shimabara`）。絵は `assets/images/event_<事件>.jpg`。
+  置き場所は `artAssetPath`（`play_screen.dart` の `sceneArtPath` がこれを呼ぶ）。**絵が無い間は** `_ArtBanner` の `errorBuilder` が `artFallback`（`kEventArtFallback`。比叡山は山寺、ほかは合戦）の場面の絵に落とす。
+  前の選び方は `sceneArtBase` に残した。
+- テスト: `off_ladder_test.dart` に、表の id がすべて実在し事件は頼まれた八つ・大事件の場面で専用の絵を選び落ちる先は場面の絵・住まいの振り分けと、200人生のどの年も表の絵になり六つすべて出ること。
+  `art_test.dart` に「住まいの絵がすべて置いてある」「歴史の大事件の絵がすべて置いてある」を足し、場面の絵の散らばりのテストは大事件の絵を受け付けるようにした。
+  **この二つは、まとめ役が絵を置くまで落ちる**。`art_test` と画面のテストは CI 未確認。
+- 気がかり: 落ちる先の絵は事件ごとに一つに決めてあり、庶民の分岐点（雨の中の軍勢・夜明け前の京）では前の選び方と違う絵になりうる（絵が置かれれば関係なくなる）。
+  `play_screen.dart` は `sceneArtPath` と `_ArtBanner` の `errorBuilder` だけ触った（担当A の岐路のカードの枠と近いので、取り込むときに見る）。
