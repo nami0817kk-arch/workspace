@@ -21,6 +21,26 @@ enum Advisor {
         legal => Tr.pick('法務顧問', 'Legal advisor'),
       };
 
+  /// 何をする顧問か(1行)。
+  String get description => switch (this) {
+        finance => Tr.pick('観客・スポンサー・グッズの収入を増やす',
+            'Raises gate, sponsor and merchandise income'),
+        scouting =>
+          Tr.pick('施設の増築費を下げる', 'Cuts what facility upgrades cost'),
+        pr => Tr.pick('毎季末にサポーターの期待を上げ、不祥事の傷を浅くする',
+            'Lifts supporters each season end and softens scandals'),
+        legal => Tr.pick('財務規則の違反の罰金を軽くする',
+            'Cuts fines for breaking the financial rules'),
+      };
+
+  /// 表の1マスに入る短い効き目(「+2%」「期待+1」)。
+  String shortEffect(int level) => switch (this) {
+        finance => Tr.pick('収入 +${level * 2}%', 'Income +${level * 2}%'),
+        scouting => Tr.pick('増築費 -${level * 4}%', 'Upgrades -${level * 4}%'),
+        pr => Tr.pick('期待 +$level/季', 'Fans +$level/season'),
+        legal => Tr.pick('罰金 -${level * 15}%', 'Fines -${level * 15}%'),
+      };
+
   String effect(int level) => switch (this) {
         finance => Tr.pick('営業収入 +${level * 2}%', 'Operating income +${level * 2}%'),
         scouting => Tr.pick('施設の増築費 -${level * 4}%', 'Facility cost -${level * 4}%'),

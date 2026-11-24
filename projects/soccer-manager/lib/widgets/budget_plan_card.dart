@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/budget_engine.dart';
 import '../logic/economy_scale.dart';
+import '../logic/transfer_window.dart';
 import '../models/budget_plan.dart';
 import '../state/game_state.dart';
 import 'offseason_lock_note.dart';
@@ -106,6 +107,11 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
     final scheme = theme.colorScheme;
     final saved = gameState.budgetPlan;
     if (!gameState.isOffseason) {
+      // シーズン中: 操作は出さず、今季の配分を帯と金額で見せ、いつ変え
+      // られるかを書く(2026-11-25 の第7段。以前は1行の字だけで、何に
+      // いくら配ったかが分からなかった)。
+      final lockedAmounts =
+          BudgetEngine.allocate(gameState.annualBudgetPool, saved);
       return Card(
         key: const ValueKey('budget-locked'),
         child: Padding(
@@ -113,13 +119,33 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(Tr.pick('予算の配り方', 'Budget split'),
+              Text(Tr.pick('今年の予算の配り方', "This year's budget split"),
                   style: theme.textTheme.titleMedium),
               const SizedBox(height: 6),
-              OffseasonLockNote([
-                for (final c in BudgetCategory.values)
-                  '${c.label} ${saved.share(c)}%',
-              ].join(Tr.pick('・', ', '))),
+              _ShareBar(plan: saved),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 12,
+                runSpacing: 2,
+                children: [
+                  for (final c in BudgetCategory.values)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _Swatch(
+                            color: BudgetPlanCard.colorFor(
+                                c, theme.brightness)),
+                        const SizedBox(width: 4),
+                        Text(
+                            '${c.label} ${saved.share(c)}% (${formatMoney(lockedAmounts[c] ?? 0)})',
+                            style: theme.textTheme.bodySmall),
+                      ],
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              OffseasonLockNote(Tr.pick('この配り方で進めています',
+                  'running on this split')),
             ],
           ),
         ),
@@ -159,6 +185,29 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
               Tr.pick('総額 ${formatMoney(pool)}。−と＋で5%ずつ動かし、「決定」で保存します。',
                   'Total ${formatMoney(pool)}. Move 5% at a time with − and +, then press Confirm.'),
               style: theme.textTheme.bodySmall,
+            ),
+            // 変えられる期間(年の初め〜開幕前)を、開いている間にも書く。
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Row(
+                key: const ValueKey('budget-window'),
+                children: [
+                  Icon(Icons.event_available, size: 16, color: scheme.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      gameState.isPreseason
+                          ? Tr.pick(
+                              '変えられるのは開幕(${TransferWindowCalendar.formatMonthDay(gameState.dateOfMatchday(1))})まで。そのあとは来季まで動かせません。',
+                              'You can change it until kick-off (${TransferWindowCalendar.formatMonthDay(gameState.dateOfMatchday(1))}); after that it is fixed for the season.')
+                          : Tr.pick('季が終わったので、来季の開幕まで変えられます。',
+                              'The season is over: you can change it until next kick-off.'),
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(

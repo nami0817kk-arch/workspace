@@ -25,7 +25,8 @@ import 'package:soccer_manager/screens/owner_work_screen.dart';
 import 'package:soccer_manager/screens/youth_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
-import 'package:soccer_manager/widgets/owner_career_card.dart';
+import 'package:soccer_manager/logic/league_rules.dart';
+import 'package:soccer_manager/widgets/rules_card.dart';
 import 'package:soccer_manager/widgets/disabled_reason.dart';
 import 'package:soccer_manager/widgets/fm_panel.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
@@ -227,9 +228,15 @@ void main() {
       }
       await gs.setMatchdayPromo('discount_day');
       s.budget = 0;
+      // 財務規則の違反は「やること」に出る(第7段)。資金0は国によっては
+      // 違反(イタリア式の流動性など)なので、資金の額で違反にならない
+      // イングランド式にそろえる。大陸大会の人件費比率も、季の途中の
+      // 帳簿では超えることがあるので、大会から外して数えない。
+      s.ruleSet = RuleSet.britain;
+      s.continentalCup = null;
     });
     final items = todosOf(tester);
-    expect(items, isEmpty, reason: items.map((t) => t.kind.name).join(', '));
+    expect(items, isEmpty, reason: items.map((t) => '${t.kind.name} ${t.title}').join(', '));
     expect(find.byKey(const ValueKey('todo-empty')), findsOneWidget);
     expect(find.text('やること'), findsOneWidget);
     // 必須が無いので、進むボタンに件数の札は付かない。
@@ -260,7 +267,7 @@ void main() {
     final checks = <(TodoPlace, Finder)>[
       (TodoPlaces.financeOverview, find.byType(ProposalCard)),
       (TodoPlaces.financeFunding, find.text('スポンサー契約')),
-      (TodoPlaces.financeProjects, find.byType(FiveYearPlanCard)),
+      (TodoPlaces.financeBusiness, find.byType(RulesCard)),
       // 方針はオーナー室の「文化と方針」の札の中(2026-11-25)。
       (TodoPlaces.ownerWorld, find.byKey(const ValueKey('club-direction-card'))),
       (TodoPlaces.clubStaff, find.textContaining('スタッフ: ')),

@@ -133,6 +133,19 @@ class NegotiationTable extends StatelessWidget {
     );
   }
 
+  // 欄の幅の割合。要求の欄が狭く、英語の「to Jun 2029」「Welcome」が
+  // 縮んだり語の途中で折れたりしていた(2026-11-25 の第7段)。提示の欄は
+  // 増減の部品が入る幅を残す。
+  int get _termFlex => compact ? 3 : 4;
+  int get _wantFlex => compact ? 3 : 4;
+  int get _offerFlex => compact ? 4 : 5;
+
+  static Widget _fit(Widget child) => FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: child,
+      );
+
   Widget _column(BuildContext context, List<NegotiationRow> rows) {
     final theme = Theme.of(context);
     final subtle = SemanticColors.subtleText(context);
@@ -150,24 +163,28 @@ class NegotiationTable extends StatelessWidget {
           Container(
             color: theme.colorScheme.surfaceContainerHighest,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            // 見出しは切らずに縮める。「選手の要求」が「選手の…」と切れて
+            // いた(2026-11-25 の第7段)。
             child: Row(
               children: [
                 Expanded(
-                    flex: compact ? 3 : 4,
-                    child: Text(Tr.pick('項目', 'Term'), style: head)),
+                    flex: _termFlex,
+                    child: _fit(Text(Tr.pick('項目', 'Term'), style: head))),
                 Expanded(
-                    flex: compact ? 2 : 3,
+                    flex: _wantFlex,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 6),
-                      child: Text(wantHeader ?? Tr.pick('相手の要求', 'They want'),
+                      child: _fit(Text(
+                          wantHeader ?? Tr.pick('相手の要求', 'They want'),
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: head),
+                          style: head)),
                     )),
                 Expanded(
-                    flex: 5,
-                    child: Text(offerHeader ?? Tr.pick('こちらの提示', 'Your offer'),
-                        style: head)),
+                    flex: _offerFlex,
+                    child: _fit(Text(
+                        offerHeader ?? Tr.pick('こちらの提示', 'Your offer'),
+                        maxLines: 1,
+                        style: head))),
               ],
             ),
           ),
@@ -224,13 +241,13 @@ class NegotiationTable extends StatelessWidget {
                 }
                 return Row(
                   children: [
-                    Expanded(flex: compact ? 3 : 4, child: name),
+                    Expanded(flex: _termFlex, child: name),
                     Expanded(
-                        flex: compact ? 2 : 3,
+                        flex: _wantFlex,
                         child: Padding(
                             padding: const EdgeInsets.only(right: 6),
                             child: r.want)),
-                    Expanded(flex: 5, child: r.offer),
+                    Expanded(flex: _offerFlex, child: r.offer),
                   ],
                 );
               }),

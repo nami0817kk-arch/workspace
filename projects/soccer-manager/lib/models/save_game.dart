@@ -34,6 +34,7 @@ import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
 import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
+import '../logic/project_engine.dart';
 import 'staff_member.dart';
 import 'affiliate_deal.dart';
 import 'community_activity.dart';
@@ -281,7 +282,8 @@ class SaveGame {
   /// 経営アドバイザー。名前→レベル(0〜3)。
   Map<String, int> advisors;
 
-  /// 投資案件。名前→完成までの残り季数(0は稼働中)。
+  /// クラブの事業(ファンアプリ・公式ショップ・博物館)。名前→開業までの
+  /// 残り季数(0は営業中)。鍵の名前は [ClubProject] の name。
   Map<String, int> projects;
 
   /// 永久欠番にした殿堂の選手の id。
@@ -1904,9 +1906,11 @@ class SaveGame {
         advisors: (json['advisors'] as Map?)
                 ?.map((k, v) => MapEntry('$k', v as int)) ??
             {},
-        projects: (json['projects'] as Map?)
+        // 2026-11-25 に「提携クラブ」を「クラブ博物館」へ改めた。古い鍵は
+        // 読み替える(ProjectEngine.migrate。2回読んでも動かない)。
+        projects: ProjectEngine.migrate((json['projects'] as Map?)
                 ?.map((k, v) => MapEntry('$k', v as int)) ??
-            {},
+            {}),
         retiredNumberIds: (json['retiredNumberIds'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??

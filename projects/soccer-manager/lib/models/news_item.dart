@@ -72,10 +72,10 @@ enum NewsCategory {
     ],
     NewsCategory.money: [
       '放映権', 'スポンサー', '提携', '系列クラブ', '施設', '投資', '決算', '景気',
-      '命名権', '年間シート', 'メディア', 'ライセンス', '規則', '相場',
+      '命名権', '年間シート', 'メディア', 'ライセンス', '規則', '相場', '事業',
       'Broadcast', 'TV', 'Sponsor', 'Partner', 'Affiliate', 'Facilit',
       'Invest', 'Accounts', 'Economy', 'Naming', 'Season ticket', 'Media',
-      'Licen', 'Rules', 'Projects',
+      'Licen', 'Rules', 'Projects', 'Business',
     ],
     NewsCategory.board: [
       'オーナー', '株主', '理事会', '最後通告', '自治体', 'サポーター', '方針',

@@ -1931,6 +1931,24 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// 財務顧問を Lv [level] にしたとき、雇わないときより増える1年の収入の
+  /// 見込み(万円)。観客・スポンサー・グッズに掛かる(放映権には掛からない)。
+  int advisorFinanceGain(int level) {
+    final save = _save;
+    if (save == null || level <= 0) return 0;
+    final parts = weeklyIncomeParts(save.userTeamId);
+    final operating = parts.gate + parts.sponsor + parts.merchandise;
+    final now = AdvisorEngine.incomeMultiplier(
+        save.advisors[Advisor.finance.name] ?? 0);
+    final base = operating / now;
+    return ((base * AdvisorEngine.incomeMultiplier(level) - base) *
+            matchdaysPerSeason)
+        .round();
+  }
+
+  /// 顧問を Lv [level] にしたときの毎季の報酬(今の部の物差し)。
+  int advisorFee(int level) => scaledMoney(AdvisorEngine.salary(level));
+
   /// アドバイザーのレベルを変える(0〜3)。
   Future<bool> setAdvisorLevel(Advisor a, int level) async {
     final save = _save;
@@ -1956,7 +1974,32 @@ extension GameStateFinance on GameState {
     if (pr > 0) _changeSupporters(pr, SupporterReason.pr);
   }
 
-  /// 投資案件に着手する。費用は着手時に払う。
+  /// 事業 [p] を始める費用(今の部の物差し)。
+  int businessCost(ClubProject p) => scaledMoney(p.cost);
+
+  /// 事業 [p] が営業していたときの、毎月の収入の見込み(万円)。まだ始めて
+  /// いなくても「始めたら」の額を出す。お金を生まない事業は0。
+  ///
+  /// 収入の式(グッズ・商業の倍率・予算の配分・景気)をそのまま通すため、
+  /// その事業だけを営業中にした場合と、無い場合の差で測る(元に戻す)。
+  int businessMonthlyIncome(ClubProject p) {
+    final save = _save;
+    if (save == null || !p.earns) return 0;
+    final before = Map<String, int>.of(save.projects);
+    try {
+      save.projects.remove(p.name);
+      final without = weeklyIncomeFor(save.userTeamId);
+      save.projects[p.name] = 0;
+      final withIt = weeklyIncomeFor(save.userTeamId);
+      return ((withIt - without) * matchdaysPerSeason / 12).round();
+    } finally {
+      save.projects
+        ..clear()
+        ..addAll(before);
+    }
+  }
+
+  /// 事業を始める。費用は始めるときに払う。
   Future<bool> startProject(ClubProject p) async {
     final save = _save;
     if (save == null || ProjectEngine.started(save.projects, p)) return false;
@@ -1965,30 +2008,30 @@ extension GameStateFinance on GameState {
     _book(LedgerCategory.facilities, -cost);
     save.projects[p.name] = p.buildSeasons;
     _logNews(
-      Tr.pick('${p.label}に着手しました(${formatMoney(cost)}・完成まで${p.buildSeasons}季)',
-          'Started ${p.label} (${formatMoney(cost)}, ${Tr.plural(p.buildSeasons, 'season')} to build)'),
-      context: Tr.pick('投資案件', 'Projects'),
+      Tr.pick('${p.label}を始めました(${formatMoney(cost)}・開業まで${p.buildSeasons}季)',
+          'Started the ${p.label} (${formatMoney(cost)}, ${Tr.plural(p.buildSeasons, 'season')} to open)'),
+      context: Tr.pick('事業', 'Business'),
     );
     _notify();
     await _persist();
     return true;
   }
 
-  /// シーズン末に建設を進め、稼働中の提携クラブの効果を与える。
+  /// シーズン末に建設を進め、営業中の博物館の効果を与える。
   void _tickProjects() {
     final save = _save!;
-    final wasPartnerActive =
-        ProjectEngine.isActive(save.projects, ClubProject.partnerClub);
+    final wasMuseumOpen =
+        ProjectEngine.isActive(save.projects, ClubProject.museum);
     final done = ProjectEngine.tick(save.projects);
     for (final p in done) {
-      _addTimeline(Tr.pick('${p.label}が完成', '${p.label} completed'));
+      _addTimeline(Tr.pick('${p.label}が開業', '${p.label} opened'));
       _logNews(
-        Tr.pick('${p.label}が完成しました', '${p.label} is complete'),
-        context: Tr.pick('投資案件', 'Projects'),
+        Tr.pick('${p.label}が開業しました', 'The ${p.label} is open'),
+        context: Tr.pick('事業', 'Business'),
       );
     }
-    // 完成した季からではなく、稼働している季の末から効く。
-    if (wasPartnerActive) {
+    // 開業した季からではなく、営業している季の末から効く。
+    if (wasMuseumOpen) {
       save.managerReputation = (save.managerReputation + 2).clamp(0, 100);
       _changeSupporters(1, SupporterReason.events);
     }
