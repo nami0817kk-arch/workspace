@@ -42,8 +42,10 @@ void _shape(Game g, int bizTarget) {
     return;
   }
   // 部下を足す（責任者・子会社の社長になる人）
-  if (g.staff.length < 6 && g.cands.isNotEmpty && g.pre > g.cands.first.salary * 4 && g.turn % 3 == 0) {
-    g.hire(g.cands.first);
+  // （1.1.0+27 から、雇う費用は採用の道で違う。払える候補の先頭を雇う）
+  final c0 = g.cands.where((p) => g.hireFeeOf(p) <= g.cash * .5).firstOrNull;
+  if (g.staff.length < 6 && c0 != null && g.pre > c0.salary * 4 && g.turn % 3 == 0) {
+    g.hire(c0);
     return;
   }
   // 分社（責任者のいる事業を2つまで）
@@ -86,7 +88,7 @@ void _shape(Game g, int bizTarget) {
   }
   // 事業を増やす（いつもの自動プレイは12で止まるので、その先を足す）
   if (g.biz.length >= 12 && g.biz.length < bizTarget) {
-    final cand = g.liveInds().where((i) => !g.biz.any((b) => b.ind == i.id) && g.capexOf(i) < g.cash * .5).toList()
+    final cand = g.liveInds().where((i) => !g.biz.any((b) => b.ind == i.id) && g.licMissing(i.id) == null && g.capexOf(i) < g.cash * .5).toList()
       ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
     if (cand.isNotEmpty) g.startBiz(cand.first.id);
   }

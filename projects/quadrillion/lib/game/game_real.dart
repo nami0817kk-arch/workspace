@@ -33,6 +33,8 @@ const Map<String, double> hoursOf = {
   'deal': 6, // 提携の話
   'spin': 16,
   'release': 8,
+  'talk': 1, // 部下の話を聞く・研修に出す（1.1.0+27）
+  'raise': 1, // 給料を上げる（1.1.0+27）
   'subipo': 24,
   'holding': 16,
   'split': 16,

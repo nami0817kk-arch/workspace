@@ -121,6 +121,10 @@ void main() {
     final s = _grown(seed: 41, months: 24);
     _fill(s);
     final b = s.biz.first;
+    // 自動プレイがもう出ている国があれば、まだどこにも出ていない形に戻して見る（1.1.0+27 で人の仕組みの乱数が増え、自動プレイが先に韓国へ出ることがある）
+    b.ctry = null;
+    b.jv = null;
+    s.calcAll();
     expect(tx(s.enterCountry(b, 'kr', 'buy')), contains('すぐに'));
     expect(s.ctryOf(b), contains('kr'));
     expect(tx(s.enterCountry(b, 'us', 'solo')), contains('6か月後'));

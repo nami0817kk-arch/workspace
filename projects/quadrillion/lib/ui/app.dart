@@ -379,7 +379,7 @@ class MainScreen extends StatelessWidget {
         final w = cb.maxWidth - 16;
         final body = switch (ctl.tab) {
           'biz' => bizTab(ctl, width: w),
-          'people' => peopleTab(ctl),
+          'people' => peopleTab(ctl, width: w),
           'stock' => stockTab(ctl),
           'money' => moneyTab(ctl),
           'world' => worldTab(ctl, w),

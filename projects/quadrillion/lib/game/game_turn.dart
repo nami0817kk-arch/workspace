@@ -261,7 +261,11 @@ extension GameTurn on Game {
           if (o != p) o.loy -= .07;
         }
       }
-      if (q == 12) {
+      if (q == 12 && p.real) {
+        // 経歴を持つ人は、経験で細かい能力が伸び、年で衰える（1.1.0+27）
+        p.age++;
+        yearPerson(p);
+      } else if (q == 12) {
         p.age++;
         if (p.age > 58 && p.trait != 'stamina') {
           for (final k in abKeys) {
@@ -289,11 +293,15 @@ extension GameTurn on Game {
         }
       }
     }
-    // 部下の引退
+    // 名前のある部下の1か月（健康・家族・給料への不満・転職。1.1.0+27）
+    monthPeople(N);
+    // 部下の引退（経歴を持つ人は、国と時代の定年から。相棒は定年が無い）
     if (q == 12) {
+      final ra = retireAge();
       for (final p in staff.toList()) {
-        if (p.age >= 65 && (p.age >= 72 || rnd() < .35)) {
-          fire(p);
+        final lim = p.real && !p.partner ? ra : 65;
+        if (p.age >= lim && (p.age >= lim + 7 || rnd() < .35)) {
+          fire(p, 'retired');
           N(M('{0}（{1}歳）が引退しました', [Nm(p.name), p.age]));
         }
       }
@@ -347,9 +355,10 @@ extension GameTurn on Game {
     coverShort(N);
     // 引き抜きなどの出来事
     rollEvents(N);
-    // 候補者
+    // 候補者（1.1.0+27 から、採用の市場で数と質が決まる）
     cands = [];
-    final n = hasT('noble') ? 2 : 3;
+    final n = extras ? 0 : (hasT('noble') ? 2 : 3);
+    if (extras) cands = rollCands();
     for (var i = 0; i < n; i++) {
       cands.add(mkPerson((hasT('noble')
               ? -.5
@@ -599,7 +608,10 @@ extension GameTurn on Game {
         }
       }
       // 引き抜き
-      final tgt = staff.where((p) => p.amb > 60 && p.loy < 55 && !events.any((e) => e.poach == p.id)).toList();
+      // （1.1.0+27 から、給料が相場より低い人も狙われる。休んでいる人は狙われない）
+      final tgt = staff
+          .where((p) => ((p.amb > 60 && p.loy < 55) || (p.real && p.amb > 45 && p.loy < 65 && payRatio(p) < payLowRatio)) && p.away == 0 && !events.any((e) => e.poach == p.id))
+          .toList();
       if (tgt.isNotEmpty && rnd() < .027) {
         final p = pick(tgt);
         final e = evPoach(c, p);
@@ -671,7 +683,7 @@ extension GameTurn on Game {
               return M('{0}は残ってくれました', [Nm(p.name)]);
             }),
             Choice(M('送り出す'), M('{0}は{1}へ移り、相手の事業が強くなる', [Nm(p.name), Nm(c.name)]), () {
-              fire(p);
+              fire(p, 'poached');
               for (final b in c.biz) {
                 b.power *= 1.05;
               }
@@ -962,7 +974,9 @@ extension GameTurn on Game {
     }
   }
 
-  void fire(Person p) {
+  /// 部下が会社を去る。[why] は社外に残すときの理由（quit 辞めた / poached 引き抜かれた / fired 解雇 / retired 引退）
+  void fire(Person p, [String why = 'quit']) {
+    if (extras && staff.contains(p)) toAlumni(p, why);
     if (p.partner && p.stake != 0) {
       sh.pt = math.max(0, sh.pt - p.stake);
       if (listed) {

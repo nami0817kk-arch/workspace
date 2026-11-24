@@ -13,6 +13,7 @@ import 'format.dart';
 import 'ind_profile.dart';
 import 'models.dart';
 import 'models_static.dart';
+import 'people_data.dart';
 
 export '../l10n/l10n.dart';
 export 'data.dart';
@@ -22,6 +23,7 @@ export 'format.dart';
 export 'ind_profile.dart';
 export 'models.dart';
 export 'models_static.dart';
+export 'people_data.dart';
 
 part 'game_turn.dart';
 part 'game_actions.dart';
@@ -34,6 +36,7 @@ part 'game_deleg.dart';
 part 'game_faces.dart';
 part 'game_real.dart';
 part 'game_units.dart';
+part 'game_people.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -280,6 +283,9 @@ class Game {
   Shares sh = Shares();
   List<Biz> biz = [];
   List<Person> staff = [], cands = [], kids = [];
+
+  /// 社外の人（前に辞めた部下。新しい順に8人まで。呼び戻せる。1.1.0+27）
+  List<Person> alumni = [];
   Map<String, int> found = {}, big = {};
   List<LogEntry> log = [];
   List<HistEntry> hist = [];
@@ -438,6 +444,8 @@ class Game {
     }
     p.traitKnown = hasT('charm');
     p.ambKnown = false;
+    // 経歴・細かい能力・人柄・暮らし（1.1.0+27。試作との一致を見る遊びでは付けない）
+    if (extras) flesh(p, qq: qq);
     return p;
   }
 
@@ -600,8 +608,13 @@ class Game {
     // 各業種の力を市場の大きさに合わせる
     indM = {for (final i in inds) i.id: 0};
     normalizeAll(true);
-    for (var i = 0; i < 3; i++) {
-      cands.add(mkPerson(0));
+    if (extras) {
+      // 採用の市場（新卒・中途・引き抜き。1.1.0+27）
+      cands = rollCands();
+    } else {
+      for (var i = 0; i < 3; i++) {
+        cands.add(mkPerson(0));
+      }
     }
     hist = [];
     reg = regFor(yr());
@@ -686,12 +699,34 @@ class Game {
           ? 3
           : 2;
 
+  /// 事業の責任者（休みや研修・留学で会社にいない人は、いないのと同じ。1.1.0+27）
+  Person? mgrOf(Biz b) {
+    final p = staffById(b.mgr);
+    return p != null && p.away > 0 ? null : p;
+  }
+
+  /// 経歴が効く倍（同じ業種の経験は高く効き、同じ分類の経験も少し効く。技術の分野が合わないと開発の腕が落ちる。1.1.0+27）
+  double expF(Person p, Industry ind) {
+    if (!p.real) return 1;
+    var same = 0, near = 0;
+    for (final j in p.jobs) {
+      if (j.ind == ind.id) {
+        same += j.years;
+      } else if (j.cat == ind.cat) {
+        near += j.years;
+      }
+    }
+    var f = 1.0 + math.min(.16, same * .02) + math.min(.08, near * .01);
+    if (ind.key == 'kai' && p.tf != null && p.tf != CAT_TF[ind.cat]) f *= .9;
+    return f;
+  }
+
   double mgrMult(Biz b) {
     final ind = indm[b.ind]!;
     if (b.mgr != null) {
-      final p = staffById(b.mgr);
+      final p = mgrOf(b);
       if (p != null) {
-        var m = .7 + p.ab[ind.key]! / 100 * .8;
+        var m = (.7 + p.ab[ind.key]! / 100 * .8) * expF(p, ind);
         if (p.partner) m *= 1.15;
         if (p.trait == 'oneman') m *= 1.25;
         if (p.trait == 'charm') m *= 1.1;
@@ -712,13 +747,13 @@ class Game {
 
   /// 現場の人1単位が生む現場の力の倍（crewEff と同じ掛け算。crewEff は試作と同じ順で掛けるので別に持つ）
   double crewMult(Biz b) {
-    final p = staffById(b.mgr);
+    final p = mgrOf(b);
     final tou = p != null ? p.ab['tou']! : pres.ab['tou']!;
     return (.8 + tou / 250) * (b.model == 'fc' ? 3 : 1) * (culture == 'sports' ? 1.25 : 1) * (culture == 'sports' && hasT('oneman') ? 1.1 : 1);
   }
 
   double crewEff(Biz b) {
-    final p = staffById(b.mgr);
+    final p = mgrOf(b);
     final tou = p != null ? p.ab['tou']! : pres.ab['tou']!;
     return crewOf(b) *
         (.8 + tou / 250) *
@@ -833,7 +868,7 @@ class Game {
         final fr = b.jv!.fold(0.0, (s, c) => s + cw(c, y)) / r;
         mg *= 1 - .5 * fr;
       }
-      final p = staffById(b.mgr);
+      final p = mgrOf(b);
       if (p != null) {
         mg += (p.ab['tou']! - 50) / 2000;
         if (p.trait == 'frugal') mg += .02;
@@ -983,6 +1018,7 @@ class Game {
         'staff': staff.map((e) => e.toJson()).toList(),
         'cands': cands.map((e) => e.toJson()).toList(),
         'kids': kids.map((e) => e.toJson()).toList(),
+        'alumni': alumni.map((e) => e.toJson()).toList(),
         'found': found,
         'big': big,
         'log': log.map((e) => e.toJson()).toList(),
@@ -1083,6 +1119,7 @@ class Game {
       ..staff = l('staff', Person.fromJson)
       ..cands = l('cands', Person.fromJson)
       ..kids = l('kids', Person.fromJson)
+      ..alumni = l('alumni', Person.fromJson)
       ..found = mi('found')
       ..big = mi('big')
       ..log = l('log', LogEntry.fromJson)
@@ -1164,6 +1201,13 @@ class Game {
     final rawBiz = j['biz'] as List;
     for (var i = 0; i < s.biz.length && i < rawBiz.length; i++) {
       if ((rawBiz[i] as Map)['sites'] == null) s.ensureUnits(s.biz[i]);
+    }
+    // 経歴・細かい能力は 1.1.0+27 から。それより前のセーブの部下と候補には、今の4つの能力を芯に付ける（給料はそのまま）
+    for (final p in [...s.staff, ...s.cands]) {
+      if (p.real) continue;
+      final sal = p.salary;
+      s.flesh(p);
+      p.salary = sal;
     }
     s.calcAll();
     // 古いセーブには最大値がないので、残っている推移から埋める

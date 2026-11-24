@@ -75,8 +75,8 @@ Map<String, dynamic> _strip(Map<String, dynamic> j) {
     ?..remove('face')
     ..remove('fb');
   bare(t['pres'] as Map);
-  for (final k in ['staff', 'cands', 'kids']) {
-    for (final p in t[k] as List) {
+  for (final k in ['staff', 'cands', 'kids', 'alumni']) {
+    for (final p in (t[k] as List?) ?? const []) {
       bare(p as Map);
     }
   }

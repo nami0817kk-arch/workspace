@@ -116,6 +116,8 @@ void main() {
               final units = [
                 for (final s in g.siteKeys(g.home, g.kindB(b))) g.unitCapexAt(b, s),
                 g.leadCost(b),
+                // 1.1.0+27 から、辞めて空いた店に中途で店長を雇う
+                g.midLeadCost(b),
                 g.svHireCost(b),
                 g.hubCost(b),
               ];
@@ -173,6 +175,8 @@ void main() {
         p.trait = trait;
         p.amb = amb;
         p.ab[indm[b.ind]!.key] = ab;
+        // 1.1.0+27 から部下は転職・定年で辞める。10年同じ人で見るため、辞めない相棒にしておく
+        p.partner = true;
         g.setDeleg(b, true);
         g.setBudget(b, 3);
         final out = <String, int>{};

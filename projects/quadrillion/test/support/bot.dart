@@ -69,11 +69,19 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
     s.borrow(s.borrowRoom() * .5, 60);
   }
   if (s.biz.isEmpty) {
-    final l = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => b.mg.compareTo(a.mg));
+    // 資格の要る業種（病院・航空など）は、資格のある人がいないと始められない（1.1.0+27）
+    final l = s.liveInds().where((i) => s.capexOf(i) <= s.cash && s.licMissing(i.id) == null).toList()..ssort((a, b) => b.mg.compareTo(a.mg));
     if (l.isNotEmpty) s.startBiz(l[0].id);
   }
-  if (s.staff.length < s.biz.length && s.cands.isNotEmpty && s.pre > s.cands[0].salary * 3) {
-    s.hire((s.cands.toList()..ssort((a, b) => tot(b) - tot(a)))[0]);
+  // 1.1.0+27 から、雇う費用は採用の道で違う（新卒は給料の1か月分・中途は2か月分・引き抜きは5か月分）。払える候補の中で能力の高い人を雇う
+  final afford = s.cands.where((p) => s.hireFeeOf(p) <= s.cash * .5).toList();
+  if (s.staff.length < s.biz.length && afford.isNotEmpty && s.pre > afford.map((p) => p.salary).reduce(math.min) * 3) {
+    final ok = afford.where((p) => s.pre > p.salary * 3).toList()..ssort((a, b) => tot(b) - tot(a));
+    if (ok.isNotEmpty) s.hire(ok[0]);
+  }
+  // 給料が相場より1割以上低い部下は、相場まで上げる（1.1.0+27。人が遊ぶときと同じく、引き抜かれる前に）
+  for (final p in s.staff.toList()) {
+    if (p.real && s.payRatio(p) < .9 && s.pre > p.salary) s.raisePay(p);
   }
   for (final b in s.biz) {
     if (b.mgr == null) {
@@ -100,7 +108,7 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
   // 1.1.0+26 から、focus のときは、今の事業を伸ばせる（客が来ていて、責任者・物件・上限が足りている）あいだは新しい事業に手を広げない。
   // 伸ばせなければ手元の4割まで。focus でなければ今までどおり手元の8割まで広げる
   final canGrow = focus && s.unitsOn && s.biz.any((b) => s.growOpt(b, s.cash * .8) != null);
-  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.capexOf(i) < s.cash * (focus && s.unitsOn ? (canGrow ? 0 : .4) : .8)).toList()
+  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.licMissing(i.id) == null && s.capexOf(i) < s.cash * (focus && s.unitsOn ? (canGrow ? 0 : .4) : .8)).toList()
     ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
   if (cand.isNotEmpty && s.ap > 0 && s.biz.length < 12) s.startBiz(cand[0].id);
   // 事業を伸ばす手は月に3つまで（時間が残っていても。人の手で遊ぶ速さに近づける）

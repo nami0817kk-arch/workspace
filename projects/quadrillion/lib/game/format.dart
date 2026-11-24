@@ -58,3 +58,23 @@ String yenJa(double v) {
 }
 
 String pct(double v) => '${v > 0 && v < 1 ? v.toStringAsFixed(2) : jsNum(jsRound(v * 10) / 10)}%';
+
+/// 「何倍」の数（1.1.0+27）。100倍までは小数1桁、1万倍までは整数、1万倍からは上2桁に丸めて
+/// 日本語は「約91万」「約1.2億」、英語は「about 910,000」と書く（908607.6倍のような桁の多い数を出さない）
+String timesL(double x) {
+  if (!x.isFinite) return '-';
+  if (x < 100) return x.toStringAsFixed(1);
+  if (x < 1e4) return commas(jsRound(x));
+  var e = 0;
+  for (var v = x; v >= 10; v /= 10) {
+    e++;
+  }
+  var unit = 1.0;
+  for (var i = 0; i < e - 1; i++) {
+    unit *= 10;
+  }
+  final r = jsRound(x / unit) * unit;
+  if (L.en) return 'about ${commas(r)}';
+  if (r >= 1e8) return '約${jsNum(double.parse((r / 1e8).toStringAsFixed(r >= 1e9 ? 0 : 1)))}億';
+  return '約${jsNum(double.parse((r / 1e4).toStringAsFixed(r >= 1e5 ? 0 : 1)))}万';
+}

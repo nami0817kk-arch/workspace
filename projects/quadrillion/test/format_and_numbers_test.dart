@@ -98,7 +98,9 @@ void main() {
     expect(s.cash, closeTo(4e7 * nomOf(1980), 1e-3));
     expect(s.pres.age, 22);
     expect(s.cos.where((c) => c.rival != null).length, 4);
-    expect(s.cands.length, 3);
+    // 1.1.0+27 から、候補の数は採用の市場（新卒・中途・引き抜き）で決まる。1980年1月の日本は新卒が出ず、中途は少ない
+    expect(s.cands.length, inInclusiveRange(2, 9));
+    expect(s.cands.every((p) => p.real), isTrue);
     // 社長の時間（1.1.0+25）: 会議を引いて、ふつうに使える残りから始まる。体力は満タン
     expect(s.hUsed, 0);
     expect(s.stamina, 100);
@@ -107,7 +109,7 @@ void main() {
     final noble = Game.newGame(SetupConfig(year: 2000, traits: ['noble', 'careful']), rng: ParkMiller(1));
     expect(noble.cash, closeTo(4e7 * nomOf(2000) * 4, 1e-3));
     expect(noble.culture, 'steady');
-    expect(noble.cands.length, 3);
+    expect(noble.cands.length, inInclusiveRange(2, 9));
   });
 
   test('事業の立ち上げは社長の時間を使い（最初の1つも）、力は元手の1.5倍', () {

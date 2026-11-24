@@ -7,6 +7,7 @@ import 'controller.dart';
 import 'glossary.dart';
 import 'guide.dart';
 import 'painters.dart';
+import 'people_screen.dart';
 import 'sheets.dart';
 import 'widgets.dart';
 
@@ -1121,10 +1122,21 @@ Widget _grpHead(String label, IconData icon) => Padding(
     );
 
 // --- 人 ---
-List<Widget> peopleTab(GameController ctl) {
+List<Widget> peopleTab(GameController ctl, {double width = 0}) {
+  final s = ctl.game!;
+  // 横に広い画面は、左に人の一覧・右に1人の中身（1.1.0+27。経歴を持つ人の仕組みがあるときだけ）
+  if (s.peopleOn && width >= peopleSplitMin) return peopleSplit(ctl, width);
+  final out = <Widget>[H2(tr('社長')), ...presPanels(ctl)];
+  out.add(H2(tr('部下（{0}人）', [s.staff.length])));
+  out.addAll(_staffAndCands(ctl));
+  return out;
+}
+
+/// 社長・社風・後継ぎの3枚（人の画面の社長の中身）
+List<Widget> presPanels(GameController ctl) {
   final s = ctl.game!;
   final P = s.pres;
-  final out = <Widget>[H2(tr('社長'))];
+  final out = <Widget>[];
   out.add(Panel(
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
     presFace(s, size: faceBig),
@@ -1198,7 +1210,13 @@ List<Widget> peopleTab(GameController ctl) {
         ]),
       ),
   ])));
-  out.add(H2(tr('部下（{0}人）', [s.staff.length])));
+  return out;
+}
+
+/// 狭い画面の部下と採用の候補（縦に並べる）
+List<Widget> _staffAndCands(GameController ctl) {
+  final s = ctl.game!;
+  final out = <Widget>[];
   if (s.staff.isNotEmpty || s.cands.isNotEmpty) out.add(Padding(key: const ValueKey('face-legend'), padding: const EdgeInsets.only(bottom: 4), child: faceLegend()));
   // 4人以上は1人1行にたたみ、押した1人だけを詳しく開く
   final foldStaff = s.staff.length >= staffFoldMin;
@@ -2321,6 +2339,19 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
         bad: b.leads == 0,
         key: ValueKey('need-lead-${b.id}'),
         btn: _apBtn(ctl, tr('育てる（{0}）', [yen(s.leadCost(b))]), () => ctl.act(() => s.trainLeads(b, 1), mark: 'act'), k: 'crew', enabled: slot > 0 && b.lic == 0)));
+    // 店長などの腕と、辞めて空いた単位。中途で雇う・名前のある部下に引き上げる（1.1.0+27。人の仕組みにつなぐ）
+    if (s.peopleOn) {
+      items.add(line(tr('{0}の腕', [tr(lead)]), b.vac >= 1 ? tr('{0}・責任者のいない{1}', [b.lq.round(), s.unitCount(b, b.vac)]) : '${b.lq.round()}',
+          bad: b.vac >= 1, key: ValueKey('need-lq-${b.id}')));
+      items.add(Padding(
+        padding: const EdgeInsets.only(bottom: 2),
+        child: Wrap(spacing: 6, runSpacing: 4, children: [
+          _apBtn(ctl, tr('中途で雇う（{0}・今月あと{1}人）', [yen(s.midLeadCost(b)), s.midLeadLeft(b)]), () => ctl.act(() => s.hireLeads(b, 1), mark: 'act'),
+              k: 'crew', enabled: s.midLeadLeft(b) > 0 && b.lic == 0),
+          _apBtn(ctl, tr('部下に引き上げる'), () => ctl.act(() => s.promoteLead(b), mark: 'act'), k: 'hire', enabled: b.leads >= 1),
+        ]),
+      ));
+    }
   }
   items.add(line(tr(KIND_SV_JA[k]!), tr('{0}人／要る{1}人', [b.sv, svN]),
       bad: b.sv < svN,

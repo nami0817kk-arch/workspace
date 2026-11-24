@@ -423,7 +423,7 @@ class Pilot {
     final h1 = s.hUsed;
     await pressKey('pres-open');
     await pressText(tr('最初の事業を決める'));
-    final first = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)));
+    final first = s.liveInds().where((i) => s.capexOf(i) <= s.cash && s.licMissing(i.id) == null).toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)));
     final ind = first.first;
     await money('最初の事業', -s.capexOf(ind), () async {
       await press(inSheet(find.text(tr('{0}（元手 {1}）', [ind.name, yen(s.capexOf(ind))]))), '最初の事業');
