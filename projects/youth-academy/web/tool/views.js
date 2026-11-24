@@ -327,8 +327,12 @@ async function clearEvents() {
   }
   btn('Bに回す') || btn('Aに上げる');
   rail('クラブ');
-  ok(txt().includes('予算と施設') && txt().includes('概要') && txt().includes('順位と日程'), 'クラブの8項目');
-  btn('概要').click();
+  // 2026-11-25 クラブは3つの群（クラブ・人・大会）
+  const cgrp = (n) => { const b = [...d.querySelectorAll('#main .tabs button.grp')].find((x) => x.textContent.trim().startsWith(n)); if (b) b.click(); return !!b; };
+  const csub = (n) => { const find = () => [...d.querySelectorAll('#main .tabs button:not(.grp)')].find((x) => x.textContent.trim() === n); if (!find()) for (const g of ['クラブ', '人', '大会']) { cgrp(g); if (find()) break; } const b = find(); if (b) b.click(); return !!b; };
+  ok(['クラブ', '人', '大会'].every((n) => [...d.querySelectorAll('#main .tabs button.grp')].some((b) => b.textContent.trim().startsWith(n))), 'クラブの3つの群');
+  csub('概要');
+  ok(txt().includes('トップチーム'), 'クラブの概要にトップの順位（ホームから移した）');
   ok(txt().includes('チームの雰囲気') && /の輪/.test(txt()) && !!btn('チーム全員で話す'), 'クラブの概要にチームの雰囲気と仲良しの輪（2026-11-20）');
   btn('チーム全員で話す').click();
   { const tb = [...d.querySelectorAll('#main button')].find((b) => b.textContent === 'チーム全員で話す'); ok(txt().includes('雰囲気+') && !!tb && tb.disabled && /月1回/.test(tb.dataset.why || ''), 'チームへの働きかけは月1回 ' + (tb && [tb.disabled, tb.dataset.why].join('|'))); }
@@ -338,20 +342,22 @@ async function clearEvents() {
   // 2026-11-21：クラブのやり残しは、どの小タブかに赤い点
   {
     const subs = w.YA.todoSubs(A.w);
-    const dots = [...d.querySelectorAll('#main .tabs .btn')].filter((b) => b.querySelector('.subdot')).map((b) => b.textContent.trim());
     const SUBN = { int: '内部昇格', sel: 'セレクション', scout: 'スカウト', over: '概要' };
-    ok(Object.keys(subs).every((k) => dots.includes(SUBN[k]) || A.ct === k), 'クラブのやり残しの小タブに赤い点 ' + Object.keys(subs).join(',') + ' / ' + dots.join(','));
+    const GN = { int: '人', sel: '人', scout: '人', over: 'クラブ' };
+    const dotsIn = (g) => { cgrp(g); return [...d.querySelectorAll('#main .tabs .btn')].filter((b) => b.querySelector('.subdot')).map((b) => b.textContent.trim()); };
+    ok(Object.keys(subs).every((k) => dotsIn(GN[k]).includes(SUBN[k]) || A.ct === k), 'クラブのやり残しの小タブに赤い点 ' + Object.keys(subs).join(','));
+    csub('概要');
   }
-  for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位と日程', '概要']) {
-    btn(k).click();
+  for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位表', '日程と結果', '概要']) {
+    csub(k);
     await sleep(10);
     if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補') && txt().includes('監督との関係') && txt().includes('得意は'), 'スタッフの画面（性格・得意・関係が出る）');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     // 見出しと注記が横に並んで1文字ずつ縦に崩れない（2026-11-21 品質）
     if (k === 'スカウト') { const tall = [...d.querySelectorAll('#main .sub, #main b')].filter((e) => /^(見えている度合い|ポジション別の人数)/.test(e.textContent) && e.getBoundingClientRect().height > 30); ok(!tall.length, 'スカウトの見出しが縦に崩れない ' + tall.map((e) => e.textContent.slice(0, 10)).join('/')); }
-    if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
-    if (k === '順位と日程') ok(/今年の日程（いま\d+月第\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
+    if (k === '順位表') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
+    if (k === '順位表') ok(/今年の日程（いま\d+月第\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
     if (k === 'スタッフ') ok(/（いま .+・能力\d+）/.test(txt()) && /[+-]?\d+・給料[+−]/.test(txt()), 'スタッフ候補は役ごとに、いまのスタッフとの差を1行で（2026-11-18）');
     // 2026-11-17：お金は YA.yen（「万」だけの表示をしない）
     if (k === '予算と施設' || k === 'スタッフ' || k === 'スカウト') { const mt = d.getElementById('main').textContent; ok(!/\d万(?![円人回])/.test(mt), 'お金の表示に「万」だけが出ない（' + k + '） ' + ((mt.match(/.{0,8}\d万(?![円人回]).{0,4}/) || [''])[0])); }
@@ -360,7 +366,7 @@ async function clearEvents() {
   {
     const t0 = A.w.club.trust;
     A.w.club.trust = 95;
-    btn('スタッフ').click();
+    csub('スタッフ');
     await sleep(10);
     const hb = btn('採用');
     if (hb) {
@@ -380,7 +386,7 @@ async function clearEvents() {
   }
   // ポジション別の人数：足りない位置は「不足」の札、字は11px以上
   {
-    btn('セレクション').click();
+    csub('セレクション');
     await sleep(10);
     const cells = [...d.querySelectorAll('#main .poscount')];
     ok(cells.length === 15 && cells.every((c) => [...c.children].every((e) => parseFloat(e.style.fontSize) >= 11)), 'ポジション別の人数の字は11px以上 ' + cells.length);
