@@ -51,7 +51,8 @@ void main() {
       expect(tester.takeException(), isNull);
       // 下まで送っても崩れず、位の名がすべて出る。
       final names = female ? kRanksF : kRanksM;
-      for (final name in names) {
+      // 一覧は上の位から並ぶので、上から順に探す（下へしか送らない）。
+      for (final name in names.reversed) {
         await tester.scrollUntilVisible(find.text(name), 200);
         expect(find.text(name), findsWidgets, reason: name);
       }
