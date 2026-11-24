@@ -17,9 +17,8 @@
   YA.faceSrc = function (w, p) {
     const F = IMG().faces;
     if (!F.length || !p) return null;
-    const N = F.length * 2; // 左右反転でもう1組
+    const N = F.length; // 左右反転は使わない（2026-11-24「反転はなし」。前は反転で2組にしていた。反転の番号を持つ古い保存の子は、ここで選び直す）
     if (p.face == null || p.face >= N) {
-      // 同じ絵の反転も「同じ顔」として避ける（k と k＋枚数）
       const base = (k) => k % F.length;
       const roster = new Set();
       const cands = new Set();
@@ -30,7 +29,7 @@
         for (let i = 0; i < N; i++) { const k = (start + i) % N; if (!bad(k)) return k; }
         return -1;
       };
-      // まず絵ごと重ならないように。足りなければ反転で別の顔に見せる
+      // まず名簿とも候補とも重ならないように。足りなければ名簿とだけ重ならないように
       let k = probe((x) => roster.has(base(x)) || cands.has(base(x)));
       if (k < 0) k = probe((x) => roster.has(base(x)));
       if (k < 0) {
@@ -174,7 +173,6 @@
     const s = YA.faceSrc(w, p);
     if (!s) return null;
     const e = img(s, 'face', px || 28, p.name);
-    if (p.face >= IMG().faces.length) e.style.transform = 'scaleX(-1)';
     // 自クラブの選手と入団の候補は自クラブの色、ほかは元の絵のまま
     const kitBase = YA.kitOf(w && w.clubName);
     const kit = p.pos === 'GK' ? Object.assign({}, kitBase, { shirt: kitBase.gk, acc: '#ffffff' }) : kitBase;

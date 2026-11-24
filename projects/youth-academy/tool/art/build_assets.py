@@ -66,16 +66,25 @@ def face_cells_auto(im):
     return [(c0, r0, c1, r1) for r0, r1 in rows for c0, c1 in cols if (c1 - c0) > 100 and (r1 - r0) > 100]
 
 
-# 2026-11-24 作り直し：選んでもらった1枚を見本に Gemini で作った 24人×5枚（同じ絵柄・同じマス目）。
+# 2026-11-24 作り直し：選んでもらった1枚を見本に Gemini で作った 24人×13枚（同じ絵柄・同じマス目）。
 # 「ブルーロック・アオアシ・DAYS のようなキャラを参考に」は、個性の強さだけを借りて、どの作品の登場人物にも似せない指示で作った。
-# シートごとに使うマス（行順の番号）。None なら全部。外したもの：女の子に見える顔（4-06・5-01・5-12）、
-# マウスの矢印が写ったマス（1-21）、3枚目の坊主の似た顔（3-04・3-10・3-11・3-16・3-18・3-21・3-22）
+# 同じ日に「三百は欲しい」「反転はなし」で 5枚→13枚（6〜13枚目は 一年生・三年生・前線・司令塔と守備・GK と CB・ムードメーカー・海外にルーツ・地方と都会）。
+# シートごとに使うマス（行順の番号）。None なら全部。外したもの：女の子に見える顔（4-06・5-01・5-12・6-07・6-18・9-01・12-18）、
+# マウスの矢印が写ったマス（1-21）、3枚目の坊主のよく似た顔（3-10・3-11・3-18・3-22）
 FACE_SHEETS = [
     ('faces_sheet1.png', None, [i for i in range(24) if i != 21]),
     ('faces_sheet2.png', None, None),
-    ('faces_sheet3.png', None, [i for i in range(24) if i not in (4, 10, 11, 16, 18, 21, 22)]),
+    ('faces_sheet3.png', None, [i for i in range(24) if i not in (10, 11, 18, 22)]),
     ('faces_sheet4.png', None, [i for i in range(24) if i != 6]),
     ('faces_sheet5.png', None, [i for i in range(24) if i not in (1, 12)]),
+    ('faces_sheet6.png', None, [i for i in range(24) if i not in (7, 18)]),
+    ('faces_sheet7.png', None, None),
+    ('faces_sheet8.png', None, None),
+    ('faces_sheet9.png', None, [i for i in range(24) if i != 1]),
+    ('faces_sheet10.png', None, None),
+    ('faces_sheet11.png', None, None),
+    ('faces_sheet12.png', None, [i for i in range(24) if i != 18]),
+    ('faces_sheet13.png', None, None),
 ]
 
 
@@ -89,7 +98,7 @@ def faces():
         print(name, len(bx), 'cells')
         for i, b in enumerate(bx):
             f = square(im, b).resize((FACE_PX, FACE_PX), Image.LANCZOS)
-            f.save(os.path.join(OUT, 'faces', '%s_%02d.jpg' % (name[:12], i)), quality=88)
+            f.save(os.path.join(OUT, 'faces', '%s_%02d.jpg' % (name[:-4], i)), quality=88)
             out.append(uri(f, 'JPEG', quality=80, optimize=True))
     return out
 
