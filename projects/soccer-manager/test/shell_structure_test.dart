@@ -10,6 +10,7 @@ import 'package:soccer_manager/screens/contract_board_screen.dart';
 import 'package:soccer_manager/screens/cup_screen.dart';
 import 'package:soccer_manager/screens/finance_screen.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
+import 'package:soccer_manager/screens/league_stats_screen.dart';
 import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/screens/owner_work_screen.dart';
 import 'package:soccer_manager/screens/owner_world_screen.dart';
@@ -32,7 +33,6 @@ import 'package:soccer_manager/widgets/era_card.dart';
 import 'package:soccer_manager/widgets/fan_segments_card.dart';
 import 'package:soccer_manager/widgets/group_page.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
-import 'package:soccer_manager/widgets/ledger_card.dart';
 import 'package:soccer_manager/widgets/media_deals_card.dart';
 import 'package:soccer_manager/widgets/owner_career_card.dart';
 import 'package:soccer_manager/widgets/owner_wealth_card.dart';
@@ -68,7 +68,7 @@ void main() {
     return find.byType(Tab).hitTestable().evaluate().length;
   }
 
-  testWidgets('左メニューは8項目、タブは 0・0・3・4・3・3・2・2、合計17(選手に登録ルール)', (tester) async {
+  testWidgets('左メニューは8項目、タブは 0・0・3・4・3・3・3・2、合計18(選手に登録ルール・リーグに個人成績)', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
     expect(TodoMenu.values.length, 8);
@@ -79,7 +79,7 @@ void main() {
       TodoMenu.club: 4,
       TodoMenu.squad: 3,
       TodoMenu.transfer: 3,
-      TodoMenu.league: 2,
+      TodoMenu.league: 3,
       TodoMenu.ownerRoom: 2,
     };
     var total = 0;
@@ -90,7 +90,7 @@ void main() {
       expect(n, want[menu], reason: '${menu.name} のタブの数');
       total += n;
     }
-    expect(total, 17);
+    expect(total, 18);
     expect(FinanceScreen.tabCount, 3);
     expect(TransferScreen.tabCount, 3);
   });
@@ -199,12 +199,19 @@ void main() {
         ]
       ),
       (
-        'リーグ > 順位と日程',
+        'リーグ > 順位表',
         const TodoPlace(TodoMenu.league),
         null,
         [type(FixturesScreen)]
       ),
       ('リーグ > カップ戦', TodoPlaces.leagueCups, null, [type(CupScreen)]),
+      // 資料のリーグランキングと個人タイトルは、ここへ戻した(2026-11-25)。
+      (
+        'リーグ > 個人成績',
+        const TodoPlace(TodoMenu.league, tab: 2),
+        null,
+        [type(LeagueStatsScreen), key('ranking-goals')]
+      ),
       (
         'オーナー室 > オーナーの仕事',
         TodoPlaces.ownerMatchday,
@@ -287,7 +294,8 @@ void main() {
         for (final d in quickAccessDestinations)
           if (d.group == g) d,
     ];
-    expect(shown.length, greaterThanOrEqualTo(14));
+    // 2026-11-25 に重なるページを片付けて9つ(資料6・設定とヘルプ3)。
+    expect(shown.length, greaterThanOrEqualTo(9));
     // 並びの外(下)の項目は、一覧を送ると出てくる。
     final seen = <String>{};
     for (var i = 0; i < 6; i++) {
@@ -307,11 +315,11 @@ void main() {
         reason: 'iPhone 横の高さでは、引き出しをスクロールできる');
     await tester.drag(scroll, const Offset(0, 2000));
     await settleShell(tester);
-    // 資料の3つの新しい画面。
+    // 資料の画面(クラブとオーナーの記録は1つにした。2026-11-25)。
     for (final (label, t) in <(String, Type)>[
-      ('収支の詳しい表', LedgerCard),
-      ('クラブの記録', ClubValueCard),
-      ('オーナーの記録', OwnerCareerCard),
+      ('収支の詳しい表', FinanceReportScreen),
+      ('クラブとオーナーの記録', ClubValueCard),
+      ('クラブとオーナーの記録', OwnerCareerCard),
     ]) {
       final item = find.descendant(of: drawer, matching: find.text(label));
       await tester.scrollUntilVisible(item, -120, scrollable: scroll);

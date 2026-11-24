@@ -10,6 +10,7 @@ import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/screens/analysis_screen.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
+import 'package:soccer_manager/screens/inbox_screen.dart';
 import 'package:soccer_manager/screens/player_compare_screen.dart';
 import 'package:soccer_manager/screens/player_detail_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
@@ -62,6 +63,8 @@ void main() {
             playerBId: game.userTeam.players[1].id,
           ),
       '分析': (_) => const AnalysisScreen(),
+      // 状況の受信箱の1行から開く(2026-11-25 にクラブニュースを一本化)。
+      '受信箱': (_) => const InboxScreen(),
     };
 
     // 画面は tap ではなく Navigator から直接開く。ボタンを押す形にすると、

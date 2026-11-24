@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/models/news_item.dart';
 import 'package:soccer_manager/screens/inbox_screen.dart';
 
@@ -62,6 +63,8 @@ void main() {
   });
 
   test('名前の並びは、件名では人数にまとめる', () {
+    Tr.language = AppLanguage.japanese;
+    addTearDown(() => Tr.language = AppLanguage.system);
     expect(InboxScreen.subjectOf('引退: 山田、佐藤、鈴木、高橋'), '引退(4人)');
     expect(InboxScreen.subjectOf('田中がクラブに加入'), '田中がクラブに加入');
   });
