@@ -13,6 +13,8 @@ const html = read('shell.html')
   .replace('/*__BOOT__*/', '')
   .replace('/*__DATA__*/', () => read('data.js'))
   .replace('/*__ENGINE__*/', () => read('engine.js'))
+  .replace('/*__LIVE__*/', () => read('live.js')) // 画面の試合は一続きの試合（前はここに入れておらず、前の作りの画面を点検していた）
+  .replace('/*__LIVEMATCH__*/', () => read('livematch.js'))
   .replace('/*__WORLD__*/', () => read('world.js'))
   .replace('/*__LEAGUE__*/', () => read('league.js'))
   .replace('/*__CLUB__*/', () => read('club.js'))
