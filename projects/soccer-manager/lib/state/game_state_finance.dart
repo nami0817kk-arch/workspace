@@ -1775,7 +1775,12 @@ extension GameStateFinance on GameState {
   RuleSet get ruleSet => _save?.ruleSet ?? RuleSet.britain;
 
   /// 規則の今の状況。今シーズンを終えたらどの罰を受けるかも含む。
-  RuleReport get ruleReport => _save == null
+  RuleReport get ruleReport => ruleReportAt();
+
+  /// [seasonOver] を true にすると、季を締めるときの判定(大陸大会の比率を
+  /// 今季の帳簿で数え、超えていれば罰)。省くと、リーグ戦を終えているかで
+  /// 決まる(季の途中は見込み)。
+  RuleReport ruleReportAt({bool? seasonOver}) => _save == null
       ? const RuleReport(statuses: [])
       : RulesEngine.evaluate(
           ruleSet: ruleSet,
@@ -1786,7 +1791,9 @@ extension GameStateFinance on GameState {
               if (l.season <= _save!.league.season) l,
           ],
           budget: _save!.budget,
-          snapshot: financeSnapshot,
+          snapshot: seasonOver == null
+              ? financeSnapshot
+              : financeSnapshot.copyWith(seasonOver: seasonOver),
         );
 
   /// 規則違反の罰で補強が禁止されているか。
@@ -1799,7 +1806,8 @@ extension GameStateFinance on GameState {
     if (save.transferBanSeasons > 0) save.transferBanSeasons -= 1;
     if (save.wageFreezeSeasons > 0) save.wageFreezeSeasons -= 1;
     if (save.wageFreezeSeasons == 0) save.wageFreezeCap = 0;
-    final penalty = ruleReport.penalty;
+    // 季を締める判定。大陸大会の比率は今季の帳簿で数える。
+    final penalty = ruleReportAt(seasonOver: true).penalty;
     if (penalty == null) return;
     if (save.league.season <= RulesEngine.graceSeasons) {
       _logNews(

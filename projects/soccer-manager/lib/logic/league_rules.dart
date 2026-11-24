@@ -227,6 +227,7 @@ class ClubFinanceSnapshot {
     this.debt = 0,
     this.inContinental = false,
     this.dueWithinYear = 0,
+    this.seasonOver = true,
   });
 
   /// 1年の収入の見込み(万円)。今の週の収入を1シーズン分。
@@ -249,6 +250,21 @@ class ClubFinanceSnapshot {
 
   /// 流動性の指標の分母(1年以内に払う額。万円)。0なら分からない。
   final int dueWithinYear;
+
+  /// 季を締めるときの判定か。false(季の途中)なら、大陸大会の比率は
+  /// 見込みで出し、違反・罰にしない。
+  final bool seasonOver;
+
+  ClubFinanceSnapshot copyWith({bool? seasonOver}) => ClubFinanceSnapshot(
+        projectedIncome: projectedIncome,
+        squadCost: squadCost,
+        equity: equity,
+        liquidity: liquidity,
+        debt: debt,
+        inContinental: inContinental,
+        dueWithinYear: dueWithinYear,
+        seasonOver: seasonOver ?? this.seasonOver,
+      );
 }
 
 /// 規則の判定。画面とシーズン終了の処理の両方がここを使う。
@@ -325,7 +341,7 @@ class RulesEngine {
         _france(ledgers, budget, snapshot, canRelegate: tier < lowestTier),
     };
     if (!snapshot.inContinental) return national;
-    final uefa = _uefa(ledgers);
+    final uefa = _uefa(ledgers, snapshot);
     final p1 = national.penalty;
     final p2 = uefa.penalty;
     return RuleReport(
@@ -657,19 +673,32 @@ class RulesEngine {
 
   /// UEFA の人件費比率。選手の給与・出場手当・移籍金の償却 ÷ (営業収入 +
   /// 選手の売却)。大陸大会に出たクラブだけ。
-  static RuleReport _uefa(List<SeasonLedger> ledgers) {
+  ///
+  /// 判定は季の終わりだけ([ClubFinanceSnapshot.seasonOver])。季の途中は、
+  /// 季の途中の帳簿だと試合の少ない時期に比率が跳ねて「違反」と出ていた
+  /// (2026-11-25 の第7段)ので、1年の人件費 ÷ 1年の収入の見込み(+ 今季
+  /// ここまでの売却)で「見込み」を出し、注意どまりにする(罰は出さない)。
+  static RuleReport _uefa(
+      List<SeasonLedger> ledgers, ClubFinanceSnapshot snap) {
     final l = ledgers.isEmpty ? null : ledgers.last;
-    if (l == null) return const RuleReport(statuses: []);
-    final revenue =
-        l.operatingIncome + max(0, l.of(LedgerCategory.playerSales));
-    final cost = l.squadCost;
+    if (l == null && snap.seasonOver) return const RuleReport(statuses: []);
+    final sales = max(0, l?.of(LedgerCategory.playerSales) ?? 0);
+    final projected = !snap.seasonOver;
+    final revenue = projected
+        ? snap.projectedIncome + sales
+        : l!.operatingIncome + sales;
+    final cost = projected ? snap.squadCost : l!.squadCost;
     final ratio = revenue <= 0 ? 0.0 : cost / revenue;
-    final level = ratio > uefaSquadCostRatio
-        ? 2
+    final over = ratio > uefaSquadCostRatio;
+    final level = over
+        ? (projected ? 1 : 2)
         : (ratio > uefaSquadCostRatio - 0.1 ? 1 : 0);
     final room = (revenue * uefaSquadCostRatio).round() - cost;
     final status = RuleStatus(
-      label: Tr.pick('大陸大会の人件費比率', 'Continental squad cost ratio'),
+      label: projected
+          ? Tr.pick('大陸大会の人件費比率(季末の見込み)',
+              'Continental squad cost ratio (season forecast)')
+          : Tr.pick('大陸大会の人件費比率', 'Continental squad cost ratio'),
       detail: Tr.pick(
           '${(ratio * 100).round()}% / 上限${(uefaSquadCostRatio * 100).round()}%',
           '${(ratio * 100).round()}% / limit ${(uefaSquadCostRatio * 100).round()}%'),
@@ -677,10 +706,15 @@ class RulesEngine {
       now: '${(ratio * 100).round()}%',
       limit: Tr.pick('${(uefaSquadCostRatio * 100).round()}%まで',
           'up to ${(uefaSquadCostRatio * 100).round()}%'),
-      gap: _gapText(
-          over: room < 0,
-          amount: formatMoney(room.abs()),
-          fix: (a) => Tr.pick('人件費をあと$a減らすと外れます', 'Cut player costs by $a to clear it')),
+      gap: projected && room < 0
+          ? Tr.pick(
+              'このままだと季末に超えます。1年の人件費をあと${formatMoney(-room)}減らすと収まります',
+              'On course to go over at season end. Cut ${formatMoney(-room)} a year of player costs to stay under')
+          : _gapText(
+              over: room < 0,
+              amount: formatMoney(room.abs()),
+              fix: (a) => Tr.pick('人件費をあと$a減らすと外れます',
+                  'Cut player costs by $a to clear it')),
     );
     if (level < 2) return RuleReport(statuses: [status]);
     final excess = cost - (revenue * uefaSquadCostRatio).round();

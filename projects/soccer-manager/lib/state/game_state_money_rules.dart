@@ -382,6 +382,21 @@ extension GameStateMoneyRules on GameState {
   void debugObserveSquadCost() => _observeSquadCost();
 
   /// 規則の判定に渡す、いまのお金の様子。
+  /// 自クラブが今季の大陸大会(2つのどちらか)に出ているか。大会そのものは
+  /// 自クラブが出ない季にもある(他国・自国の他のクラブが出る)ので、
+  /// 組に名前があるかで見る。以前は大会があるだけで大陸大会の規則を当て、
+  /// 3部のクラブにも「大陸大会の人件費比率」が出ていた(2026-11-25)。
+  bool get userInContinental {
+    final s = _save;
+    if (s == null) return false;
+    bool inCup(ContinentalCup? c) =>
+        c != null &&
+        (c.groups.any((g) => g.contains(s.userTeamId)) ||
+            c.knockoutRounds.any((r) => r.any(
+                (t) => t.teamAId == s.userTeamId || t.teamBId == s.userTeamId)));
+    return inCup(s.continentalCup) || inCup(s.secondContinentalCup);
+  }
+
   ClubFinanceSnapshot get financeSnapshot => ClubFinanceSnapshot(
         projectedIncome: projectedAnnualIncome,
         squadCost: annualSquadCost,
@@ -389,6 +404,7 @@ extension GameStateMoneyRules on GameState {
         liquidity: liquidityIndex,
         dueWithinYear: liquidityLiabilities,
         debt: outstandingLoanDebt + outstandingInstallments,
-        inContinental: _save?.continentalCup != null,
+        inContinental: userInContinental,
+        seasonOver: _save?.league.isSeasonComplete ?? true,
       );
 }

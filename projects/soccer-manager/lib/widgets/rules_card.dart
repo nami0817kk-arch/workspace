@@ -116,7 +116,7 @@ class RulesCard extends StatelessWidget {
             fact(Icons.gavel_outlined, Tr.pick('違反すると', 'If you breach'),
                 ruleSet.consequence,
                 key: const ValueKey('rules-consequence')),
-            if (save.continentalCup != null)
+            if (gameState.userInContinental)
               fact(Icons.public, Tr.pick('大陸大会', 'Continental'),
                   RulesEngine.uefaConsequence),
             if (inGrace)
