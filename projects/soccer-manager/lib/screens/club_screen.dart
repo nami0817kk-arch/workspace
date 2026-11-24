@@ -27,7 +27,6 @@ import '../widgets/player_stat_chips.dart';
 import '../widgets/youth_analytics_card.dart';
 import '../widgets/fan_segments_card.dart';
 import '../widgets/club_look_card.dart';
-import '../widgets/affiliate_card.dart';
 import '../widgets/club_license_card.dart';
 import '../widgets/season_tickets_card.dart';
 import '../logic/economy_scale.dart';
@@ -331,7 +330,17 @@ class ClubScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const ClubLicenseCard(),
               const SizedBox(height: 8),
-              const AffiliateCard(),
+              // 系列クラブ(選手の貸し借り)は移籍の話なので、移籍の「探す」へ
+              // 移した(2026-11-25)。ここには入口だけを置く。
+              PlaceLink(
+                key: const ValueKey('club-to-affiliate'),
+                icon: Icons.handshake_outlined,
+                title: Tr.pick('系列クラブは「移籍 > 探す」へ',
+                    'Feeder club: open Transfers > Search'),
+                note: Tr.pick('提携先の選手は2割引で取れ、貸し出しの相手にもなります。',
+                    'Their players come 20% cheaper, and your loans can go there.'),
+                place: TodoPlaces.transferAffiliate,
+              ),
             ],
             if (show(ClubSection.community)) ...[
               const SizedBox(height: 8),

@@ -336,7 +336,11 @@ extension GameStateTransfer on GameState {
     if (transferMarket.contains(p)) return 100;
     final stored = _save!.scoutKnowledge[p.id] ?? 0;
     final same = sameLeagueIds ?? sameLeaguePlayerIds();
-    final base = same.contains(p.id) ? ScoutKnowledge.sameLeagueBase : 0;
+    // 所属なしの選手は練習に呼んで見られるので、半分は見えている
+    // (2026-11-25。移籍の一覧を見立てでそろえたため)。
+    final base = same.contains(p.id)
+        ? ScoutKnowledge.sameLeagueBase
+        : (_save!.freeAgents.contains(p) ? ScoutKnowledge.freeAgentBase : 0);
     return max(stored, base).clamp(0, 100);
   }
 

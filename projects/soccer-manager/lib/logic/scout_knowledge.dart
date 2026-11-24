@@ -15,6 +15,9 @@ class ScoutKnowledge {
 
   static const int sameLeagueBase = 30;
 
+  /// 所属なしの選手の最初の見え方(練習に呼んで見られる)。
+  static const int freeAgentBase = 50;
+
   /// 監督が補強の案に挙げるのに要る見え方。
   static const int proposalMinimum = 30;
 
