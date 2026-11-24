@@ -689,7 +689,7 @@ extension GameUnits on Game {
             for (var i = 0; i < n && b.offers.length < 24; i++) {
               final good = rnd();
               b.offers.add(Offer(
-                  s: s, rent: .75 + rnd() * .5, mul: .85 + good * .35, riv: good > .6 ? ri(1, 3) : (rnd() < .2 ? 1 : 0)));
+                  s: s, rent: .75 + rnd() * .5, mul: .85 + good * .35, riv: offerRivals(b.ind, good > .6 ? ri(1, 3) : (rnd() < .2 ? 1 : 0))));
             }
           }
         }

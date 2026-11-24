@@ -37,6 +37,7 @@ part 'game_faces.dart';
 part 'game_real.dart';
 part 'game_units.dart';
 part 'game_people.dart';
+part 'game_corp.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -281,6 +282,9 @@ class Game {
   bool listed = false;
   int region = 0;
   Shares sh = Shares();
+
+  /// 株価・上場の準備・買う話・大口の客（1.1.0+29。game_corp.dart）
+  CorpState corp = CorpState();
   List<Biz> biz = [];
   List<Person> staff = [], cands = [], kids = [];
 
@@ -619,6 +623,11 @@ class Game {
     hist = [];
     reg = regFor(yr());
     calcAll();
+    // CPU の会社の借金と上場（1.1.0+29。店などは今の計算で客に見合う数になった）
+    if (unitsOn) {
+      cpuSeed();
+      calcAll();
+    }
     log.add(LogEntry(M('{0}年、{1}は{2}会社を立ち上げた。手元の資金は{3}。', [year, Nm(pres.name), M(hasT('noble') ? '親の援助を受けて' : 'わずかな元手で'), Y(cash)]), 'big'));
     history = [];
     chron('found', M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
@@ -896,6 +905,12 @@ class Game {
     }
     // 業種の市場の大きさは、この計算のあいだは変わらないので1回ずつだけ求める（会社が900社あると、会社ごとに求めると重い）
     final mk = <String, double>{};
+    // 1.1.0+29 から、CPU の会社も自社と同じ決まり（店などの数・借金・税・株価の式）で数える（game_corp.dart）
+    if (unitsOn) {
+      coCalcAll(T, sm, mk);
+      groupCalc();
+      return;
+    }
     for (final c in cos) {
       if (!c.alive) continue;
       var rv = 0.0, pr = 0.0;
@@ -955,6 +970,8 @@ class Game {
     var cp = math.max(0, p * .9 * 12) * per(gg) * (1 + .6 * ts) * (listed ? 1 : .6) + assets + cash - debt - bond + stakes + land;
     if (scandal > 0) cp *= .8;
     if (cooked > 0) cp *= 1.3;
+    // 上場している会社は、うわさ・決算の上ぶれ下ぶれ・減損でも動く（1.1.0+29）
+    if (unitsOn && listed) cp *= corp.noise * corp.shock;
     cap = math.max(cp, 1);
     g = gg;
   }
@@ -1014,6 +1031,7 @@ class Game {
         'listed': listed,
         'region': region,
         'sh': sh.toJson(),
+        'corp': corp.toJson(),
         'biz': biz.map((e) => e.toJson()).toList(),
         'staff': staff.map((e) => e.toJson()).toList(),
         'cands': cands.map((e) => e.toJson()).toList(),
@@ -1115,6 +1133,7 @@ class Game {
       ..listed = j['listed'] == true
       ..region = i('region')
       ..sh = Shares.fromJson(j['sh'] as Map<String, dynamic>)
+      ..corp = CorpState.fromJson(j['corp'] as Map<String, dynamic>?)
       ..biz = l('biz', Biz.fromJson)
       ..staff = l('staff', Person.fromJson)
       ..cands = l('cands', Person.fromJson)

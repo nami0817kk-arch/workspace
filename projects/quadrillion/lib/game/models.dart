@@ -3,6 +3,10 @@ library;
 
 import 'dart:collection';
 
+import 'corp_models.dart';
+
+export 'corp_models.dart';
+
 double _d(dynamic x, [double def = 0]) => x == null ? def : (x as num).toDouble();
 double? _dn(dynamic x) => x == null ? null : (x as num).toDouble();
 int _i(dynamic x, [int def = 0]) => x == null ? def : (x as num).round();
@@ -618,10 +622,13 @@ class Offer {
 class CoBiz {
   String ind;
   double power, w, rev;
-  CoBiz({required this.ind, required this.power, this.w = 0, this.rev = 0});
-  Map<String, dynamic> toJson() => {'ind': ind, 'power': power, 'w': w, 'rev': rev};
+
+  /// 店・工場などの数（育ちきった分・育ちかけの分）と、客の数で決まる売上（店の数で抑える前。1.1.0+29 から。自社と同じ決まり）
+  double u, uy, dem;
+  CoBiz({required this.ind, required this.power, this.w = 0, this.rev = 0, this.u = 0, this.uy = 0, this.dem = 0});
+  Map<String, dynamic> toJson() => {'ind': ind, 'power': power, 'w': w, 'rev': rev, if (u != 0) 'u': u, if (uy != 0) 'uy': uy};
   factory CoBiz.fromJson(Map<String, dynamic> j) =>
-      CoBiz(ind: j['ind'] as String, power: _d(j['power']), w: _d(j['w']), rev: _d(j['rev']));
+      CoBiz(ind: j['ind'] as String, power: _d(j['power']), w: _d(j['w']), rev: _d(j['rev']), u: _d(j['u']), uy: _d(j['uy']));
 }
 
 /// 宿敵（会社ごとに持つ。試作では定数を共有していた）
@@ -771,6 +778,9 @@ class Company {
   /// 顔を決めたときの社長の年齢（[Person.fb] と同じ）
   int? pfb;
 
+  /// 借金・資金繰り・隠れた問題・統合（1.1.0+29 から。古いセーブでは無し）
+  CoFin? fin;
+
   Company({
     required this.id,
     required this.name,
@@ -804,6 +814,7 @@ class Company {
     this.pf,
     this.pfn,
     this.pfb,
+    this.fin,
   })  : biz = biz ?? [],
         revHist = revHist ?? [];
 
@@ -840,6 +851,7 @@ class Company {
         if (pf != null) 'pf': pf,
         if (pfn != null) 'pfn': pfn,
         if (pfb != null) 'pfb': pfb,
+        if (fin != null) 'fin': fin!.toJson(),
       };
 
   factory Company.fromJson(Map<String, dynamic> j) => Company(
@@ -875,6 +887,7 @@ class Company {
         pf: j['pf'] as String?,
         pfn: j['pfn'] as String?,
         pfb: _in(j['pfb']),
+        fin: j['fin'] == null ? null : CoFin.fromJson(j['fin'] as Map<String, dynamic>),
       );
 }
 
