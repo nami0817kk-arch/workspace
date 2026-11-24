@@ -54,6 +54,20 @@ class TransferTalk {
   /// 分割払い(頭金3割と、残りを契約の年数で毎年)で申し込んだか。
   bool installments;
 
+  /// 分割の年数(2〜4)。0 は契約の年数に合わせる(2026-11-25 より前の形)。
+  int installmentYears;
+
+  /// 出来高(加入後に決まった数の試合に出たら払う額。万円)。0 なら無し。
+  int addOn;
+
+  /// こちらから約束した、売却時の上乗せ(将来売るときに元のクラブへ
+  /// 払う割合%)。相手が求めた[sellOnPercent]と大きい方を約束する。
+  int offeredSellOn;
+
+  /// 交換で相手に渡す自クラブの選手(いなければ null)。
+  String? exchangePlayerId;
+  String? exchangePlayerName;
+
   /// 相手の返事が来る日(返事待ちのとき)。
   DateTime? replyOn;
 
@@ -103,6 +117,11 @@ class TransferTalk {
     this.stage = TransferTalkStage.waiting,
     this.round = 1,
     this.installments = false,
+    this.installmentYears = 0,
+    this.addOn = 0,
+    this.offeredSellOn = 0,
+    this.exchangePlayerId,
+    this.exchangePlayerName,
     this.replyOn,
     this.fee = 0,
     this.sellOnPercent = 0,
@@ -141,6 +160,12 @@ class TransferTalk {
         'round': round,
         'bid': bid,
         if (installments) 'installments': true,
+        if (installmentYears > 0) 'installmentYears': installmentYears,
+        if (addOn > 0) 'addOn': addOn,
+        if (offeredSellOn > 0) 'offeredSellOn': offeredSellOn,
+        if (exchangePlayerId != null) 'exchangePlayerId': exchangePlayerId,
+        if (exchangePlayerName != null)
+          'exchangePlayerName': exchangePlayerName,
         if (replyOn != null) 'replyOn': _date(replyOn),
         if (fee > 0) 'fee': fee,
         if (sellOnPercent > 0) 'sellOnPercent': sellOnPercent,
@@ -167,6 +192,11 @@ class TransferTalk {
         round: json['round'] as int? ?? 1,
         bid: json['bid'] as int? ?? 0,
         installments: json['installments'] as bool? ?? false,
+        installmentYears: json['installmentYears'] as int? ?? 0,
+        addOn: json['addOn'] as int? ?? 0,
+        offeredSellOn: json['offeredSellOn'] as int? ?? 0,
+        exchangePlayerId: json['exchangePlayerId'] as String?,
+        exchangePlayerName: json['exchangePlayerName'] as String?,
         replyOn: _parse(json['replyOn']),
         fee: json['fee'] as int? ?? 0,
         sellOnPercent: json['sellOnPercent'] as int? ?? 0,

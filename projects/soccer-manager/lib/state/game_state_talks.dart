@@ -44,7 +44,11 @@ extension GameStateTalks on GameState {
         _save!.difficultyOf(DifficultyItem.transferPrices).transferPriceFactor;
     final affiliate =
         isAffiliateClub(club.id) ? GameStateAffiliate.priceDiscount : 1.0;
+    // 売りに出している選手は、少し安く手放す。
+    final listed =
+        isListedByClub(p) ? GameStateTransfer.listedPriceFactor : 1.0;
     return (asking *
+            listed *
             sdPriceFactor *
             distress *
             level *
@@ -57,11 +61,26 @@ extension GameStateTalks on GameState {
   }
 
   /// 移籍金[bid]を提示する(新しく申し込む、または対案に出し直す)。
-  /// [installments]なら分割払い(頭金3割と、残りを契約の年数で毎年)を求める。
+  /// [installments]なら分割払い(頭金3割と、残りを[installmentYears]年で
+  /// 毎年。0 なら契約の年数)を求める。
+  ///
+  /// FM の提示の形(2026-11-25): [addOn]は出来高(加入後に
+  /// [TransferTalkEngine.addOnApps]試合に出たら払う)、[sellOn]は売却時の
+  /// 上乗せ(%)、[exchangePlayerId]は交換で渡す自クラブの選手。相手は
+  /// これらを移籍金に直した値打ち([packageValueOf])で返事を決める。
   /// 申し込めなければ false(理由は[lastSigningBlockReason])。
   Future<bool> openTransferTalk(String playerId, int bid,
-      {bool installments = false}) async {
-    final ok = _openTalkCore(playerId, bid, installments: installments);
+      {bool installments = false,
+      int installmentYears = 0,
+      int addOn = 0,
+      int sellOn = 0,
+      String? exchangePlayerId}) async {
+    final ok = _openTalkCore(playerId, bid,
+        installments: installments,
+        installmentYears: installmentYears,
+        addOn: addOn,
+        sellOn: sellOn,
+        exchangePlayerId: exchangePlayerId);
     if (ok) {
       _notify();
       await _persist();
@@ -69,7 +88,75 @@ extension GameStateTalks on GameState {
     return ok;
   }
 
-  bool _openTalkCore(String playerId, int bid, {bool installments = false}) {
+  /// 移籍金[bid]の提示で、いま要るお金(頭金か全額と、代理人手数料)。
+  int upfrontForBid(int bid, {bool installments = false}) =>
+      (installments
+          ? (bid * TransferTalkEngine.downPaymentShare).round()
+          : bid) +
+      TransferTermsEngine.agentFee(bid);
+
+  /// 交換に出せる自クラブの選手(借りている・貸している選手と、ほかの
+  /// 交渉で交換に出している選手は除く)。
+  List<Player> exchangeCandidates({String? forPlayerId}) {
+    if (_save == null) return const [];
+    final promised = {
+      for (final t in transferTalks)
+        if (t.playerId != forPlayerId && t.exchangePlayerId != null)
+          t.exchangePlayerId!,
+    };
+    return [
+      for (final p in userTeam.players)
+        if (!p.isLoan && !p.isLoanedOut && !promised.contains(p.id)) p,
+    ]..sort((a, b) => b.marketValue.compareTo(a.marketValue));
+  }
+
+  /// 相手のクラブ[clubId]が、交換で受け取る[p]をどれだけ欲しいか
+  /// (0.6〜0.85)。その位置の先発より上なら欲しい。
+  double exchangeFitFor(Player p, String clubId) {
+    final club = _worldTeams.where((t) => t.id == clubId).firstOrNull;
+    if (club == null) return 0.75;
+    final same = [
+      for (final q in club.players)
+        if (club.startingXI.contains(q.id) &&
+            q.position.group == p.position.group)
+          q.overall,
+    ];
+    if (same.isEmpty) return 0.85;
+    return p.overall > same.reduce(min) ? 0.85 : 0.6;
+  }
+
+  /// 提示の中身を、相手が移籍金に直して見る値打ち。
+  int packageValueOf(
+    Player target, {
+    required int cash,
+    bool installments = false,
+    int installmentYears = 0,
+    int addOn = 0,
+    int sellOn = 0,
+    String? exchangePlayerId,
+  }) {
+    final ex = exchangePlayerId == null
+        ? null
+        : userTeam.players.where((p) => p.id == exchangePlayerId).firstOrNull;
+    final clubId = _sellingClubOf(target.id)?.id ?? '';
+    return TransferTalkEngine.packageValue(
+      cash: cash,
+      installments: installments,
+      installmentYears: installmentYears,
+      addOn: addOn,
+      sellOn: sellOn,
+      marketValue: target.marketValue,
+      exchangeValue: ex?.marketValue ?? 0,
+      exchangeFit: ex == null ? 0.75 : exchangeFitFor(ex, clubId),
+    );
+  }
+
+  bool _openTalkCore(String playerId, int bid,
+      {bool installments = false,
+      int installmentYears = 0,
+      int addOn = 0,
+      int sellOn = 0,
+      String? exchangePlayerId}) {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (!isTransferWindowOpen) {
@@ -102,13 +189,29 @@ extension GameStateTalks on GameState {
     final player = target.player;
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
-    final upfront = installments ? (bid * 0.3).round() : bid;
-    if (bid <= 0 ||
-        _save!.budget < upfront + TransferTermsEngine.agentFee(bid)) {
-      return _blockTalk(Tr.pick('資金が足りません(代理人手数料も要ります)。',
-          'You cannot afford it (the agent fee comes on top).'));
+    final need = upfrontForBid(bid, installments: installments);
+    if (bid <= 0) {
+      return _blockTalk(Tr.pick('移籍金を入れてください。', 'Enter a fee.'));
+    }
+    if (_save!.budget < need) {
+      return _blockTalk(Tr.pick(
+          '資金が足りません(いま${formatMoney(need)}要ります。あと${formatMoney(need - _save!.budget)})。',
+          'You cannot afford it: ${formatMoney(need)} is due now (${formatMoney(need - _save!.budget)} short).'));
+    }
+    if (exchangePlayerId != null &&
+        !exchangeCandidates(forPlayerId: playerId)
+            .any((p) => p.id == exchangePlayerId)) {
+      return _blockTalk(Tr.pick('その選手は交換に出せません。',
+          'That player cannot be offered in exchange.'));
+    }
+    if (exchangePlayerId != null && userTeam.players.length <= minSquadSize) {
+      return _blockTalk(Tr.pick('スカッドが下限の$minSquadSize人なので、交換には出せません。',
+          'Your squad is at the minimum of $minSquadSize, so nobody can go the other way.'));
     }
     if (!_wageBudgetAllowsSigning(player.wage)) return false;
+    final exchangeName = exchangePlayerId == null
+        ? null
+        : userTeam.players.firstWhere((p) => p.id == exchangePlayerId).name;
 
     final replyOn =
         today.add(const Duration(days: TransferTalkEngine.replyDays));
@@ -117,6 +220,11 @@ extension GameStateTalks on GameState {
         ..round += 1
         ..bid = bid
         ..installments = installments
+        ..installmentYears = installmentYears
+        ..addOn = max(0, addOn)
+        ..offeredSellOn = max(0, sellOn)
+        ..exchangePlayerId = exchangePlayerId
+        ..exchangePlayerName = exchangeName
         ..stage = TransferTalkStage.waiting
         ..replyOn = replyOn;
     } else {
@@ -127,6 +235,11 @@ extension GameStateTalks on GameState {
         clubName: target.club?.name ?? (player.originClubName ?? ''),
         bid: bid,
         installments: installments,
+        installmentYears: installmentYears,
+        addOn: max(0, addOn),
+        offeredSellOn: max(0, sellOn),
+        exchangePlayerId: exchangePlayerId,
+        exchangePlayerName: exchangeName,
         replyOn: replyOn,
       ));
     }
@@ -137,6 +250,54 @@ extension GameStateTalks on GameState {
             'Bid ${formatMoney(bid)} to $club for ${player.name} (${installments ? 'in instalments' : 'up front'}). Expect a reply around ${TransferWindowCalendar.formatMonthDay(replyOn)}.'),
         context: Tr.pick('移籍', 'Transfer'));
     return true;
+  }
+
+  /// 交換に出す自クラブの選手[p]を、相手のクラブ[club]へ移す。
+  void _sendInExchange(Player p, Team? club, String clubName) {
+    final team = userTeam;
+    _logMove(p, from: team.name, to: clubName, kind: PlayerMoveKind.transfer);
+    _fixNationality(p);
+    _clearPlayerRoleReferences(team, p.id);
+    team.players.remove(p);
+    final wasStarter = team.startingXI.remove(p.id);
+    _save!.incomingOffers.removeWhere((o) => o.playerId == p.id);
+    _save!.preContracts.removeWhere((c) => c.playerId == p.id);
+    _save!.sellOnClauses.remove(p.id);
+    _save!.addOnClauses.remove(p.id);
+    _writeOffBook(p.id);
+    p.isTransferListed = false;
+    p.releaseClause = null;
+    if (club != null) {
+      ContractEngine.applyTransferContract(p);
+      club.players.add(p);
+    }
+    if (wasStarter) LineupUtils.fillVacancies(team);
+    _logNews(
+        Tr.pick('${p.name}は交換で$clubNameへ移った。',
+            '${p.name} moved to $clubName as part of the deal.'),
+        context: Tr.pick('移籍', 'Transfer'));
+  }
+
+  /// 出来高: 加入後の出場が決めた数に届いた選手の分を、元のクラブへ払う。
+  /// もういない選手の分は消す。
+  void _settleAddOns() {
+    final s = _save;
+    if (s == null || s.addOnClauses.isEmpty) return;
+    for (final e in [...s.addOnClauses.entries]) {
+      final p = userTeam.players.where((x) => x.id == e.key).firstOrNull;
+      final v = e.value;
+      if (p == null || v.length < 3) {
+        s.addOnClauses.remove(e.key);
+        continue;
+      }
+      if (p.careerAppearances - v[1] < v[2]) continue;
+      s.addOnClauses.remove(e.key);
+      _payTransferFee(v[0]);
+      _logNews(
+          Tr.pick('${p.name}の出場が${v[2]}試合に届き、出来高${formatMoney(v[0])}を元のクラブへ払った。',
+              '${p.name} has reached ${v[2]} appearances, so the ${formatMoney(v[0])} add-on went to his former club.'),
+          context: Tr.pick('移籍', 'Transfer'));
+    }
   }
 
   bool _blockTalk(String reason) {
@@ -284,6 +445,19 @@ extension GameStateTalks on GameState {
 
     final inst = t != null && t.installments && t.installmentsOk;
     final fee = fa != null ? 0 : t!.fee;
+    // 交換に出す選手が、まだ自クラブにいるか。
+    final exchangeId = fa == null ? t!.exchangePlayerId : null;
+    final Player? exchange = exchangeId == null
+        ? null
+        : userTeam.players
+            .where((p) => p.id == exchangeId && !p.isLoanedOut)
+            .firstOrNull;
+    if (exchangeId != null && exchange == null) {
+      _blockTalk(Tr.pick(
+          '交換に出す約束の${t!.exchangePlayerName ?? ''}が、もう出せません。提示を出し直してください。',
+          '${t.exchangePlayerName ?? 'The player'} promised in exchange is no longer available. Make a new bid.'));
+      return TermsOutcome.blocked;
+    }
     final upfront = inst ? (fee * 0.3).round() : fee;
     // 代理人の手数料は、代理人の個性で率が違う。所属なしの選手は移籍金が
     // 無いので、年俸に対する割合で払う(以前は移籍金0に掛けて0になっていた)。
@@ -414,18 +588,31 @@ extension GameStateTalks on GameState {
     } else {
       _payTransferFee(upfront);
       if (inst) {
-        // 残りは契約の年数(2〜5年)に合わせて、季の締めに毎年払う。
+        // 残りは決めた年数(旧い話は契約の年数。2〜5年)で、季の締めに毎年払う。
         _addAnnualInstallment(
-            player, fee - upfront, endYear - Player.contractClockYear + 1);
+            player,
+            fee - upfront,
+            t.installmentYears > 0
+                ? t.installmentYears
+                : endYear - Player.contractClockYear + 1);
       }
       _bookAgentFee(player, agentFee);
-      if (t.sellOnPercent > 0) {
-        _save!.sellOnClauses[player.id] = t.sellOnPercent;
+      final sellOn = max(t.sellOnPercent, t.offeredSellOn);
+      if (sellOn > 0) {
+        _save!.sellOnClauses[player.id] = sellOn;
         _logNews(
-            Tr.pick('${player.name}の獲得で、${t.clubName}に売却条項(${t.sellOnPercent}%)を約束した。',
-                'To land ${player.name} we agreed a ${t.sellOnPercent}% sell-on clause with ${t.clubName}.'),
+            Tr.pick('${player.name}の獲得で、${t.clubName}に売却条項($sellOn%)を約束した。',
+                'To land ${player.name} we agreed a $sellOn% sell-on clause with ${t.clubName}.'),
             context: ctx);
       }
+      if (t.addOn > 0) {
+        _save!.addOnClauses[player.id] = [
+          t.addOn,
+          player.careerAppearances,
+          TransferTalkEngine.addOnApps,
+        ];
+      }
+      if (exchange != null) _sendInExchange(exchange, target!.club, t.clubName);
       _takeFromSeller(target!);
       if (fee < player.marketValue) {
         _save!.negotiationSignings++;
@@ -487,6 +674,7 @@ extension GameStateTalks on GameState {
 
   void _advanceTransferTalksInner(DateTime before, DateTime after) {
     final days = TransferWindowCalendar.daysBetween(before, after);
+    _settleAddOns();
     _advanceIncomingCounters(after);
     final talks = _save!.transferTalks;
     if (talks.isEmpty) return;
@@ -541,10 +729,18 @@ extension GameStateTalks on GameState {
           t.replyOn!.isAfter(after)) {
         continue;
       }
-      final r = TransferTalkEngine.reply(
+      final r = TransferTalkEngine.replyToPackage(
         asking: askingPriceFor(player),
-        bid: t.bid,
+        cash: t.bid,
+        value: packageValueOf(player,
+            cash: t.bid,
+            installments: t.installments,
+            installmentYears: t.installmentYears,
+            addOn: t.addOn,
+            sellOn: t.offeredSellOn,
+            exchangePlayerId: t.exchangePlayerId),
         installments: t.installments,
+        installmentYears: t.installmentYears,
         round: t.round,
         roll: GameState._transferOfferRng.nextDouble(),
       );
