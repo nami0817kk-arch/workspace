@@ -361,7 +361,7 @@ void main() {
 
   test('長押しのヒントが今のメニューに合っている（0.7.40・試作 v57）', () {
     final html = File(gameAsset).readAsStringSync();
-    expect(html, contains('モンスター＝進化・配合'));
+    expect(html, contains('ゴブリン＝進化・配合'));
     expect(html, isNot(contains('肥料・埋め戻す・ここに集まれ・主役への命令のメニューが開く')));
     // v58: 骨はモンスターが倒れても出さない（自動プレイで4周目に400〜2000本たまった）
     expect(html, isNot(contains("g.bone=(g.bone||0)+1;")));
@@ -383,13 +383,11 @@ void main() {
     expect(html, contains("tani:{n:'竜の谷',k:1.8,"));
     expect(html, contains('g.exp={ms:ms,ch:ch,d:d};'));
     expect(html, contains("var xd=ev.target.closest('[data-expd]');"));
-    // 骨の兵に弓兵（3マス先まで）と盾兵（固い）
-    expect(html, contains('<button data-x="bonea"'));
-    expect(html, contains('<button data-x="boned"'));
+    // 骨の兵の弓兵・盾兵（v66 から通路のメニューには出さない。仕組みは残す）
+    expect(html, contains("if(a=='bonea'||a=='boned'){"));
     expect(html, contains('(m.rng||S.range)?g.en.filter('));
     // 図鑑の掛け合わせ表と、見つけた組み合わせの記録
-    expect(html, contains('<h3 class="dexh">配合と特性</h3>'));
-    expect(html, contains('brdAdd(a.sp,b.sp,ch.sp);'));
+    expect(html, contains('<h3 class="dexh">血と特性と上の技</h3>'));
     expect(html, contains("kvSet('tou-brd',"));
   });
 
@@ -423,8 +421,9 @@ void main() {
     expect(html, contains('<div id="cmdsum"></div>'));
     expect(html, contains('<button data-x="altar"'));
     // 配合: 子は親のどちらか、特性を3つまで受け継ぐ
-    expect(html, contains('function breedTraits(a,b){'));
-    expect(html, contains('layEgg(ch.sp,ch.env,a.f,a.x,a.y,BREED_T,{tr:trs});'));
+    // v66 から配合は血の濃さで受け継ぐ（ゴブリンの一族）
+    expect(html, contains('function bloodOf(a,b){'));
+    expect(html, contains('layEgg(gobKey(ch.sz,ch.hd),a.env,a.f,a.x,a.y,BREED_T,{gob:ch,hpk:sumK(),atkk:sumK()});'));
     expect(html, contains('var TR={doku:'));
     expect(html, isNot(contains("if(A.line!=B.line)return {sp:'chimera',env:'sp'};")));
     // コアに体力。殴られて0で負け、運び出しは無い
@@ -442,7 +441,7 @@ void main() {
     expect(html, contains("{n:'三つの特性',"));
     expect(html, contains("{n:'コアを守り抜く',"));
     expect(html, contains("{n:'掘る力20',"));
-    expect(html, contains("{n:'骨の軍団',"));
+    expect(html, contains("{n:'濃い血',")); // v66 で骨の軍団から差し替え
     // 前のチャレンジ（掘ると生まれる前提）の記録は引き継がない
     expect(html, contains("kvGet('tou-chal2')"));
     expect(html, isNot(contains("{n:'花の守り',")));
@@ -469,8 +468,9 @@ void main() {
 
   test('召喚できない理由をコマンドの画面に出す（0.7.47・試作 v64）', () {
     final html = File(gameAsset).readAsStringSync();
-    expect(html, contains('function sumWhy(k){'));
-    expect(html, contains("'<button class=\"btn go\" data-csgo=\"1\"'+(sumWhy(k)?' disabled':'')"));
+    expect(html, contains('function sumWhy(){'));
+    // v66 から候補3匹のボタンを、呼べないときは押せなくする
+    expect(html, contains("'<button data-cpick=\"'+i+'\"'+(why?' disabled':'')"));
     // 盤の下の知らせはシートに隠れるので、コマンドの画面の一番上にも出す
     expect(html, contains('<div class="cmsg2" id="cmdmsg"></div>'));
   });
@@ -481,6 +481,35 @@ void main() {
     expect(html, contains('var oldTower=!g.alt;if(oldTower)fromOldTower();'));
     expect(html, contains('function fromOldTower(){'));
     expect(html, contains('var OLD_KEEP=40;'));
+  });
+
+  test('ゴブリンの一族: 候補3匹から召喚・血の濃さで配合・特性の段と上の技・弱点（0.7.49・試作 v66）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // ゴブリン6通り（体格 小中大 × 得手 殴る・投げる）
+    for (final k in ['gob_sm', 'gob_st', 'gob_mm', 'gob_mt', 'gob_lm', 'gob_lt']) {
+      expect(html, contains('$k:{line:'), reason: k);
+    }
+    // 召喚: はぐれゴブリンの候補3匹から1匹、引き直し
+    expect(html, contains('function summonPick(a,i){'));
+    expect(html, contains('function summonReroll(){'));
+    expect(html, contains('g.sumCand=[gobCand(),gobCand(),gobCand()]'));
+    // 血の濃さ: 濃い＝同じ特性の段+1、薄い＝新しい特性
+    expect(html, contains("return {r:r,k:r>=0.5?'koi':r>0?'futsu':'usui'};"));
+    expect(html, contains("if(B.k=='koi'){if(la&&lb)l=Math.min(3,l+1);"));
+    // 特性10・上の技10・弱点6
+    expect(html, contains("iyashi:{n:'癒し',"));
+    expect(html, contains("noroi:{n:'呪い',"));
+    expect(html, contains("var CMB={bakuen:{n:'爆炎',a:'doku',b:'hono',"));
+    expect(html, contains("var WK={yowai:{n:'体が弱い',"));
+    // 固いが受ける傷に効く（v61 では効いていなかった）
+    expect(html, contains('ad=dmgTaken(tt,ad);tt.hp-=ad;'));
+    // 見つけた上の技は周をまたいで残す（アプリ側にも保存）
+    expect(html, contains("kvSet('tou-combo',"));
+    // 卵がかえるときに止まらない（v66 の途中で eg.sp を空にして止まった）
+    expect(html, contains("var gb=m&&m.gob;if(gb)say("));
+    // 外したもの: 通路の骨の兵・コマンドの骨の兵と卵
+    expect(html, isNot(contains('<button data-x="bone5"')));
+    expect(html, isNot(contains('<div id="cmdbone"></div>')));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
