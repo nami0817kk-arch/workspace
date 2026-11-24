@@ -91,6 +91,7 @@ import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
 import '../logic/money_calendar.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/club_calendar_engine.dart';
 import '../logic/season_calendar.dart';
 import '../logic/day_events.dart';
 import '../logic/summer_tournament.dart';
@@ -2166,6 +2167,14 @@ class GameState extends ChangeNotifier {
 
   /// 直近のstartNextSeasonでの昇格・降格結果メッセージ(なければnull)。
   String? lastDivisionChangeMessage;
+
+  /// [lastDivisionChangeMessage] が良い知らせ(昇格)か。降格・プレーオフ
+  /// 敗退・ライセンス不交付は false。シーズン開始レポートで、悪い知らせに
+  /// 祝いの印を付けないために使う(2026-11-25)。
+  bool lastDivisionChangeIsGood = false;
+
+  /// 直近のスーパーカップで自クラブが勝ったか([lastSuperCupNews] の印)。
+  bool lastSuperCupWon = false;
 
   /// 直近に終えたシーズンの締めくくり。シーズン開始レポートに出す絵を
   /// 決めるために持つ。優勝は昇格より上に置く(優勝すればたいてい昇格も

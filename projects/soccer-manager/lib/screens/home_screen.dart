@@ -201,9 +201,9 @@ class HomeScreen extends StatelessWidget {
                                     // かったので、数を前に付ける(2026-11-23)。
                                     Expanded(
                                       child: Text(
-                                        Tr.pick(
-                                            '${save.currentDivisionTier}部・${gameState.leagueDisplayName}',
-                                            'Tier ${save.currentDivisionTier} • ${gameState.leagueDisplayName}'),
+                                        gameState.currentLeagueTheme
+                                            .divisionTitle(
+                                                save.currentDivisionTier),
                                         key: const ValueKey('band-league-name'),
                                         // 文字1.5倍では1行に入らず、部の名前が
                                         // 切れていた。2行まで折り返す。
@@ -1109,7 +1109,7 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
     GameState gameState,
   ) async {
-    final messages = <(String text, bool isHighlight)>[];
+    final messages = <(String text, _ReportTone tone)>[];
 
     // 節目の絵。昇格と優勝のときだけ出す。毎シーズン出すと、節目が
     // 節目でなくなる。
@@ -1127,37 +1127,45 @@ class HomeScreen extends StatelessWidget {
     gameState.lastSeasonResultLines = null;
     final message = gameState.lastDivisionChangeMessage;
     if (message != null) {
-      messages.add((message, true));
+      messages.add((
+          message,
+          gameState.lastDivisionChangeIsGood
+              ? _ReportTone.good
+              : _ReportTone.bad));
       gameState.lastDivisionChangeMessage = null;
     }
     final boardBonus = gameState.lastBoardBonusNote;
     if (boardBonus != null) {
-      messages.add((boardBonus, true));
+      messages.add((boardBonus, _ReportTone.good));
       gameState.lastBoardBonusNote = null;
     }
     final contractNote = gameState.lastManagerContractNote;
     if (contractNote != null) {
-      messages.add((contractNote, true));
+      messages.add((contractNote, _ReportTone.neutral));
       gameState.lastManagerContractNote = null;
     }
     if (gameState.lastSeasonManagerAwardWon) {
       messages.add((
         Tr.pick(
             'クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'),
-        true
+        _ReportTone.good
       ));
       gameState.lastSeasonManagerAwardWon = false;
     }
     final superCupNews = gameState.lastSuperCupNews;
     if (superCupNews != null) {
-      messages.add((superCupNews, true));
+      messages.add((
+          superCupNews,
+          gameState.lastSuperCupWon
+              ? _ReportTone.good
+              : _ReportTone.neutral));
       gameState.lastSuperCupNews = null;
     }
     final retirees = gameState.lastRetirements;
     if (retirees.isNotEmpty) {
       messages.add((
         Tr.pick('引退: ${retirees.join('、')}', "Retired: ${retirees.join(', ')}"),
-        false
+        _ReportTone.neutral
       ));
       gameState.lastRetirements = [];
     }
@@ -1166,7 +1174,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('契約満了で退団: ${contractExpired.join('、')}',
             "Left on a free at the end of their contract: ${contractExpired.join(', ')}"),
-        false
+        _ReportTone.neutral
       ));
       gameState.lastContractExpirations = [];
     }
@@ -1176,7 +1184,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('ローン期間満了で貸し元へ復帰: ${loanEndings.join('、')}',
             "Loan spells ended, returned to their parent clubs: ${loanEndings.join(', ')}"),
-        false
+        _ReportTone.neutral
       ));
       gameState.lastLoanEndings = [];
     }
@@ -1185,7 +1193,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('契約最終年に突入: ${contractWarnings.join('、')}',
             "Into the final year of their contract: ${contractWarnings.join(', ')}"),
-        false
+        _ReportTone.neutral
       ));
       gameState.lastContractWarnings = [];
     }
@@ -1194,7 +1202,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('緊急補強: ${emergencySignings.join('、')}',
             "Emergency signings: ${emergencySignings.join(', ')}"),
-        false
+        _ReportTone.neutral
       ));
       gameState.lastEmergencySignings = [];
     }
@@ -1265,18 +1273,29 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              for (final (text, isHighlight) in messages)
+              // 良い知らせ・悪い知らせ・ふつうで印を分ける。悪い知らせ
+              // (降格・プレーオフ敗退)に祝いの印が付いていた(2026-11-25)。
+              for (final (text, tone) in messages)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
-                        isHighlight ? Icons.celebration : Icons.info_outline,
+                        switch (tone) {
+                          _ReportTone.good => Icons.celebration,
+                          _ReportTone.bad => Icons.trending_down,
+                          _ReportTone.neutral => Icons.info_outline,
+                        },
+                        key: ValueKey('report-tone-${tone.name}'),
                         size: 18,
-                        color: isHighlight
-                            ? SemanticColors.ink(context, Colors.amber.shade700)
-                            : SemanticColors.ink(context, Colors.grey),
+                        color: switch (tone) {
+                          _ReportTone.good =>
+                            SemanticColors.ink(context, Colors.amber.shade700),
+                          _ReportTone.bad => SemanticColors.negative(context),
+                          _ReportTone.neutral =>
+                            SemanticColors.ink(context, Colors.grey),
+                        },
                       ),
                       const SizedBox(width: 8),
                       Expanded(child: Text(text)),
@@ -2091,3 +2110,5 @@ class _BandPill extends StatelessWidget {
   }
 }
 
+/// シーズン開始レポートの1行の調子(印の出し分け)。
+enum _ReportTone { good, bad, neutral }

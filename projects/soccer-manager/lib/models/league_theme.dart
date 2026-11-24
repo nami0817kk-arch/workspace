@@ -23,6 +23,15 @@ String continentalCupName(int level) => level <= 1
     ? Tr.pick('ヨーロピアン・チャンピオンズカップ', 'European Champions Cup')
     : Tr.pick('ヨーロッパ・カップ', 'Europa Cup');
 
+/// 保存されたリーグ名(1部の名前)と部から、部を画面に出すときの書き方を
+/// 作る([LeagueThemeInfo.divisionTitle])。国を引けない古い名前のときは、
+/// リーグ名に部を添える。
+String divisionTitleFor(String leagueName, int tier) {
+  final theme = leagueThemeFromName(leagueName);
+  if (theme != null) return theme.divisionTitle(tier);
+  return Tr.pick('$leagueName($tier部)', '$leagueName (Tier $tier)');
+}
+
 /// 保存されたリーグ名([LeagueThemeInfo.label])から国を引く。表示の言語や、
 /// 2026-11-22 に名前を実在へ寄せる前の名前(アルビオン・リーグなど)でも引ける。
 LeagueTheme? leagueThemeFromName(String? name) {
@@ -44,6 +53,13 @@ extension LeagueThemeInfo on LeagueTheme {
     final (ja, en) = _divisionNames[this]![t - 1];
     return Tr.pick(ja, en);
   }
+
+  /// 部を画面に出すときの書き方(「リーグ・ディビジョン1(3部)」)。
+  /// 状況の順位の札・シーズン成績など、部を出す所は全部これを使う
+  /// (2026-11-25。「プレミア・ディビジョン(3部)」と「3部・リーグ・
+  /// ディビジョン1」が食い違っていた)。
+  String divisionTitle(int tier) => Tr.pick(
+      '${divisionName(tier)}($tier部)', '${divisionName(tier)} (Tier $tier)');
 
   static const Map<LeagueTheme, List<(String, String)>> _divisionNames = {
     // i18n-ignore: 部の名前(日本語と英語の組)。

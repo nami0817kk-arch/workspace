@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../models/match_result.dart';
 import '../models/team.dart';
-import '../screens/match_screen.dart';
 import '../screens/player_detail_screen.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -16,8 +15,8 @@ import 'match_widgets.dart';
 ///
 /// **どの大会の試合でも、これ1つを出す**(2026-11-24)。以前はリーグ戦だけ
 /// がこのダイアログで、カップ戦は試合経過の画面、スーパーカップは状況の札
-/// から試合経過の画面と、大会ごとに見せ方が違った。試合経過は、この中の
-/// 「試合経過を見る」から開く。
+/// から試合経過の画面と、大会ごとに見せ方が違った。試合経過の画面は
+/// 利用者と決めて外した(2026-11-25「試合経過の画面は不要」)。
 ///
 /// [competition] は見出しに出す大会の名前(「リーグ戦 第8節」「国内カップ
 /// 3回戦」「親善試合」など)。[prizeNote] は勝ち上がりの賞金の知らせ。
@@ -259,20 +258,6 @@ Future<void> showMatchDigestDialog(
           ),
         ),
         actions: [
-          // 試合経過(どの大会でも同じ画面)。
-          OutlinedButton.icon(
-            key: const ValueKey('match-digest-watch'),
-            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => MatchScreen(
-                    result: result, teams: teams, title: competition),
-              ));
-            },
-            icon: const Icon(Icons.play_circle_outline, size: 18),
-            label: Text(Tr.pick('試合経過を見る', 'Match timeline')),
-          ),
           FilledButton(
             key: const ValueKey('match-digest-close'),
             style: FilledButton.styleFrom(minimumSize: const Size(120, 48)),

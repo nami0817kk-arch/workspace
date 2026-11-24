@@ -70,12 +70,8 @@ class SettingsScreen extends StatelessWidget {
             Tr.pick('表示', 'Display'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          const SizedBox(height: 4),
-          Text(
-            Tr.pick('横画面は、この設定にかかわらず暗い配色で表示します。',
-                'In landscape the app is always shown in the dark scheme, whatever you pick here.'),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          // 「横画面は、この設定にかかわらず暗い配色」の一文は消した。横画面も
+          // この設定に従う(2026-11-25)。
           const SizedBox(height: 8),
           Card(
             child: Column(

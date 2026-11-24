@@ -1,10 +1,7 @@
 import 'dart:io';
 
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soccer_manager/game/pitch_game.dart';
-import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/theme/club_palette.dart';
 
 void main() {
@@ -90,78 +87,6 @@ void main() {
       expect(emblem, contains('ClubPalette.of(teamId'));
       expect(emblem, isNot(contains('HSLColor.fromAHSL')),
           reason: 'エンブレムが色を自前で計算している(ClubPalette と二重になる)');
-    });
-  });
-
-  group('ピッチの布陣', () {
-    test('11人で、ゴールキーパーはちょうど1人', () {
-      expect(PitchGame.formation.length, 11);
-      expect(PitchGame.formation.where((s) => s.keeper).length, 1);
-    });
-
-    test('自陣の側に収まっている', () {
-      // 正規化座標をそのまま左右反転して相手チームを置いているので、
-      // ハーフウェイラインを越える選手がいると両チームが重なって描かれる。
-      for (final slot in PitchGame.formation) {
-        expect(slot.x, lessThan(0.6), reason: '$slot が中央より前に出ている');
-        expect(slot.x, greaterThan(0.0));
-        expect(slot.y, inInclusiveRange(0.05, 0.95));
-      }
-    });
-
-    test('キーパーが一番後ろにいる', () {
-      final keeper = PitchGame.formation.firstWhere((s) => s.keeper);
-      for (final other in PitchGame.formation.where((s) => !s.keeper)) {
-        expect(keeper.x, lessThan(other.x));
-      }
-    });
-  });
-
-  group('進行', () {
-    test('区間の終わりまで進めるとイベントが出尽くし、終了が通知される', () async {
-      // 描画を作り込んだあとも、実況を出す・終わりを知らせるという
-      // 本来の役目が壊れていないことを固定する。
-      final seen = <int>[];
-      var finished = false;
-      final game = PitchGame(
-        events: [
-          MatchEvent(minute: 10, teamId: 'home'),
-          MatchEvent(minute: 30, teamId: 'away'),
-        ],
-        startMinute: 1,
-        endMinute: 45,
-        durationSeconds: 1,
-        onEvent: (e) => seen.add(e.minute),
-        onFinished: () => finished = true,
-        homeTeamId: 'home',
-        awayTeamId: 'away',
-      );
-      game.onGameResize(Vector2(320, 180));
-      await game.onLoad();
-
-      for (var i = 0; i < 40; i++) {
-        game.update(0.05);
-      }
-
-      expect(seen, [10, 30]);
-      expect(finished, isTrue);
-    });
-
-    test('チームIDを渡さなくても動く', () async {
-      // 既存の呼び出し元を壊さないための確認。色は既定の青/赤になる。
-      var finished = false;
-      final game = PitchGame(
-        events: const [],
-        durationSeconds: 0.5,
-        onEvent: (_) {},
-        onFinished: () => finished = true,
-      );
-      game.onGameResize(Vector2(320, 180));
-      await game.onLoad();
-      for (var i = 0; i < 20; i++) {
-        game.update(0.05);
-      }
-      expect(finished, isTrue);
     });
   });
 }

@@ -128,7 +128,7 @@ extension GameStateDecisions on GameState {
 
   /// 答えを待っている決めごとの数(右の欄の見出し)。
   int get openDecisionCount =>
-      inboxActions.length + (_save?.pendingBoardReviewMessage != null ? 1 : 0);
+      inboxActions.length + (pendingBoardReviewMessage != null ? 1 : 0);
 
   // ---- サポーターの期待の推移 ----
 
@@ -209,6 +209,21 @@ extension GameStateDecisions on GameState {
     final id = s.userTeamId;
     return !s.league.fixtures.any(
         (f) => f.result != null && (f.homeTeamId == id || f.awayTeamId == id));
+  }
+
+  /// オフシーズンか。季の終わり(自クラブのリーグ戦の最終節のあと)から、
+  /// 次の季の開幕前(自クラブのリーグ戦がまだ1つも終わっていない)まで。
+  ///
+  /// 予算の配り方・クラブの見た目・チケットの値段・クラブの方針は、この間
+  /// だけ変えられる(2026-11-25)。シーズン中は「今季: ○○」と見せるだけ。
+  bool get isOffseason {
+    final s = _save;
+    if (s == null) return false;
+    if (isPreseason) return true;
+    final id = s.userTeamId;
+    final mine = s.league.fixtures
+        .where((f) => f.homeTeamId == id || f.awayTeamId == id);
+    return mine.isNotEmpty && mine.every((f) => f.result != null);
   }
 
   /// 開幕前の海外ツアーに出るかを、まだ決めていないか(開幕前で未決)。

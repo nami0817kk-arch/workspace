@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/auto_columns.dart';
 import '../widgets/club_culture_card.dart';
-import '../widgets/era_group_card.dart';
+import '../widgets/era_card.dart';
 import '../widgets/responsive_body.dart';
 import '../widgets/rival_owners_card.dart';
 
@@ -22,7 +22,7 @@ class OwnerWorldScreen extends StatelessWidget {
         children: [
           ClubCultureCard(),
           RivalOwnersCard(),
-          EraGroupCard(),
+          EraCard(),
         ],
       ),
     );

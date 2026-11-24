@@ -10,16 +10,23 @@ import '../theme/semantic_colors.dart';
 import 'todo_navigation.dart';
 
 /// 1か月のカレンダー(2026-11-22)。日ごとに、自クラブの試合・給料日・
-/// 放映権の入金・移籍の窓・契約の期日に印を付ける。日を押すと、その日の
-/// 予定を右に出す。
+/// 放映権の入金・移籍の窓・契約の期日に印を付ける。
 ///
 /// 試合の日は、マスに相手の短い名前・ホームかアウェイか・終わっていれば
 /// 結果を書き、大会(リーグ・カップ・大陸カップ・親善試合)ごとに色を
-/// 分ける(2026-11-24)。小さな印だけでは、どの日が試合で相手が誰かが
-/// 分からなかった。今日と次の試合のマスは枠で目立たせる。試合以外の予定は
-/// 小さな印のまま(試合を目立たせる)。
+/// 分ける(2026-11-24)。今日と次の試合のマスは枠で目立たせる。試合以外の
+/// 予定は小さな印のまま(試合を目立たせる)。
+///
+/// 2026-11-25 に作り直した: 右の「○月の予定」の一覧は月の表の繰り返し
+/// だったのでやめ、月の表を横いっぱいに使う。相手の名前は2行まで使って
+/// 「…」で切らない。横画面では月の表を送らずに1画面に収め(6週目まで)、
+/// マスを押すと、その日の詳しい予定を下から出す。縦画面では表の下に出す。
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+  const CalendarScreen({super.key, this.modeSwitch});
+
+  /// 「月」と「1年の予定」の切り替え。月の見出しの行に一緒に置く
+  /// (見出しを2段にすると、月の表が1画面に収まらない)。
+  final Widget? modeSwitch;
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -28,8 +35,15 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   DateTime? _month;
   DateTime? _selected;
+  bool _legend = false;
 
   static DateTime _monthOf(DateTime d) => DateTime(d.year, d.month);
+
+  /// 見出しの行の高さ(押せる所の48)。
+  static const double _headerHeight = 48;
+
+  /// 曜日の行の高さ。
+  static const double _weekdayHeight = 14;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +61,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final next = game.nextStop;
     final nextMatch = nextMatchDate(game);
     final selected = _selected;
-    final body = LayoutBuilder(
+    // カップ戦の画面へ移る(その日の予定から)。下から出した札の中では
+    // シェルの場所が引けないので、札を閉じてから表の側の context で移る。
+    void toCups(BuildContext from) {
+      if (ModalRoute.of(from) is ModalBottomSheetRoute) {
+        Navigator.of(from).pop();
+      }
+      openTodoPlace(context, TodoPlaces.leagueCups);
+    }
+
+    Widget dayList(DateTime day) => _DayList(
+          title: CalendarEngine.formatDate(day),
+          events: byDay[day] ?? const [],
+          today: today,
+          nextStop: next,
+          nextMatch: nextMatch,
+          onCups: toCups,
+        );
+
+    return LayoutBuilder(
       builder: (context, c) {
         final wide = c.maxWidth >= 600;
+        final scaler = MediaQuery.textScalerOf(context);
+        final lead = first.weekday - 1;
+        final rows = ((lead + last.day) / 7).ceil();
+        // 押す所は48以上。文字を大きくしたら、その分だけ伸ばす。
+        final minCell = scaler.scale(48);
+        double cellHeight = minCell;
+        if (wide && c.maxHeight.isFinite) {
+          // 横画面は、6週目の行まで送らずに見えるよう、残りの高さを行で
+          // 割る(48を下回るときは48のまま。そのときだけ送る)。
+          final rest = c.maxHeight - _headerHeight - _weekdayHeight - 2;
+          cellHeight = (rest / rows - 1).clamp(minCell, scaler.scale(96));
+        }
         final grid = _MonthGrid(
           month: month,
           today: today,
@@ -57,23 +101,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
           nextMatch: nextMatch,
           selected: selected,
           byDay: byDay,
-          onPick: (d) => setState(() => _selected = d),
+          cellHeight: cellHeight,
+          wide: wide,
+          showLegend: !wide || _legend,
+          onPick: (d) {
+            setState(() => _selected = d);
+            if (wide) _showDay(context, d, dayList);
+          },
         );
-        final list = _DayList(
-          title: selected == null
-              ? Tr.pick(
-                  '${month.month}月の予定',
-                  'In ${CalendarEngine.formatShortDate(first).split(' ').last}',
-                )
-              : CalendarEngine.formatDate(selected),
-          events: selected == null
-              ? events.where((e) => !e.date.isBefore(first)).toList()
-              : byDay[selected] ?? const [],
-          today: today,
-          nextStop: next,
-          nextMatch: nextMatch,
-        );
-        final header = Row(
+        final monthNav = Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
               tooltip: Tr.pick('前の月', 'Previous month'),
@@ -99,47 +136,106 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 _selected = null;
               }),
             ),
-            const Spacer(),
-            TextButton(
-              onPressed: () => setState(() {
-                _month = null;
-                _selected = null;
-              }),
-              child: Text(Tr.pick('今日へ', 'Today')),
-            ),
           ],
         );
+        final todayButton = TextButton(
+          onPressed: () => setState(() {
+            _month = null;
+            _selected = null;
+          }),
+          child: Text(Tr.pick('今日へ', 'Today')),
+        );
         if (!wide) {
+          // 縦画面: 切り替え・月の行・表・選んだ日の予定を縦に並べて送る。
           return ListView(
             padding: const EdgeInsets.all(8),
-            children: [header, grid, const SizedBox(height: 8), list],
+            children: [
+              if (widget.modeSwitch != null) widget.modeSwitch!,
+              // 月の行は縮めない(押す所が48を割る)。入らないときだけ縮める。
+              Row(children: [
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: monthNav,
+                  ),
+                ),
+                todayButton,
+              ]),
+              grid,
+              const SizedBox(height: 8),
+              if (selected != null)
+                dayList(selected)
+              else
+                Text(
+                  Tr.pick('日を押すと、その日の予定が出ます。',
+                      'Tap a day to see what is on.'),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: SemanticColors.subtleText(context),
+                  ),
+                ),
+            ],
           );
         }
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // マスに相手の名前を書くので、表を広めに取る(一覧は右の残り)。
               SizedBox(
-                width: (c.maxWidth * 0.68).clamp(320.0, 760.0),
-                child: SingleChildScrollView(
-                  child: Column(children: [header, grid]),
+                height: _headerHeight,
+                child: Row(
+                  children: [
+                    if (widget.modeSwitch != null) ...[
+                      widget.modeSwitch!,
+                      const SizedBox(width: 8),
+                    ],
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: monthNav,
+                      ),
+                    ),
+                    todayButton,
+                    IconButton(
+                      key: const ValueKey('calendar-legend-button'),
+                      tooltip: Tr.pick('印の見方', 'What the marks mean'),
+                      isSelected: _legend,
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () => setState(() => _legend = !_legend),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: list,
-                ),
-              ),
+              grid,
             ],
           ),
         );
       },
     );
-    return body;
+  }
+
+  /// その日の詳しい予定を下から出す(横画面)。
+  void _showDay(
+    BuildContext context,
+    DateTime day,
+    Widget Function(DateTime) dayList,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 640),
+      builder: (_) => SafeArea(
+        child: SingleChildScrollView(
+          key: const ValueKey('calendar-day-sheet'),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: dayList(day),
+        ),
+      ),
+    );
   }
 
   /// 次の試合(まだ終わっていない、今日以降でいちばん早い自クラブの試合)の日。
@@ -251,6 +347,7 @@ String _dayKey(DateTime d) =>
 Color _nextColor(BuildContext context) =>
     SemanticColors.ink(context, Colors.amber.shade700, min: 3);
 
+
 class _MonthGrid extends StatelessWidget {
   const _MonthGrid({
     required this.month,
@@ -259,6 +356,9 @@ class _MonthGrid extends StatelessWidget {
     required this.nextMatch,
     required this.selected,
     required this.byDay,
+    required this.cellHeight,
+    required this.wide,
+    required this.showLegend,
     required this.onPick,
   });
 
@@ -268,6 +368,13 @@ class _MonthGrid extends StatelessWidget {
   final DateTime? nextMatch;
   final DateTime? selected;
   final Map<DateTime, List<DayEvent>> byDay;
+  final double cellHeight;
+
+  /// 横画面か(マスが広いので、相手の名前を2行まで使う)。
+  final bool wide;
+
+  /// 印の見方を表の下に出すか(横画面では見出しの (i) で開く)。
+  final bool showLegend;
   final void Function(DateTime) onPick;
 
   @override
@@ -280,27 +387,28 @@ class _MonthGrid extends StatelessWidget {
     final cells = lead + days;
     final rows = (cells / 7).ceil();
     final subtle = SemanticColors.subtleText(context);
-    // 押す所は48以上。文字を大きくしたら、その分だけ伸ばす。
-    final cellHeight = MediaQuery.textScalerOf(context).scale(50);
     return Column(
       children: [
-        Row(
-          children: [
-            for (var w = 1; w <= 7; w++)
-              Expanded(
-                child: Center(
-                  child: Text(
-                    CalendarEngine.weekdayLabel(w),
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: w >= 6 ? scheme.primary : subtle,
+        SizedBox(
+          height: _CalendarScreenState._weekdayHeight,
+          child: Row(
+            children: [
+              for (var w = 1; w <= 7; w++)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      CalendarEngine.weekdayLabel(w),
+                      textScaler: TextScaler.noScaling,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: w >= 6 ? scheme.primary : subtle,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 2),
         for (var r = 0; r < rows; r++)
           Row(
             children: [
@@ -310,15 +418,17 @@ class _MonthGrid extends StatelessWidget {
                     builder: (context) {
                       final i = r * 7 + c - lead;
                       if (i < 0 || i >= days) {
-                        return SizedBox(height: cellHeight + 2);
+                        return SizedBox(height: cellHeight + 1);
                       }
                       final d = DateTime(month.year, month.month, i + 1);
                       return Padding(
-                        padding: const EdgeInsets.all(1),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 1, vertical: 0.5),
                         child: _DayCell(
                           day: d,
                           events: byDay[d] ?? const [],
                           height: cellHeight,
+                          wide: wide,
                           isToday: d == today,
                           isNextMatch: d == nextMatch,
                           isNextStop: d == nextStop,
@@ -332,50 +442,53 @@ class _MonthGrid extends StatelessWidget {
                 ),
             ],
           ),
-        const SizedBox(height: 6),
-        Wrap(
-          spacing: 10,
-          runSpacing: 2,
-          children: [
-            _legendBox(context, scheme.primary, Tr.pick('今日', 'Today')),
-            _legendBox(
-              context,
-              _nextColor(context),
-              Tr.pick('次の試合', 'Next match'),
-            ),
-            for (final c in MatchCompetition.values)
+        if (showLegend) ...[
+          const SizedBox(height: 6),
+          Wrap(
+            key: const ValueKey('calendar-legend'),
+            spacing: 10,
+            runSpacing: 2,
+            children: [
+              _legendBox(context, scheme.primary, Tr.pick('今日', 'Today')),
+              _legendBox(
+                context,
+                _nextColor(context),
+                Tr.pick('次の試合', 'Next match'),
+              ),
+              for (final c in MatchCompetition.values)
+                _legend(
+                  context,
+                  _competitionIcon(c),
+                  _competitionColor(context, c, min: 3),
+                  switch (c) {
+                    MatchCompetition.league => Tr.pick('リーグ戦', 'League'),
+                    MatchCompetition.cup => Tr.pick('カップ戦', 'Cup'),
+                    MatchCompetition.continental => Tr.pick(
+                        '大陸カップ',
+                        'Continental',
+                      ),
+                    MatchCompetition.friendly => Tr.pick('親善試合', 'Friendly'),
+                  },
+                ),
+              _legendText(
+                context,
+                Tr.pick('H ホーム・A アウェイ・N 中立地', 'H home • A away • N neutral'),
+              ),
               _legend(
                 context,
-                _competitionIcon(c),
-                _competitionColor(context, c, min: 3),
-                switch (c) {
-                  MatchCompetition.league => Tr.pick('リーグ戦', 'League'),
-                  MatchCompetition.cup => Tr.pick('カップ戦', 'Cup'),
-                  MatchCompetition.continental => Tr.pick(
-                      '大陸カップ',
-                      'Continental',
-                    ),
-                  MatchCompetition.friendly => Tr.pick('親善試合', 'Friendly'),
-                },
+                Icons.payments_outlined,
+                subtle,
+                Tr.pick('お金', 'Money'),
               ),
-            _legendText(
-              context,
-              Tr.pick('H ホーム・A アウェイ・N 中立地', 'H home • A away • N neutral'),
-            ),
-            _legend(
-              context,
-              Icons.payments_outlined,
-              subtle,
-              Tr.pick('お金', 'Money'),
-            ),
-            _legend(
-              context,
-              Icons.swap_horiz,
-              Colors.teal,
-              Tr.pick('移籍・契約', 'Transfers'),
-            ),
-          ],
-        ),
+              _legend(
+                context,
+                Icons.swap_horiz,
+                Colors.teal,
+                Tr.pick('移籍・契約', 'Transfers'),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }
@@ -421,14 +534,15 @@ class _MonthGrid extends StatelessWidget {
 
 /// 月の表の1マス。
 ///
-/// 試合の日: 1行目に日付とホーム/アウェイ、2行目に相手の短い名前
-/// (収まらなければ「…」)、3行目に結果(終わった試合)か大会の名前。
-/// 左の縁を大会の色にし、地もその色を薄く敷く。
+/// 試合の日: 1行目に日付・ホーム/アウェイ・節か結果、2行目から相手の
+/// 短い名前(横画面は2行まで使い、「…」で切らない)。左の縁を大会の色に
+/// し、地もその色を薄く敷く。
 class _DayCell extends StatelessWidget {
   const _DayCell({
     required this.day,
     required this.events,
     required this.height,
+    required this.wide,
     required this.isToday,
     required this.isNextMatch,
     required this.isNextStop,
@@ -440,6 +554,7 @@ class _DayCell extends StatelessWidget {
   final DateTime day;
   final List<DayEvent> events;
   final double height;
+  final bool wide;
   final bool isToday;
   final bool isNextMatch;
   final bool isNextStop;
@@ -502,85 +617,128 @@ class _DayCell extends StatelessWidget {
     } else {
       final (String, Color)? result =
           facts != null && facts.played ? _resultOf(context, facts) : null;
+      // 節(リーグ戦)か、大会の短い名前(カップ戦・親善試合)。大会の
+      // 正式な名前はマスに入らないので、押したときの予定に出す。
       final note = result?.$1 ??
-          (facts == null
-              ? ''
-              : comp == MatchCompetition.league
-                  ? (match.matchday == null
-                      ? facts.competitionName
-                      : Tr.pick('第${match.matchday}節', 'MD ${match.matchday}'))
-                  : facts.competitionName);
+          (comp == MatchCompetition.league && match.matchday != null
+              ? Tr.pick('第${match.matchday}節', 'MD ${match.matchday}')
+              : match.buttonLabel);
       final scaler = MediaQuery.textScalerOf(context);
+      final noteStyle = TextStyle(
+        fontSize: 10,
+        height: 1.1,
+        fontWeight: result != null ? FontWeight.bold : null,
+        color: result?.$2 ?? _competitionColor(context, comp!, min: 4.5),
+      );
+      final oppStyle = TextStyle(
+        fontSize: 11,
+        height: 1.15,
+        fontWeight: FontWeight.bold,
+        color: past && result == null ? subtle : scheme.onSurface,
+      );
+      final opponent = facts?.opponentShort ?? match.buttonLabel;
       content = LayoutBuilder(
         builder: (context, box) {
           // 縦の狭い画面(幅320)で文字を大きくすると、マスの幅が日付と
           // H/A の札の合計に足りない(はみ出していた)。そのときは札を
           // 下の行の頭に字で入れ、小さな印も省く。
           final narrow = box.maxWidth < scaler.scale(36);
-          final side = facts == null ? null : _sideLabel(facts.home);
-          // 字の高さは端末の字体で変わる。3行がマスの高さを超えるときは、
+          final sideLabel = facts == null ? null : _sideLabel(facts.home);
+          final Widget body;
+          if (wide && !narrow) {
+            // 横画面: 1行目に日付・H/A・節か結果、下に相手の名前を2行まで。
+            body = Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    dayText,
+                    if (facts != null) ...[
+                      const SizedBox(width: 3),
+                      _SidePill(
+                        home: facts.home,
+                        color: compColor!,
+                        key: ValueKey('cal-side-${_dayKey(day)}'),
+                      ),
+                    ],
+                    ...icons,
+                    const SizedBox(width: 2),
+                    Expanded(
+                      child: Text(
+                        note,
+                        key: ValueKey('cal-note-${_dayKey(day)}'),
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        textAlign: TextAlign.right,
+                        style: noteStyle,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  opponent,
+                  key: ValueKey('cal-opp-${_dayKey(day)}'),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: oppStyle,
+                ),
+              ],
+            );
+          } else {
+            body = Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Flexible(child: dayText),
+                    if (!narrow && facts != null) ...[
+                      const Spacer(),
+                      _SidePill(
+                        home: facts.home,
+                        color: compColor!,
+                        key: ValueKey('cal-side-${_dayKey(day)}'),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 1),
+                Text(
+                  opponent,
+                  key: ValueKey('cal-opp-${_dayKey(day)}'),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: oppStyle,
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        narrow && sideLabel != null ? '$sideLabel $note' : note,
+                        key: ValueKey('cal-note-${_dayKey(day)}'),
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: noteStyle,
+                      ),
+                    ),
+                    if (!narrow) ...icons,
+                  ],
+                ),
+              ],
+            );
+          }
+          // 字の高さは端末の字体で変わる。マスの高さを超えるときは、
           // はみ出さずに少し縮めて収める(下に切れていた)。
           return FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: box.maxWidth,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(child: dayText),
-                      if (!narrow && facts != null) ...[
-                        const Spacer(),
-                        _SidePill(
-                          home: facts.home,
-                          color: compColor!,
-                          key: ValueKey('cal-side-${_dayKey(day)}'),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 1),
-                  Text(
-                    facts?.opponentShort ?? match.buttonLabel,
-                    key: ValueKey('cal-opp-${_dayKey(day)}'),
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11,
-                      height: 1.15,
-                      fontWeight: FontWeight.bold,
-                      color: past && result == null ? subtle : scheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          narrow && side != null ? '$side $note' : note,
-                          key: ValueKey('cal-note-${_dayKey(day)}'),
-                          maxLines: 1,
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 10,
-                            height: 1.1,
-                            fontWeight: result != null ? FontWeight.bold : null,
-                            color: result?.$2 ??
-                                _competitionColor(context, comp!, min: 4.5),
-                          ),
-                        ),
-                      ),
-                      if (!narrow) ...icons,
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            child: SizedBox(width: box.maxWidth, child: body),
           );
         },
       );
@@ -668,7 +826,11 @@ class _DayList extends StatelessWidget {
     required this.today,
     required this.nextStop,
     required this.nextMatch,
+    required this.onCups,
   });
+
+  /// カップ戦の画面へ移る(押した行の context を渡す)。
+  final void Function(BuildContext) onCups;
 
   final String title;
   final List<DayEvent> events;
@@ -808,9 +970,8 @@ class _DayList extends StatelessWidget {
                 ),
               ),
       ),
-      // 一覧は表の右の狭い列に入るので、「次の試合」の印は日付の下、
-      // カップ戦の画面への入口は字の下に置く(横に並べると相手の名前が
-      // 「vs ノー…」まで削られていた)。
+      // 「次の試合」の印は日付の下、カップ戦の画面への入口は字の下に置く
+      // (縦画面の狭い幅で、横に並べると相手の名前が削られていた)。
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -849,8 +1010,7 @@ class _DayList extends StatelessWidget {
                       minimumSize: const Size(48, 48),
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                     ),
-                    onPressed: () =>
-                        openTodoPlace(context, TodoPlaces.leagueCups),
+                    onPressed: () => onCups(context),
                     icon: const Icon(Icons.chevron_right, size: 18),
                     label: Text(Tr.pick('カップ戦の画面へ', 'Open Cups')),
                   ),

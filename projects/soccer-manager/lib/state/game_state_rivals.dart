@@ -216,7 +216,7 @@ extension GameStateRivals on GameState {
         if (s == null) return out;
         for (var i = 0; i < advanceLimit; i++) {
           if (s.league.isSeasonComplete || saleReason != null) break;
-          if (inboxActions.isNotEmpty || s.pendingBoardReviewMessage != null) {
+          if (inboxActions.isNotEmpty || pendingBoardReviewMessage != null) {
             break;
           }
           final r = await playNextMatchdayQuickSim();

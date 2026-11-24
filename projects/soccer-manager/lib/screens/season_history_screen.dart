@@ -9,6 +9,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../widgets/trend_chart.dart';
 import '../l10n/tr.dart';
+import '../models/league_theme.dart';
 
 /// シーズンごとの最終成績(順位・勝敗・昇降格・カップ優勝歴)を振り返る画面。
 class SeasonHistoryScreen extends StatelessWidget {
@@ -109,8 +110,8 @@ class _SeasonRecordCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               Tr.pick(
-                  '${record.leagueName}${record.divisionTier != 1 ? '(${record.divisionTier}部)' : ''} ${record.finalRank}位 / ${record.teamCount}クラブ中',
-                  "${record.leagueName}${record.divisionTier != 1 ? ' (Tier ${record.divisionTier})' : ''} — ${Tr.ordinal(record.finalRank)} of ${record.teamCount}"),
+                  '${divisionTitleFor(record.leagueName, record.divisionTier)} ${record.finalRank}位 / ${record.teamCount}クラブ中',
+                  '${divisionTitleFor(record.leagueName, record.divisionTier)} — ${Tr.ordinal(record.finalRank)} of ${record.teamCount}'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),

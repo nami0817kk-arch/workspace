@@ -6,6 +6,7 @@ import '../logic/budget_engine.dart';
 import '../logic/economy_scale.dart';
 import '../models/budget_plan.dart';
 import '../state/game_state.dart';
+import 'offseason_lock_note.dart';
 
 /// オーナーが年の予算を5つの配り先へ配るカード。
 ///
@@ -17,6 +18,8 @@ import '../state/game_state.dart';
 /// - 減らした分は「残り」になり、好きな配り先へ足す。
 /// - 「決定」を押すまで保存しない。「元に戻す」で保存してある配分に戻る。
 /// - 残りが0%のときだけ決定できる。
+/// - 変えられるのはオフシーズン(季の終わり〜開幕前)だけ。シーズン中は
+///   操作を出さず、今季の配分を1行で見せる(2026-11-25)。
 class BudgetPlanCard extends StatefulWidget {
   const BudgetPlanCard({super.key});
 
@@ -102,6 +105,26 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final saved = gameState.budgetPlan;
+    if (!gameState.isOffseason) {
+      return Card(
+        key: const ValueKey('budget-locked'),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(Tr.pick('予算の配り方', 'Budget split'),
+                  style: theme.textTheme.titleMedium),
+              const SizedBox(height: 6),
+              OffseasonLockNote([
+                for (final c in BudgetCategory.values)
+                  '${c.label} ${saved.share(c)}%',
+              ].join(Tr.pick('・', ', '))),
+            ],
+          ),
+        ),
+      );
+    }
     final plan = _draft ?? saved;
     final dirty = _draft != null;
     final pool = gameState.annualBudgetPool;

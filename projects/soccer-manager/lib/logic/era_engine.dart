@@ -60,16 +60,3 @@ class EraEngine {
     return const [Era.tvBoom, Era.transferInflation, Era.austerity][(i - 1) % 3];
   }
 }
-
-/// 複数のクラブを持つ(オーナーの私財で、他国の1部のクラブを買う)。
-class GroupClubEngine {
-  /// 買う値段: 選手の価値の合計の6割。
-  static int price(int squadValue) => (squadValue * 0.6).round();
-
-  /// 売る値段: 選手の価値の合計の5割。
-  static int salePrice(int squadValue) => (squadValue * 0.5).round();
-
-  /// 1季の損益: 順位が上ほど儲かる(1位で値段の+8%、最下位で-6%)。
-  static int seasonProfit(int price, double rankFactor) =>
-      (price * (-0.06 + 0.14 * rankFactor)).round();
-}

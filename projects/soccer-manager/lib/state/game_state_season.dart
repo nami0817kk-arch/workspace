@@ -1155,8 +1155,6 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
-    // 持っているほかのクラブの損益(他国の1部の今季の順位で)。
-    _settleGroupClubs();
     // 他国の1部の上位を控え(大陸大会の相手)、国の係数に今季を足す。
     _rememberForeignTop();
     _updateCountryCoefficients();
@@ -1318,6 +1316,7 @@ extension GameStateSeason on GameState {
     _save!.declinedProposalIds.clear();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
+    _applyPendingClubPolicy();
     _advanceEconomy();
 
     // オーナーは雇われる立場ではないので、理事会との契約(満了で解任)は
@@ -1620,6 +1619,7 @@ extension GameStateSeason on GameState {
         .toList();
     userInvolvedInLastPromotionPlayoff = userInPromotionPlayoff;
     lastPromotionBonus = 0;
+    lastDivisionChangeIsGood = newTier < playedTier;
     if (newTier > playedTier) {
       lastDivisionChangeMessage = graceFailed
           ? Tr.pick('スタジアムがクラブライセンスの条件に届かず、降格になりました。来シーズンは$newTier部リーグでの再出発です。',
@@ -2019,6 +2019,10 @@ extension GameStateSeason on GameState {
     _pruneScoutKnowledge();
     _save!.boardReviewDoneThisSeason = false;
     _save!.pendingBoardReviewMessage = null;
+    // 「今日の一面」は前の季の最後の試合のまま残っていた(2026-11-25)。
+    // 新しい季の最初の試合で書き直されるまでは出さない。
+    _save!.frontPageHeadline = null;
+    _save!.frontPageQuote = null;
     _save!.lastManagerOfMonthCheckpoint = 0;
     // シーズン最終週に自動実施等でトレーニング済みのまま次シーズンへ入ると、
     // プレシーズン中ずっとrunWeeklyTrainingが「実施済み」扱いでブロックされて

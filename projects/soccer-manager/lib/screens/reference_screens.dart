@@ -8,7 +8,6 @@ import '../models/player.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/auto_columns.dart';
-import '../widgets/chip_switcher.dart';
 import '../widgets/club_comparison_card.dart';
 import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
@@ -20,7 +19,6 @@ import '../widgets/owner_career_card.dart';
 import '../widgets/projection_card.dart';
 import '../widgets/responsive_body.dart';
 import '../widgets/rival_card.dart';
-import '../widgets/screen_bar.dart';
 import '../widgets/trend_chart.dart';
 import 'calendar_screen.dart';
 import 'club_calendar_screen.dart';
@@ -179,7 +177,7 @@ class OwnerRecordsScreen extends StatelessWidget {
 /// 横画面では左メニューの項目(状況のすぐ下)として [embedded] で出し、
 /// 上の帯の日付を押してもこの項目に切り替わる(重ねて開かない)。縦画面では
 /// ≡ の引き出しから単独の画面として開く。
-class CalendarHubScreen extends StatelessWidget {
+class CalendarHubScreen extends StatefulWidget {
   const CalendarHubScreen({super.key, this.embedded = false});
 
   /// 左メニューの項目として埋め込まれているか。見出しの帯と戻るボタンを
@@ -187,22 +185,35 @@ class CalendarHubScreen extends StatelessWidget {
   final bool embedded;
 
   @override
+  State<CalendarHubScreen> createState() => _CalendarHubScreenState();
+}
+
+class _CalendarHubScreenState extends State<CalendarHubScreen> {
+  bool _year = false;
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    // 中の2つの画面は自分の見出しを持つので、ここでは隠す(見出しが
-    // 2段にならないように)。
-    final body = HideScreenBar(
-      child: Theme(
-        data: theme.copyWith(
-          appBarTheme: theme.appBarTheme.copyWith(toolbarHeight: 0),
-        ),
-        child: ChipSwitcher(items: [
-          (Tr.pick('月', 'Month'), (_) => const CalendarScreen()),
-          (Tr.pick('1年の予定', 'The year'), (_) => const ClubCalendarScreen()),
-        ]),
-      ),
+    // 「月」と「1年の予定」の切り替えは、中の画面の見出しの行に置く
+    // (切り替えだけで1段使うと、月の表が1画面に収まらない。2026-11-25)。
+    final modeSwitch = Wrap(
+      spacing: 6,
+      children: [
+        for (final (k, label) in [
+          (0, Tr.pick('月', 'Month')),
+          (1, Tr.pick('1年の予定', 'The year')),
+        ])
+          ChoiceChip(
+            key: ValueKey('chip-$k'),
+            label: Text(label),
+            selected: _year == (k == 1),
+            onSelected: (_) => setState(() => _year = k == 1),
+          ),
+      ],
     );
-    if (embedded) return body;
+    final body = _year
+        ? ClubCalendarScreen(modeSwitch: modeSwitch)
+        : CalendarScreen(modeSwitch: modeSwitch);
+    if (widget.embedded) return body;
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('カレンダー', 'Calendar'))),
       body: body,

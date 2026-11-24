@@ -110,6 +110,81 @@ extension GameStateCalendar on GameState {
     return out;
   }
 
+  /// 今季の大きな試合(1年の予定に載せる。2026-11-25)。国内カップの
+  /// 準決勝・決勝、スーパーカップ、大陸カップの始まり・決勝トーナメント・
+  /// 決勝。日はゲームが試合を行う日と同じ決め方(回戦・段階を消化できる
+  /// ようになる節の前の平日)。日が決まっていない古い形の大会は載せない。
+  List<ClubEvent> bigMatchEvents() {
+    final s = _save;
+    if (s == null) return const [];
+    final userId = s.userTeamId;
+    final cal = seasonCalendar;
+    final out = <ClubEvent>[];
+    String still(bool gone) => gone
+        ? Tr.pick('敗退したので、自クラブは出ない。', 'You are out, so you will not play in it.')
+        : Tr.pick('勝ち残れば、この日に戦う。', 'Win your way there and you play on this day.');
+    final dom = domesticCup;
+    if (dom != null && dom.roundDue != null && dom.totalRounds >= 2) {
+      final gone = dom.isEliminated(userId);
+      for (final (r, title) in [
+        (dom.totalRounds - 1, Tr.pick('準決勝', 'semi-finals')),
+        (dom.totalRounds, Tr.pick('決勝', 'final')),
+      ]) {
+        final due = dom.dueMatchdayFor(r);
+        if (due == null) continue;
+        out.add(ClubEvent(
+          date: SeasonCalendar.dateOnly(
+              cal.cupDateBefore(due, continental: false)),
+          kind: ClubEventKind.bigMatch,
+          title: Tr.pick('${dom.name} $title', '${dom.name} $title'),
+          detail: still(gone),
+        ));
+      }
+    }
+    final sc = s.pendingSuperCup;
+    if (sc != null) {
+      final opp = sc.homeTeamId == userId ? sc.awayTeamId : sc.homeTeamId;
+      out.add(ClubEvent(
+        date: SeasonCalendar.dateOnly(cal.superCupDate),
+        kind: ClubEventKind.bigMatch,
+        title: Tr.pick('スーパーカップ', 'Super Cup'),
+        detail: Tr.pick('${_teamById(opp)?.name ?? '-'}と1試合で争う。',
+            'A one-off match against ${_teamById(opp)?.name ?? '-'}.'),
+      ));
+    }
+    final cont = continentalCup;
+    final due = cont?.stepDue;
+    if (cont != null && due != null && due.isNotEmpty) {
+      final gone = cont.isEliminated(userId);
+      const groupSteps = (ContinentalCupEngine.groupSize - 1) * 2;
+      for (final (i, title, detail) in [
+        (
+          0,
+          Tr.pick('グループリーグ開幕', 'group stage begins'),
+          Tr.pick('4クラブの組でホームとアウェイの総当たり。',
+              'Groups of four, home and away.'),
+        ),
+        if (due.length > groupSteps)
+          (
+            groupSteps,
+            Tr.pick('決勝トーナメント', 'knockout stage'),
+            still(gone),
+          ),
+        if (due.length > 1)
+          (due.length - 1, Tr.pick('決勝', 'final'), still(gone)),
+      ]) {
+        out.add(ClubEvent(
+          date: SeasonCalendar.dateOnly(
+              cal.cupDateBefore(due[i], continental: true)),
+          kind: ClubEventKind.bigMatch,
+          title: Tr.pick('${cont.name} $title', '${cont.name} $title'),
+          detail: detail,
+        ));
+      }
+    }
+    return out;
+  }
+
   /// リーグ・カップ戦のチームを id から引く(見つからなければ null)。
   Team? _teamById(String id) {
     for (final t in allTeamsForCups) {
