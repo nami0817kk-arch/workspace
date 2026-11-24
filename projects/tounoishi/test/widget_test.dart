@@ -370,6 +370,9 @@ void main() {
     // 掲載画像の道具は 28×28 の座標に引き伸ばす
     final cap = File('tool/screenshots/capture.py').readAsStringSync();
     expect(cap, contains('function __s(v){return Math.round(v*(__N()-1)/19);}'));
+    // v61 から掘っても生まれないので、掲載画像の場面は祭壇から召喚して作る
+    expect(cap, contains('function __sum(f,ks){'));
+    expect(cap, contains("('04_cmd', r"));
   });
 
   test('遠征の行き先・骨の弓兵と盾兵・掛け合わせ表（0.7.42・試作 v59）', () {
