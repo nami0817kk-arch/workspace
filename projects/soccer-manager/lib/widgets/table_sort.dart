@@ -25,10 +25,14 @@ class TableSort {
       };
 
   /// [key]で並べた写し。[key]が null なら渡された順のまま。
-  static List<Player> sort(List<Player> players, String? key, bool asc) {
+  ///
+  /// 選手に持たない数字(今季の成績・調子など)の列は[extra]で比べる
+  /// (知らない列なら null を返す)。
+  static List<Player> sort(List<Player> players, String? key, bool asc,
+      {int? Function(Player a, Player b, String key)? extra}) {
     if (key == null) return players;
     final out = [...players]..sort((a, b) {
-        final c = _cmp(a, b, key);
+        final c = extra?.call(a, b, key) ?? _cmp(a, b, key);
         return asc ? c : -c;
       });
     return out;
