@@ -85,6 +85,11 @@ FACE_SHEETS = [
     ('faces_sheet11.png', None, None),
     ('faces_sheet12.png', None, [i for i in range(24) if i != 18]),
     ('faces_sheet13.png', None, None),
+    # 14・15枚目：同じ日に「金髪、赤髪、白髪とかもいいね」「ブルーロックのキャラとかの個性参考に」。別の Google アカウントの Gemini で、
+    # 見本の1人と2枚目のシートを渡して同じ絵柄で作った派手な髪色。左右で白と赤に分かれた髪（14-18）は既存の作品の登場人物を思わせるので外し、
+    # 14枚目とほぼ同じ顔（15-01・15-02）と、髪に網の模様が出たもの（15-09）も外した
+    ('faces_sheet14.png', None, [i for i in range(24) if i != 18]),
+    ('faces_sheet15.png', None, [i for i in range(24) if i not in (1, 2, 9)]),
 ]
 
 
