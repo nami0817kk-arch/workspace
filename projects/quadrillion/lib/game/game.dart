@@ -10,6 +10,7 @@ import 'data.dart';
 import 'econ.dart';
 import 'faces.dart';
 import 'format.dart';
+import 'ind_profile.dart';
 import 'models.dart';
 import 'models_static.dart';
 
@@ -18,6 +19,7 @@ export 'data.dart';
 export 'econ.dart';
 export 'faces.dart';
 export 'format.dart';
+export 'ind_profile.dart';
 export 'models.dart';
 export 'models_static.dart';
 
@@ -31,6 +33,7 @@ part 'game_mid.dart';
 part 'game_deleg.dart';
 part 'game_faces.dart';
 part 'game_real.dart';
+part 'game_units.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -256,6 +259,16 @@ class Game {
 
   /// 先月返した元本
   double lastPrincipal = 0;
+
+  /// 売掛金（売上のうち、まだ入っていない分。1.1.0+26）
+  double ar = 0;
+
+  /// 社長の時間を使わずに手を打っている最中か（任せた責任者・会議の提案。保存しない）
+  bool freeTime = false;
+
+  /// 店などの数で売上を抑えた倍（事業の番号 → 0〜1。1 は抑えていない）・原価・固定費の内訳（家賃・光熱費・物流費・保険料・修繕）。計算のたびに作る。保存しない
+  Map<int, double> capKOf = {}, cogsOf = {};
+  Map<int, List<double>> fixOf = {};
 
   /// 業種の分類ごとの、先月の現場の人1人の人件費（人件費を賃金の動きに合わせるため）
   Map<String, double> wiLast = {};
@@ -770,14 +783,41 @@ class Game {
     lastT = T;
     final y = yr();
     final fxCost = clampD(1 - .12 * (fxMove(home) - 1), .9, 1.06);
+    capKOf = {};
+    cogsOf = {};
+    fixOf = {};
     for (final b in biz) {
       final ind = indm[b.ind]!;
       final r = reachOf(b), x = rEff(b);
       final M = mkt(ind) * r;
-      final e = effPow(b, sm);
-      final tot = poolT(b, T) * (r / x);
+      var e = effPow(b, sm);
+      var tot = poolT(b, T) * (r / x);
+      // 売上は、客の数（事業の力とシェア）と、店などが売れる量の小さい方（1.1.0+26）。
+      // 売れる量を超えた力は奪い合いに入れない（その分だけ、ほかの会社の取り分が戻る）
+      var k = 1.0;
+      if (unitsOn && M > 0 && e > 0) {
+        final cr = capRev(b);
+        final rev0 = tot > 0 ? M * e / tot / 3 : 0.0;
+        if (rev0 > cr) {
+          final pp = poolT(b, T);
+          final sh = 3 * cr * (r / x) / M;
+          k = sh >= 1
+              ? 1
+              : sh <= 0
+                  ? 0
+                  : clampD(sh * (pp - e) / ((1 - sh) * e), 0, 1);
+          final d = e * (1 - k);
+          final t = T[b.ind]!;
+          for (var i = 0; i < t.length; i++) {
+            t[i] -= d;
+          }
+          e *= k;
+          tot = poolT(b, T) * (r / x);
+        }
+      }
+      capKOf[b.id] = k;
       b.share = tot > 0 ? e / tot : 0;
-      b.rev = M * b.share / 3;
+      b.rev = M * b.share / 3 * (unitsOn ? seasonF(b) : 1);
       var mg = ind.mg *
           (b.price == 'cut'
               ? .55
@@ -805,7 +845,19 @@ class Game {
       if (b.attack > 0) mg *= .7;
       // 原料を外から買う業種は、自国の通貨が安くなると原価が上がる（3年前と比べた為替。1.1.0+25）
       if (ind.cat == 'make' || ind.cat == 'ene' || ind.cat == 'food') mg *= fxCost;
-      b.profit = b.rev * mg - (b.ad > 0 ? b.adCost : 0) - b.upkeep * (['make', 'food'].contains(ind.cat) && hasDeal('outsrc') ? .7 : 1);
+      final up = b.upkeep * (['make', 'food'].contains(ind.cat) && hasDeal('outsrc') ? .7 : 1);
+      b.profit = b.rev * mg - (b.ad > 0 ? b.adCost : 0) - up;
+      if (unitsOn) {
+        // 店などの固定費（家賃・光熱費・物流・保険・修繕）。粗利はその分だけ厚く、育ちきって売り切れば今までの利益率になる。
+        // 売れ残る（客が足りない）・育っていない・拠点が無いと、固定費が利益を食う
+        final pf = prof(b);
+        final fx = fixedCost(b), pen = hubPen(b);
+        final sp = b.sv * svPayOne(b), hr = b.hubs.length * hubRun(b);
+        b.profit += b.rev * (pf.fixed - pen) - fx - sp - hr;
+        cogsOf[b.id] = math.max(0.0, b.rev * (1 - mg - pf.fixed));
+        final sl = KIND_FIX_SPLIT[pf.kind]!;
+        fixOf[b.id] = [for (var i = 0; i < 5; i++) fx * sl[i] + (i == 2 ? b.rev * pen + hr : 0)];
+      }
     }
     // 業種の市場の大きさは、この計算のあいだは変わらないので1回ずつだけ求める（会社が900社あると、会社ごとに求めると重い）
     final mk = <String, double>{};
@@ -850,7 +902,10 @@ class Game {
     final sb = subs();
     final sp = sb.fold(0.0, (s, c) => s + c.profit * pctOf(c) / 100);
     final it = loanInterest();
-    final h0 = (biz.length * 1e5 + 3.3e4) * nom() * (holding ? 1.5 : 1);
+    // 本社の経費。1.1.0+26 から、事業1つごとの決まった額を小さくし、売上の1.5%（大きな会社ほど本社も大きい）を足す
+    final h0 = unitsOn
+        ? ((biz.length * 2e4 + 3.3e4) * nom() + biz.fold(0.0, (a, b) => a + math.max(0.0, b.rev)) * .015) * (holding ? 1.5 : 1)
+        : (biz.length * 1e5 + 3.3e4) * nom() * (holding ? 1.5 : 1);
     final p = own + sp - salaries() - it - h0;
     pre = p;
     interest = it;
@@ -917,6 +972,8 @@ class Game {
         'ytdPre': ytdPre,
         'ytdTax': ytdTax,
         'lastPrincipal': lastPrincipal,
+        'ar': ar,
+        'reg': reg,
         'wiLast': wiLast,
         'expLast': expLast,
         'listed': listed,
@@ -1016,6 +1073,7 @@ class Game {
       ..ytdPre = d('ytdPre')
       ..ytdTax = d('ytdTax')
       ..lastPrincipal = d('lastPrincipal')
+      ..ar = d('ar')
       ..wiLast = md('wiLast') ?? {}
       ..expLast = md('expLast') ?? {}
       ..listed = j['listed'] == true
@@ -1087,7 +1145,9 @@ class Game {
       ..ach = mi('ach')
       ..everInd = {for (final e in (j['everInd'] as List? ?? [])) e as String};
     s.events = [];
-    s.reg = regFor(s.yr());
+    // 地域の重み（1.1.0+26 から保存する。月の初めに求めた値なので、読み込んだ月の値で作り直すと、続きの進み方がわずかに変わっていた）
+    final rg = j['reg'] as List?;
+    s.reg = rg != null && rg.length == 3 ? [for (final x in rg) (x as num).toDouble()] : regFor(s.yr());
     final saved = j['indM'] as Map?;
     s.indM = {for (final ind in s.inds) ind.id: saved != null && saved[ind.id] != null ? (saved[ind.id] as num).toDouble() : s.mkt(ind)};
     // 1.0.0+7 までのセーブには足した業種がない。生まれたことにして、次の月に CPU の会社を置く（知らせは出さない）
@@ -1098,6 +1158,12 @@ class Game {
           s.lateInds.add(ind.id);
         }
       }
+    }
+    // 店などの数は 1.1.0+26 から。それより前のセーブの事業（sites を持たない）には、売上から見積もって置く
+    // （今の版のセーブで数が0の事業は、解約や古くなって0になったものなので、そのままにする）
+    final rawBiz = j['biz'] as List;
+    for (var i = 0; i < s.biz.length && i < rawBiz.length; i++) {
+      if ((rawBiz[i] as Map)['sites'] == null) s.ensureUnits(s.biz[i]);
     }
     s.calcAll();
     // 古いセーブには最大値がないので、残っている推移から埋める

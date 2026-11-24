@@ -44,6 +44,9 @@ void main() {
 
   test('セーブと読み込みの往復で中身が変わらず、その後の進み方も同じ', () {
     final s = _grown(seed: 21, months: 72);
+    // 読み込むと数字を計算し直す。出来事を片付けたあとの元の会社も、計算し直してから比べる
+    // （1.1.0+26 から、店などで売上を抑えた倍を、人手の見積もりに使う。片付けた出来事で古いままだと、続きの手が変わる）
+    s.calcAll();
     final j1 = jsonEncode(s.toJson());
     final back = Game.fromJson(jsonDecode(j1) as Map<String, dynamic>, rng: ParkMiller(1));
     expect(jsonEncode(back.toJson()), j1);
@@ -72,7 +75,8 @@ void main() {
     _fill(s);
     final b = s.biz.first;
     expect(tx(s.develop(b, .1)), contains('開発'));
-    expect(tx(s.build(b, .1)), contains('か月後に開きます'));
+    // 1.1.0+26 から、お金の割合の「店を増やす」は、今いちばん要る伸ばす手（開く・責任者を育てる・本部・拠点）を打つ
+    expect(tx(s.build(b, .1)), anyOf(contains('開き始めました'), contains('育て始めました'), contains('置きました'), contains('拠点を作り始めました'), contains('増やせません')));
     expect(tx(s.addCrew(b, .05)), contains('現場の人'));
     expect(tx(s.adv(b)), contains('広告'));
     expect(s.invest(b, .05), isNotEmpty);
@@ -204,7 +208,11 @@ void main() {
     expect(s.cos.any((c) => c.formerMine), isTrue);
     // 約束の業種には入れない。破ると裁判
     final banned = s.noncomp!.inds.first;
+    // 元手が足りない理由で断られないよう、お金は足りている形で確かめる（1.1.0+26 から売値が店などの数で変わり、元手に届かないことがある）
+    final cash0 = s.cash;
+    s.cash = 1e15;
     expect(tx(s.startBiz(banned)), contains('約束'));
+    s.cash = cash0;
     expect(tx(s.breakNoncomp()), contains('約束を破る'));
     expect(s.suits.single.against, isTrue);
     for (var i = 0; i < 30; i++) {

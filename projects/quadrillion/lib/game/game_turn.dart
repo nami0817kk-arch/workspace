@@ -181,7 +181,9 @@ extension GameTurn on Game {
       if (b.ad > 0) b.ad--;
       if (b.war > 0) b.war--;
       final p = staffById(b.mgr);
-      if (p != null && b.profit > 0) {
+      // 1.1.0+26 から、店などが売り切れている（客は余っている）あいだは、責任者は稼ぎを客集めに回さない（回しても売上は増えない）
+      final full = unitsOn && (capKOf[b.id] ?? 1) < .97;
+      if (p != null && b.profit > 0 && !full) {
         var rate = .3;
         if (p.trait == 'careful') rate = .15;
         if (p.trait == 'gambler') rate = .6;
@@ -193,7 +195,7 @@ extension GameTurn on Game {
         if (p.trait == 'frugal') eff *= .8;
         b.power += gain * eff * .6;
         b.crew = crewOf(b) + gain * eff * .8;
-        if (p.amb > 75 && b.share < .15 && b.price != 'cut' && p.trait != 'charm' && rnd() < .08) {
+        if (p.amb > 75 && b.share < .15 && b.price != 'cut' && p.trait != 'charm' && rnd() < .08 && !full) {
           b.price = 'cut';
           p.ambKnown = true;
           N(M('{0}が勝手に「{1}」で値下げ合戦を始めました。野心が強い人のようです', [Nm(p.name), I(b.ind)]), 'bad');
@@ -224,6 +226,8 @@ extension GameTurn on Game {
         N(M('「{0}」の加盟店で不祥事が起き、看板に傷がつきました', [I(b.ind)]), 'bad');
       }
     }
+    // 店などの育ち・解約・許可・物件（1.1.0+26）
+    monthUnits(N);
     // 仕掛かり中の打ち手
     for (final b in biz.toList()) {
       if (b.pipe.isNotEmpty) {
@@ -326,6 +330,11 @@ extension GameTurn on Game {
     // 税金は国と年の法人税率で、今年の利益の積み上げにかける（赤字の月は今年払った分から戻る。1.1.0+25）
     final tax = monthTax(p0);
     cash += p0 - tax;
+    // 売掛金：代金をもらうまでの月が長い業種は、売上が伸びた分だけ現金が遅れて入る（1.1.0+26）
+    // （売掛は4か月かけて今の売上に追いつく。始めた月に数か月分の現金がいきなり消えないように）
+    final ar1 = ar + (receivables() - ar) * .25;
+    cash -= ar1 - ar;
+    ar = ar1;
     lastTax = tax;
     for (final c in subs()) {
       if (c.profit > 0) cash += c.profit * .4 * pctOf(c) / 100;
@@ -377,6 +386,10 @@ extension GameTurn on Game {
       N(M('売ったときの「同じ業種に入らない」約束の期限が切れました'));
     }
     calcAll();
+    for (final b in biz) {
+      b.rh.add(b.rev);
+      if (b.rh.length > 13) b.rh.removeAt(0);
+    }
     hist.add(HistEntry(t: '$year-$q', cap: cap, rev: rev, cash: cash, pre: pre));
     if (hist.length > 1200) hist.removeAt(0);
     // 社長の時間と体力（使った時間で体力が動き、新しい月の時間に戻る）
@@ -972,6 +985,7 @@ extension GameTurn on Game {
 
   void finishPipe(Biz b, Pipe x, void Function(String, [String]) N) {
     final name = I(b.ind);
+    if (finishUnitPipe(b, x, N)) return;
     if (x.k == 'enter') {
       addCtry(b, x.c!, x.mode!, x.pw ?? x.cost);
       N(M(x.mode == 'jv' ? '「{0}」が{1}で始まりました（地元の会社と組んで）' : '「{0}」が{1}で始まりました', [name, C(x.c!)]), 'good');
@@ -982,6 +996,8 @@ extension GameTurn on Game {
       if (hasT('gambler') && rnd() < .2) eff *= .3;
       b.power += x.cost * eff;
       b.upkeep = b.upkeep + x.cost * .006;
+      // 1.1.0+26 から、広げる手は改装（今ある単位の売上の倍が上がる）
+      if (x.ext && unitsOn) b.upg = math.min(upgMax, b.upg + upgStep);
       // 広げたぶんは「新しい店が開いた」とは言わない（増やしたのと区別がつかなかった。1.0.0+18）
       N(M(x.ext ? '「{0}」の{1}を広げ終わりました' : '「{0}」の新しい{1}が開きました', [name, uw(b)]), 'good');
       return;
@@ -1047,7 +1063,7 @@ extension GameTurn on Game {
             : .25;
     final cost = cash * bigF;
     final opts = <Proposal>[];
-    if (crewEff(b) < b.power * .95) {
+    if (crewEff(b) < crewWant(b) * .95) {
       opts.add(Proposal(k: 'crew', w: 3, cost: cash * .15, l: M('「{0}」の現場の人を増やしたい', [I(ind.id)]), d: M('今のままでは{0}の一部が止まっています', [uw(b)])));
     }
     opts.add(Proposal(k: 'build', w: t == 'careful' ? 1 : 2, cost: cost, l: M('「{0}」の{1}を増やしたい', [I(ind.id), uw(b)]), d: M('客は来ています。広げれば確実に伸びます')));
@@ -1110,7 +1126,12 @@ extension GameTurn on Game {
           ..n = n);
       }
     }
-    final bi = self ? null : [for (var i = bigI; i >= 0; i--) i].where((i) => buildCost(b, buildUnits[i]) <= cash).firstOrNull;
+    // 1.1.0+26 から、店などを増やす提案は、今いちばん要る伸ばす手（責任者を育てる・本部・拠点・開く）
+    final go = self || !unitsOn ? null : growOpt(b, cash * .6, want: buildUnits[bigI]);
+    if (go != null) {
+      opts.add(Proposal(k: 'grow', w: t == 'careful' ? 1 : 2, cost: go.cost, l: go.l, d: M('客は来ています。広げれば確実に伸びます')));
+    }
+    final bi = self || unitsOn ? null : [for (var i = bigI; i >= 0; i--) i].where((i) => buildCost(b, buildUnits[i]) <= cash).firstOrNull;
     if (bi != null) {
       final n = buildUnits[bi];
       opts.add(Proposal(k: 'build', w: t == 'careful' ? 1 : 2, cost: buildCost(b, n), l: M('「{0}」で{1}増やしたい', [I(ind.id), unitsOf(b, n)]), d: M('客は来ています。広げれば確実に伸びます'))
@@ -1240,6 +1261,10 @@ extension GameTurn on Game {
     } else if (o.k == 'dev' && o.sz != null) {
       cash -= o.cost;
       b.pipe.add(Pipe(k: 'dev', cost: o.cost, left: ri(devMonths[o.sz!].$1, devMonths[o.sz!].$2), by: p.id, sz: o.sz));
+    } else if (o.k == 'grow') {
+      final go = growOpt(b, cash);
+      if (go == null) return M('その提案はもう意味がなくなっていました');
+      go.run();
     } else if (o.k == 'build' || o.k == 'dev') {
       cash -= o.cost;
       b.pipe.add(Pipe(k: o.k, cost: o.cost, left: o.k == 'dev' ? ri(3, 6) : ri(1, 2), by: p.id));
@@ -1276,7 +1301,9 @@ extension GameTurn on Game {
       if (biz.any((x) => x.ind == o.ind)) return M('その業種にはもう入っていました');
       cash -= o.cost;
       b.mgr = null;
-      biz.add(Biz(id: uid(), ind: o.ind!, power: o.cost * newPow, crew: o.cost * newPow * 1.2, mgr: p.id));
+      final nb = Biz(id: uid(), ind: o.ind!, power: o.cost * newPow, crew: o.cost * newPow * 1.2, mgr: p.id);
+      biz.add(nb);
+      initUnits(nb, o.cost);
     }
     p.loy = math.min(99, p.loy + 3);
     p.rej = 0;

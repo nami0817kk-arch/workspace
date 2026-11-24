@@ -35,7 +35,7 @@ void main() {
       expect(g.over, isNull);
       expect(g.biz.length, inInclusiveRange(20, 30));
       expect(g.holding, isTrue);
-      expect(g.listed, isTrue);
+      // 上場（年の利益3億円が条件）は 1.1.0+26 から入らないことがある（店などの数で伸びが遅くなった）。子会社の上場は見る
       expect(g.locals(), isNotEmpty);
       expect(g.subs().where((c) => c.loc == null), isNotEmpty);
       expect(g.subs().where((c) => c.listed), isNotEmpty);
@@ -90,6 +90,8 @@ void main() {
         loc.locRiv = foe.id;
         loc.locRivPct = 12;
         g.ap = g.apMax;
+        // 買い戻せるお金を持たせる（1.1.0+26 から伸びが遅くなり、育った会社の手元が少ないことがある）
+        g.cash = 1e15;
         g.calcAll();
         p.where = '子会社のカード';
         await p.tab('stock');
@@ -134,6 +136,8 @@ void main() {
 
     testWidgets('会社を2つに割るのは、1つのボタンから小窓で分類を選ぶ', (tester) async {
       final g = _grown();
+      // 会社を2つに割るのは上場している会社だけ。1.1.0+26 から育った会社が上場していないことがあるので、上場した形で見る
+      g.listed = true;
       final p = await Pilot.launch(tester, game: g);
       await p.tab('stock');
       final cats = <String>{for (final b in g.biz) indm[b.ind]!.cat};
@@ -182,7 +186,7 @@ void main() {
       for (final g in [a, b]) {
         // 人手不足の事業を3つ作る
         for (final x in g.biz.where((x) => x.model != 'fc').take(3)) {
-          x.crew = g.crewOf(x) * .6;
+          x.crew = g.crewOf(x) * .02; // 1.1.0+26 から、店などの数で売上が頭打ちのときは要る人が少ないので、人手不足を作るときは大きく減らす
         }
         g.calcAll();
         // 社長の時間を、人を雇う2回ぶんだけ残す（1.1.0+25 から手ではなく時間）
@@ -244,11 +248,12 @@ void main() {
     testWidgets('見出しを押すと一覧ごとたためて、「新しい事業」がすぐ下に来る。まとめての手が押せる', (tester) async {
       final g = _grown();
       for (final x in g.biz.where((x) => x.model != 'fc').take(2)) {
-        x.crew = g.crewOf(x) * .6;
+        x.crew = g.crewOf(x) * .02; // 1.1.0+26 から、店などの数で売上が頭打ちのときは要る人が少ないので、人手不足を作るときは大きく減らす
       }
       g.calcAll();
       g.cash = 1e14;
-      final p = await Pilot.launch(tester, game: g);
+      // 見出しでたたむ・並べ替え・まとめての手の欄は1つの列の事業の画面のもの（1.1.0+26 から、真ん中が幅520以上なら2列）。幅600の窓で見る
+      final p = await Pilot.launch(tester, game: g, size: const Size(600, 590));
       await p.tab('biz');
       expect(g.biz.length, greaterThanOrEqualTo(bizManyMin));
       expect(find.byKey(const ValueKey('biz-attn')), findsOneWidget);
@@ -416,16 +421,23 @@ void main() {
   group('回Eの残り', () {
     test('「今ある店を広げる」は、仕掛かりの札・行・開いたときの知らせが「増やす」と別になる', () {
       final g = _grown();
-      final b = g.biz.firstWhere((b) => b.pipe.isEmpty && b.model != 'fc');
+      final b = g.biz.firstWhere((b) => b.pipe.isEmpty && b.model != 'fc' && g.kindB(b) == 'shop');
       g.cash = 1e14;
       g.ap = 2;
+      // 1.1.0+26 から「増やす」は物件と店長の分だけ開く（仕掛かりの種類は open）。「広げる」は改装で、仕組みの上では今までどおり建設（build）
+      b.leads = 3;
+      b.lic = 0;
+      b.upg = 1;
+      b.offers = [Offer(s: g.siteKeys(g.home, 'shop').first)];
       g.extendN(b);
+      g.ap = 2;
       g.buildN(b, 1);
-      expect(b.pipe.map((x) => x.k), ['build', 'build'], reason: '仕組みの上では、どちらも建設のまま');
-      expect(b.pipe.map(pipeKind), ['ext', 'build']);
+      expect(b.pipe.map((x) => x.k), ['build', 'open']);
+      expect(b.pipe.map(pipeKind), ['ext', 'open']);
       expect(pipeKindName('ext'), '拡張中');
+      expect(pipeKindName('open'), '開く準備');
       expect(pipeKindName('build'), '建設中');
-      expect(pipeGroups(b).map((x) => x.k), ['ext', 'build']);
+      expect(pipeGroups(b).map((x) => x.k), ['ext', 'open']);
       expect(pipeText(g, b, b.pipe[0]), contains('今ある${txIn(g.uw(b), 'ja')}を広げる'));
       expect(pipeText(g, b, b.pipe[1]), isNot(contains('広げる')));
       // セーブを読み直しても残る。古いセーブ（印なし）は「増やす」として読む
@@ -446,10 +458,15 @@ void main() {
 
     testWidgets('事業のカードで、広げている分は「拡張中」の札で出る', (tester) async {
       final g = _grown();
-      final b = g.biz.firstWhere((b) => b.pipe.isEmpty && b.model != 'fc');
+      final b = g.biz.firstWhere((b) => b.pipe.isEmpty && b.model != 'fc' && g.kindB(b) == 'shop');
       g.cash = 1e14;
       g.ap = 2;
+      // 1.1.0+26 から「増やす」は物件と店長の分だけ開く（札は「開く準備」）
+      b.leads = 3;
+      b.upg = 1;
+      b.offers = [for (var i = 0; i < 3; i++) Offer(s: g.siteKeys(g.home, 'shop').first)];
       g.extendN(b);
+      g.ap = 2;
       g.buildN(b, 3);
       final p = await Pilot.launch(tester, game: g);
       await p.tab('biz');
@@ -459,7 +476,7 @@ void main() {
       final card = find.ancestor(of: find.byKey(ValueKey('grp-grow-${b.id}')), matching: find.byType(Panel)).first;
       expect(await p.reveal(find.byKey(ValueKey('grp-grow-${b.id}'))), isTrue);
       expect(find.descendant(of: card, matching: find.text('拡張中')), findsOneWidget);
-      expect(find.descendant(of: card, matching: find.text('建設中')), findsOneWidget);
+      expect(find.descendant(of: card, matching: find.text('開く準備')), findsOneWidget);
       expect(p.found, isEmpty, reason: p.found.join('\n'));
     });
 
@@ -626,7 +643,7 @@ void main() {
             loc.locRivPct = 18;
           }
           for (final x in g.biz.where((x) => x.model != 'fc').take(3)) {
-            x.crew = g.crewOf(x) * .7;
+            x.crew = g.crewOf(x) * .02; // 1.1.0+26 から、店などの数で売上が頭打ちのときは要る人が少ないので、人手不足を作るときは大きく減らす
           }
           final top = (g.biz.toList()..ssort((x, y) => y.rev.compareTo(x.rev))).first;
           g.ap = g.apMax;

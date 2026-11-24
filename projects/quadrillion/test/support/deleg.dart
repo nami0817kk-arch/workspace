@@ -91,7 +91,7 @@ double expGain(Game g, Biz b, String k, double cost) {
   final c0 = g.cash;
   try {
     var need = g.crewNeedPeople(b);
-    if (need > 0 && g.crewEff(b) < b.power * .95) {
+    if (need > 0 && g.crewEff(b) < g.crewWant(b) * .95) {
       if (g.hireCost(b, need) > room) need = (room / g.hireCost(b, 1)).floor();
       if (need > 0) {
         g.hireN(b, need);
@@ -185,7 +185,7 @@ DelegVs delegVsBest(Game base, {int months = 60, int budget = 1, int seed = 5}) 
 (String, double) _peekBest(Game g, Biz b) {
   final room = math.min(g.delegBudget(b), g.cash - g.delegReserve());
   final need = g.crewNeedPeople(b);
-  if (need > 0 && g.crewEff(b) < b.power * .95 && (g.hireCost(b, need) <= room || (room / g.hireCost(b, 1)).floor() > 0)) return ('crew', 0);
+  if (need > 0 && g.crewEff(b) < g.crewWant(b) * .95 && (g.hireCost(b, need) <= room || (room / g.hireCost(b, 1)).floor() > 0)) return ('crew', 0);
   if (b.pipe.length >= 3) return ('none', 0);
   var best = ('none', 0.0);
   for (final o in <(String, double)>[

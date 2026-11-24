@@ -448,12 +448,27 @@ class Pilot {
     if (ctl.tab != id) note('タブ $id に替わらない');
   }
 
+  /// 事業の画面が2列（左に一覧・右に中身。1.1.0+26）か
+  bool get _split => _has(find.byKey(const ValueKey('biz-new')));
+
+  /// 2列の画面で、右に「新しい事業」の一覧を出す（1つの列の画面では何もしない）
+  Future<void> _newList() async {
+    if (_split && !ctl.bizNew && s.biz.isNotEmpty) await pressKey('biz-new');
+  }
+
+  /// その事業のカードが見えるようにする（2列なら左の一覧で選ぶ。1つの列で3つ以上なら行を開く）
+  Future<void> _select(Biz b) async {
+    if (_split) {
+      if (ctl.openBiz != b.id || ctl.bizNew) await pressKey('biz-row-${b.id}');
+    } else if (s.biz.length >= 3 && ctl.openBiz != b.id) {
+      await pressKey('biz-row-${b.id}');
+    }
+  }
+
   /// 事業のカードを開いて、その中のボタンの組を返す
   Future<Finder> _card(Biz b, String grp) async {
     await tab('biz');
-    if (s.biz.length >= 3 && ctl.openBiz != b.id) {
-      await pressKey('biz-row-${b.id}');
-    }
+    await _select(b);
     // ボタンの3つの組は「ほかの手」の中（1.0.0+20）。たたまれていれば開く
     if (ctl.moreBiz != b.id) await pressKey('biz-more-${b.id}');
     final g = find.byKey(ValueKey('grp-$grp-${b.id}'));
@@ -471,7 +486,7 @@ class Pilot {
   /// 事業のカードを開いて（「ほかの手」はたたんだまま）、カードを返す
   Future<Finder> card(Biz b) async {
     await tab('biz');
-    if (s.biz.length >= 3 && ctl.openBiz != b.id) await pressKey('biz-row-${b.id}');
+    await _select(b);
     if (ctl.moreBiz == b.id) await pressKey('biz-more-${b.id}');
     final c = find.byKey(ValueKey('biz-card-${b.id}'));
     await reveal(c);
@@ -485,8 +500,37 @@ class Pilot {
 
   // ===== 手 =====
   Future<void> build(Biz b) async {
-    final n = buildUnits.reversed.where((n) => s.buildCost(b, n) <= s.cash * .4).firstOrNull;
-    if (n == null || s.ap < 1) return;
+    if (s.ap < 1) return;
+    // 1.1.0+26 から、増やす小窓は「開く・責任者を育てる・本部・物流の拠点・改装」。今いちばん要る手を、小窓の選び肢から打つ
+    final go = s.unitsOn ? s.growOpt(b, s.cash * .4, want: 1, time: true) : null;
+    if (go == null) return;
+    final k = s.kindB(b);
+    String label;
+    double cost;
+    String hk;
+    switch (go.k) {
+      case 'build':
+        final site = s.openSites(b, 3).first;
+        // 他社と取り合う物件は、取られるとお金が動かず確かめにくいので、取り合いの無い物件のときだけ打つ
+        if (k == 'shop' && s.bestOffers(b, site).first.riv > 0) return;
+        label = tr('{0}に1つ開く', [s.siteName(site)]);
+        cost = s.unitCapexAt(b, site);
+        hk = 'build';
+      case 'train':
+        label = tr('{0}を育てる（1人）', [tr(KIND_LEAD_JA[k]!)]);
+        cost = s.leadCost(b);
+        hk = 'crew';
+      case 'hub':
+        final a = s.hubWanted(b).first;
+        label = tr('{0}に配送の拠点を作る', [s.areaName(a)]);
+        cost = s.hubCost(b);
+        hk = 'build';
+      default:
+        final n = s.svNeed(b) - b.sv;
+        label = tr('{0}を{1}人置く', [tr(KIND_SV_JA[k]!), n]);
+        cost = k == 'shop' ? 0 : s.svHireCost(b) * n;
+        hk = 'hire';
+    }
     where = '店・工場を増やす';
     // 開いたカードに出ていれば、そこから（1.0.0+20）。出ていなければ「ほかの手」の中から
     await card(b);
@@ -498,11 +542,11 @@ class Pilot {
       return;
     }
     final h0 = s.hUsed;
-    await money('増やす', -s.buildCost(b, n), () async {
-      await pressText(tr('{0}増やす', [s.unitsOf(b, n)]));
+    await money('増やす', -cost, () async {
+      await pressText(label);
       await drain();
     });
-    if (s.hUsed - h0 != s.hrs('build')) note('増やすの時間: 札は${s.hrs('build')}時間、実際は${s.hUsed - h0}');
+    if (s.hUsed - h0 != s.hrs(hk)) note('増やすの時間: 札は${s.hrs(hk)}時間、実際は${s.hUsed - h0}');
     mark('店・工場を増やす');
   }
 
@@ -584,6 +628,7 @@ class Pilot {
     final i = list.last;
     where = '新しい事業';
     await tab('biz');
+    await _newList();
     await pressKey('sort-cost');
     await pressKey('filter-can');
     final row = find.ancestor(of: find.byKey(ValueKey('newbiz-${i.id}')), matching: find.byType(Row));
@@ -961,8 +1006,8 @@ class Pilot {
       }
       mark('まとめて任せる');
     }
-    // 事業が多い会社：自社の事業の並べ替えと、見出しでたたむ・開く
-    if (s.biz.length >= bizManyMin) {
+    // 事業が多い会社：自社の事業の並べ替えと、見出しでたたむ・開く（1つの列の画面だけ。2列の画面は左に一覧がいつも出る）
+    if (s.biz.length >= bizManyMin && !_split) {
       for (final o in myBizSorts) {
         await pressKey('mysort-${o.$1}');
         if (ctl.myBizSort != o.$1) note('自社の事業の並びが${o.$1}に替わらない');
@@ -974,6 +1019,7 @@ class Pilot {
       await press(head, '自社の事業の見出し');
       mark('事業の一覧をたたむ');
     }
+    await _newList();
     for (final o in bizSorts) {
       await pressKey('sort-${o.$1}');
     }

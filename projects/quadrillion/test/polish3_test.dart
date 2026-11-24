@@ -34,9 +34,13 @@ void main() {
       expect(a.diff, 'normal');
     });
 
-    test('2000年から30年、自動プレイの順位がやさしい＞ふつう＞むずかしいになる', () {
-      final med = <String, int>{};
+    // 1.1.0+26（段2）から、自動プレイの会社は30年で上位に届かない（店などの数で伸びが遅くなり、自分の順位は900社の下の方で並ぶ）ので、
+    // 自分の順位では難しさの差が見えなくなった。難しさが効くのは宿敵と CPU の会社の伸びなので、100位の会社の時価総額で比べる
+    test('2000年から30年、CPU の会社の大きさ（100位の会社の時価総額）がやさしい＜ふつう＜むずかしいになる', () {
+      final med = <String, double>{};
+      final mine = <String, int>{};
       for (final d in const ['easy', 'normal', 'hard']) {
+        final caps = <double>[];
         final ranks = <int>[];
         for (var seed = 1; seed <= 6; seed++) {
           final s = _g(seed: seed * 7919, diff: d, year: 2000);
@@ -44,19 +48,19 @@ void main() {
           for (var t = 0; t < 360 && s.over == null; t++) {
             botMonth(s, units: true);
           }
+          final others = s.rankList().where((x) => !x.me).toList();
+          caps.add(others[99].cap);
           ranks.add(s.rank);
         }
+        caps.sort();
         ranks.sort();
-        med[d] = ranks[ranks.length ~/ 2];
+        med[d] = caps[caps.length ~/ 2];
+        mine[d] = ranks[ranks.length ~/ 2];
       }
       // ignore: avoid_print
-      print('[diff] $med');
-      // 実測（12通りの中央値）: やさしい86位・ふつう157位・むずかしい244位
-      // 1.0.0+19（国ごとの事件・宿敵の場面・提案の種類を足した）の前後（この6通りの中央値）:
-      //   前 やさしい77位・ふつう123位・むずかしい195位 → 後 やさしい98位・ふつう179位・むずかしい270位
-      //   乱数の流れが変わり、自動プレイは新しい出来事でいつも受け身の選択肢を選ぶので順位は少し下がったが、線（0.8倍・1.2倍）は引き直さずに通る
-      expect(med['easy']! < med['normal']! * .8, isTrue, reason: '$med');
-      expect(med['hard']! > med['normal']! * 1.2, isTrue, reason: '$med');
+      print('[diff] 100位の会社の時価総額 ${med.map((k, v) => MapEntry(k, yen(v)))}・自分の順位 $mine');
+      expect(med['easy']!, lessThan(med['normal']!), reason: '$med');
+      expect(med['hard']!, greaterThan(med['normal']!), reason: '$med');
     }, timeout: const Timeout(Duration(minutes: 10)));
 
     test('難しさはセーブに入り、古いセーブはふつう', () {
@@ -151,31 +155,34 @@ void main() {
     });
   });
 
+  // 1.1.0+26（段2）から、自動プレイの会社は10年では500位に届かない。節目の行の仕組みを見るために、
+  // 時価総額を400位・150位の会社のすぐ上にして（現金を足して）1か月進め、節目の行が出るかを見る
   test('社史の節目に500位・200位がある', () {
     expect(rankMarks, containsAll([200, 500]));
+    final s = _g(seed: 31, year: 2000);
+    for (var t = 0; t < 24; t++) {
+      botMonth(s);
+    }
     final seen = <int>{};
-    for (var seed = 1; seed <= 8; seed++) {
-      final s = _g(seed: seed * 31, year: 2000);
-      for (var t = 0; t < 120; t++) {
-        botMonth(s);
-        if (t % 12 == 0) {
-          // 節目の行が出るように最高位を忘れさせて、1か月進める
-          final n0 = s.history.length;
-          s.peakRank = 999;
-          resolveEvents(s);
-          s.nextQuarter();
-          final added = s.history.sublist(n0).where((e) => e.k == 'rank').toList();
-          final th = rankMarks.where((m) => s.peakRank <= m).firstOrNull;
-          expect(added.length, th == null ? 0 : 1);
-          if (th != null && th > 1) {
-            expect(tx(added.single.m), contains('$th位以内'));
-            seen.add(th);
-          }
-        }
+    for (final pos in const [400, 150]) {
+      final others = s.rankList().where((x) => !x.me).toList();
+      final target = others[pos - 1].cap * 1.05;
+      s.cash += target - s.cap;
+      s.calcAll();
+      final n0 = s.history.length;
+      s.peakRank = 999;
+      resolveEvents(s);
+      s.nextQuarter();
+      final added = s.history.sublist(n0).where((e) => e.k == 'rank').toList();
+      final th = rankMarks.where((m) => s.peakRank <= m).firstOrNull;
+      expect(added.length, th == null ? 0 : 1);
+      if (th != null && th > 1) {
+        expect(tx(added.single.m), contains('$th位以内'));
+        seen.add(th);
       }
     }
     expect(seen, containsAll([200, 500]), reason: '$seen');
-  }, timeout: const Timeout(Duration(minutes: 5)));
+  });
 
   group('番頭のひとこと', () {
     Game mid() {
@@ -184,6 +191,17 @@ void main() {
         botMonth(s);
       }
       resolveEvents(s);
+      // 1.1.0+26 から伸びが遅くなり、12年目でも事業が5つに届かないことがある。番頭のひとことを見るために、安い業種から始めて5つにする
+      final cash0 = s.cash;
+      for (final i in s.liveInds().toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)))) {
+        if (s.biz.length + s.subs().length >= 5) break;
+        if (s.biz.any((b) => b.ind == i.id)) continue;
+        s.cash = s.capexOf(i) * 2;
+        s.hUsed = 0;
+        s.startBiz(i.id);
+      }
+      s.cash = cash0;
+      s.hUsed = 0;
       s.calcAll();
       return s;
     }

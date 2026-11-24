@@ -47,7 +47,15 @@ final _grown = <String, String>{};
 
 /// 育った会社（始めた国ごとに1度だけ作って使い回す）
 Game _grownIn(String home) {
-  final j = _grown[home] ??= jsonEncode(grownGame(home: home).toJson());
+  final j = _grown[home] ??= () {
+    final g = grownGame(home: home);
+    // 1.1.0+26 から店などの数で伸びが遅くなり、国によっては部下を雇えるほどの利益が出ない。顔を見るために、候補と同じ作り方の部下を足す
+    while (g.staff.length < 10) {
+      g.staff.add(g.mkPerson(0));
+    }
+    g.ensureFaces();
+    return jsonEncode(g.toJson());
+  }();
   return Game.fromJson(jsonDecode(j) as Map<String, dynamic>, rng: ParkMiller(5))..calcAll();
 }
 

@@ -17,13 +17,32 @@ final _cjk = RegExp(r'[぀-ヿ㐀-鿿]');
 String? _midJson;
 
 /// 1990年から6年回した会社（借金あり・海外あり）。作るのは1回だけ
+/// 1.1.0+26 から、借りて回すと6年で倒れることがある（店などの数で伸びが遅くなった）。倒れない種を選び、
+/// 事業の画面で型の違いが見えるように、店舗型のほかに型の違う事業を足す
 Game _mid() {
   if (_midJson == null) {
-    final g = Game.newGame(SetupConfig(mode: 'world', year: 1990, traits: const ['charm', 'careful']), rng: ParkMiller(7));
-    for (var m = 0; m < 72; m++) {
-      botMonth(g, units: true, borrow: 'some');
+    late Game g;
+    for (var seed = 7; seed < 40; seed++) {
+      g = Game.newGame(SetupConfig(mode: 'world', year: 1990, traits: const ['charm', 'careful']), rng: ParkMiller(seed));
+      for (var m = 0; m < 72 && g.over == null; m++) {
+        botMonth(g, units: true, focus: true);
+      }
+      if (g.over == null && g.biz.any((b) => g.kindB(b) == 'shop')) break;
     }
-    if (g.loans.isEmpty) g.loanFromEvent(5e8);
+    resolveEvents(g);
+    // 人で稼ぐ型（コンサル）・工場型（冷凍食品）・許認可型（質屋）
+    for (final ind in const ['consult', 'frozen', 'pawn']) {
+      if (g.biz.any((b) => b.ind == ind) || g.biz.length >= 4) continue;
+      g.cash += g.capexOf(indm[ind]!);
+      g.hUsed = 0;
+      g.startBiz(ind);
+    }
+    if (g.loans.isEmpty) {
+      // 借りたお金は手元に入る（会社の大きさに見合う額にする。1.1.0+26 から会社が小さいことがあり、5億円だと時価総額が1円になった）
+      final a = g.rev * 6 + 1e7;
+      g.loanFromEvent(a);
+      g.cash += a;
+    }
     resolveEvents(g);
     g.calcAll();
     _midJson = jsonEncode(g.toJson());
@@ -38,7 +57,8 @@ List<String> _texts(WidgetTester t) => [
       for (final w in t.widgetList<RichText>(find.byType(RichText))) w.text.toPlainText(),
     ];
 
-const _views = ['town', 'biz', 'people', 'stock', 'money', 'money:bank', 'money:cost', 'money:tax', 'money:book', 'world', 'zukan'];
+// biz:2 は2つ目の事業、biz:shop は店舗型の事業を選んだ画面、biz:new は右に新しい事業を出した画面、town:1 は2つ目の都市圏（1.1.0+26）
+const _views = ['town', 'town:1', 'biz', 'biz:2', 'biz:shop', 'biz:new', 'people', 'stock', 'money', 'money:bank', 'money:cost', 'money:tax', 'money:book', 'world', 'zukan'];
 
 Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = false}) async {
   SharedPreferences.setMockInitialValues({});
@@ -58,6 +78,19 @@ Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = fa
     ctl.setTab(p[0]);
     if (p[0] == 'money') ctl.setMoney(p.length > 1 ? p[1] : 'cash');
     if (p[0] == 'world') ctl.setWorld('us');
+    if (p[0] == 'town') ctl.setTownCity(p.length > 1 ? int.parse(p[1]) : 0);
+    if (p[0] == 'biz') {
+      final g = ctl.game!;
+      if (p.length > 1 && p[1] == 'new') {
+        ctl.showNewBiz();
+      } else if (p.length > 1 && p[1] == 'shop') {
+        // 店舗型の事業（立地ごとの店の数・日販・1店の利益の表）
+        ctl.selectBiz(g.biz.firstWhere((b) => g.kindB(b) == 'shop', orElse: () => g.biz.first).id);
+      } else {
+        final l = g.biz.toList()..sort((a, b) => b.rev.compareTo(a.rev));
+        ctl.selectBiz(l[p.length > 1 ? (int.parse(p[1]) - 1).clamp(0, l.length - 1) : 0].id);
+      }
+    }
     await tester.pump();
     expect(tester.takeException(), isNull, reason: '$v ${size.width}x${size.height} $lang');
     if (lang == 'en') {

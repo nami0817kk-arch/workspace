@@ -270,12 +270,22 @@ void openPresSheet(GameController ctl) => ctl.showSheet((_) => Column(crossAxisA
 List<Widget> townTabL(GameController ctl, double width) {
   final s = ctl.game!;
   final wide = width >= 500;
+  final cities = s.cityList(s.home);
+  final city = ctl.townCity < cities.length ? ctl.townCity : 0;
   // 横に広い街（高さの低い横向きの画面でも、絵だけで画面が埋まらないように）
   final pic = Frame(
     key: const ValueKey('town-picture'),
     child: AspectRatio(
         aspectRatio: 480 / 180,
-        child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: 480), size: Size.infinite)))),
+        child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: 480, city: city), size: Size.infinite)))),
+  );
+  // 都市圏の切り替え（自分の国の都市。1.1.0+26）
+  final cityChips = Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Wrap(spacing: 6, runSpacing: 4, children: [
+      for (var i = 0; i < cities.length; i++)
+        PickChip(L.en ? cities[i].en : cities[i].ja, key: ValueKey('town-city-$i'), on: city == i, onTap: () => ctl.setTownCity(i)),
+    ]),
   );
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
   final rival = topRival(s);
@@ -332,13 +342,13 @@ List<Widget> townTabL(GameController ctl, double width) {
     out.add(Padding(
       padding: const EdgeInsets.only(top: 6),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [pic, me])),
+        Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [pic, if (cities.length > 1) cityChips, me])),
         const SizedBox(width: 8),
         Expanded(flex: 2, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [econ, news])),
       ]),
     ));
   } else {
-    out.addAll([const SizedBox(height: 6), pic, me, econ, news]);
+    out.addAll([const SizedBox(height: 6), pic, if (cities.length > 1) cityChips, me, econ, news]);
   }
   final vow = s.vow;
   if (vow != null) {
@@ -600,7 +610,20 @@ List<Widget> _bankView(GameController ctl) {
 }
 
 /// 経費の名前
-const expNames = {'crew': '現場の人件費', 'staff': '部下の給料', 'hq': '本社の経費', 'ad': '広告費', 'int': '支払利息', 'tax': '税金'};
+/// 経費の11の内訳（1.1.0+26。企画書「毎月の経費」）
+const expNames = {
+  'labor': '人件費',
+  'rent': '家賃',
+  'cogs': '原価',
+  'util': '光熱費',
+  'logi': '物流費',
+  'ad': '広告費',
+  'insur': '保険料',
+  'repair': '修繕と更新',
+  'hq': '本社の経費',
+  'int': '支払利息',
+  'tax': '税金',
+};
 
 List<Widget> _costView(GameController ctl) {
   final s = ctl.game!;
