@@ -1691,6 +1691,19 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// 5つの配分をまとめて保存する。画面で配り直して「決定」を押したとき用。
+  /// 1つずつ [setBudgetShare] で入れると、途中で他の配り先が比率で動く。
+  /// 配り切っていない(合計が100でない)配分は [ArgumentError]。
+  Future<void> setBudgetPlan(BudgetPlan plan) async {
+    if (!plan.isComplete) {
+      throw ArgumentError.value(plan.shares, 'plan', 'total is not 100');
+    }
+    if (_save == null) return;
+    _save!.budgetPlan = BudgetPlan.draft(plan.shares);
+    _notify();
+    await _persist();
+  }
+
   /// このクラブのいる国の財務規則。
   RuleSet get ruleSet => _save?.ruleSet ?? RuleSet.britain;
 
