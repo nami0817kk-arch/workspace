@@ -222,7 +222,7 @@ void main() {
     expect(game.isTransferWindowOpen, isFalse);
     await pump(tester, game, settings,
         const TransferScreen(key: ValueKey('b')));
-    await openWatch();
+    // 窓が閉じているあいだは、注目が「候補」の最初の札(2026-11-25)。
     final sign = find.ancestor(
         of: find.text('獲得'), matching: find.byType(FilledButton));
     expect(sign, findsOneWidget);

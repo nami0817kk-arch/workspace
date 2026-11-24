@@ -6,17 +6,54 @@ import 'package:flutter/material.dart';
 /// オーナー室)。似たもの(他の部の順位表・他国の順位表・記録もの)は
 /// 1つのタブにし、上の札で切り替える。
 class ChipSwitcher extends StatefulWidget {
-  const ChipSwitcher({super.key, required this.items});
+  const ChipSwitcher({super.key, required this.items, this.index});
 
   /// 札の名前と、選んだときに出す中身。
   final List<(String, WidgetBuilder)> items;
+
+  /// 外から札を選ぶとき(「注目へ」の入口など)。省くと中で覚える。
+  final ValueNotifier<int>? index;
 
   @override
   State<ChipSwitcher> createState() => _ChipSwitcherState();
 }
 
 class _ChipSwitcherState extends State<ChipSwitcher> {
-  int _index = 0;
+  int _own = 0;
+
+  int get _index => widget.index?.value ?? _own;
+  set _index(int v) {
+    if (widget.index != null) {
+      widget.index!.value = v;
+    } else {
+      _own = v;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.index?.addListener(_changed);
+  }
+
+  @override
+  void didUpdateWidget(ChipSwitcher old) {
+    super.didUpdateWidget(old);
+    if (old.index != widget.index) {
+      old.index?.removeListener(_changed);
+      widget.index?.addListener(_changed);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.index?.removeListener(_changed);
+    super.dispose();
+  }
+
+  void _changed() {
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

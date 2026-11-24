@@ -48,7 +48,8 @@ Widget standaloneScreenFor(TodoPlace place) => switch (place.menu) {
         },
       TodoMenu.squad =>
         place.tab == 1 ? const ContractBoardScreen() : const SquadScreen(),
-      TodoMenu.transfer => TransferScreen(initialTab: place.tab),
+      TodoMenu.transfer =>
+        TransferScreen(initialTab: place.tab, initialCard: place.card),
       TodoMenu.league =>
         place.tab == 1 ? const CupScreen() : const FixturesScreen(),
       TodoMenu.ownerRoom => OwnerWorkScreen(initialCard: place.card),
