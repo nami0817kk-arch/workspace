@@ -475,6 +475,14 @@ void main() {
     expect(html, contains('<div class="cmsg2" id="cmdmsg"></div>'));
   });
 
+  test('前の版の塔を続きから開くと新しい仕組みに合わせる（0.7.48・試作 v65）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 祭壇が無い保存＝前の版。祭壇・魂・供物・コアの体力を渡し、湧いたモンスターは40匹まで
+    expect(html, contains('var oldTower=!g.alt;if(oldTower)fromOldTower();'));
+    expect(html, contains('function fromOldTower(){'));
+    expect(html, contains('var OLD_KEEP=40;'));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
