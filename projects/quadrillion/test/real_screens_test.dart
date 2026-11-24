@@ -57,8 +57,8 @@ List<String> _texts(WidgetTester t) => [
       for (final w in t.widgetList<RichText>(find.byType(RichText))) w.text.toPlainText(),
     ];
 
-// biz:2 は2つ目の事業を選んだ画面、biz:new は右に新しい事業を出した画面、town:1 は2つ目の都市圏（1.1.0+26）
-const _views = ['town', 'town:1', 'biz', 'biz:2', 'biz:new', 'people', 'stock', 'money', 'money:bank', 'money:cost', 'money:tax', 'money:book', 'world', 'zukan'];
+// biz:2 は2つ目の事業、biz:shop は店舗型の事業を選んだ画面、biz:new は右に新しい事業を出した画面、town:1 は2つ目の都市圏（1.1.0+26）
+const _views = ['town', 'town:1', 'biz', 'biz:2', 'biz:shop', 'biz:new', 'people', 'stock', 'money', 'money:bank', 'money:cost', 'money:tax', 'money:book', 'world', 'zukan'];
 
 Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = false}) async {
   SharedPreferences.setMockInitialValues({});
@@ -83,6 +83,9 @@ Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = fa
       final g = ctl.game!;
       if (p.length > 1 && p[1] == 'new') {
         ctl.showNewBiz();
+      } else if (p.length > 1 && p[1] == 'shop') {
+        // 店舗型の事業（立地ごとの店の数・日販・1店の利益の表）
+        ctl.selectBiz(g.biz.firstWhere((b) => g.kindB(b) == 'shop', orElse: () => g.biz.first).id);
       } else {
         final l = g.biz.toList()..sort((a, b) => b.rev.compareTo(a.rev));
         ctl.selectBiz(l[p.length > 1 ? (int.parse(p[1]) - 1).clamp(0, l.length - 1) : 0].id);

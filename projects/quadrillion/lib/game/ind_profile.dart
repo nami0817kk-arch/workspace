@@ -50,7 +50,7 @@ const Map<String, String> KIND_COUNT_JA = {
   'shop': '{0}店',
   'factory': '{0}ライン',
   'net': '{0}万人',
-  'people': '{0}人',
+  'people': '{0}人@@units',
   'license': '{0}拠点',
   'hit': '{0}作品',
   'infra': '{0}設備',

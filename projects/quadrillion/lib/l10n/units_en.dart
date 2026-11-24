@@ -23,6 +23,7 @@ const Map<String, String> unitsEn = {
   '{0}店': '{0} stores',
   '{0}ライン': '{0} lines',
   '{0}拠点': '{0} sites',
+  '{0}人@@units': '{0} people',
   '{0}設備': '{0} facilities',
   '{0}作品': '{0} titles',
   '{0}万人': '{0}0K users',

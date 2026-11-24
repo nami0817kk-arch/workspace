@@ -2159,10 +2159,14 @@ Widget _kpi(String k, String v, [Color c = Pal.ink]) => Text.rich(TextSpan(child
 
 /// 表の1つの升（入りきらなければ字を縮める）
 Widget _tc(String t, {double? w, bool bold = false, Color c = Pal.ink, bool left = false}) {
-  final txt = FittedBox(
-    fit: BoxFit.scaleDown,
-    alignment: left ? Alignment.centerLeft : Alignment.centerRight,
-    child: Text(t, maxLines: 1, softWrap: false, style: ts(size: 12, bold: bold, color: c)),
+  // 隣の升とくっつかないよう、左を少し空ける（英語の見出しが「CapDaily sales」のように続いて見えた）
+  final txt = Padding(
+    padding: EdgeInsets.only(left: left ? 0 : 6),
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: left ? Alignment.centerLeft : Alignment.centerRight,
+      child: Text(t, maxLines: 1, softWrap: false, style: ts(size: 12, bold: bold, color: c)),
+    ),
   );
   return w != null ? SizedBox(width: w, child: txt) : Expanded(child: txt);
 }
