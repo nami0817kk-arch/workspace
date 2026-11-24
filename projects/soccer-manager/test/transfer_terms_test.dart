@@ -68,11 +68,15 @@ void main() {
       final target = legacyMarket(game).first;
       final down = (target.marketValue * 0.3).round();
       final fee = TransferTermsEngine.agentFee(target.marketValue);
-      game.save!.budget = 100000;
+      // 資金は「頭金＋手数料」に足して渡す。以前は 10億 で決め打ちしていて、
+      // 市場の先頭(乱数で作る)が25億を超える選手のときは頭金と手数料が
+      // 払えず、買えずに落ちていた(CI で出た。2026-11-25)。
+      game.save!.budget = down + fee + 100000;
       game.save!.wageBudget = 999999;
 
-      expect(await game.buyPlayerOnInstallments(target.id), isTrue);
-      expect(game.save!.budget, 100000 - down - fee);
+      expect(await game.buyPlayerOnInstallments(target.id), isTrue,
+          reason: '${game.lastSigningBlockReason}');
+      expect(game.save!.budget, 100000);
     });
 
     test('値切って買うと売却条項が付き、満額なら付かない', () async {
