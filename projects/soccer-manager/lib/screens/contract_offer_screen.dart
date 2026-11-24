@@ -618,7 +618,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
       ),
       offer: wageEditable
           ? NegotiationStepper(
-              label: formatMoney(annualFromWeekly(_wage)),
+              label: formatMoneyCompact(annualFromWeekly(_wage)),
               color: demand > 0
                   ? (meets
                       ? theme.colorScheme.primary
@@ -709,7 +709,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         want: t(required > 0 ? formatMoney(required) : '—',
             style: required > 0 ? bold : cell),
         offer: NegotiationStepper(
-          label: formatMoney(_bonus),
+          label: formatMoneyCompact(_bonus),
           onMinus: _bonus > minB && open
               ? () => setState(() => _bonus = max(minB, _bonus - step))
               : null,
@@ -768,7 +768,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         offer: NegotiationStepper(
           label: _goalBonus == 0
               ? Tr.pick('なし', 'None')
-              : formatMoney(_goalBonus),
+              : formatMoneyCompact(_goalBonus),
           onMinus: _goalBonus > 0 && open
               ? () => setState(() => _goalBonus = max(0, _goalBonus - goalStep))
               : null,

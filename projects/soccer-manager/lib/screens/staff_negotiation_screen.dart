@@ -191,7 +191,8 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
             '要求の9割を割ると断られます。', 'Below 90% of what he asks, he says no.'),
         want: Text(_annual(gs, _ask.weeklyWage), style: want),
         offer: NegotiationStepper(
-          label: _annual(gs, _offer.weeklyWage),
+          label: formatMoneyCompact(
+              annualFromWeekly(gs.scaledMoney(_offer.weeklyWage))),
           onMinus: _over || _offer.weeklyWage <= _wageStep
               ? null
               : () => setState(() => _offer =
@@ -227,7 +228,7 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
             'Paid once. You can lean on it to keep the salary down.'),
         want: Text(formatMoney(gs.scaledMoney(_ask.signingBonus)), style: want),
         offer: NegotiationStepper(
-          label: formatMoney(gs.scaledMoney(_offer.signingBonus)),
+          label: formatMoneyCompact(gs.scaledMoney(_offer.signingBonus)),
           onMinus: _over || _offer.signingBonus <= 0
               ? null
               : () => setState(() => _offer = _offer.copyWith(
