@@ -137,24 +137,18 @@ void main() {
     await tester.pump(GameState.persistDebounce);
   });
 
-  testWidgets('4. 契約タブ: 移籍リストのボタンと説明が同じ列にある', (tester) async {
+  testWidgets('4. 操作の一覧: 移籍リストの行に相場の説明がある', (tester) async {
+    // 2026-11-25 に契約のタブをやめ、上の「操作」の一覧へ移した。
     final (game, settings) = await start(tester);
     final p = game.userTeam.players.first;
     await pump(tester, game, settings, PlayerDetailScreen(playerId: p.id));
-    await tester.tap(find.text('契約'));
+    await tester.tap(find.byKey(const ValueKey('player-actions')));
     await tester.pumpAndSettle();
-    final block = find.byKey(const ValueKey('transfer-list-block'));
-    expect(block, findsOneWidget);
-    final button = find.descendant(
-        of: block, matching: find.byKey(const ValueKey('transfer-list')));
-    final note =
-        find.descendant(of: block, matching: find.textContaining('相場は契約の残り年数'));
-    expect(button, findsOneWidget);
-    expect(note, findsOneWidget);
-    // 同じ列(左端が同じ)で、説明はボタンのすぐ下。
-    expect(tester.getTopLeft(note).dx, tester.getTopLeft(button).dx);
-    expect(tester.getTopLeft(note).dy,
-        greaterThan(tester.getBottomLeft(button).dy - 1));
+    final row = find.byKey(const ValueKey('action-transfer-list'));
+    expect(row, findsOneWidget);
+    expect(
+        find.descendant(of: row, matching: find.textContaining('相場')),
+        findsOneWidget);
     await tester.pump(GameState.persistDebounce);
   });
 

@@ -68,7 +68,7 @@ void main() {
     return find.byType(Tab).hitTestable().evaluate().length;
   }
 
-  testWidgets('左メニューは8項目、タブは 0・0・3・4・2・3・2・2、合計16', (tester) async {
+  testWidgets('左メニューは8項目、タブは 0・0・3・4・3・3・2・2、合計17(選手に登録ルール)', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
     expect(TodoMenu.values.length, 8);
@@ -77,7 +77,7 @@ void main() {
       TodoMenu.calendar: 0,
       TodoMenu.finance: 3,
       TodoMenu.club: 4,
-      TodoMenu.squad: 2,
+      TodoMenu.squad: 3,
       TodoMenu.transfer: 3,
       TodoMenu.league: 2,
       TodoMenu.ownerRoom: 2,
@@ -90,7 +90,7 @@ void main() {
       expect(n, want[menu], reason: '${menu.name} のタブの数');
       total += n;
     }
-    expect(total, 16);
+    expect(total, 17);
     expect(FinanceScreen.tabCount, 3);
     expect(TransferScreen.tabCount, 3);
   });

@@ -9,6 +9,36 @@ import '../widgets/player_face_avatar.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/disabled_reason.dart';
+import 'player_actions.dart';
+
+/// ユースコーチの見立て(推定幅)から、伸びしろの言葉とおすすめを出す
+/// (2026-11-25。数字の幅だけだと、取るか迷ったときの決め手が無かった)。
+class IntakeAdvice {
+  const IntakeAdvice._();
+
+  /// 見立ての真ん中の潜在能力で、どこまで行けそうか。
+  static String ceiling(int mid) {
+    if (mid >= 80) return Tr.pick('スターになりうる', 'Could be a star');
+    if (mid >= 70) return Tr.pick('一軍の主力になりうる', 'Could be a regular');
+    if (mid >= 60) return Tr.pick('一軍の控えになりうる', 'Could make the squad');
+    return Tr.pick('下の部で通用する程度', 'Lower-league level');
+  }
+
+  /// スカウトのおすすめの段(0: 見送り 1: 様子見 2: 取る 3: 必ず取る)。
+  static int level(int mid) {
+    if (mid >= 75) return 3;
+    if (mid >= 65) return 2;
+    if (mid >= 55) return 1;
+    return 0;
+  }
+
+  static String recommendation(int mid) => switch (level(mid)) {
+        3 => Tr.pick('必ず引き取りたい', 'Must sign'),
+        2 => Tr.pick('引き取る価値あり', 'Worth signing'),
+        1 => Tr.pick('枠が余れば', 'If there is room'),
+        _ => Tr.pick('見送ってよい', 'Can let go'),
+      };
+}
 
 /// シーズン終了時に一括生成されたユースインテーク候補を選抜する画面。
 class YouthIntakeScreen extends StatelessWidget {
@@ -66,22 +96,56 @@ class YouthIntakeScreen extends StatelessWidget {
                         p,
                         scoutLevel: gameState.youthCoachJudgingLevel,
                       );
+                      final mid = ((range.$1 + range.$2) / 2).round();
+                      final advice = IntakeAdvice.level(mid);
+                      final adviceColor = switch (advice) {
+                        3 => SemanticColors.positive(context),
+                        2 => SemanticColors.ink(context, Colors.green),
+                        1 => SemanticColors.subtleText(context),
+                        _ => SemanticColors.negative(context),
+                      };
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
+                          key: ValueKey('intake-${p.id}'),
+                          // 押すと選手の詳しい画面(能力・得意な位置・人柄)。
+                          onTap: () => openPlayerDetail(context, p.id),
                           leading: PlayerFaceAvatar(
                             playerId: p.id,
                             position: p.position,
                           ),
-                          title: Text(p.name),
+                          title: Row(
+                            children: [
+                              Flexible(
+                                  child: Text(p.name,
+                                      overflow: TextOverflow.ellipsis)),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 1),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: adviceColor),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  IntakeAdvice.recommendation(mid),
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: adviceColor),
+                                ),
+                              ),
+                            ],
+                          ),
                           // 潜在能力をそのまま出していたが、これでは選抜に
                           // 判断が要らない(数字の大きい順に取るだけ)。
                           // スカウト候補と同じく見立て(推定幅)にする。
                           // ユースコーチの見極めが高いほど幅が狭くなる。
+                          // 幅に加えて、伸びしろの言葉とおすすめを出す。
                           subtitle: Text(
                             Tr.pick(
-                                '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2}',
-                                'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2}'),
+                                '${p.age}歳・${p.position.label}・総合 ${p.overall}・伸びしろ: ${gameState.growthRoomWordFor(p)}(${IntakeAdvice.ceiling(mid)}。見立て ${range.$1}〜${range.$2})',
+                                'Age ${p.age} • ${p.position.label} • overall ${p.overall} • room to grow: ${gameState.growthRoomWordFor(p)} (${IntakeAdvice.ceiling(mid)}; est. ${range.$1}-${range.$2})'),
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

@@ -768,12 +768,21 @@ extension GameStateTransfer on GameState {
     _persist();
   }
 
-  /// 交渉に延長オプションが付いていれば、求める週俸の倍率。
-  double _optionFactor(ContractNegotiation n) =>
-      n.option ? ContractEngine.optionWageFactor : 1.0;
+  /// 交渉に延長オプションが付いていれば、求める週俸の倍率。序列の約束を
+  /// 上げていれば、その分も掛ける(2026-11-25)。
+  double _optionFactor(ContractNegotiation n) {
+    final player =
+        userTeam.players.where((p) => p.id == n.playerId).firstOrNull;
+    final promise = n.promise;
+    final promiseFactor = player == null || promise == null
+        ? 1.0
+        : ContractTermsEngine.promiseFactor(player.squadStatus, promise);
+    return (n.option ? ContractEngine.optionWageFactor : 1.0) * promiseFactor;
+  }
 
-  /// 交渉中の満了の年・延長オプションを変える(求める週俸も合わせて変わる)。
-  void setNegotiationTerms({int? endYear, bool? option}) {
+  /// 交渉中の満了の年・延長オプション・序列の約束を変える(求める週俸も
+  /// 合わせて変わる)。
+  void setNegotiationTerms({int? endYear, bool? option, SquadStatus? promise}) {
     final n = _save?.pendingContractNegotiation;
     if (n == null) return;
     final player =
@@ -782,6 +791,7 @@ extension GameStateTransfer on GameState {
     final before = _optionFactor(n);
     if (endYear != null) n.endYear = endYear;
     if (option != null) n.option = option;
+    if (promise != null) n.promise = promise;
     final end = n.endYear ??
         Player.contractClockYear + ContractEngine.negotiatedYears(player);
     if (n.option && !ContractEngine.canAttachOption(end, player.age)) {
@@ -792,14 +802,61 @@ extension GameStateTransfer on GameState {
     _persist();
   }
 
+  /// 国の既定の降格の条項(年俸を下げる割合%)。
+  int get defaultRelegationCutPct => ((1 - relegationWageFactor) * 100).round();
+
+  /// 更新の交渉の「いまの条件」(年俸以外の項目は今の契約のまま、サイン料は
+  /// 選手が求める額)。交渉の画面の初めの値で、値打ちを比べる基準。
+  ContractTerms renewalBaseline(Player p, {ContractNegotiation? n}) =>
+      ContractTerms(
+        wage: n?.counterWage ?? p.wage,
+        endYear: n?.endYear ?? ContractEngine.defaultRenewalEndYear(p),
+        option: n?.option ?? false,
+        promise: n?.promise ?? p.squadStatus,
+        signingBonus: ContractEngine.signingBonusFor(p),
+        releaseClause: p.releaseClause,
+        relegationCutPct: p.relegationCutPct,
+        promotionRisePct: p.promotionRisePct,
+      );
+
+  /// [t]の年俸以外の項目が、基準([renewalBaseline])よりどれだけ選手に
+  /// 嬉しいか(1週あたりの万円)。0 なら基準と同じ。
+  int renewalExtrasWeekly(Player p, ContractTerms t) {
+    final years = max(1, t.endYear - Player.contractClockYear + 1);
+    final goals = seasonStatsForAll([p.id])[p.id]?.goals ?? 0;
+    int value(ContractTerms x) => ContractTermsEngine.extrasWeekly(p, x,
+        requiredBonus: ContractEngine.signingBonusFor(p),
+        defaultRelegationCutPct: defaultRelegationCutPct,
+        years: years,
+        goalsThisSeason: goals);
+    return value(t) -
+        value(renewalBaseline(p)
+            .copyWith(wage: t.wage, endYear: t.endYear, promise: t.promise));
+  }
+
   /// 交渉中の選手に週俸を提示する。選手の最低希望額以上ならその場で合意成立
   /// (契約更新の基本費用・サインボーナスの支払いが必要)。届かなければ選手側
   /// から対案が届き交渉が続く。規定回数を超えると選手は交渉から離脱する。
   Future<ContractOfferResult> offerContractWage(int wage) async {
+    final n = _save?.pendingContractNegotiation;
+    final p = n == null
+        ? null
+        : userTeam.players.where((x) => x.id == n.playerId).firstOrNull;
+    return offerContractTerms(p == null
+        ? ContractTerms(wage: wage, endYear: Player.contractClockYear + 1)
+        : renewalBaseline(p, n: n).copyWith(wage: wage));
+  }
+
+  /// 交渉中の選手に条件の一式を出す(2026-11-25)。年俸以外の項目
+  /// (サイン料・出来高・昇給・リリース条項・降格/昇格の条項)は、選手から
+  /// 見た値打ちを1週あたりに直して年俸に足し、それで要求に届くかを見る。
+  /// 合意したら、序列の約束と条項も契約に入る。
+  Future<ContractOfferResult> offerContractTerms(ContractTerms terms) async {
     if (_save == null || _save!.pendingContractNegotiation == null) {
       return ContractOfferResult.walkedAway;
     }
     final negotiation = _save!.pendingContractNegotiation!;
+    final wage = terms.wage;
     Player? player;
     for (final p in userTeam.players) {
       if (p.id == negotiation.playerId) {
@@ -815,20 +872,41 @@ extension GameStateTransfer on GameState {
       await _persist();
       return ContractOfferResult.walkedAway;
     }
+    // 序列の約束は条件の一式から(交渉に入れたものと同じにそろえる)。
+    if (terms.promise != (negotiation.promise ?? player.squadStatus)) {
+      negotiation.promise = terms.promise;
+    }
     final minAcceptable = (ContractEngine.minimumAcceptableWage(player) *
             _optionFactor(negotiation))
         .round();
-    if (wage >= minAcceptable) {
-      final cost = ContractEngine.renewalCost(player) +
-          ContractEngine.signingBonusFor(player);
+    final extras = renewalExtrasWeekly(player, terms);
+    if (wage + extras >= minAcceptable) {
+      final bonus = max(0, terms.signingBonus);
+      final cost = ContractEngine.renewalCost(player) + bonus;
       if (_save!.budget < cost) return ContractOfferResult.insufficientFunds;
       _book(LedgerCategory.transfers, -(cost));
       player.wage = wage;
       ContractEngine.renewContract(
         player,
-        endYear: negotiation.endYear,
-        option: negotiation.option,
+        endYear: terms.endYear,
+        option: terms.option,
       );
+      // 出来高・昇給は新しい契約に付ける(renewContract が固定に戻した後)。
+      player.goalBonus = max(0, terms.goalBonus);
+      player.raisePct = max(0, terms.raisePct);
+      // スペインは条項が必ず付く(null は既定の額のまま)。
+      player.releaseClause = terms.releaseClause;
+      player.relegationCutPct = terms.relegationCutPct;
+      player.promotionRisePct = max(0, terms.promotionRisePct);
+      if (terms.promise != player.squadStatus) {
+        player.squadStatus = terms.promise;
+        // 上の立場を約束したら、それを守る(外し続けると怒る)。
+        if (terms.promise.index <= SquadStatus.regular.index) {
+          player.promisedStatus = terms.promise;
+          player.promiseMisses = 0;
+          player.promiseBroken = false;
+        }
+      }
       // この週俸は今の序列で求められた額(のちに上げると見直しを求める)。
       player.wageStatus = player.squadStatus;
       _save!.pendingContractNegotiation = null;
@@ -844,10 +922,15 @@ extension GameStateTransfer on GameState {
       return ContractOfferResult.walkedAway;
     }
     negotiation.offeredWage = wage;
+    // 対案は年俸で返す(出した条項の値打ちを差し引いた額)。
     negotiation.counterWage = max(
-        minAcceptable,
-        (ContractEngine.counterOffer(player, wage) * _optionFactor(negotiation))
-            .round());
+        minWeeklyWage,
+        max(
+                minAcceptable,
+                (ContractEngine.counterOffer(player, wage + extras) *
+                        _optionFactor(negotiation))
+                    .round()) -
+            extras);
     _notify();
     await _persist();
     return ContractOfferResult.countered;
@@ -1479,6 +1562,8 @@ extension GameStateTransfer on GameState {
         max(1, (TransferWindowCalendar.daysBetween(today, until) / 7).ceil());
     player.loanRecallClause = recallClause;
     player.loanedOutToClubName = destination.name;
+    _logMove(player,
+        from: userTeam.name, to: destination.name, kind: PlayerMoveKind.loan);
     // 育成型かどうか。約束させると成長は大きいが、レンタル料は入らない。
     player.loanedWithPlayingTime = guaranteePlayingTime;
     // レンタル料。選手から入るお金なので、売却と同じ区分に入れる
@@ -1663,6 +1748,11 @@ extension GameStateTransfer on GameState {
   /// 資金の分かるクラブ(自国)の手元から引く。
   void _movePlayerToBuyer(Player player, String buyerClubName, {int fee = 0}) {
     if (_save == null) return;
+    _logMove(player,
+        from: userTeam.name,
+        to: buyerClubName,
+        kind: PlayerMoveKind.transfer,
+        fee: fee);
     // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
     // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
     _fixNationality(player);

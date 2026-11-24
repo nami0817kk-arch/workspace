@@ -2192,9 +2192,14 @@ extension GameStateFinance on GameState {
       final f = RelegationClause.wageFactorFor(theme,
           fromTier: fromTier, toTier: fromTier + 1);
       if (f >= 1.0) continue;
+      final mine = t.id == _save!.userTeamId;
       for (final p in t.players) {
         if (p.isLoan) continue;
-        p.wage = max(minWeeklyWage, (p.wage * f).round());
+        // 自クラブの選手で、交渉で降格の条項を決めていればその割合
+        // (2026-11-25)。決めていなければ国の既定。
+        final cut = mine ? p.relegationCutPct : null;
+        final factor = cut == null ? f : (1 - cut / 100);
+        p.wage = max(minWeeklyWage, (p.wage * factor).round());
       }
       if (t.id == _save!.userTeamId) {
         _logNews(
@@ -2206,6 +2211,29 @@ extension GameStateFinance on GameState {
       }
     }
   }
+
+  /// 昇格したとき、交渉で昇格の条項を付けた自クラブの選手の年俸を上げる
+  /// (2026-11-25)。
+  void _applyPromotionWageClause(int fromTier, int toTier) {
+    if (toTier >= fromTier) return;
+    var raised = 0;
+    for (final p in userTeam.players) {
+      if (p.isLoan || p.promotionRisePct <= 0) continue;
+      p.wage = (p.wage * (100 + p.promotionRisePct) / 100).round();
+      raised++;
+    }
+    if (raised > 0) {
+      _logNews(
+        Tr.pick('昇格の条項で、$raised人の年俸が上がりました',
+            'Promotion clauses raised $raised salaries'),
+        context: Tr.pick('契約', 'Contracts'),
+      );
+    }
+  }
+
+  @visibleForTesting
+  void debugApplyPromotionWageClause(int fromTier, int toTier) =>
+      _applyPromotionWageClause(fromTier, toTier);
 
   /// 昇格・降格の条項で、結んでいるスポンサー・命名権(と提示中の候補)の
   /// 額を動かす(SponsorEngine.divisionChangeFactor)。

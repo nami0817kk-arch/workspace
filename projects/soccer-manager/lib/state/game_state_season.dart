@@ -1131,6 +1131,8 @@ extension GameStateSeason on GameState {
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);
     final league = _save!.league;
+    // 選手の経歴に今季の1行を足す(試合の結果が消える前に)。
+    _recordCareerLines();
     // 季を締める前の2つの期待。季末の増減を引く前の値で、新しい季の底上げを
     // 決める(引いた後の値で決めると、期待20で季末の -20 を受けたクラブが
     // 0 のまま、第2季の1試合目より前に手放すことになった。2026-11-23)。
@@ -1674,6 +1676,7 @@ extension GameStateSeason on GameState {
     // 降格の条項(年俸を下げる。自クラブも CPU も)と、スポンサー・命名権の
     // 昇格・降格の条項。ファンの需要も成績・昇格・降格で動かす。
     _applyRelegationWageClause(relegatedAll);
+    _applyPromotionWageClause(playedTier, newTier);
     _applySponsorDivisionClause(playedTier, newTier);
     _advanceFanDemand(
         playedTier: playedTier,

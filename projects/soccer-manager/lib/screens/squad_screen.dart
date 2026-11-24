@@ -6,7 +6,7 @@ import '../models/player.dart';
 import '../models/player_season_stats.dart';
 import '../models/team.dart';
 import '../state/game_state.dart';
-import 'contract_offer_screen.dart';
+import 'player_actions.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/player_stat_chips.dart';
 import '../widgets/position_filter_bar.dart';
@@ -52,8 +52,18 @@ extension on SquadSortOption {
       };
 }
 
-/// スカッドの状況で絞り込むフィルタ。
-enum SquadStatusFilter { all, starters, bench, needsAttention }
+/// スカッドの状況で絞り込むフィルタ。けが・契約・移籍リスト・貸し借りは
+/// 2026-11-25 に足した(FM の選手の一覧の絞り込みに寄せた)。
+enum SquadStatusFilter {
+  all,
+  starters,
+  bench,
+  needsAttention,
+  unavailable,
+  expiring,
+  transferListed,
+  loans,
+}
 
 extension SquadStatusFilterInfo on SquadStatusFilter {
   String get label => switch (this) {
@@ -61,6 +71,13 @@ extension SquadStatusFilterInfo on SquadStatusFilter {
         SquadStatusFilter.starters => Tr.pick('スタメン', 'Starters'),
         SquadStatusFilter.bench => Tr.pick('控え', 'Backups'),
         SquadStatusFilter.needsAttention => Tr.pick('要対応', 'Needs attention'),
+        SquadStatusFilter.unavailable =>
+          Tr.pick('けが・出場停止', 'Injured or banned'),
+        SquadStatusFilter.expiring =>
+          Tr.pick('今季で契約が切れる', 'Contract ends this season'),
+        SquadStatusFilter.transferListed =>
+          Tr.pick('移籍リスト', 'Transfer listed'),
+        SquadStatusFilter.loans => Tr.pick('貸し借り', 'Loans in and out'),
       };
 }
 
@@ -106,6 +123,21 @@ class SquadScreen extends StatefulWidget {
         break;
       case SquadStatusFilter.needsAttention:
         players = players.where(needsAttention).toList();
+        break;
+      case SquadStatusFilter.unavailable:
+        players =
+            players.where((p) => p.isInjured || p.isSuspended).toList();
+        break;
+      case SquadStatusFilter.expiring:
+        players = players
+            .where((p) => !p.isLoan && p.contractYearsRemaining <= 1)
+            .toList();
+        break;
+      case SquadStatusFilter.transferListed:
+        players = players.where((p) => p.isTransferListed).toList();
+        break;
+      case SquadStatusFilter.loans:
+        players = players.where((p) => p.isLoan || p.isLoanedOut).toList();
         break;
     }
     if (query.isNotEmpty) {
@@ -193,95 +225,42 @@ class _SquadScreenState extends State<SquadScreen> {
         _selected.add(playerId);
       }
     });
+    // 表では2人目を押したらすぐ比べる(カードでは下の「比較する」)。
+    if (_table && _selected.length == 2) _openCompare();
   }
 
-  void _showContractSheet(BuildContext context, Player p) {
-    final gameState = context.read<GameState>();
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (sheetContext) {
-        final renewalCost = gameState.renewalCostFor(p.id);
-        final signingBonus = gameState.signingBonusFor(p.id);
-        final totalCost = renewalCost + signingBonus;
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(p.name, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 4),
-                Text(
-                  Tr.pick(
-                      '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
-                      'Salary: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}'),
-                ),
-                const SizedBox(height: 12),
-                if (gameState.renewalBlockReason(p) != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(gameState.renewalBlockReason(p)!,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: SemanticColors.negative(context))),
-                  ),
-                if (gameState.save!.budget < totalCost)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      Tr.pick(
-                          '資金が${formatMoney(totalCost - gameState.save!.budget)}足りません'
-                              '（必要${formatMoney(totalCost)} / 手元${formatMoney(gameState.save!.budget)}）。',
-                          'You are ${formatMoney(totalCost - gameState.save!.budget)} short '
-                              '(need ${formatMoney(totalCost)}, you have ${formatMoney(gameState.save!.budget)}).'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: SemanticColors.negative(context)),
-                    ),
-                  ),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: gameState.save!.budget < totalCost ||
-                            gameState.renewalBlockReason(p) != null
-                        ? null
-                        : () {
-                            Navigator.pop(sheetContext);
-                            openContractOffer(context,
-                                player: p, kind: ContractKind.renewal);
-                          },
-                    child: Text(
-                      Tr.pick(
-                          '契約の更新を話し合う（手数料${formatMoney(renewalCost)} + サイン料${formatMoney(signingBonus)}）',
-                          'Discuss a new contract (fee ${formatMoney(renewalCost)} + bonus ${formatMoney(signingBonus)})'),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(sheetContext);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => PlayerDetailScreen(playerId: p.id),
-                        ),
-                      );
-                    },
-                    child: Text(Tr.pick('年俸交渉・放出など詳しい操作を開く',
-                        'Open wage talks, release and other actions')),
-                  ),
-                ),
-              ],
+  static String _nameOf(Team team, String id) =>
+      team.players.where((p) => p.id == id).map((p) => p.name).join();
+
+  /// 比較に入れる(行の「…」から)。2人そろったら比較の画面を開く。
+  void _addToCompare(Player p) {
+    setState(() {
+      _compareMode = true;
+      if (!_selected.contains(p.id)) {
+        if (_selected.length >= 2) _selected.removeAt(0);
+        _selected.add(p.id);
+      }
+    });
+    if (_selected.length == 2) _openCompare();
+  }
+
+  void _openCompare() {
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (_) => PlayerCompareScreen(
+              playerAId: _selected[0],
+              playerBId: _selected[1],
             ),
           ),
-        );
-      },
-    );
+        )
+        .then((_) {
+      if (mounted && _compareMode) _toggleCompareMode();
+    });
   }
+
+  void _openActions(BuildContext context, Player p) =>
+      showPlayerActions(context, p, onAddToCompare: _addToCompare);
 
   void _showIconLegend(BuildContext context) {
     showDialog<void>(
@@ -445,18 +424,7 @@ class _SquadScreenState extends State<SquadScreen> {
       drawer: const QuickAccessDrawer(),
       floatingActionButton: _compareMode && _selected.length == 2
           ? FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                        builder: (_) => PlayerCompareScreen(
-                          playerAId: _selected[0],
-                          playerBId: _selected[1],
-                        ),
-                      ),
-                    )
-                    .then((_) => _toggleCompareMode());
-              },
+              onPressed: _openCompare,
               icon: const Icon(Icons.compare_arrows),
               label: Text(Tr.pick('比較する', 'Compare')),
             )
@@ -469,7 +437,13 @@ class _SquadScreenState extends State<SquadScreen> {
               ? Row(children: [
                   const SizedBox(width: 12),
                   Expanded(
-                      child: Text(Tr.pick('選手を2人選択', 'Pick two players'),
+                      child: Text(
+                          _selected.length == 1
+                              ? Tr.pick(
+                                  '比べる相手をもう1人選んでください(${_nameOf(team, _selected.first)}を選択中)',
+                                  'Pick one more player (${_nameOf(team, _selected.first)} chosen)')
+                              : Tr.pick('選手を2人選択', 'Pick two players'),
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.titleSmall)),
                   ...actions,
                 ])
@@ -516,16 +490,17 @@ class _SquadScreenState extends State<SquadScreen> {
                 onChanged: (g) => setState(() => _filterGroup = g),
               ),
             ),
-            Padding(
+            // 絞り込みが8つに増えたので、折り返さず横に送る(縦画面の
+            // 一覧の高さを食わないように)。
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: [
-                    for (final f in SquadStatusFilter.values)
-                      ChoiceChip(
+              child: Row(
+                children: [
+                  for (final f in SquadStatusFilter.values)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ChoiceChip(
                         label: Text(
                           f == SquadStatusFilter.needsAttention
                               ? '${f.label} '
@@ -538,8 +513,8 @@ class _SquadScreenState extends State<SquadScreen> {
                         selected: _statusFilter == f,
                         onSelected: (_) => setState(() => _statusFilter = f),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
             Padding(
@@ -567,15 +542,26 @@ class _SquadScreenState extends State<SquadScreen> {
           ],
           list: players.isEmpty
               ? Center(child: Text(Tr.pick('該当する選手がいません', 'No players match')))
-              : (_table && !_compareMode)
+              : _table
                   ? SquadTable(
                       players: players,
                       startingIds: team.startingXI.toSet(),
-                      onTap: (p) => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => PlayerDetailScreen(playerId: p.id),
-                        ),
-                      ),
+                      stats: gameState
+                          .seasonStatsForAll(players.map((p) => p.id)),
+                      form: gameState
+                          .recentFormForAll(players.map((p) => p.id)),
+                      selectedIds: _selected.toSet(),
+                      onMenu: _compareMode
+                          ? null
+                          : (p) => _openActions(context, p),
+                      onTap: (p) => _compareMode
+                          ? _toggleSelected(p.id)
+                          : Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    PlayerDetailScreen(playerId: p.id),
+                              ),
+                            ),
                     )
                   : (wide
                       // 横画面のカードは2列。1列だと幅が余り、文が詰まって見えた。
@@ -911,17 +897,12 @@ class _SquadScreenState extends State<SquadScreen> {
                           ));
                     },
                   ),
-                  if (!p.isLoan && !p.isLoanedOut) ...[
-                    const SizedBox(width: 4),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.description_outlined,
-                        size: 20,
-                      ),
-                      tooltip: Tr.pick('契約を操作', 'Contract actions'),
-                      onPressed: () => _showContractSheet(context, p),
-                    ),
-                  ],
+                  const SizedBox(width: 4),
+                  IconButton(
+                    icon: const Icon(Icons.more_horiz, size: 20),
+                    tooltip: Tr.pick('操作', 'Actions'),
+                    onPressed: () => _openActions(context, p),
+                  ),
                 ],
               ),
         onTap: _compareMode
