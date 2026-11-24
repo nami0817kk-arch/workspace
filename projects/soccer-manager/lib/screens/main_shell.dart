@@ -365,6 +365,12 @@ class _FmTopBar extends StatelessWidget {
   /// 設定・用語集・ガイドを開く(左のメニューに入りきらないので帯の左端に置く)。
   final VoidCallback onMore;
 
+  /// 帯の日付。日本語は「7/1(水)」、英語は曜日を落として「1 Jul」。
+  static String _shortToday(DateTime d) {
+    final full = CalendarEngine.formatShortDate(d);
+    return Tr.pick(full, full.substring(full.indexOf(' ') + 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     final save = gameState.save;
@@ -424,26 +430,36 @@ class _FmTopBar extends StatelessWidget {
                     // 日付は年なしの短い形にし、節と部は切らずに残す。
                     // 小さな端末で「第7節・3部」が「…」に切れていた
                     // (2026-11-23)。切れるなら季のほうから。
+                    //
+                    // 日付は切らない。進むボタンと件数の札で帯が詰まると、
+                    // 「7/1(…」「Wed 1 J…」と日付から切れていた。切れるのは
+                    // 右端の季から(2026-11-24)。英語は曜日を落として短くする。
+                    // 小さなカレンダーの印で、押すとカレンダーが開くと分かる
+                    // ようにする。
                     Row(
                       children: [
+                        Icon(Icons.calendar_month,
+                            key: const ValueKey('topbar-calendar-icon'),
+                            size: 13,
+                            color: scheme.primary),
+                        const SizedBox(width: 3),
+                        Text(
+                          _shortToday(gameState.today),
+                          key: const ValueKey('topbar-date'),
+                          maxLines: 1,
+                          style: sub,
+                        ),
                         Flexible(
                           child: Text(
                             Tr.pick(
-                                '${CalendarEngine.formatShortDate(gameState.today)}  第${league.season}季',
-                                // 英語は短い形(「Season 1」は文字1.3倍で
-                                // 「…」に切れていた)。ホームの帯と同じ S1。
-                                '${CalendarEngine.formatShortDate(gameState.today)}  S${league.season}'),
+                                ' 第$matchday節・${save.currentDivisionTier}部 第${league.season}季',
+                                ' • MD $matchday • Tier ${save.currentDivisionTier} • S${league.season}'),
+                            key: const ValueKey('topbar-division'),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.clip,
+                            softWrap: false,
                             style: sub,
                           ),
-                        ),
-                        Text(
-                          Tr.pick(' 第$matchday節・${save.currentDivisionTier}部',
-                              ' • MD $matchday • Tier ${save.currentDivisionTier}'),
-                          key: const ValueKey('topbar-division'),
-                          maxLines: 1,
-                          style: sub,
                         ),
                       ],
                     ),

@@ -310,6 +310,8 @@ void main() {
         items.firstWhere((t) => t.kind == TodoKind.managerProposals);
     expect(items.recommendedAt(TodoMenu.finance, proposals.place.tab),
         greaterThan(0));
+    expect(find.text('オーナーの目標を決める'), findsNothing,
+        reason: '目標を決める入口は、右のやることの行だけにした');
     nav.go(proposals.place);
     await settle(tester);
     expect(find.text('承認').hitTestable(), findsWidgets);
