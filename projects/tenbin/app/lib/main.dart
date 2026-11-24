@@ -20,6 +20,7 @@ Future<void> main() async {
     yield LicenseEntryWithLineBreaks(['matter.js'], await rootBundle.loadString('assets/licenses/matter-js.txt'));
     yield LicenseEntryWithLineBreaks(['poly-decomp.js'], await rootBundle.loadString('assets/licenses/poly-decomp.txt'));
     yield LicenseEntryWithLineBreaks(['ことばの一覧（wordfreq・UniDic）'], await rootBundle.loadString('assets/licenses/words.txt'));
+    yield LicenseEntryWithLineBreaks(['JMdict'], await rootBundle.loadString('assets/licenses/jmdict.txt'));
   });
   final prefs = await SharedPreferences.getInstance();
   final money = Monetization(prefs, ads: createAdService(), store: createPurchaseService());

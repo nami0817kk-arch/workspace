@@ -20,6 +20,8 @@ class WebStore {
       if (k.startsWith(prefix) && _prefs.getString(k) != null) k.substring(prefix.length): _prefs.getString(k)!,
   };
 
+  String? get(String key) => _prefs.getString(prefix + key);
+
   Future<void> set(String key, String? value) =>
       value == null ? _prefs.remove(prefix + key) : _prefs.setString(prefix + key, value);
 }
@@ -50,7 +52,21 @@ class GameBridge {
     this.haptic,
     this.share,
     this.review,
+    this.deviceLang = 'ja',
   });
+
+  /// 端末の言語（`ja` / `en` など）。ゲームの中で言語を選んでいれば、そちらを使う
+  final String deviceLang;
+
+  /// お知らせの言語。ゲームが保存した `lang`（JSON の文字列）→ 端末の言語 の順に見る
+  String get lang {
+    final v = store.get('tenbin-kana-lang');
+    if (v == '"en"') return 'en';
+    if (v == '"ja"') return 'ja';
+    return deviceLang.startsWith('ja') ? 'ja' : 'en';
+  }
+
+  String _t(String ja, String en) => lang == 'en' ? en : ja;
 
   final Monetization money;
   final WebStore store;
@@ -151,18 +167,18 @@ class GameBridge {
   Future<void> _buy() async {
     final r = await money.buy();
     await pushApp(msg: switch (r) {
-      PurchaseOutcome.purchased => '広告を消しました。ありがとうございます',
-      PurchaseOutcome.pending => '保護者の承認を待っています。承認されると広告が消えます',
-      PurchaseOutcome.timedOut => '購入の結果がまだ届いていません。届きしだい自動で広告が消えます',
+      PurchaseOutcome.purchased => _t('広告を消しました。ありがとうございます', 'Ads removed. Thank you!'),
+      PurchaseOutcome.pending => _t('保護者の承認を待っています。承認されると広告が消えます', 'Waiting for approval. Ads will be removed once approved'),
+      PurchaseOutcome.timedOut => _t('購入の結果がまだ届いていません。届きしだい自動で広告が消えます', 'Still waiting for the purchase. Ads will be removed as soon as it arrives'),
       PurchaseOutcome.canceled => null,
-      PurchaseOutcome.unavailable => 'ストアに接続できませんでした',
-      PurchaseOutcome.failed => '購入できませんでした',
+      PurchaseOutcome.unavailable => _t('ストアに接続できませんでした', 'Could not connect to the App Store'),
+      PurchaseOutcome.failed => _t('購入できませんでした', 'The purchase did not go through'),
     });
   }
 
   Future<void> _restore() async {
     final r = await money.restore();
-    await pushApp(msg: r == PurchaseOutcome.purchased || money.adFree ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
+    await pushApp(msg: r == PurchaseOutcome.purchased || money.adFree ? _t('購入を復元しました', 'Purchase restored') : _t('復元できる購入が見つかりませんでした', 'No purchase to restore'));
   }
 
   /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。

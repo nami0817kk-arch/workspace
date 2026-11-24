@@ -95,6 +95,7 @@ Future<(GameBridge, Monetization, FakeAds, FakeStore, List<String>)> setup({
   void Function(String)? haptic,
   Future<void> Function(String)? share,
   Future<void> Function(Uri)? openUrl,
+  String deviceLang = 'ja',
 }) async {
   SharedPreferences.setMockInitialValues(prefs);
   final p = await SharedPreferences.getInstance();
@@ -111,6 +112,7 @@ Future<(GameBridge, Monetization, FakeAds, FakeStore, List<String>)> setup({
     showLicenses: () {},
     haptic: haptic,
     share: share,
+    deviceLang: deviceLang,
   );
   return (bridge, money, ads, store, js);
 }
@@ -262,6 +264,23 @@ void main() {
     final (b, _, _, _, js) = await setup();
     await b.handle('{"type":"restore"}');
     expect(lastApp(js)['msg'], '復元できる購入が見つかりませんでした');
+  });
+
+  test('お知らせは、端末が日本語以外なら英語で出す', () async {
+    final (b, _, _, _, js) = await setup(deviceLang: 'en');
+    await b.handle('{"type":"restore"}');
+    expect(lastApp(js)['msg'], 'No purchase to restore');
+    await b.handle('{"type":"buy"}');
+    expect(lastApp(js)['msg'], 'Ads removed. Thank you!');
+  });
+
+  test('ゲームの中で選んだ言語が、端末の言語より先', () async {
+    final (b, _, _, _, js) = await setup(deviceLang: 'en', prefs: {'web:tenbin-kana-lang': '"ja"'});
+    await b.handle('{"type":"restore"}');
+    expect(lastApp(js)['msg'], '復元できる購入が見つかりませんでした');
+    final (b2, _, _, _, js2) = await setup(deviceLang: 'ja', prefs: {'web:tenbin-kana-lang': '"en"'});
+    await b2.handle('{"type":"restore"}');
+    expect(lastApp(js2)['msg'], 'No purchase to restore');
   });
 
   test('外のページは決めた所だけ開く', () async {

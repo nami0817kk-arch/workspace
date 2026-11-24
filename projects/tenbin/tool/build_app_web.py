@@ -25,6 +25,14 @@ wordfreq のデータは Creative Commons Attribution-ShareAlike 4.0（CC BY-SA 
 この一覧も CC BY-SA 4.0 で扱う。 https://creativecommons.org/licenses/by-sa/4.0/
 '''
 
+JMDICT_LICENSE = '''Moji Stack / もじつみ — English meanings of words (meanings.js)
+
+The kanji spellings and English meanings come from JMdict, the property of the
+Electronic Dictionary Research and Development Group (EDRDG), used in conformance
+with the Group's licence: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0).
+https://www.edrdg.org/edrdg/licence.html  https://creativecommons.org/licenses/by-sa/4.0/
+'''
+
 
 def read(p):
     return io.open(p, encoding='utf-8').read()
@@ -61,7 +69,7 @@ def main():
     bad = re.findall(r'<(?:link|script|img)[^>]+(?:href|src)="https?://', s)
     assert not bad, '外のファイルを読みに行く要素が残っている: %r' % bad[:3]
     assert 'fonts.googleapis.com' not in s
-    for need in ('TenbinCore', 'TenbinMoney', 'TenbinGlyphs', 'TenbinWords', 'window.__TENBIN_APP', 'data:font/woff2;base64,'):
+    for need in ('TenbinCore', 'TenbinMoney', 'TenbinGlyphs', 'TenbinWords', 'TenbinMeanings', 'window.__TENBIN_APP', 'data:font/woff2;base64,'):
         assert need in s, need + ' が入っていない'
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     io.open(OUT, 'w', encoding='utf-8', newline='\n').write(s)
@@ -70,6 +78,7 @@ def main():
     shutil.copy(os.path.join(ROOT, 'node_modules', 'matter-js', 'LICENSE'), os.path.join(LIC, 'matter-js.txt'))
     shutil.copy(os.path.join(ROOT, 'node_modules', 'poly-decomp', 'LICENSE'), os.path.join(LIC, 'poly-decomp.txt'))
     io.open(os.path.join(LIC, 'words.txt'), 'w', encoding='utf-8', newline='\n').write(WORDS_LICENSE)
+    io.open(os.path.join(LIC, 'jmdict.txt'), 'w', encoding='utf-8', newline='\n').write(JMDICT_LICENSE)
     print('built app index.html (%d bytes)' % len(s.encode('utf-8')))
 
 

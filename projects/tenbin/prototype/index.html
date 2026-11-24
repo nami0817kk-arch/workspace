@@ -93,7 +93,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .words{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px;max-height:120px;overflow:auto}
 .w{font-family:TenbinKana,"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:16px;border-radius:10px;padding:5px 9px;background:var(--bg);border:1px solid var(--line)}
 .w.new{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2) inset}
-.w.new::after{content:"あたらしい";display:block;font:700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--accent)}
+.w.new::after{content:attr(data-new);display:block;font:700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--accent)}
 .w .pt{display:block;font:700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--ok)}
 .w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:400;letter-spacing:2px}
 .badge{display:inline-block;background:var(--accent2);color:#3b2f24;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;margin-top:6px}
@@ -102,6 +102,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .bar2{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin:4px 0 0}.bar2 i{display:block;height:100%;background:var(--ok)}
 .credits{text-align:left}.credits p{font-size:11px}
 .coach{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(59,47,36,.82);color:#fff;font-size:13px;font-weight:700;border-radius:999px;padding:7px 14px;white-space:nowrap;pointer-events:none;animation:fade .3s}
+.w .rm{display:block;font:400 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--sub);letter-spacing:0;max-width:150px;white-space:normal}
+.w .kj{font:700 12px "Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif;color:var(--sub);margin-left:4px}
 .dict h3{font-size:13px;color:var(--sub);margin:12px 0 0;font-weight:700}
 </style></head><body>
 <div class="app">
@@ -130,6 +132,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 <script src="decomp.min.js"></script>
 <script src="glyphs.js"></script>
 <script src="words.js"></script>
+<script src="meanings.js"></script>
 <script src="core.js"></script>
 <script src="monetization.js"></script>
 <script>
@@ -140,12 +143,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   var sheet = document.getElementById('sheet'), card = document.getElementById('card'), hint = document.getElementById('hint');
   // 字の色。ことば帳に集めた数で開く
   var THEMES = [
-    { key: 'base', name: 'いつもの', need: 0, ink: ['#d9472f', '#e98a1f', '#2f9a5c', '#2f6fc2', '#7b4fc0', '#d8508f', '#1f9a9a', '#b5552a'] },
-    { key: 'sakura', name: 'さくら', need: 30, ink: ['#e2577f', '#f08aa8', '#c9476e', '#e98fae', '#d86a8f', '#b84a6a'] },
-    { key: 'umi', name: 'うみ', need: 70, ink: ['#2f6fc2', '#1f9a9a', '#4b8fd8', '#2a5aa0', '#3fb0c8', '#5577cc'] },
-    { key: 'mori', name: 'もり', need: 150, ink: ['#2f9a5c', '#5a9a2f', '#3e7a48', '#6fae4f', '#2a8070', '#7a9a3a'] },
-    { key: 'sumi', name: 'すみ', need: 250, ink: ['#3b2f24', '#5a4a3a', '#2a2420', '#4a3f36', '#6a5848'] },
-    { key: 'kin', name: 'きんいろ', need: 400, ink: ['#c8961e', '#e0ad2c', '#b5832a', '#d9a441', '#caa23a'] }
+    { key: 'base', name: 'いつもの', en: 'Classic', need: 0, ink: ['#d9472f', '#e98a1f', '#2f9a5c', '#2f6fc2', '#7b4fc0', '#d8508f', '#1f9a9a', '#b5552a'] },
+    { key: 'sakura', name: 'さくら', en: 'Sakura', need: 30, ink: ['#e2577f', '#f08aa8', '#c9476e', '#e98fae', '#d86a8f', '#b84a6a'] },
+    { key: 'umi', name: 'うみ', en: 'Ocean', need: 70, ink: ['#2f6fc2', '#1f9a9a', '#4b8fd8', '#2a5aa0', '#3fb0c8', '#5577cc'] },
+    { key: 'mori', name: 'もり', en: 'Forest', need: 150, ink: ['#2f9a5c', '#5a9a2f', '#3e7a48', '#6fae4f', '#2a8070', '#7a9a3a'] },
+    { key: 'sumi', name: 'すみ', en: 'Ink', need: 250, ink: ['#3b2f24', '#5a4a3a', '#2a2420', '#4a3f36', '#6a5848'] },
+    { key: 'kin', name: 'きんいろ', en: 'Gold', need: 400, ink: ['#c8961e', '#e0ad2c', '#b5832a', '#d9a441', '#caa23a'] }
   ];
   // 台も、ことば帳に集めた数で開く（ふつう→てんびん→さか→ふたつ→ゆらゆら→せまい）
   var PLAT_NEED = { flat: 0, seesaw: 10, slope: 25, twin: 50, sway: 90, narrow: 140 };
@@ -168,6 +171,33 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function openUrl(u) { if (APP) appPost({ type: 'open', url: u }); else window.open(u, '_blank', 'noopener'); }
   // 壊れた値・古い形の値が入っていても遊べるように、型を確かめてから使う
   function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+  // --- ことば（日本語／英語）。端末の言語で始め、はじめの画面で切り替えられる。英語は日本語を学ぶ人向け ---
+  function deviceLang() { var l = (APP && APP.lang) || (navigator.languages && navigator.languages[0]) || navigator.language || 'ja'; return /^ja/i.test(l) ? 'ja' : 'en'; }
+  var lang = store.get('lang', null); if (lang !== 'ja' && lang !== 'en') lang = deviceLang();
+  function T(ja, en) { return lang === 'en' ? en : ja; }
+  // 字にローマ字を添える（英語では はじめから つける。日本語でも つけられる）
+  var showRoma = store.get('roma', null); if (typeof showRoma !== 'boolean') showRoma = lang === 'en';
+  var ROMA = { 'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o', 'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+    'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so', 'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
+    'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no', 'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
+    'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo', 'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+    'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro', 'わ': 'wa', 'を': 'wo', 'ん': 'n' };
+  // ヘボン式。ん のあとに母音・や行が来るときは n' で区切る（きんえん kin'en）
+  function romaji(w) { var o = ''; for (var i = 0; i < w.length; i++) { var r = ROMA[w[i]] || w[i];
+    if (w[i] === 'ん' && /^[aiueoy]/.test(ROMA[w[i + 1]] || '')) r = "n'"; o += r; } return o; }
+  window.__romaji = romaji;
+  var MEAN = window.TenbinMeanings || {};
+  function meaningOf(w) { var m = MEAN[w]; return m ? m[1] : ''; }
+  function kanjiOf(w) { var m = MEAN[w]; return m ? m[0] : ''; }
+  // ことばに添える1行: 英語なら ローマ字・意味、日本語でローマ字ありなら ローマ字だけ
+  function gloss(w) { if (lang === 'en') return romaji(w) + (meaningOf(w) ? ' · ' + meaningOf(w) : ''); return showRoma ? romaji(w) : ''; }
+  function glossHtml(w) { var k = lang === 'en' ? kanjiOf(w) : '', g = gloss(w);
+    return (k ? '<span class="kj">' + k + '</span>' : '') + (g ? '<small class="rm">' + esc(g) + '</small>' : ''); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  document.documentElement.lang = lang;
+  var PLAT_EN = { flat: 'Basic', seesaw: 'Seesaw', slope: 'Slope', twin: 'Twin', sway: 'Swing', narrow: 'Narrow' };
+  function pname(k) { return T(C.PLATFORMS[k].name, PLAT_EN[k]); }
+  function tname(t) { return T(t.name, t.en); }
   var bests = obj(store.get('bests2', {})), dict = obj(store.get('dict', {})), plat = String(store.get('plat', 'flat')), muted = store.get('muted', false) === true;
   var theme = String(store.get('theme', 'base')), useItems = store.get('items', true) !== false;
   // 記録はアイテムの あり／なし で分ける（使った点と使わない点を混ぜない）
@@ -186,10 +216,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 次に開くもの（ことば帳とはじめの画面に出す）
   function nextUnlock() {
     var n = dictCount(), list = [];
-    PLAT_ORDER.forEach(function (k) { if (PLAT_NEED[k] > n) list.push({ need: PLAT_NEED[k], text: '「' + C.PLATFORMS[k].name + '」の台' }); });
-    THEMES.forEach(function (t) { if (t.need > n) list.push({ need: t.need, text: '字の色「' + t.name + '」' }); });
+    PLAT_ORDER.forEach(function (k) { if (PLAT_NEED[k] > n) list.push({ need: PLAT_NEED[k], text: T('「' + pname(k) + '」の台', 'the ' + pname(k) + ' stage') }); });
+    THEMES.forEach(function (t) { if (t.need > n) list.push({ need: t.need, text: T('字の色「' + tname(t) + '」', 'the ' + tname(t) + ' colors') }); });
     list.sort(function (a, b) { return a.need - b.need; });
-    return list[0] ? 'あと ' + (list[0].need - n) + '語で ' + list[0].text + 'がひらく' : 'ぜんぶ ひらいた！';
+    if (!list[0]) return T('ぜんぶ ひらいた！', 'Everything unlocked!');
+    var left = list[0].need - n;
+    return T('あと ' + left + '語で ' + list[0].text + 'がひらく', left + ' more word' + (left === 1 ? '' : 's') + ' to unlock ' + list[0].text);
   }
 
   // --- 音（Web Audio でその場で鳴らす） ---
@@ -212,7 +244,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     fail: function () { tone(330, 0.5, 'sawtooth', 0.08, 0, 110); tone(220, 0.6, 'sine', 0.12, 0.05, 80); },
     record: function () { [0, 4, 7, 12, 16].forEach(function (n, i) { tone(587 * Math.pow(2, n / 12), 0.3, 'triangle', 0.14, i * 0.09); }); }
   };
-  function drawSoundBtn() { var el = document.getElementById('soundBtn'); el.textContent = 'おと'; el.className = 'chip' + (muted ? ' off' : ''); el.setAttribute('aria-pressed', String(!muted)); }
+  function drawSoundBtn() { var el = document.getElementById('soundBtn'); el.textContent = T('おと', 'Sound'); el.className = 'chip' + (muted ? ' off' : ''); el.setAttribute('aria-pressed', String(!muted)); }
   document.getElementById('soundBtn').onclick = function () { muted = !muted; store.set('muted', muted); drawSoundBtn(); if (!muted) SND.rot(); };
   drawSoundBtn();
 
@@ -265,8 +297,19 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   window.__drawAt = function (g, ch, x, y, a, al) { drawGlyph(g, ch, x, y, a, al); };
   function drawBody(g, b) {
-    var o = C.OFFSET[b.kind], c = Math.cos(b.angle), s = Math.sin(b.angle), sq = b.squash || 0;
-    drawGlyph(g, b.kind, b.position.x - (o.x * c - o.y * s), b.position.y - (o.x * s + o.y * c), b.angle, 1, b.glow || 0, 1 + 0.1 * sq, 1 - 0.12 * sq);
+    var o = C.OFFSET[b.kind], c = Math.cos(b.angle), s = Math.sin(b.angle), sq = b.squash || 0, x = b.position.x - (o.x * c - o.y * s), y = b.position.y - (o.x * s + o.y * c);
+    drawGlyph(g, b.kind, x, y, b.angle, 1, b.glow || 0, 1 + 0.1 * sq, 1 - 0.12 * sq);
+    romaTag(g, b.kind, x, y, b.angle, 1);
+  }
+  // 字の読み（ローマ字）の小さな札。字が回っても札は立てたまま、字の真ん中に置く
+  function romaTag(g, ch, x, y, a, alpha, size) {
+    if (!showRoma || ch === C.BOARD || !ROMA[ch]) return;
+    var t = ROMA[ch], fs = size || 12, cy = -8;   // 字形の真ん中は原点より少し上
+    g.save(); g.translate(x - Math.sin(a) * cy, y + Math.cos(a) * cy); g.globalAlpha = (alpha == null ? 1 : alpha) * 0.92;
+    g.font = '800 ' + fs + 'px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    var w = g.measureText(t).width + fs * 0.7, h = fs * 1.25;
+    g.fillStyle = 'rgba(255,250,241,.88)'; roundRect(g, -w / 2, -h / 2, w, h, h / 2); g.fill();
+    g.fillStyle = '#3b2f24'; g.fillText(t, 0, 1); g.restore();
   }
 
   // --- 状態 ---
@@ -285,25 +328,27 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   // はじめて遊ぶ人への手引き（最初の3字だけ。1度見たら出さない）
   var coachEl = document.getElementById('coach'), coached = store.get('coached', false) === true;
-  var COACH = ['指でなぞると 字が動く。はなすと落ちる', '「まわす」で回してから落とせる', '字と字を くっつけると ことばになる'];
+  var COACH = [T('指でなぞると 字が動く。はなすと落ちる', 'Drag to move. Let go to drop'), T('「まわす」で回してから落とせる', 'Tap "Rotate" to turn it first'), T('字と字を くっつけると ことばになる', 'Touching letters make words')];
   function updateCoach() {
     var show = !coached && phase === 'play' && s && s.placed < COACH.length;
     if (!show) { if (!coachEl.hidden && !coachEl.style.zIndex) coachEl.hidden = true; if (!coached && s && s.placed >= COACH.length) { coached = true; store.set('coached', true); } return; }
     if (coachEl.textContent !== COACH[s.placed]) coachEl.textContent = COACH[s.placed];
     coachEl.hidden = false;
   }
-  function setHint() { hint.textContent = s && s.def.seesaw ? 'かたよると板が傾く' : s && s.def.sway ? '台が左右に動く' : 'なぞって、はなすと落ちる'; }
+  function setHint() { hint.textContent = s && s.def.seesaw ? T('かたよると板が傾く', 'Uneven weight tips the board') : s && s.def.sway ? T('台が左右に動く', 'The stage swings') : T('なぞって、はなすと落ちる', 'Drag, then let go to drop'); }
   // アイテムのボタン
-  var ITEM_INFO = { glue: ['のり', 'つぎの字がくっつく'], board: ['いた', 'たいらな板をおく'], undo: ['とりけし', 'さいごの字をどける'], freeze: ['こおり', 'いまの字をかためる'] };
+  var ITEM_INFO = lang === 'en'
+    ? { glue: ['Glue', 'Next letter sticks'], board: ['Board', 'Drop a flat board'], undo: ['Undo', 'Remove the last letter'], freeze: ['Freeze', 'Lock the letters in place'] }
+    : { glue: ['のり', 'つぎの字がくっつく'], board: ['いた', 'たいらな板をおく'], undo: ['とりけし', 'さいごの字をどける'], freeze: ['こおり', 'いまの字をかためる'] };
   var itemsEl = document.getElementById('items');
   function drawItems() {
     if (!s || !s.useItems || (phase !== 'play' && phase !== 'pause' && phase !== 'ad')) { itemsEl.hidden = true; return; }
     itemsEl.hidden = false;
     itemsEl.innerHTML = C.ITEM_KEYS.map(function (k) { var n = s.items[k], on = k === 'glue' && s.glueArmed;
-      return '<button data-item="' + k + '" class="' + (on ? 'on' : '') + '"' + (n > 0 && !on ? '' : ' disabled') + ' aria-label="' + ITEM_INFO[k][0] + '（' + ITEM_INFO[k][1] + '）のこり' + n + '" title="' + ITEM_INFO[k][1] + '">' +
-        ITEM_INFO[k][0] + (on ? '<small>つぎに使う</small>' : '') + (n ? '<b>' + n + '</b>' : '') + '</button>'; }).join('') +
+      return '<button data-item="' + k + '" class="' + (on ? 'on' : '') + '"' + (n > 0 && !on ? '' : ' disabled') + ' aria-label="' + ITEM_INFO[k][0] + T('（' + ITEM_INFO[k][1] + '）のこり' + n, ' (' + ITEM_INFO[k][1] + '), ' + n + ' left') + '" title="' + ITEM_INFO[k][1] + '">' +
+        ITEM_INFO[k][0] + (on ? '<small>' + T('つぎに使う', 'Next') + '</small>' : '') + (n ? '<b>' + n + '</b>' : '') + '</button>'; }).join('') +
       // 動画を見てアイテムを1つもらう（1回の遊びで1回）
-      (s.itemVideoUsed ? '' : '<button data-video="1" class="vid" aria-label="動画を見てアイテムをもらう">' + (money.rewardNeedsAd() ? '▶ もらう' : 'もらう') + '<small>1回だけ</small></button>');
+      (s.itemVideoUsed ? '' : '<button data-video="1" class="vid" aria-label="' + T('動画を見てアイテムをもらう', 'Watch a video to get an item') + '">' + (money.rewardNeedsAd() ? T('▶ もらう', '▶ Get') : T('もらう', 'Get')) + '<small>' + T('1回だけ', 'Once') + '</small></button>');
     var vb = itemsEl.querySelector('[data-video]');
     if (vb) vb.onclick = function () {
       if (phase !== 'play' || s.itemVideoUsed) return;
@@ -319,11 +364,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function drawNext() {
     var g = nextCv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, nextCv.width, nextCv.height);
     if (!s) return;
-    nextCv.setAttribute('aria-label', 'つぎの字 ' + s.queue.slice(1, 4).join('、'));
+    nextCv.setAttribute('aria-label', T('つぎの字 ', 'Next letters: ') + s.queue.slice(1, 4).map(function (k) { return lang === 'en' && ROMA[k] ? k + ' ' + ROMA[k] : k; }).join(T('、', ', ')));
+    var room = showRoma ? 50 : 62, mid = showRoma ? nextCv.height / 2 - 9 : nextCv.height / 2;
     for (var i = 0; i < 3; i++) {
-      var k = s.queue[1 + i], e = C.extent(k, 0), w = e.maxX - e.minX, h = e.maxY - e.minY, box = 72, sc = Math.min(62 / w, 62 / h) * (i ? 0.82 : 1);
-      g.setTransform(sc, 0, 0, sc, box * i + box / 2 - (e.minX + w / 2) * sc, nextCv.height / 2 - (e.minY + h / 2) * sc);
+      var k = s.queue[1 + i], e = C.extent(k, 0), w = e.maxX - e.minX, h = e.maxY - e.minY, box = 72, sc = Math.min(room / w, room / h) * (i ? 0.82 : 1);
+      g.setTransform(sc, 0, 0, sc, box * i + box / 2 - (e.minX + w / 2) * sc, mid - (e.minY + h / 2) * sc);
       drawGlyph(g, k, 0, 0, 0, i ? 0.55 : 1);
+      if (showRoma && ROMA[k]) { g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = i ? 0.6 : 1; g.fillStyle = '#5a4a3a'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+        g.font = '800 17px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; g.fillText(ROMA[k], box * i + box / 2, nextCv.height - 4); g.globalAlpha = 1; }
     }
   }
   function holdPos() { var k = C.current(s); return { kind: k, x: C.clampX(k, ang, pointer.x), y: C.holdY(s, k, ang) }; }
@@ -365,23 +413,25 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
           dict[e.text] = 1; store.set('dict', dict); newWords.push(e.text); document.getElementById('dictN').textContent = dictCount();
           // ちょうど数に届いたものだけ知らせる
           var nOpen = dictCount(), un = [];
-          PLAT_ORDER.forEach(function (k) { if (PLAT_NEED[k] === nOpen) un.push('「' + C.PLATFORMS[k].name + '」の台がひらいた！'); });
-          THEMES.forEach(function (t) { if (t.need === nOpen) un.push('字の色「' + t.name + '」がつかえる！'); });
+          PLAT_ORDER.forEach(function (k) { if (PLAT_NEED[k] === nOpen) un.push(T('「' + pname(k) + '」の台がひらいた！', 'New stage: ' + pname(k) + '!')); });
+          THEMES.forEach(function (t) { if (t.need === nOpen) un.push(T('字の色「' + tname(t) + '」がつかえる！', 'New colors: ' + tname(t) + '!')); });
           if (un.length) { unlocked = unlocked.concat(un); un.forEach(function (u, i) { popup(u, W / 2, camTop + 170 + i * 22, false, '#7b4fc0'); }); SND.record(); }
         }
         popups.push({ text: e.text, x: Math.max(70, Math.min(W - 70, sx)), y: minY - 26, life: 1, big: true, col: '#d9472f', size: 30 + Math.min(4, e.text.length - 1) * 6 });
+        // 読みと意味（日本語を学ぶ人向け）。大きな字のすぐ下に
+        var gl = gloss(e.text); if (gl) popups.push({ text: gl, x: Math.max(90, Math.min(W - 90, sx)), y: minY - 2, life: 1, col: '#1f5f8a', gloss: true });
         // 長いことばほど派手に（3字で揺れ、4字以上で画面が光る）
         if (e.text.length >= 3) shake = Math.max(shake, 3 + e.text.length);
         if (e.text.length >= 4) flash = 1;
         var px = Math.max(70, Math.min(W - 70, sx));
-        wordLog.push({ text: e.text, pts: e.pts }); say('ことば ' + e.text + '、' + e.pts + '点');
-        popup('+' + e.pts + (e.mult > 1 ? '（×' + e.mult + '）' : ''), px, minY + 8, false, '#2f9a5c');
-        if (isNew) popup('あたらしいことば！', px, minY - 62, false, '#b5552a');
+        wordLog.push({ text: e.text, pts: e.pts }); say(T('ことば ' + e.text + '、' + e.pts + '点', 'Word ' + e.text + ', ' + romaji(e.text) + (meaningOf(e.text) ? ', ' + meaningOf(e.text) : '') + ', ' + e.pts + ' points'));
+        popup('+' + e.pts + (e.mult > 1 ? T('（×' + e.mult + '）', ' (×' + e.mult + ')') : ''), px, minY + (gl ? 18 : 8), false, '#2f9a5c');
+        if (isNew) popup(T('あたらしいことば！', 'New word!'), px, minY - 62, false, '#b5552a');
         sparkle(sx, minY, 18 * (e.text.length - 1) + (e.mult > 1 ? 20 : 0)); SND.word(e.text.length); buzz(e.text.length >= 3 ? [20, 40, 30] : 18);
       } else if (e.type === 'item') {
-        popup('「' + ITEM_INFO[e.item][0] + '」をもらった！', W / 2, camTop + 130, false, '#1f7a9a'); SND.rot(); setTimeout(drawItems, 0);
+        popup(T('「' + ITEM_INFO[e.item][0] + '」をもらった！', 'Got ' + ITEM_INFO[e.item][0] + '!'), W / 2, camTop + 130, false, '#1f7a9a'); SND.rot(); setTimeout(drawItems, 0);
       } else if (e.type === 'use') {
-        var msg = { glue: 'のり！ つぎの字がくっつく', board: 'いた！', undo: 'とりけし！', freeze: 'こおり！ かたまった' }[e.item];
+        var msg = (lang === 'en' ? { glue: 'Glue! The next letter sticks', board: 'Board!', undo: 'Undo!', freeze: 'Freeze! Locked in place' } : { glue: 'のり！ つぎの字がくっつく', board: 'いた！', undo: 'とりけし！', freeze: 'こおり！ かたまった' })[e.item];
         popup(msg, W / 2, camTop + 150, false, '#1f7a9a');
         if (e.item === 'freeze') { flash = 0.6; s.cargo.forEach(function (b) { b.glow = 0.6; }); }
         setTimeout(drawItems, 0);
@@ -391,7 +441,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         var lb = s.last; popup('+' + e.pts, (lb.bounds.min.x + lb.bounds.max.x) / 2, lb.bounds.min.y - 8, false, 'rgba(138,118,99,.9)');
       }
       if (e.type === 'score' || e.type === 'word') {
-        if (!recordBroken && best.p > 0 && s.points > best.p) { recordBroken = true; popup('さいこう記録こえ！', W / 2, camTop + 140, false, '#2f9a5c'); SND.record(); }
+        if (!recordBroken && best.p > 0 && s.points > best.p) { recordBroken = true; popup(T('さいこう記録こえ！', 'New best!'), W / 2, camTop + 140, false, '#2f9a5c'); SND.record(); }
       }
     });
     s.events.length = 0;
@@ -453,7 +503,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       var by = base - best.h; ctx.save(); ctx.setLineDash([6, 6]); ctx.strokeStyle = recordBroken ? 'rgba(47,154,92,.7)' : 'rgba(217,71,47,.6)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(0, by); ctx.lineTo(W, by); ctx.stroke(); ctx.restore();
       ctx.fillStyle = recordBroken ? '#2f9a5c' : '#d9472f'; ctx.textAlign = 'left'; ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
-      ctx.fillText('さいこう ' + (best.h * M_PER_PX).toFixed(1) + 'm', 6, by - 4);
+      ctx.fillText(T('さいこう ', 'Best ') + (best.h * M_PER_PX).toFixed(1) + 'm', 6, by - 4);
     }
     // 床
     drawFloor();
@@ -512,7 +562,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (ready && pk !== preview.key && frameN - preview.at > 4) { preview.key = pk; preview.at = frameN; preview.words = C.previewWords(s, hp2.kind, ang, hp2.x); }
       // （落とせない間は出さないだけ。消すと、揺れで一瞬 落とせなくなったあと数え直さず出なくなった）
       if (ready && preview.words.length && ly < C.GROUND) {
-        var pw = preview.words.slice(0, 2).join('・') + ' ？';
+        var pw = preview.words.slice(0, 2).map(function (w) { return showRoma ? w + ' ' + romaji(w) : w; }).join(T('・', ' / ')) + ' ?';
         ctx.save(); ctx.font = '900 15px ' + G.font + ',"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         // 影の横に出す（上に出すと、持っている字に隠れた）。右に入らなければ左
         var tw = ctx.measureText(pw).width, gh = e2.maxY - e2.minY, py = ly - gh / 2, half = (e2.maxX - e2.minX) / 2 + 10 + tw / 2 + 7;
@@ -524,7 +574,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       // 落ちる先が台の外（そのまま床へ落ちる）なら知らせる
       if (ready && ly >= C.GROUND) {
         ctx.save(); ctx.fillStyle = 'rgba(217,71,47,.85)'; ctx.font = '800 12px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText('ここは台の外', mid, hp2.y + e2.maxY + 22 + bob); ctx.restore();
+        ctx.fillText(T('ここは台の外', 'Off the stage'), mid, hp2.y + e2.maxY + 22 + bob); ctx.restore();
       }
       // まだ落とせない間は、待ちの残りを輪で見せる（最長3秒）
       if (!ready) {
@@ -534,6 +584,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       }
       if (s.glueArmed) { ctx.save(); ctx.globalAlpha = 0.5 + 0.3 * Math.sin(frameN / 6); ctx.fillStyle = 'rgba(120,200,140,.35)'; ctx.beginPath(); ctx.arc(mid, hp2.y + (e2.minY + e2.maxY) / 2 + bob, 48, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
       drawGlyph(ctx, hp2.kind, hp2.x, hp2.y + bob, visAng, ready ? 1 : 0.35);
+      romaTag(ctx, hp2.kind, hp2.x, hp2.y + bob, visAng, ready ? 1 : 0.35, 13);
     }
     // 粒と文字の飛び出し
     if (parts.length > 400) parts.splice(0, parts.length - 400);   // 粒は多すぎると重い
@@ -545,7 +596,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     popups.forEach(function (p) {
       var t = 1 - p.life, sc = p.big ? (t < 0.12 ? 0.6 + t / 0.12 * 0.55 : 1.15 - Math.min(0.15, (t - 0.12))) : 1;
       ctx.save(); ctx.translate(p.x, p.y); ctx.scale(sc, sc); ctx.globalAlpha = Math.min(1, p.life * 3);
-      ctx.font = p.big ? '900 ' + (p.size || 34) + 'px ' + G.font + ',"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif' : '800 14px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
+      ctx.font = p.big ? '900 ' + (p.size || 34) + 'px ' + G.font + ',"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif' : '800 ' + (p.gloss ? 13 : 14) + 'px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.lineWidth = p.big ? 7 : 4; ctx.strokeStyle = '#fffaf1'; ctx.strokeText(p.text, 0, 0); ctx.fillStyle = p.col; ctx.fillText(p.text, 0, 0); ctx.restore();
     });
@@ -558,22 +609,22 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // どれも 地面のそばの景色 → 積むほど 夕方 → 夜空。どうぶつタワーの 青空・白い雲・太陽 には寄せない（CLAUDE.md）
   var G0 = C.GROUND;
   var SCENES = {
-    flat: { name: 'にわ', fx: 'sakura', sun: '#e8573e', floor: 'engawa',
+    flat: { name: 'にわ', en: 'Garden', fx: 'sakura', sun: '#e8573e', floor: 'engawa',
       sky: [[0, '#f8eedc'], [350, '#f8e0c2'], [800, '#f4b893'], [1300, '#e08f86'], [1800, '#a7799e'], [2400, '#4e4a7c'], [3100, '#1d2145']],
       ridges: [[0.18, 1.3, 46, G0 - 170, '#dccbd2'], [0.32, 4.2, 38, G0 - 115, '#c4b3c2'], [0.5, 7.7, 30, G0 - 62, '#a596ab']] },
-    seesaw: { name: 'じんじゃ', fx: 'momiji', sun: '#d9452c', floor: 'gravel',
+    seesaw: { name: 'じんじゃ', en: 'Shrine', fx: 'momiji', sun: '#d9452c', floor: 'gravel',
       sky: [[0, '#f6e6cf'], [350, '#f3cfa3'], [800, '#ee9a6a'], [1300, '#c9624f'], [1800, '#7f4560'], [2400, '#3e2f55'], [3100, '#191a38']],
       ridges: [[0.18, 2.1, 40, G0 - 165, '#e2c3ae'], [0.32, 5.3, 34, G0 - 112, '#cfa48f'], [0.5, 8.1, 26, G0 - 62, '#b0857a']] },
-    slope: { name: 'ちゃばたけ', fx: 'leaf', sun: '#ec6a3c', floor: 'earth',
+    slope: { name: 'ちゃばたけ', en: 'Tea field', fx: 'leaf', sun: '#ec6a3c', floor: 'earth',
       sky: [[0, '#eef3df'], [350, '#e9eecd'], [800, '#f2d29a'], [1300, '#e3a07f'], [1800, '#94789f'], [2400, '#45467a'], [3100, '#1b2042']],
       ridges: [[0.18, 3.3, 30, G0 - 150, '#d3e0bd'], [0.32, 6.1, 26, G0 - 102, '#b6cc9a'], [0.5, 9.2, 20, G0 - 58, '#95b67a']] },
-    twin: { name: 'かわ', fx: 'hotaru', sun: '#f08a5d', floor: 'stone',
+    twin: { name: 'かわ', en: 'River', fx: 'hotaru', sun: '#f08a5d', floor: 'stone',
       sky: [[0, '#ecebe6'], [350, '#dfdcea'], [800, '#cdb5d6'], [1300, '#9a86b8'], [1800, '#5d5a92'], [2400, '#2f3466'], [3100, '#141a36']],
       ridges: [[0.18, 4.4, 36, G0 - 160, '#d0cce0'], [0.32, 2.6, 28, G0 - 110, '#b2aecb']] },
-    sway: { name: 'うみ', fx: 'none', sun: '#ef5b3a', floor: 'pier',
+    sway: { name: 'うみ', en: 'Sea', fx: 'none', sun: '#ef5b3a', floor: 'pier',
       sky: [[0, '#fbeedd'], [350, '#fbd9b5'], [800, '#f7b07c'], [1300, '#e57f74'], [1800, '#9b6a92'], [2400, '#3f3f76'], [3100, '#151a3a']],
       ridges: [] },
-    narrow: { name: 'ゆきやま', fx: 'snow', sun: '#f0a07a', floor: 'snow',
+    narrow: { name: 'ゆきやま', en: 'Snow peak', fx: 'snow', sun: '#f0a07a', floor: 'snow',
       sky: [[0, '#eef1f4'], [350, '#e1e6ee'], [800, '#d5cfe0'], [1300, '#b4a6c8'], [1800, '#7a76a8'], [2400, '#3d4476'], [3100, '#161c3c']],
       ridges: [[0.18, 1.7, 52, G0 - 185, '#f6f8fb'], [0.32, 3.9, 42, G0 - 125, '#e6ebf2'], [0.5, 6.6, 30, G0 - 66, '#d2d9e4']] }
   };
@@ -778,34 +829,39 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     drawPetals();
     if (phase === 'menu') return;
     // 夜空でも読めるよう、点数の下に紙を敷く
-    ctx.fillStyle = 'rgba(255,250,241,.82)'; roundRect(ctx, 6, 12, 112, (s.def.seesaw ? 104 : 70) + (s.useItems && phase === 'play' ? 18 : 0), 12); ctx.fill();
+    ctx.fillStyle = 'rgba(255,250,241,.82)'; roundRect(ctx, 6, 12, lang === 'en' ? 128 : 112, (s.def.seesaw ? 104 : 70) + (s.useItems && phase === 'play' ? 18 : 0), 12); ctx.fill();
     ctx.textBaseline = 'alphabetic';
     ctx.fillStyle = '#3b2f24'; ctx.textAlign = 'left'; ctx.font = '800 30px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
     // 点は数え上げるように増やす
     hudPts += (s.points - hudPts) * 0.18; if (Math.abs(s.points - hudPts) < 0.5) hudPts = s.points;
     var shown = Math.round(hudPts), grow = s.points - hudPts > 1 ? 1.12 : 1;
     ctx.save(); ctx.translate(14, 40); ctx.scale(grow, grow); ctx.fillText(shown, 0, 0); var nw = ctx.measureText(String(shown)).width * grow; ctx.restore();
-    ctx.font = '700 13px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText('点', 18 + nw, 40);
-    ctx.fillText(s.score + '字・' + (s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
-    ctx.fillText('ことば ' + s.made.length, 14, 74);
+    ctx.font = '700 13px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.fillText(T('点', 'pts'), 18 + nw, 40);
+    ctx.fillText(T(s.score + '字・', s.score + ' kana · ') + (s.height * M_PER_PX).toFixed(1) + 'm', 14, 58);
+    ctx.fillText(T('ことば ' + s.made.length, s.made.length + ' word' + (s.made.length === 1 ? '' : 's')), 14, 74);
     if (s.useItems && phase === 'play') {   // つぎのアイテムまで（字8つごと）
       var left = C.ITEM_EVERY - (s.placed % C.ITEM_EVERY);
-      ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#1f7a9a'; ctx.fillText('アイテムまで あと' + left + '字', 14, s.def.seesaw ? 124 : 90);
+      ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#1f7a9a'; ctx.fillText(T('アイテムまで あと' + left + '字', 'Item in ' + left + ' more'), 14, s.def.seesaw ? 124 : 90);
     }
     // さいきんできたことば（右上）
     if (phase === 'play') {
       var recent = s.made.slice(-3).reverse(), y0 = 14;
       ctx.textAlign = 'right';
-      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText('字と字を くっつけて', W - 14, 26); ctx.fillText('ことばを つくろう', W - 14, 40);
-        if (s.score >= 3) { ctx.fillStyle = '#b5552a'; ctx.fillText('ひかっている字の となりや上が ねらいめ', W - 14, 56); } }
+      if (!recent.length) { ctx.font = '700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = 'rgba(138,118,99,.85)'; ctx.fillText(T('字と字を くっつけて', 'Touch letters together'), W - 14, 26); ctx.fillText(T('ことばを つくろう', 'to make words'), W - 14, 40);
+        if (s.score >= 3) { ctx.fillStyle = '#b5552a'; ctx.fillText(T('ひかっている字の となりや上が ねらいめ', 'Aim next to the glowing letters'), W - 14, 56); } }
       recent.forEach(function (w, i) {
-        ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = ctx.measureText(w).width, x1 = W - 12, bh = i ? 24 : 30;
+        // 読みと意味を、ことばの下に小さく（日本語を学ぶ人向け）
+        var gl = gloss(w), gf = '700 ' + (i ? 9 : 10) + 'px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif';
+        ctx.font = gf; var gw = gl ? ctx.measureText(gl).width : 0;
+        ctx.font = '900 ' + (i ? 15 : 19) + 'px ' + G.font; var tw = Math.max(ctx.measureText(w).width, gw), x1 = W - 12, bh = (i ? 24 : 30) + (gl ? 12 : 0);
         ctx.globalAlpha = i ? 0.7 : 1; ctx.fillStyle = 'rgba(255,250,241,.9)'; roundRect(ctx, x1 - tw - 16, y0, tw + 16, bh, 9); ctx.fill();
         ctx.strokeStyle = i ? 'rgba(120,90,50,.2)' : '#f2b24f'; ctx.lineWidth = i ? 1 : 2; roundRect(ctx, x1 - tw - 16, y0, tw + 16, bh, 9); ctx.stroke();
-        ctx.fillStyle = '#3b2f24'; ctx.textBaseline = 'middle'; ctx.fillText(w, x1 - 8, y0 + bh / 2 + 1); ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#3b2f24'; ctx.textBaseline = 'middle'; ctx.fillText(w, x1 - 8, y0 + (i ? 24 : 30) / 2 + 1);
+        if (gl) { ctx.font = gf; ctx.fillStyle = '#1f5f8a'; ctx.fillText(gl, x1 - 8, y0 + bh - 9); }
+        ctx.textBaseline = 'alphabetic';
         ctx.globalAlpha = 1; y0 += bh + 5;
       });
-      if (!C.canDrop(s) && s.t - s.lastDropT > 40) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ゆれがおさまるまで まって', W / 2, VIEW_H - 14); }
+      if (!C.canDrop(s) && s.t - s.lastDropT > 40) { ctx.fillStyle = 'rgba(138,118,99,.8)'; ctx.font = '700 11px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.textAlign = 'center'; ctx.fillText(T('ゆれがおさまるまで まって', 'Wait for it to settle'), W / 2, VIEW_H - 14); }
     }
     if (s.def.seesaw && phase === 'play') {
       var r = C.tilt(s), mx = 14, my = 86, mw = 90, mh = 8;
@@ -818,7 +874,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       if (Math.abs(r) < 0.45) tiltWarn = false;
       if (danger && frameN % 20 < 10) { ctx.strokeStyle = '#d9472f'; ctx.lineWidth = 2; roundRect(ctx, mx - 6, my - 6, mw + 12, mh + 20, 8); ctx.stroke(); }
       var nx = mx + mw / 2 + r * mw / 2; ctx.fillStyle = '#3b2f24'; ctx.fillRect(nx - 1.5, my - 3, 3, mh + 6);
-      ctx.font = '9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText('かたむき', mx, my + mh + 11);
+      ctx.font = '9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; ctx.fillStyle = '#8a7663'; ctx.textAlign = 'left'; ctx.fillText(T('かたむき', 'Tilt'), mx, my + mh + 11);
     }
   }
 
@@ -827,47 +883,55 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function showSheet(html) { card.innerHTML = html; card.scrollTop = 0; sheet.className = 'sheet show'; }   // 前の画面のスクロール位置を持ち越さない
   function platButtons() {
     return '<div class="plats">' + PLAT_ORDER.map(function (k) { var b = bests[bkey(k)], open = isOpenPlat(k);
-      return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + '>' + C.PLATFORMS[k].name +
-        '<small>' + (!open ? 'ことば' + PLAT_NEED[k] + 'でひらく' : SCENES[k].name + '・' + (b && b.p ? b.p + '点' : 'まだ')) + '</small></button>'; }).join('') + '</div>';
+      return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + '>' + pname(k) +
+        '<small>' + (!open ? T('ことば' + PLAT_NEED[k] + 'でひらく', PLAT_NEED[k] + ' words') : T(SCENES[k].name, SCENES[k].en) + T('・', ' · ') + (b && b.p ? b.p + T('点', '') : T('まだ', '—'))) + '</small></button>'; }).join('') + '</div>';
   }
   function themeButtons() {
     return '<div class="themes">' + THEMES.map(function (t) { var open = isOpenTheme(t);
-      return '<button data-theme="' + t.key + '" class="' + (t.key === theme ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + ' aria-label="字の色 ' + t.name + '">' +
+      return '<button data-theme="' + t.key + '" class="' + (t.key === theme ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + ' aria-label="' + T('字の色 ', 'Colors: ') + tname(t) + '">' +
         '<span class="dots">' + t.ink.slice(0, 3).map(function (c) { return '<i style="background:' + (open ? c : '#cdbfa9') + '"></i>'; }).join('') + '</span>' +
-        (open ? t.name : t.need + '語') + '</button>'; }).join('') + '</div>';
+        (open ? tname(t) : t.need + T('語', '')) + '</button>'; }).join('') + '</div>';
   }
   function wirePlats(onPick) {
     card.querySelectorAll('[data-plat]').forEach(function (el) { el.onclick = function () { plat = el.getAttribute('data-plat'); store.set('plat', plat); SND.rot(); onPick(); }; });
     card.querySelectorAll('[data-items]').forEach(function (el) { el.onclick = function () { useItems = el.getAttribute('data-items') === '1'; store.set('items', useItems); SND.rot(); onPick(); }; });
+    card.querySelectorAll('[data-lang]').forEach(function (el) { el.onclick = function () { setLang(el.getAttribute('data-lang')); SND.rot(); onPick(); }; });
+    card.querySelectorAll('[data-roma]').forEach(function (el) { el.onclick = function () { showRoma = el.getAttribute('data-roma') === '1'; store.set('roma', showRoma); SND.rot(); drawNext(); onPick(); }; });
     card.querySelectorAll('[data-theme]').forEach(function (el) { el.onclick = function () { theme = el.getAttribute('data-theme'); store.set('theme', theme); INK = themeOf(theme).ink; SND.rot(); drawNext(); onPick(); }; });
   }
   function showMenu() {
     phase = 'menu'; drawItems();
-    showSheet('<h2>もじつみ</h2><p style="margin:-6px 0 0;font-size:12px;opacity:.7">ひらがな積み上げ ことばパズル</p><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas><p>字を<b>くっつけて</b>ことばにすると点がふえる。向きは自由。<br>2字100点・3字400点・4字900点</p>' +
-      '<p style="margin-top:6px;font-weight:700;color:var(--ink)">台をえらぶ</p>' + platButtons() +
-      '<p style="margin-top:6px;font-weight:700;color:var(--ink)">アイテム</p><div class="seg"><button data-items="1" class="' + (useItems ? 'cur' : '') + '">あり</button><button data-items="0" class="' + (useItems ? '' : 'cur') + '">なし</button></div>' +
-      '<p style="margin-top:6px;font-weight:700;color:var(--ink)">字の色</p>' + themeButtons() +
+    var H = function (t) { return '<p style="margin-top:6px;font-weight:700;color:var(--ink)">' + t + '</p>'; };
+    showSheet('<h2>' + T('もじつみ', 'Moji Stack') + '</h2><p style="margin:-6px 0 0;font-size:12px;opacity:.7">' + T('ひらがな積み上げ ことばパズル', 'Stack hiragana, learn Japanese words') + '</p><canvas id="demo" width="560" height="190" style="width:240px;height:81px;display:block;margin:2px auto 0"></canvas>' +
+      T('<p>字を<b>くっつけて</b>ことばにすると点がふえる。向きは自由。<br>2字100点・3字400点・4字900点</p>',
+        '<p><b>Touch</b> letters together to spell Japanese words — any direction.<br>2 letters 100 · 3 letters 400 · 4 letters 900</p>') +
+      H(T('台をえらぶ', 'Stage')) + platButtons() +
+      '<div class="seg" style="grid-template-columns:1fr 1fr 1fr 1fr;margin-top:10px">' +
+        '<button data-items="1" class="' + (useItems ? 'cur' : '') + '">' + T('アイテム', 'Items on') + '</button><button data-items="0" class="' + (useItems ? '' : 'cur') + '">' + T('なし', 'Off') + '</button>' +
+        '<button data-roma="1" class="' + (showRoma ? 'cur' : '') + '">' + T('ローマ字', 'Romaji') + '</button><button data-roma="0" class="' + (showRoma ? '' : 'cur') + '">' + T('なし', 'Off') + '</button></div>' +
+      H(T('字の色', 'Letter colors')) + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
-      '<p style="font-size:11px">ことば帳 ' + dictCount() + ' / ' + ALL_WORDS.length + '・遊んだ回数 ' + (moneyPrefs.get('games', 0) || 0) + '</p>' +
-      (money.adFree() ? '<p style="margin-top:8px">広告なし（購入ずみ）</p>' :
+      '<p style="font-size:11px">' + T('ことば帳 ', 'Word book ') + dictCount() + ' / ' + ALL_WORDS.length + T('・遊んだ回数 ', ' · Games ') + (moneyPrefs.get('games', 0) || 0) + '</p>' +
+      '<div class="seg" style="margin-top:8px"><button data-lang="ja" class="' + (lang === 'ja' ? 'cur' : '') + '" lang="ja">日本語</button><button data-lang="en" class="' + (lang === 'en' ? 'cur' : '') + '" lang="en">English</button></div>' +
+      (money.adFree() ? '<p style="margin-top:8px">' + T('広告なし（購入ずみ）', 'No ads (purchased)') + '</p>' :
         // アプリでは値段はストアから（読めるまでボタンを出さない。審査の端末で値段が取れないと「課金が見つからない」になる）
-        '<div class="row" style="margin-top:8px">' + (!APP ? '<button class="btn sec" id="noads">広告を消す（370円）</button>' :
-          APP.canBuy && APP.price ? '<button class="btn sec" id="noads">広告を消す（' + APP.price + '）</button>' : '') +
-        '<button class="btn sec" id="restore">購入を復元</button></div>') +
+        '<div class="row" style="margin-top:8px">' + (!APP ? '<button class="btn sec" id="noads">' + T('広告を消す（370円）', 'Remove ads (¥370)') + '</button>' :
+          APP.canBuy && APP.price ? '<button class="btn sec" id="noads">' + T('広告を消す（' + APP.price + '）', 'Remove ads (' + APP.price + ')') + '</button>' : '') +
+        '<button class="btn sec" id="restore">' + T('購入を復元', 'Restore') + '</button></div>') +
       (APP ? '' : '<p style="margin-top:8px;font-size:11px">試作用: 広告のふるまい <select id="adMode">' + ['normal:ふつう', 'nofill:読み込めない', 'closeEarly:途中で閉じる', 'showFail:表示に失敗'].map(function (o) {
         var kv = o.split(':'); return '<option value="' + kv[0] + '"' + (ads.mode === kv[0] ? ' selected' : '') + '>' + kv[1] + '</option>'; }).join('') + '</select>' +
         (money.adFree() ? ' <button class="chip" id="unbuy">広告ありに戻す</button>' : '') + '</p>') +
-      '<p style="margin-top:4px"><button class="chip" id="credits">クレジット</button></p>' +
-      '<div class="row"><button class="btn" id="go">はじめる</button></div>');
+      '<p style="margin-top:4px"><button class="chip" id="credits">' + T('クレジット', 'Credits') + '</button></p>' +
+      '<div class="row"><button class="btn" id="go">' + T('はじめる', 'Start') + '</button></div>');
     drawDemo();
     document.getElementById('credits').onclick = showCredits;
     wirePlats(function () { s = C.create(null, plat); drawNext(); showMenu(); });
     document.getElementById('go').onclick = function () { audio(); start(); };
     var nb = document.getElementById('noads');
-    if (nb) nb.onclick = function () { nb.disabled = true; if (APP || window.confirm('試作なので本当の購入はしません。広告なしにしますか？')) money.buy().then(function () { if (phase === 'menu') showMenu(); }); else nb.disabled = false; };
+    if (nb) nb.onclick = function () { nb.disabled = true; if (APP || window.confirm(T('試作なので本当の購入はしません。広告なしにしますか？', 'Prototype: no real purchase. Turn off ads?'))) money.buy().then(function () { if (phase === 'menu') showMenu(); }); else nb.disabled = false; };
     var rb = document.getElementById('restore');
     // アプリでは結果のお知らせはアプリから届く（tenbinSetApp の msg）
-    if (rb) rb.onclick = function () { rb.disabled = true; money.restore().then(function (r) { if (!APP && r !== 'purchased') window.alert('復元できる購入がありません'); if (phase === 'menu') showMenu(); }); };
+    if (rb) rb.onclick = function () { rb.disabled = true; money.restore().then(function (r) { if (!APP && r !== 'purchased') window.alert(T('復元できる購入がありません', 'Nothing to restore')); if (phase === 'menu') showMenu(); }); };
     var am = document.getElementById('adMode');
     if (am) am.onchange = function () { ads.mode = am.value; store.set('adMode', am.value); ads.dispose(); ads.ensureLoaded('rewarded'); };
     var ub = document.getElementById('unbuy');
@@ -884,7 +948,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     g.font = '900 15px ' + G.font; g.fillStyle = '#d9472f'; g.textBaseline = 'middle';
     g.fillText('ねこ', 70, 46); g.fillText('うみ', 210, 48);
     g.font = '700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif'; g.fillStyle = '#8a7663';
-    g.fillText('上と下でも', 20, 90); g.fillText('右から左でも', 146, 90);
+    if (lang === 'en') { g.fillStyle = '#1f5f8a'; g.fillText('neko · cat', 70, 60); g.fillText('umi · sea', 210, 62); g.fillStyle = '#8a7663'; }
+    g.fillText(T('上と下でも', 'top to bottom'), 20, 90); g.fillText(T('右から左でも', 'right to left'), 146, 90);
   }
   // さいこう記録を保存する（結果・途中でやめたとき）
   function saveBest() {
@@ -898,33 +963,37 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 記録は遊び始めたときのさいこう（best）とくらべる。結果画面を出し直しても「さいこう記録！」が消えないように
     var rec = s.points > best.p, b = best;
     saveBest();
-    var why = s.failed === 'ground' ? 'てんびんが床に着いた' : '「' + s.failedBody.kind + '」が落ちた';
+    var why = s.failed === 'ground' ? T('てんびんが床に着いた', 'The seesaw hit the floor') : T('「' + s.failedBody.kind + '」が落ちた', '「' + s.failedBody.kind + '」(' + (ROMA[s.failedBody.kind] || '') + ') fell');
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
     wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
-    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new' : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>ことばは できなかった。字と字を くっつけてみよう</p>';
+    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new" data-new="' + T('あたらしい', 'new') : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + glossHtml(a.text) + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>' + T('ことばは できなかった。字と字を くっつけてみよう', 'No words this time. Try touching letters together') + '</p>';
     var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
     var longest = agg.reduce(function (m, a) { return !m || a.text.length > m.length ? a.text : m; }, '');
-    var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">落ちた字をどけて つづきから（1回だけ）</p>' +
-      '<button class="btn" id="cont">' + (money.rewardNeedsAd() ? '▶ 動画を見て つづける' : 'つづける（広告なし）') + '</button>' +
+    var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">' + T('落ちた字をどけて つづきから（1回だけ）', 'Clear the fallen letters and keep going (once)') + '</p>' +
+      '<button class="btn" id="cont">' + (money.rewardNeedsAd() ? T('▶ 動画を見て つづける', '▶ Watch a video to continue') : T('つづける（広告なし）', 'Continue (no ad)')) + '</button>' +
       (resultMsg ? '<p style="margin:6px 0 0;color:var(--accent);font-weight:700">' + resultMsg + '</p>' : '') + '</div>' : '';
     resultMsg = '';
-    showSheet('<p>' + why + '</p><div class="big' + (cont ? ' sm' : '') + '">' + s.points + '<small> 点</small></div>' + cont +
-      '<p>字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点</p>' +
-      '<p>' + C.PLATFORMS[plat].name + 'の台・高さ ' + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +
-      (rec ? '<span class="badge">さいこう記録！</span>' : '<p>さいこう ' + b.p + '点' + (b.p > s.points ? '（あと ' + (b.p - s.points) + '点）' : '') + '</p>') +
-      (newWords.length ? '<p>あたらしいことば <b style="color:var(--accent)">' + newWords.length + 'こ</b>（ことば帳 ' + dictCount() + '）</p>' : '') +
-      (longest.length >= 3 ? '<p>いちばん長いことば <b style="color:var(--accent);font-size:16px">' + longest + '</b></p>' : '') + made +
+    showSheet('<p>' + why + '</p><div class="big' + (cont ? ' sm' : '') + '">' + s.points + '<small> ' + T('点', 'pts') + '</small></div>' + cont +
+      '<p>' + T('字 ' + s.score + '×10＝' + (s.score * C.LETTER_PTS) + '点 ＋ ことば ' + s.made.length + 'こ＝' + wsum + '点',
+        s.score + ' kana ×10 = ' + (s.score * C.LETTER_PTS) + ' + ' + s.made.length + ' word' + (s.made.length === 1 ? '' : 's') + ' = ' + wsum) + '</p>' +
+      '<p>' + T(pname(plat) + 'の台・高さ ', pname(plat) + ' stage · height ') + (s.height * M_PER_PX).toFixed(1) + 'm</p>' +
+      (rec ? '<span class="badge">' + T('さいこう記録！', 'New best!') + '</span>' : '<p>' + T('さいこう ' + b.p + '点', 'Best ' + b.p) + (b.p > s.points ? T('（あと ' + (b.p - s.points) + '点）', ' (' + (b.p - s.points) + ' to go)') : '') + '</p>') +
+      (newWords.length ? '<p>' + T('あたらしいことば <b style="color:var(--accent)">' + newWords.length + 'こ</b>（ことば帳 ' + dictCount() + '）',
+        'New words <b style="color:var(--accent)">' + newWords.length + '</b> (word book ' + dictCount() + ')') + '</p>' : '') +
+      (longest.length >= 3 ? '<p>' + T('いちばん長いことば', 'Longest word') + ' <b style="color:var(--accent);font-size:16px">' + longest + '</b>' + (gloss(longest) ? ' <small>' + esc(gloss(longest)) + '</small>' : '') + '</p>' : '') + made +
       (unlocked.length ? '<p class="unlock">' + unlocked.join('<br>') + '</p>' : '<p>' + nextUnlock() + '</p>') +
-      '<p style="margin-top:8px"><button class="chip" id="share">結果をシェア</button></p>' +
-      '<div class="row"><button class="btn sec" id="menu">台をかえる</button><button class="btn" id="again">もう一度</button></div>');
-    say(why + '。' + s.points + '点。' + (rec ? 'さいこう記録' : ''));
+      '<p style="margin-top:8px"><button class="chip" id="share">' + T('結果をシェア', 'Share') + '</button></p>' +
+      '<div class="row"><button class="btn sec" id="menu">' + T('台をかえる', 'Stages') + '</button><button class="btn" id="again">' + T('もう一度', 'Play again') + '</button></div>');
+    say(why + T('。', '. ') + s.points + T('点。', ' points. ') + (rec ? T('さいこう記録', 'New best') : ''));
     document.getElementById('share').onclick = function () {
-      var text = 'もじつみ（' + C.PLATFORMS[plat].name + 'の台）で ' + s.points + '点！ ことば ' + s.made.length + 'こ' + (longest ? '・いちばん長いのは「' + longest + '」' : '') + ' #もじつみ';
+      var text = T('もじつみ（' + pname(plat) + 'の台）で ' + s.points + '点！ ことば ' + s.made.length + 'こ' + (longest ? '・いちばん長いのは「' + longest + '」' : '') + ' #もじつみ',
+        'I scored ' + s.points + ' in Moji Stack (' + pname(plat) + ') with ' + s.made.length + ' Japanese word' + (s.made.length === 1 ? '' : 's') +
+        (longest ? ' — longest: ' + longest + ' (' + romaji(longest) + (meaningOf(longest) ? ', ' + meaningOf(longest) : '') + ')' : '') + ' #MojiStack');
       var el = this;
       if (APP) appPost({ type: 'share', text: text });
       else if (navigator.share) navigator.share({ text: text }).catch(function () {});
-      else if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { el.textContent = 'コピーしました'; }, function () { el.textContent = 'コピーできませんでした'; });
+      else if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { el.textContent = T('コピーしました', 'Copied'); }, function () { el.textContent = T('コピーできませんでした', 'Could not copy'); });
     };
     // 1回の遊びの終わりを1度だけ数える（つづけたあと また崩れても数え直さない）。全画面はつぎを始めるときに
     if (!s.endCounted) { s.endCounted = true; money.gameEnded(); }
@@ -937,7 +1006,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (cb) cb.onclick = function () {
       if (phase !== 'end') return;   // 2度押しで動画を2本見せない
       cb.disabled = true;
-      rewardThen(function () { C.revive(s); phase = 'play'; hideSheet(); drawNext(); drawItems(); popup('つづきから！', W / 2, camTop + 150, true, '#2f9a5c'); },
+      rewardThen(function () { C.revive(s); phase = 'play'; hideSheet(); drawNext(); drawItems(); popup(T('つづきから！', 'Go on!'), W / 2, camTop + 150, true, '#2f9a5c'); },
         function (msg) { resultMsg = msg; showResult(); });
     };
   }
@@ -948,9 +1017,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     return new Promise(function (res) {
       var back = phase; phase = 'ad';
       var n = kind === 'rewarded' ? 5 : 3, done = false;
-      showSheet('<div class="ad"><div class="ring"></div><h2>' + (kind === 'rewarded' ? '動画の広告' : '広告') + '（試作）</h2>' +
-        '<p>アプリでは ここで本物の広告が流れます<br>のこり <b id="adN">' + n + '</b> 秒</p>' +
-        '<button class="btn sec" id="adX">' + (kind === 'rewarded' ? 'とじる（ごほうびなし）' : 'とじる') + '</button></div>');
+      showSheet('<div class="ad"><div class="ring"></div><h2>' + (kind === 'rewarded' ? T('動画の広告', 'Video ad') : T('広告', 'Ad')) + T('（試作）', ' (prototype)') + '</h2>' +
+        '<p>' + T('アプリでは ここで本物の広告が流れます<br>のこり <b id="adN">' + n + '</b> 秒', 'The app shows a real ad here<br><b id="adN">' + n + '</b> s left') + '</p>' +
+        '<button class="btn sec" id="adX">' + (kind === 'rewarded' ? T('とじる（ごほうびなし）', 'Close (no reward)') : T('とじる', 'Close')) + '</button></div>');
       var x = document.getElementById('adX'); if (kind !== 'rewarded') x.disabled = true;
       function finish(r) { if (done) return; done = true; clearInterval(tm); phase = back; res(r); }
       var tm = setInterval(function () { n--; var el = document.getElementById('adN'); if (el) el.textContent = Math.max(0, n);
@@ -969,27 +1038,34 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     if (phase === 'menu') showMenu();
   });
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') money.refresh(); });
-  var GATE_MSG = { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
+  var GATE_MSG = lang === 'en'
+    ? { cancelled: '', declined: 'Watch to the end to get it', unavailable: 'No video right now. Please try again later', showFailed: 'The video could not be shown. Please try again later' }
+    : { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
   // 動画を見てごほうび。ごほうびは画面の状態を見ずに必ず渡す（docs/app-pitfalls.md の2）
   function rewardThen(onGranted, onOther) {
     var back = phase, cancelled = false; phase = 'ad';
     // 読み込みを待つ間（最長6秒）も「やめる」で戻れる
     money.beforeReward(function () {
-      showSheet('<div class="ad"><div class="ring"></div><h2>動画を読み込み中…</h2><p>少しだけ まってください</p><button class="btn sec" id="adCancel">やめる</button></div>');
+      showSheet('<div class="ad"><div class="ring"></div><h2>' + T('動画を読み込み中…', 'Loading video…') + '</h2><p>' + T('少しだけ まってください', 'Just a moment') + '</p><button class="btn sec" id="adCancel">' + T('やめる', 'Cancel') + '</button></div>');
       document.getElementById('adCancel').onclick = function () { cancelled = true; money.cancelReward(); phase = back; onOther(''); };
     }, function () { return cancelled; })
       .then(function (gate) { if (cancelled) return; phase = back; if (gate === 'granted') onGranted(); else onOther(GATE_MSG[gate] || ''); });
   }
   // 使わせてもらっているもの（ライセンスの表示）
   function showCredits() {
-    showSheet('<div class="credits"><h2 style="text-align:center">クレジット</h2>' +
-      '<p><b>もじつみ</b> © つるはし社</p>' +
-      '<p><b>字形</b>: M PLUS Rounded 1c（© The Rounded M+ Project Authors）SIL Open Font License 1.1</p>' +
-      '<p><b>ことば</b>: wordfreq（Robyn Speer）の頻度データ（CC BY-SA 4.0）で選び、UniDic（UniDic Consortium・BSD ライセンス）で品詞と読みを確かめた。ことばの一覧は CC BY-SA 4.0 で扱います</p>' +
-      '<p><b>物理</b>: matter.js（Liam Brummitt・MIT）／ poly-decomp.js（Stefan Hedman・MIT）</p>' +
-      '<p style="text-align:center"><button class="chip" id="privacy">プライバシーポリシー</button> <button class="chip" id="support">お問い合わせ・広告の報告</button>' +
-      (APP ? ' <button class="chip" id="licenses">ライセンス一覧</button>' : '') + '</p>' +
-      '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
+    showSheet('<div class="credits"><h2 style="text-align:center">' + T('クレジット', 'Credits') + '</h2>' +
+      '<p><b>' + T('もじつみ', 'Moji Stack') + '</b> © ' + T('つるはし社', 'Tsuruhashi-sha') + '</p>' +
+      T('<p><b>字形</b>: M PLUS Rounded 1c（© The Rounded M+ Project Authors）SIL Open Font License 1.1</p>' +
+        '<p><b>ことば</b>: wordfreq（Robyn Speer）の頻度データ（CC BY-SA 4.0）で選び、UniDic（UniDic Consortium・BSD ライセンス）で品詞と読みを確かめた。ことばの一覧は CC BY-SA 4.0 で扱います</p>' +
+        '<p><b>ことばの意味（英語）</b>: JMdict（Electronic Dictionary Research and Development Group・CC BY-SA 4.0）</p>' +
+        '<p><b>物理</b>: matter.js（Liam Brummitt・MIT）／ poly-decomp.js（Stefan Hedman・MIT）</p>',
+        '<p><b>Letters</b>: M PLUS Rounded 1c (© The Rounded M+ Project Authors), SIL Open Font License 1.1</p>' +
+        '<p><b>Word list</b>: chosen with wordfreq (Robyn Speer) frequency data (CC BY-SA 4.0) and checked with UniDic (UniDic Consortium, BSD). The word list is CC BY-SA 4.0</p>' +
+        '<p><b>English meanings</b>: JMdict, Electronic Dictionary Research and Development Group (CC BY-SA 4.0)</p>' +
+        '<p><b>Physics</b>: matter.js (Liam Brummitt, MIT) / poly-decomp.js (Stefan Hedman, MIT)</p>') +
+      '<p style="text-align:center"><button class="chip" id="privacy">' + T('プライバシーポリシー', 'Privacy policy') + '</button> <button class="chip" id="support">' + T('お問い合わせ・広告の報告', 'Support / report an ad') + '</button>' +
+      (APP ? ' <button class="chip" id="licenses">' + T('ライセンス一覧', 'Licenses') + '</button>' : '') + '</p>' +
+      '<div class="row"><button class="btn" id="close">' + T('とじる', 'Close') + '</button></div></div>');
     document.getElementById('close').onclick = showMenu;
     document.getElementById('privacy').onclick = function () { openUrl(SITE + '/privacy.html'); };
     document.getElementById('support').onclick = function () { openUrl(SITE + '/support.html'); };
@@ -1004,13 +1080,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     var wasPlay = phase === 'play'; if (wasPlay) phase = 'pause';
     // 五十音の順に並べる。集めた割合を棒で
     function list(title, arr) { arr = arr.slice().sort(function (a, b) { return a.localeCompare(b, 'ja'); }); var got = arr.filter(function (w) { return dict[w]; }).length;
-      return '<h3>' + title + '（' + got + '/' + arr.length + '）</h3><div class="bar2"><i style="width:' + (100 * got / arr.length).toFixed(1) + '%"></i></div><div class="words">' +
+      // 英語では意味つきの札にするので、1段に並ぶ数が減る
+      return '<h3>' + title + T('（', ' (') + got + '/' + arr.length + T('）', ')') + '</h3><div class="bar2"><i style="width:' + (100 * got / arr.length).toFixed(1) + '%"></i></div><div class="words">' +
       // まだのことばは数だけ（2000語ぶんの「・・」の箱が並ぶと、集めたことばが埋もれた）
-      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w">' + w + '</span>'; }).join('') +
-      (got < arr.length ? '<span class="w lock">まだ ' + (arr.length - got) + '語</span>' : '') + '</div>'; }
-    showSheet('<div class="dict"><h2>ことば帳</h2><p>くっつけてできたことばが ここに入る。' + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
-      list('2字', C.WORDS.short) + list('3字', C.WORDS.middle) + list('4字より長い', C.WORDS.long) +
-      '<div class="row"><button class="btn" id="close">とじる</button></div></div>');
+      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w">' + w + glossHtml(w) + '</span>'; }).join('') +
+      (got < arr.length ? '<span class="w lock">' + T('まだ ' + (arr.length - got) + '語', (arr.length - got) + ' to find') + '</span>' : '') + '</div>'; }
+    showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
+      list(T('2字', '2 letters'), C.WORDS.short) + list(T('3字', '3 letters'), C.WORDS.middle) + list(T('4字より長い', '4+ letters'), C.WORDS.long) +
+      '<div class="row"><button class="btn" id="close">' + T('とじる', 'Close') + '</button></div></div>');
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };
   }
   document.getElementById('dictBtn').onclick = showDict;
@@ -1019,10 +1096,11 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function showPause() {
     if (phase !== 'play') return;
     phase = 'pause'; pointer.active = false;
-    showSheet('<h2>ひとやすみ</h2><p>' + s.points + '点・' + s.score + '字</p>' +
-      '<div class="row" style="flex-direction:column"><button class="btn" id="resume">つづける</button>' +
-      '<button class="btn sec" id="retry">はじめから</button><button class="btn sec" id="toMenu">台をえらぶ画面へ</button></div>' +
-      (matchMedia('(hover: hover)').matches ? '<p style="font-size:11px">キーボード: ←→ 動かす（Shift で細かく）・↑/E と Q でまわす・スペースで落とす・Esc でとめる</p>' : ''));
+    showSheet('<h2>' + T('ひとやすみ', 'Paused') + '</h2><p>' + T(s.points + '点・' + s.score + '字', s.points + ' pts · ' + s.score + ' kana') + '</p>' +
+      '<div class="row" style="flex-direction:column"><button class="btn" id="resume">' + T('つづける', 'Resume') + '</button>' +
+      '<button class="btn sec" id="retry">' + T('はじめから', 'Restart') + '</button><button class="btn sec" id="toMenu">' + T('台をえらぶ画面へ', 'Back to stages') + '</button></div>' +
+      (matchMedia('(hover: hover)').matches ? '<p style="font-size:11px">' + T('キーボード: ←→ 動かす（Shift で細かく）・↑/E と Q でまわす・スペースで落とす・Esc でとめる',
+        'Keys: ←→ move (Shift for fine) · ↑/E and Q rotate · Space drop · Esc pause') + '</p>' : ''));
     document.getElementById('resume').onclick = function () { phase = 'play'; hideSheet(); };
     document.getElementById('retry').onclick = function () { saveBest(); start(); };
     document.getElementById('toMenu').onclick = function () { saveBest(); showMenu(); };
@@ -1033,6 +1111,34 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   // 裏に回ったら止めて、記録も残しておく（そのままアプリを終了されても消えない）
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') { if (phase === 'play' || phase === 'pause') saveBest(); showPause(); } });
   document.getElementById('dictN').textContent = dictCount();
+  function applyStatic() {
+    document.documentElement.lang = lang; document.title = T('もじつみ', 'Moji Stack');
+    document.querySelector('h1').innerHTML = T('もじ<span>つみ</span>', 'Moji <span>Stack</span>');
+    pauseBtn.textContent = T('とめる', 'Pause'); pauseBtn.setAttribute('aria-label', T('一時停止', 'Pause'));
+    document.getElementById('soundBtn').setAttribute('aria-label', T('音のオンとオフ', 'Sound on/off')); drawSoundBtn();
+    var db = document.getElementById('dictBtn'); db.firstChild.textContent = T('ことば帳 ', 'Book '); db.setAttribute('aria-label', T('ことば帳', 'Word book'));
+    cv.setAttribute('aria-label', T('ゲームの画面。ひらがなを積む台', 'Game screen: a stage for stacking hiragana'));
+    document.querySelector('.next span').textContent = T('つぎ', 'Next');
+    document.getElementById('rotL').setAttribute('aria-label', T('持っている字を左に45度まわす', 'Rotate left 45°'));
+    var rb = document.getElementById('rot'); rb.textContent = T('まわす', 'Rotate'); rb.setAttribute('aria-label', T('持っている字を右に45度まわす', 'Rotate right 45°'));
+    setHint();
+  }
+  function setLang(l) {
+    if (l !== 'ja' && l !== 'en' || l === lang) return;
+    lang = l; store.set('lang', lang);
+    // ローマ字は、自分で決めていなければ言語に合わせる
+    if (typeof store.get('roma', null) !== 'boolean') showRoma = lang === 'en';
+    // 言語で中身が変わる表は作り直す
+    ITEM_INFO = lang === 'en'
+      ? { glue: ['Glue', 'Next letter sticks'], board: ['Board', 'Drop a flat board'], undo: ['Undo', 'Remove the last letter'], freeze: ['Freeze', 'Lock the letters in place'] }
+      : { glue: ['のり', 'つぎの字がくっつく'], board: ['いた', 'たいらな板をおく'], undo: ['とりけし', 'さいごの字をどける'], freeze: ['こおり', 'いまの字をかためる'] };
+    GATE_MSG = lang === 'en'
+      ? { cancelled: '', declined: 'Watch to the end to get it', unavailable: 'No video right now. Please try again later', showFailed: 'The video could not be shown. Please try again later' }
+      : { cancelled: '', declined: '最後まで見ると もらえます', unavailable: 'いまは動画を読み込めません。少しあとで ためしてください', showFailed: '動画を出せませんでした。少しあとで ためしてください' };
+    COACH = [T('指でなぞると 字が動く。はなすと落ちる', 'Drag to move. Let go to drop'), T('「まわす」で回してから落とせる', 'Tap "Rotate" to turn it first'), T('字と字を くっつけると ことばになる', 'Touching letters make words')];
+    applyStatic(); drawNext();
+  }
+  applyStatic();
 
   // --- 進行 ---
   function tick() {
