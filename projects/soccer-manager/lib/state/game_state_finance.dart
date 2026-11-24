@@ -740,18 +740,70 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// 毎節続けて打つ試合日のイベント(「続ける」の設定)。無ければ null。
+  MatchdayPromo? get matchdayPromoKeep {
+    final id = _save?.matchdayPromoKeepId;
+    if (id == null) return null;
+    return matchdayPromos.where((p) => p.id == id).firstOrNull;
+  }
+
+  /// 試合日のイベントを「続ける」に決める([id] が null なら やめる)。
+  ///
+  /// 決めたら、次の節のイベントもすぐそれに替える(決めてあった別の
+  /// イベントは取り消して費用を戻す)。資金が足りなければ設定だけ残し、
+  /// 次の節は打たない。やめても、決めてある次の節のぶんはそのまま。
+  Future<bool> setMatchdayPromoKeep(String? id) async {
+    final save = _save;
+    if (save == null) return false;
+    if (id == null) {
+      save.matchdayPromoKeepId = null;
+      _notify();
+      await _persist();
+      return true;
+    }
+    final promo = matchdayPromos.where((p) => p.id == id).firstOrNull;
+    if (promo == null) return false;
+    save.matchdayPromoKeepId = promo.id;
+    final active = activeMatchdayPromo;
+    if (active?.id != promo.id) {
+      if (active != null) {
+        final refund = scaledMoney(active.cost);
+        if (refund > 0) _book(LedgerCategory.other, refund);
+        save.matchdayPromoId = null;
+      }
+      _applyKeptMatchdayPromo();
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 「続ける」のイベントを次の節に決める(資金が足りるときだけ)。
+  void _applyKeptMatchdayPromo() {
+    final save = _save!;
+    final keep = matchdayPromoKeep;
+    if (keep == null || save.matchdayPromoId != null) return;
+    final cost = scaledMoney(keep.cost);
+    if (cost > 0 && save.budget < cost) return;
+    if (cost > 0) _book(LedgerCategory.other, -cost);
+    save.matchdayPromoId = keep.id;
+  }
+
   /// 節を終えたとき、試合日のイベントの効きを2つの期待に反映して使い切る。
+  /// 「続ける」に決めてあれば、次の節にも同じイベントを決める。
   void _consumeMatchdayPromo() {
     final save = _save!;
     final promo = activeMatchdayPromo;
     if (promo == null) {
       save.matchdayPromoId = null;
+      _applyKeptMatchdayPromo();
       return;
     }
     _changeSupporters(promo.supporters, SupporterReason.pr);
     save.shareholderExpectation =
         (save.shareholderExpectation + promo.shareholders).clamp(0, 100);
     save.matchdayPromoId = null;
+    _applyKeptMatchdayPromo();
   }
 
   /// テスト用: 節を終えたときの試合日のイベントの処理だけを走らせる。

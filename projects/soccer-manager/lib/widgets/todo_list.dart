@@ -323,8 +323,10 @@ class TodoRow extends StatelessWidget {
                           if (item.note.isNotEmpty)
                             Text(
                               item.note,
-                              // 必須は読み切れるように長めに出す。
-                              maxLines: item.isMust ? 4 : 2,
+                              // 必須は読み切れるように長めに出す。おすすめは
+                              // 1行(状況を開いたときに上位が見えるように。
+                              // 2026-11-25)。
+                              maxLines: item.isMust ? 4 : 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 12,

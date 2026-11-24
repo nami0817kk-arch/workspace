@@ -100,11 +100,8 @@ void main() {
   testWidgets('オーナーの仕事: 資金不足は額を出し、今季済みはボタンの字だけ', (tester) async {
     final (game, settings) = await start(tester);
     final work = ownerWorks.firstWhere((w) => w.id == 'merch_drive');
-    final chip = OwnerWorkCategory.values.indexOf(work.category) + 1;
     game.save!.budget = 0;
     await pump(tester, game, settings, const OwnerWorkScreen());
-    await tester.tap(find.byKey(ValueKey('owner-work-chip-$chip')));
-    await tester.pumpAndSettle();
 
     final button = find.byKey(ValueKey('owner-work-do-${work.id}'));
     await tester.scrollUntilVisible(button, 120,
@@ -120,8 +117,6 @@ void main() {
     game.save!.ownerWorkDoneSeason[work.id] = game.save!.league.season;
     await pump(tester, game, settings,
         const OwnerWorkScreen(key: ValueKey('b')));
-    await tester.tap(find.byKey(ValueKey('owner-work-chip-$chip')));
-    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(button, 120,
         scrollable: find.byType(Scrollable).first);
     expect(tester.widget<FilledButton>(button).onPressed, isNull);

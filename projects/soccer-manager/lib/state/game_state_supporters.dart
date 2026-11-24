@@ -235,6 +235,25 @@ extension GameStateSupporters on GameState {
   int get thisMonthSupporterTotal =>
       (_save?.supporterMonth.values ?? const <int>[]).fold(0, (a, b) => a + b);
 
+  /// 状況の順位の札に入れる1行。「8月の期待 +2(結果 +2)・今月 0」。
+  /// 前の月が無ければ null(2026-11-25。別の札だったものを1行にした)。
+  String? get supporterMonthBandLine {
+    final s = _save;
+    if (s == null || s.supporterLastMonthKey == 0) return null;
+    String sign(int v) => v > 0 ? '+$v' : v == 0 ? '±0' : '$v';
+    final month = monthLabel(s.supporterLastMonthKey);
+    final parts = lastMonthSupporterParts.take(3).toList();
+    final detail = parts.isEmpty
+        ? ''
+        : Tr.pick(
+            '(${parts.map((p) => '${p.$1.label} ${sign(p.$2)}').join('、')})',
+            ' (${parts.map((p) => '${p.$1.label} ${sign(p.$2)}').join(', ')})');
+    final soFar = sign(thisMonthSupporterTotal);
+    return Tr.pick(
+        '$monthの期待 ${sign(lastMonthSupporterTotal)}$detail・今月 $soFar',
+        'Fans in $month: ${sign(lastMonthSupporterTotal)}$detail • this month $soFar');
+  }
+
   // ---- 補強と売却 ----
 
   /// 自クラブが [p] を獲った: 主力級(上位3人に入る)ならサポーターが沸く。

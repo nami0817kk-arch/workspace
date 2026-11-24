@@ -72,13 +72,13 @@ Map<String, (String, String)> get matchdayPromoTexts => {
       ),
     };
 
+/// 4種類(2026-11-25 に8種類から減らした)。節ごとに選び直すのではなく、
+/// 「続ける」に決めておくと、毎節そのイベントを打つ([GameState.matchdayPromoKeep])。
+/// 外したもの(マスコット祭り・OBトーク・地元感謝デー・VIP接待席)は、
+/// 効き目が残る4つのどれかとほぼ同じだった。名前は古いセーブのために残す。
 const List<MatchdayPromo> matchdayPromos = [
   MatchdayPromo(id: 'family_day', cost: 80, gateMultiplier: 1.10, supporters: 1),
   MatchdayPromo(id: 'discount_day', cost: 0, gateMultiplier: 0.90, supporters: 3),
   MatchdayPromo(id: 'light_up', cost: 150, gateMultiplier: 1.15, supporters: 1),
-  MatchdayPromo(id: 'mascot_fest', cost: 60, gateMultiplier: 1.05, supporters: 1),
-  MatchdayPromo(id: 'legends_talk', cost: 100, gateMultiplier: 1.08, supporters: 2),
-  MatchdayPromo(id: 'community_day', cost: 120, gateMultiplier: 1.04, supporters: 3),
-  MatchdayPromo(id: 'vip_hospitality', cost: 200, gateMultiplier: 1.18, supporters: -1),
   MatchdayPromo(id: 'charity_collect', cost: 40, gateMultiplier: 1.0, supporters: 2, shareholders: 1),
 ];

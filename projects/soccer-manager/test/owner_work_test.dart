@@ -4,14 +4,16 @@ import 'package:soccer_manager/models/owner_work.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
-/// オーナーの仕事30件。資金と2つの期待を動かす手で、1シーズンに1回ずつ。
+/// オーナーの仕事12件(2026-11-25 に33件から減らした)。資金と2つの期待を
+/// 動かす手で、1シーズンに1回ずつ(広報は月に1回)。
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('仕事は33件(通常30+危機3)で、IDが重複せず、名前と説明が全部ある', () {
-    expect(ownerWorks.length, 33);
-    expect(ownerWorks.where((w) => !w.onlyInRed).length, 30);
-    expect(ownerWorks.map((w) => w.id).toSet().length, 33);
+  test('仕事は12件(通常10+危機2)で、IDが重複せず、名前と説明が全部ある', () {
+    // 「オーナーの仕事が多くて分かりにくい」(2026-11-24)。目安10〜12件。
+    expect(ownerWorks.length, 12);
+    expect(ownerWorks.where((w) => !w.onlyInRed).length, 10);
+    expect(ownerWorks.map((w) => w.id).toSet().length, 12);
     for (final w in ownerWorks) {
       expect(w.title, isNotEmpty, reason: w.id);
       expect(w.description, isNotEmpty, reason: w.id);
@@ -57,7 +59,7 @@ void main() {
     final game = GameState();
     await game.startNewGame('仕事FC');
     game.save!.budget = 10;
-    final work = ownerWorks.firstWhere((w) => w.id == 'asia_tour');
+    final work = ownerWorks.firstWhere((w) => w.id == 'dividend_bonus');
     expect(game.canDoOwnerWork(work), isFalse);
     expect(await game.doOwnerWork(work.id), isFalse);
     expect(game.save!.budget, 10);

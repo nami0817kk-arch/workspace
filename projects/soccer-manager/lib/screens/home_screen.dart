@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
 import '../widgets/owner_event_card.dart';
+import '../widgets/decision_card.dart';
 import '../widgets/agm_demand_card.dart';
 import '../widgets/preseason_tour_card.dart';
 import '../widgets/surgery_decision_card.dart';
@@ -14,6 +15,7 @@ import '../logic/calendar_engine.dart';
 import '../logic/cup_engine.dart';
 import '../logic/day_events.dart';
 import '../models/league.dart';
+import '../models/team.dart';
 import '../models/league_theme.dart';
 import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
@@ -30,7 +32,6 @@ import '../widgets/match_digest_dialog.dart';
 import '../widgets/inbox_card.dart';
 import '../widgets/incoming_offers_card.dart';
 import '../widgets/fm_panel.dart';
-import '../widgets/manager_report_card.dart';
 import '../widgets/todo_list.dart';
 import '../logic/todo_advisor.dart';
 import 'todo_navigation.dart';
@@ -127,7 +128,11 @@ class HomeScreen extends StatelessWidget {
           maxWidth: wide ? 1100 : 720,
           child: TwoPane(
             wide: wide,
-            children: [
+            // 横画面: 左は 帯・受信箱・目標・たたんだ数字、右は「やること」と
+            // 次の試合。縦長: 帯 → やること → 次の試合 → 数字 の順に1本。
+            children: _arrange(
+              wide: wide,
+              top: [
               // クラブの色で染めた見出しの帯。**状況の先頭に置く**(2026-11-21)。
               // 以前は左の欄の一番下にあり、開いても順位が見えなかった。
               //
@@ -188,7 +193,9 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16),
+                            // 帯は低めに(2026-11-25)。iPhone 横で、帯の下の
+                            // 受信箱まで送らずに見えるように。
+                            padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -234,7 +241,7 @@ class HomeScreen extends StatelessWidget {
                                     ],
                                   ],
                                 ),
-                                const SizedBox(height: 14),
+                                const SizedBox(height: 6),
                                 // **順位をここに大きく出す。** このゲームで
                                 // いちばん見る数字なのに、6枚のタイルの1枚に
                                 // 埋もれていた。帯の主役にする。
@@ -250,7 +257,7 @@ class HomeScreen extends StatelessWidget {
                                       key: const ValueKey('band-rank'),
                                       style: const TextStyle(
                                         fontFamily: 'NotoSansJP',
-                                        fontSize: 46,
+                                        fontSize: 40,
                                         fontWeight: FontWeight.w800,
                                         height: 1.0,
                                         letterSpacing: -2,
@@ -281,12 +288,12 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 8),
                                 Divider(
                                   height: 1,
                                   color: Colors.white.withValues(alpha: 0.22),
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 6),
                                 Text(
                                   Tr.pick(
                                       '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
@@ -325,6 +332,25 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                // 前の月のサポーターの期待の内訳。以前は別の札
+                                // (「8月の期待」)で、帯の下に1枚ぶんの高さを
+                                // 取っていた。順位の札に1行で入れる(2026-11-25)。
+                                if (gameState.supporterMonthBandLine
+                                    case final month?)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      month,
+                                      key: const ValueKey('band-month'),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white
+                                            .withValues(alpha: 0.85),
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
@@ -342,20 +368,17 @@ class HomeScreen extends StatelessWidget {
               // 目立つ形で(2026-11-23)。
               const SupporterUltimatumCard(),
               const SeasonReviewCard(),
-              // 監督からの週次報告(ひとことと経営診断)。
-              ManagerReportCard(weeklyNet: net),
-              // 前の月のサポーターの期待の内訳。
-              const SupporterMonthCard(),
-              // 「今週の決断」(いま手を付けること1件)は、右の欄の「やること」の
-              // 一覧に入れた(2026-11-24)。1件だけだと、ほかの用件が隠れた。
-              // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
+              // 監督の報告(ひとことと経営診断)は外した(2026-11-25)。順位と
+              // 目標は帯に、警告は「やること」に出ていて、同じことを3か所で
+              // 言っていた。前の月の期待の内訳は帯の中へ。
+              // 受信箱は件数の1行だけ(押すと受信箱の画面)。
               const InboxCard(),
               // オーナーの目標。決めた後の残りだけをここに出す。決める前の
               // 「目標を決める」は、右の「やること」の行の1つだけにした
               // (同じ用件が左右に2つ並んでいた。2026-11-24)。
               if (gameState.ownerGoal != null) const OwnerGoalCard(),
-              // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
-              const PaneBreak(divider: false),
+              ],
+              todos: [
               // 右の欄の先頭は「やること」の一覧(2026-11-24)。以前は左メニューの
               // 印・「決めること」・「今週の決断」が別々に数えていて、どこにも
               // 出ない用件があった。源は TodoAdvisor の1つ。
@@ -365,52 +388,21 @@ class HomeScreen extends StatelessWidget {
               const TodoHeader(),
               const TodoMustRows(),
               if (gameState.pendingBoardReviewMessage != null)
-                // 地と文字はテーマの組で塗る。以前は地が indigo.shade50 の
-                // 固定で、暗い見た目では白い文字が薄い地に載って読めなかった。
-                Card(
+                // 題と「了解した」だけ。中身は押すと開く(2026-11-25)。
+                DecisionCard(
                   key: const ValueKey('board-review-card'),
+                  icon: Icons.gavel,
+                  title: Tr.pick(
+                      'シーズン中盤 理事会レビュー', 'Mid-season board review'),
+                  detail: gameState.pendingBoardReviewMessage!,
                   color: scheme.secondaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.gavel,
-                                color: scheme.onSecondaryContainer),
-                            const SizedBox(width: 8),
-                            Text(
-                              Tr.pick(
-                                  'シーズン中盤 理事会レビュー', 'Mid-season board review'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                      color: scheme.onSecondaryContainer),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(gameState.pendingBoardReviewMessage!,
-                            style:
-                                TextStyle(color: scheme.onSecondaryContainer)),
-                        const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          // 唯一の操作なので塗りのボタン(文字だけだと
-                          // 押せる所に見えなかった)。
-                          child: FilledButton(
-                            onPressed: () {
-                              FeedbackService.tap();
-                              gameState.dismissBoardReview();
-                            },
-                            child: Text(Tr.pick('了解した', 'Understood')),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  onColor: scheme.onSecondaryContainer,
+                  choices: [
+                    DecisionChoice(Tr.pick('了解した', 'Understood'), () {
+                      FeedbackService.tap();
+                      gameState.dismissBoardReview();
+                    }),
+                  ],
                 ),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
               if (gameState.agmDemand != null) const AgmDemandCard(),
@@ -449,111 +441,8 @@ class HomeScreen extends StatelessWidget {
               if (PreseasonTourCard.visible(gameState))
                 const PreseasonTourCard(),
               const TodoRecommendedList(),
-              const SizedBox(height: 4),
-              LayoutBuilder(
-                builder: (context, constraints) => GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: constraints.maxWidth > 500 ? 3 : 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  // 縦横比で高さを決めると、補足行やプログレスバーを持つ
-                  // タイルだけ中身がはみ出す。必要な高さを直接指定し、
-                  // 文字サイズ設定に合わせて伸ばす。
-                  mainAxisExtent: MediaQuery.textScalerOf(context).scale(108),
-                  children: [
-                    // 順位は帯へ移した。空いた枠には勝点を置く。
-                    // 順位だけでは「あと何が要るのか」が分からない。
-                    _StatTile(
-                      icon: Icons.emoji_events,
-                      label: Tr.pick('勝点', 'Points'),
-                      value: '${userRow.points}',
-                      sub: Tr.pick(
-                          '${userRow.won}勝${userRow.draw}分${userRow.lost}敗',
-                          '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
-                      color: SemanticColors.ink(context, Colors.amber.shade800),
-                    ),
-                    // 資金と2つの期待は、横画面では上バーに出ている。
-                    // 3か所に同じ数字が並んでいたので、上バーが無いときだけ出す。
-                    if (!EmbeddedInShell.of(context)) ...[
-                      _StatTile(
-                        icon: Icons.account_balance_wallet,
-                        label: Tr.pick('資金', 'Funds'),
-                        value: formatMoney(save.budget),
-                        sub: Tr.pick(
-                            '1年の収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
-                            "Per year ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
-                        color: net >= 0
-                            ? SemanticColors.positive(context)
-                            : SemanticColors.negative(context),
-                        subColor: net >= 0
-                            ? SemanticColors.positive(context)
-                            : SemanticColors.negative(context),
-                      ),
-                      // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
-                      _StatTile(
-                        icon: Icons.shield,
-                        label: Tr.pick('サポーターの期待', 'Supporter expectation'),
-                        glossaryTerm:
-                            Tr.pick('サポーターの期待', 'Supporter expectation'),
-                        value: '${save.confidence}',
-                        sub: Tr.pick('結果とオーナーの手', 'Results and your moves'),
-                        progress: save.confidence / 100,
-                        color: save.confidence <= 25
-                            ? SemanticColors.ink(context, Colors.redAccent)
-                            : SemanticColors.ink(context, Colors.teal.shade700),
-                      ),
-                      _StatTile(
-                        icon: Icons.account_balance,
-                        label: Tr.pick('株主の期待', 'Shareholder expectation'),
-                        value: '${save.shareholderExpectation}',
-                        sub: Tr.pick('収支', 'Finances'),
-                        progress: save.shareholderExpectation / 100,
-                        color: save.shareholderExpectation <= 25
-                            ? SemanticColors.ink(context, Colors.redAccent)
-                            : SemanticColors.ink(
-                                context, Colors.amber.shade800),
-                      ),
-                    ],
-                    _StatTile(
-                      icon: Icons.bar_chart,
-                      label: Tr.pick('平均総合力', 'Average overall'),
-                      value: '${userTeam.overallRating}',
-                      color: SemanticColors.ink(context, Colors.blue.shade700),
-                      glossaryTerm: Tr.pick('総合力', 'Overall'),
-                    ),
-                    _StatTile(
-                      icon: Icons.star,
-                      // オーナーとしての世間の評価(グッズ収入などに効く)。
-                      label: Tr.pick('オーナーの評判', 'Your reputation'),
-                      glossaryTerm: Tr.pick('オーナーの評判', 'Reputation'),
-                      value: '${gameState.managerReputation}',
-                      progress: gameState.managerReputation / 100,
-                      color: SemanticColors.ink(context, Colors.deepPurple),
-                    ),
-                    _StatTile(
-                      icon: Icons.groups,
-                      label: Tr.pick('観客動員', 'Attendance'),
-                      glossaryTerm: Tr.pick('観客動員', 'Attendance'),
-                      value: Tr.pick(
-                          '${formatCount(gameState.lastMatchAttendance ?? gameState.expectedAttendance)}人',
-                          formatCount(gameState.lastMatchAttendance ??
-                              gameState.expectedAttendance)),
-                      sub: Tr.pick(
-                          '収容人数 ${formatCount(gameState.stadiumCapacity)}人',
-                          'Capacity ${formatCount(gameState.stadiumCapacity)}'),
-                      color: SemanticColors.ink(context, Colors.brown.shade600),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              _ThisWeekCard(gameState: gameState, next: next, league: league),
-              const SizedBox(height: 12),
-              // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
-              const BigMomentPresenter(),
-              if (gameState.save?.frontPageHeadline != null)
-                const FrontPageCard(),
+              ],
+              match: [
               if (gameState.pendingSuperCup != null)
                 _SuperCupCard(gameState: gameState),
               // 試合の日が近いときだけ出す。以前は7月から「カップ戦へ」が
@@ -575,40 +464,6 @@ class HomeScreen extends StatelessWidget {
                       openTodoPlace(context, TodoPlaces.leagueCups);
                     },
                     child: Text(Tr.pick('カップ戦へ', 'Go to the cup')),
-                  ),
-                ),
-              // 理事会の路線。順位だけでなく戦い方も見られている。
-              // 守れていないことに気づけないと、信頼が落ちる理由が
-              // 分からないまま解任される。
-              if ((gameState.save?.clubVision ?? ClubVision.none) !=
-                  ClubVision.none)
-                Card(
-                  child: ListTile(
-                    leading: Icon(
-                      gameState.isClubVisionSatisfied
-                          ? Icons.check_circle_outline
-                          : Icons.error_outline,
-                      color: gameState.isClubVisionSatisfied
-                          ? SemanticColors.positive(context)
-                          : SemanticColors.negative(context),
-                    ),
-                    title: Text(
-                      Tr.pick('理事会の路線: ${gameState.save!.clubVision.label}',
-                          'Board direction: ${gameState.save!.clubVision.label}'),
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    subtitle: Text(
-                      // 評価はシーズン終了時に一度だけ。いま守れているかと、
-                      // 今季どれだけ守れてきたかの両方を出す。片方だけだと
-                      // 「いま直せば間に合うのか」が分からない。
-                      (gameState.isClubVisionSatisfied
-                              ? Tr.pick('守れています。', 'You are meeting it. ')
-                              : Tr.pick(
-                                  '守れていません。', 'You are not meeting it. ')) +
-                          gameState.clubVisionProgressLabel +
-                          gameState.save!.clubVision.requirement,
-                      style: const TextStyle(fontSize: 12),
-                    ),
                   ),
                 ),
               // 季の後に自クラブのカップ戦が残っていれば、進むボタンで行う
@@ -867,6 +722,55 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
+              more: [
+              // 数字のタイルは「クラブの数字」にたたむ(2026-11-25)。開いた
+              // ときにスクロールなしで順位と目標・2つの期待・必須・おすすめが
+              // 見えるように。資金と2つの期待は、横画面では上の帯にある。
+              _NumbersSection(
+                gameState: gameState,
+                userTeam: userTeam,
+                userRow: userRow,
+                net: net,
+              ),
+              // 理事会の路線。順位だけでなく戦い方も見られている。
+              // 守れていないことに気づけないと、信頼が落ちる理由が
+              // 分からないまま解任される。
+              if ((gameState.save?.clubVision ?? ClubVision.none) !=
+                  ClubVision.none)
+                Card(
+                  child: ListTile(
+                    leading: Icon(
+                      gameState.isClubVisionSatisfied
+                          ? Icons.check_circle_outline
+                          : Icons.error_outline,
+                      color: gameState.isClubVisionSatisfied
+                          ? SemanticColors.positive(context)
+                          : SemanticColors.negative(context),
+                    ),
+                    title: Text(
+                      Tr.pick('理事会の路線: ${gameState.save!.clubVision.label}',
+                          'Board direction: ${gameState.save!.clubVision.label}'),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    subtitle: Text(
+                      // 評価はシーズン終了時に一度だけ。いま守れているかと、
+                      // 今季どれだけ守れてきたかの両方を出す。片方だけだと
+                      // 「いま直せば間に合うのか」が分からない。
+                      (gameState.isClubVisionSatisfied
+                              ? Tr.pick('守れています。', 'You are meeting it. ')
+                              : Tr.pick(
+                                  '守れていません。', 'You are not meeting it. ')) +
+                          gameState.clubVisionProgressLabel +
+                          gameState.save!.clubVision.requirement,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
+              const BigMomentPresenter(),
+              if (gameState.save?.frontPageHeadline != null)
+                const FrontPageCard(),
               // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を
               // 大きなタイルで並べ直すと、状況ページが縦に長くなるだけなので出さない。
               if (!EmbeddedInShell.of(context)) ...[
@@ -897,7 +801,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -1466,6 +1371,174 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+/// 状況の札を、横画面は左右2つの欄に、縦長は1本に並べる。
+///
+/// - [top]: 帯(順位・目標・前の月の期待)・最後通告・受信箱・目標
+/// - [todos]: 「やること」(必須とおすすめ)
+/// - [match]: 次の試合・カップ戦・季の終わり
+/// - [more]: たたんだ数字・理事会の路線・一面
+///
+/// 開いたとき、スクロールなしで順位と目標・2つの期待・必須・おすすめの上位が
+/// 見えるように、[more] は横画面では左の欄の下、縦長ではいちばん下へ
+/// (2026-11-25)。
+List<Widget> _arrange({
+  required bool wide,
+  required List<Widget> top,
+  required List<Widget> todos,
+  required List<Widget> match,
+  required List<Widget> more,
+}) =>
+    wide
+        ? [...top, ...more, const PaneBreak(divider: false), ...todos, ...match]
+        : [...top, ...todos, ...match, ...more];
+
+/// 数字のタイル。縦長(上の帯が無い)ときの資金と2つの期待だけを開いたまま
+/// 出し、残り(勝点・平均総合力・オーナーの評判・観客動員)は「クラブの数字」
+/// にたたむ(2026-11-25)。
+class _NumbersSection extends StatelessWidget {
+  const _NumbersSection({
+    required this.gameState,
+    required this.userTeam,
+    required this.userRow,
+    required this.net,
+  });
+
+  final GameState gameState;
+  final Team userTeam;
+  final StandingRow userRow;
+  final int net;
+
+  Widget _grid(BuildContext context, List<Widget> tiles) => LayoutBuilder(
+        builder: (context, constraints) => GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: constraints.maxWidth > 500 ? 3 : 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          // 縦横比で高さを決めると、補足行やプログレスバーを持つ
+          // タイルだけ中身がはみ出す。必要な高さを直接指定し、
+          // 文字サイズ設定に合わせて伸ばす。
+          mainAxisExtent: MediaQuery.textScalerOf(context).scale(108),
+          children: tiles,
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final save = gameState.save!;
+    // 資金と2つの期待は、横画面では上バーに出ている。3か所に同じ数字が
+    // 並んでいたので、上バーが無いときだけ出す。
+    final primary = EmbeddedInShell.of(context)
+        ? const <Widget>[]
+        : [
+            _StatTile(
+              icon: Icons.account_balance_wallet,
+              label: Tr.pick('資金', 'Funds'),
+              value: formatMoney(save.budget),
+              sub: Tr.pick(
+                  '1年の収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                  "Per year ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
+              color: net >= 0
+                  ? SemanticColors.positive(context)
+                  : SemanticColors.negative(context),
+              subColor: net >= 0
+                  ? SemanticColors.positive(context)
+                  : SemanticColors.negative(context),
+            ),
+            // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
+            _StatTile(
+              icon: Icons.shield,
+              label: Tr.pick('サポーターの期待', 'Supporter expectation'),
+              glossaryTerm: Tr.pick('サポーターの期待', 'Supporter expectation'),
+              value: '${save.confidence}',
+              sub: Tr.pick('結果とオーナーの手', 'Results and your moves'),
+              progress: save.confidence / 100,
+              color: save.confidence <= 25
+                  ? SemanticColors.ink(context, Colors.redAccent)
+                  : SemanticColors.ink(context, Colors.teal.shade700),
+            ),
+            _StatTile(
+              icon: Icons.account_balance,
+              label: Tr.pick('株主の期待', 'Shareholder expectation'),
+              value: '${save.shareholderExpectation}',
+              sub: Tr.pick('収支', 'Finances'),
+              progress: save.shareholderExpectation / 100,
+              color: save.shareholderExpectation <= 25
+                  ? SemanticColors.ink(context, Colors.redAccent)
+                  : SemanticColors.ink(context, Colors.amber.shade800),
+            ),
+          ];
+    final rest = [
+      // 順位は帯へ移した。空いた枠には勝点を置く。
+      // 順位だけでは「あと何が要るのか」が分からない。
+      _StatTile(
+        icon: Icons.emoji_events,
+        label: Tr.pick('勝点', 'Points'),
+        value: '${userRow.points}',
+        sub: Tr.pick('${userRow.won}勝${userRow.draw}分${userRow.lost}敗',
+            '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
+        color: SemanticColors.ink(context, Colors.amber.shade800),
+      ),
+      _StatTile(
+        icon: Icons.bar_chart,
+        label: Tr.pick('平均総合力', 'Average overall'),
+        value: '${userTeam.overallRating}',
+        color: SemanticColors.ink(context, Colors.blue.shade700),
+        glossaryTerm: Tr.pick('総合力', 'Overall'),
+      ),
+      _StatTile(
+        icon: Icons.star,
+        // オーナーとしての世間の評価(グッズ収入などに効く)。
+        label: Tr.pick('オーナーの評判', 'Your reputation'),
+        glossaryTerm: Tr.pick('オーナーの評判', 'Reputation'),
+        value: '${gameState.managerReputation}',
+        progress: gameState.managerReputation / 100,
+        color: SemanticColors.ink(context, Colors.deepPurple),
+      ),
+      _StatTile(
+        icon: Icons.groups,
+        label: Tr.pick('観客動員', 'Attendance'),
+        glossaryTerm: Tr.pick('観客動員', 'Attendance'),
+        value: Tr.pick(
+            '${formatCount(gameState.lastMatchAttendance ?? gameState.expectedAttendance)}人',
+            formatCount(gameState.lastMatchAttendance ??
+                gameState.expectedAttendance)),
+        sub: Tr.pick('収容人数 ${formatCount(gameState.stadiumCapacity)}人',
+            'Capacity ${formatCount(gameState.stadiumCapacity)}'),
+        color: SemanticColors.ink(context, Colors.brown.shade600),
+      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (primary.isNotEmpty) ...[
+          _grid(context, primary),
+          const SizedBox(height: 8),
+        ],
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: ExpansionTile(
+            key: const ValueKey('home-numbers'),
+            leading: const Icon(Icons.insights_outlined),
+            title: Text(Tr.pick('クラブの数字', 'Club numbers'),
+                style: Theme.of(context).textTheme.titleSmall),
+            subtitle: Text(
+              Tr.pick(
+                  '勝点${userRow.points}・平均総合力${userTeam.overallRating}・評判${gameState.managerReputation}',
+                  '${userRow.points} pts • overall ${userTeam.overallRating} • reputation ${gameState.managerReputation}'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12),
+            ),
+            childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            children: [_grid(context, rest)],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _SuperCupCard extends StatelessWidget {
   final GameState gameState;
 
@@ -1497,95 +1570,6 @@ class _SuperCupCard extends StatelessWidget {
             Text(Tr.pick(
                 '開幕前特別マッチ: $dateに$opponentNameと対戦します。進むボタンがその日に止まります。',
                 'The curtain-raiser: you face $opponentName on $date. The advance button stops on that day.')),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 「今週」に何をすべきかを一目でまとめるカード。試合(リーグ/カップ)の
-/// 予定とトレーニングの実施状況を、カレンダーの代わりに凝縮して見せる。
-class _ThisWeekCard extends StatelessWidget {
-  final GameState gameState;
-  final Fixture? next;
-  final League league;
-
-  const _ThisWeekCard({
-    required this.gameState,
-    required this.next,
-    required this.league,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final dateLabel = CalendarEngine.formatShortDate(gameState.today);
-    final nextDate = gameState.nextMatchDate;
-    final nextDateLabel =
-        nextDate == null ? '' : CalendarEngine.formatShortDate(nextDate);
-    String matchLine;
-    if (next == null) {
-      matchLine = Tr.pick('リーグ戦は今シーズン終了しています', 'The league season is over');
-    } else {
-      final userId = gameState.userTeam.id;
-      final isHome = next!.homeTeamId == userId;
-      final opponentId = isHome ? next!.awayTeamId : next!.homeTeamId;
-      final opponent = league.teams.firstWhere(
-        (t) => t.id == opponentId,
-        orElse: () => league.teams.first,
-      );
-      final derby = gameState.isRivalFixture(next!);
-      matchLine = Tr.pick(
-          '$nextDateLabel 第${next!.matchday}節 ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' ・ダービー' : ''}',
-          "$nextDateLabel Matchday ${next!.matchday} ${isHome ? '(H)' : '(A)'} vs ${opponent.name}${derby ? ' • derby' : ''}");
-    }
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    Tr.pick('今週の予定 ($dateLabel)', 'This week ($dateLabel)'),
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Icon(Icons.sports_soccer, size: 18, color: scheme.primary),
-                const SizedBox(width: 6),
-                Expanded(child: Text(matchLine)),
-              ],
-            ),
-            if (gameState.isUserDomesticCupMatchSoon) ...[
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Icon(
-                    Icons.emoji_events_outlined,
-                    size: 18,
-                    color: SemanticColors.ink(context, Colors.amber, min: 3),
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                      child: Text(Tr.pick('国内カップ戦の出番も控えています',
-                          'You also have a domestic cup tie coming up'))),
-                ],
-              ),
-            ],
           ],
         ),
       ),

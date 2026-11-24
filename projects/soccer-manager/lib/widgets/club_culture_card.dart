@@ -10,7 +10,10 @@ import '../theme/semantic_colors.dart';
 
 /// クラブの文化を選ぶ(1季に1回まで)。
 class ClubCultureCard extends StatelessWidget {
-  const ClubCultureCard({super.key});
+  const ClubCultureCard({super.key, this.embedded = false});
+
+  /// 別の札の中に入れるとき(オーナー室の「文化と方針」)。枠を描かない。
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +23,7 @@ class ClubCultureCard extends StatelessWidget {
     final canChange = gs.canChangeClubCulture;
     final small =
         TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+    final body = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TitleWithHelp(
@@ -55,8 +55,9 @@ class ClubCultureCard extends StatelessWidget {
                 key: const ValueKey('culture-blocked'),
               ),
           ],
-        ),
-      ),
-    );
+        );
+    return embedded
+        ? Padding(padding: const EdgeInsets.only(bottom: 8), child: body)
+        : Card(child: Padding(padding: const EdgeInsets.all(16), child: body));
   }
 }
