@@ -164,7 +164,11 @@ List<Trait> traitDraw(Rng r, ClassDef cls, bool female) {
     TraitTier.uncommon,
     TraitTier.common,
   ]) {
-    if (!r.chance(tier.chance) || tr.length >= kMaxTraits) continue;
+    // 女性の「珍しい」の段だけ、女武者の分を上乗せして引く（籤の回数は変えない）。
+    final ch =
+        tier.chance +
+        (female && tier == TraitTier.uncommon ? kOnnaExtraChance : 0);
+    if (!r.chance(ch) || tr.length >= kMaxTraits) continue;
     final pool = [
       for (final t in kTraits)
         if (t.tier == tier && t.fits(cls, female)) t,

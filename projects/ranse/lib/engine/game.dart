@@ -457,9 +457,11 @@ class Game extends ChangeNotifier {
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
     dp *= risk * spendingRisk(this); // 具足・馬・郎党（`spending.dart`）
+    // 死因と結果の文に出す家の名は、いまの呼び名で（一五六七年からは徳川、一五八六年からは豊臣）。
+    final en = houseName(this, e.name);
     if (rng.chance(dp)) {
-      die('${e.name}との合戦で討死', 'senshi');
-      return '${e.name}との合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
+      die('$enとの合戦で討死', 'senshi');
+      return '$enとの合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
     }
     final merit =
         (mult *
@@ -473,7 +475,7 @@ class Game extends ChangeNotifier {
     l.fame += merit ~/ 3;
     l.fav = clampInt(l.fav + (win ? 3 : -1), 0, 100);
     j(win ? 2 : -4);
-    var txt = '${e.name}家との合戦。${win ? '我が方の勝利！' : '我が方は敗れた。'}功$merit。';
+    var txt = '$en家との合戦。${win ? '我が方の勝利！' : '我が方は敗れた。'}功$merit。';
     if (win) {
       final g = rng.range(1, 4) * mult.ceil();
       l.gold += g;
@@ -525,7 +527,7 @@ class Game extends ChangeNotifier {
       j(10);
       return '下剋上成功！${houseName(this, l.lord)}家を乗っ取り、ついに大名の座に就いた！';
     }
-    if (rng.chance(.7)) {
+    if (rng.chance(.35)) {
       die('謀反に失敗し、処刑された', 'seppuku');
       return '謀反は露見し、捕らえられて処刑された…';
     }
@@ -564,8 +566,8 @@ class Game extends ChangeNotifier {
     l.fame -= 3;
     j(-5);
     if (rng.chance(.08 * (1 - l.un / 200))) {
-      die('${t.name}家との戦で討死', 'senshi');
-      return '${t.name}家との戦に敗れ、討死した。';
+      die('${houseName(this, t.name)}家との戦で討死', 'senshi');
+      return '${houseName(this, t.name)}家との戦に敗れ、討死した。';
     }
     return '${t.name}家との戦に敗れた。勢力が削られた。';
   }

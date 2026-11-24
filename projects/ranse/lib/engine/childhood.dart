@@ -188,7 +188,7 @@ List<SceneDef> buildChildScenes() {
           g.mark('熱病に伏した');
           g.j(-4);
           if (g.rng.chance(
-            (l.hp < 50 ? .22 : .08) / (g.has('hardy') ? 2 : 1),
+            (l.hp < 50 ? .2 : .08) / (g.has('hardy') ? 2 : 1),
           )) {
             g.die('熱病で亡くなった');
             return '熱は下がらなかった。';

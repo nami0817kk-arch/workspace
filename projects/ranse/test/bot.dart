@@ -45,3 +45,17 @@ int pickAmbitious(Game g, Prompt p, Rng r) {
   }
   return best;
 }
+
+/// 能力で増えた手（[Choice.via] に [vias] のどれかの字を含む手）があれば、必ずそれを選ぶ選び方。
+/// なければ [pickAmbitious]。能力ごとの手の強さを比べる物差し（2026-11-24「気がかりの直し」）。
+/// 二つの能力のどちらかで出る手（`知魅` など）は、どちらの字でも当たる。特性・持ち物の名の印は当たらない。
+int pickVia(Game g, Prompt p, Rng r, String vias) {
+  if (p.title != '今年の重点') {
+    for (var i = 0; i < p.choices.length; i++) {
+      final v = p.choices[i].via;
+      if (v == null || !viaIsAbility(v)) continue;
+      if (v.split('').any(vias.contains)) return i;
+    }
+  }
+  return pickAmbitious(g, p, r);
+}

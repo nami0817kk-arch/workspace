@@ -220,6 +220,8 @@ void main() {
     var warBefore = 0, warAfter = 0, yielded = 0;
     final got = <String>{}, gotWays = <String>{}, gotKinds = <String>{};
     final bands = <String, List<int>>{};
+    final rareTales = <String>[];
+    final early = <(Game, EndingDef, String)>[];
     for (var i = 0; i < 3000; i++) {
       final g = _life(i, const [0, 1, 2, 2, 3][i % 5]);
       if (g == null || g.l.victory || g.year < 1601) continue;
@@ -253,6 +255,7 @@ void main() {
       b[0]++;
       if (sb) b[1]++;
       if (sa) b[2]++;
+      if (g.year < kPeaceYieldFrom && peaceTime(g)) early.add((g, def, kind));
       if (g.year < kPeaceYieldFrom || !peaceTime(g)) continue;
       after1616++;
       if (sb) side16Before++;
@@ -260,16 +263,28 @@ void main() {
       if (before != null && !sb && hasWarWords(before)) warBefore++;
       if (before != null && before.id != def.id && !_isNew(def)) yielded++;
       // 一六一六年からの世に亡くなった人の最期に、戦の世の言い回しは出ない。
-      // 残してよいのは、幻の最期と、自ら起こした戦で討死した人の戦死の最期だけ。
+      // 残してよいのは、幻の最期と、自ら起こした戦で討死した人の戦死の最期と、
+      // 稀な最期の昔語り（北ノ庄の落城を思い返す女 など。「現在の戦」の文は残さない）だけ。
       if (!sa && hasWarWords(def)) {
-        warAfter++;
         final ownBattle = kind == 'senshi' && !RegExp('大坂|島原').hasMatch(g.l.dead!);
+        final rareTale = def.tier == Tier.rare && isWarTale(def);
+        if (rareTale) {
+          rareTales.add(def.id);
+        } else {
+          warAfter++;
+        }
         expect(
-          def.tier == Tier.phantom || ownBattle,
+          def.tier == Tier.phantom || ownBattle || rareTale,
           isTrue,
           reason: '${def.id} ${g.year}年 $kind ${g.l.dead}',
         );
+        if (!ownBattle) expect(isWarNow(def), isFalse, reason: def.id);
       }
+    }
+    // 一六〇一〜一五年に亡くなった人には、戦の昔語りは出てよいが、「現在の戦」の文は出ない（自ら起こした戦の討死は除く）。
+    for (final (g, def, kind) in early) {
+      if (kind == 'senshi' && !RegExp('大坂|島原').hasMatch(g.l.dead!)) continue;
+      expect(isWarNow(def), isFalse, reason: '${def.id} ${g.year}年 $kind ${g.l.dead}');
     }
     String pct(int a, int b) => b == 0 ? '-' : '${(a * 100 / b).toStringAsFixed(1)}%';
     // ignore: avoid_print
@@ -280,6 +295,8 @@ void main() {
       '・戦の言い回しの最期 $warBefore → $warAfter・足した最期 ${got.length}種（道 ${gotWays.length}・死に方 ${gotKinds.length}）'
       '\n  ${(got.toList()..sort()).join(' ')}',
     );
+    // ignore: avoid_print
+    print('  一六一六年からの世に残った稀な昔語り ${rareTales.length}（${rareTales.toSet().join(' ')}）・一六〇一〜一五年 ${early.length}人生');
     expect(late, greaterThan(500));
     expect(after1616, greaterThan(200));
     // 泰平の側の最期が付く割合が上がる（足す前と比べる）。
@@ -390,6 +407,91 @@ void main() {
     final oe = buildEnding(old);
     expect(byId[oe.handId]!.spec, greaterThanOrEqualTo(9), reason: oe.handId);
     expect(oe.text, isNot(contains('{')));
+
+    // ---- 「現在の戦」と「昔語り」の分け方（2026-11-24 気がかりの直し）
+    // 表: 現在の戦は、陣中や囲まれた城で息を引き取る・戦の世がまだ続いている前提の文だけ。
+    for (final id in ['p_byo_abbot', 'd_tenju_born', 'b_byo_chosen', 'j_byo_numajiri', 'd_byo_longcamp']) {
+      expect(isWarNow(byId[id]!), isTrue, reason: id);
+      expect(isWarTale(byId[id]!), isFalse, reason: id);
+    }
+    for (final id in [
+      'f_kitanosho_survivor', 'f_tenju_onnajo', 'p_tenju_late_samurai', 'p_tenju_ishiyama', //
+      'b_byo_spouse', 'b_tenju_retired', 'j_tenju_joy', 'b_era_letters', 'f_tenju_content',
+    ]) {
+      expect(isWarTale(byId[id]!), isTrue, reason: id);
+      expect(isWarNow(byId[id]!), isFalse, reason: id);
+    }
+    // 泰平の最期と、戦に触れない最期は、どちらでもない。
+    expect(isWarNow(byId['b_taihei']!) || isWarNow(quiet), isFalse);
+    expect(kHandEndings.where(isWarNow).length, inInclusiveRange(8, 20));
+
+    final now = EndingDef(
+      id: 'x_now',
+      way: 'samurai',
+      tier: Tier.common,
+      title: '陣小屋で逝った侍',
+      text: '長い対陣の陣中で病に倒れた。',
+      kinds: const {'tenju'},
+      cond: (g) => true,
+      spec: 5,
+    );
+    final rareTale = EndingDef(
+      id: 'x_rare_tale',
+      way: 'samurai',
+      tier: Tier.rare,
+      title: '落城の日を語った侍',
+      text: 'かつての落城の日のことを、また思い返していた。',
+      kinds: const {'tenju'},
+      cond: (g) => true,
+      spec: 5,
+    );
+    final rareNow = EndingDef(
+      id: 'x_rare_now',
+      way: 'samurai',
+      tier: Tier.rare,
+      title: '陣中に果てた侍',
+      text: '遠い国の陣中で病に倒れた。',
+      kinds: const {'tenju'},
+      cond: (g) => true,
+      spec: 5,
+    );
+    expect(isWarNow(now), isTrue);
+    expect(isWarTale(war), isTrue);
+    // 一六〇一〜一五年: 現在の戦の文だけが譲り、昔語りは残る。譲った先には、昔語りの既存の最期も泰平の側の最期も入る。
+    expect(yieldsToPeace(early, now, 'tenju'), isTrue);
+    expect(yieldsToPeace(early, rareNow, 'tenju'), isTrue);
+    expect(yieldsToPeace(early, war, 'tenju'), isFalse);
+    expect(yieldsToPeace(early, rareTale, 'tenju'), isFalse);
+    expect(yieldsToPeace(early, quiet, 'tenju'), isFalse);
+    final poolEarly = yieldPool(early, 'tenju');
+    expect(poolEarly.any(isWarNow), isFalse);
+    expect(poolEarly.any((e) => e.id == 'b_byo_spouse'), isTrue);
+    expect(poolEarly.any((e) => e.id == 'b_taihei'), isTrue);
+    final ee = byId[buildEnding(early).handId]!;
+    expect(isWarNow(ee), isFalse, reason: ee.id);
+    // 一六〇一年より前（戦の世）は、現在の戦の文もそのまま。
+    final sengoku = make(1595);
+    sengoku.die('病に倒れた');
+    expect(yieldsToPeace(sengoku, now, 'byo'), isFalse);
+    // 一六一六年から: 稀な最期の昔語りは残り、稀でも現在の戦の文は譲る。ふつうの昔語りは、これまでどおり譲る。
+    expect(yieldsToPeace(g, rareTale, 'tenju'), isFalse);
+    expect(yieldsToPeace(g, rareNow, 'tenju'), isTrue);
+    expect(yieldsToPeace(g, now, 'tenju'), isTrue);
+    expect(yieldsToPeace(g, byId['f_kitanosho_survivor']!, 'tenju'), isFalse);
+    expect(yieldsToPeace(g, byId['p_tenju_late_samurai']!, 'tenju'), isFalse);
+    expect(yieldsToPeace(g, byId['b_byo_spouse']!, 'byo'), isTrue);
+    expect(yieldPool(g, 'tenju').every((e) => isPeaceSideEnding(e, 'tenju')), isTrue);
+    // 寺を預かる僧が一六一〇年に病で亡くなっても、「戦の世でも、この寺は焼かせるな」は出ない。
+    final abbot = make(1610);
+    abbot.l
+      ..rank = 0
+      ..lord = null;
+    abbot.setFlag('priesthood');
+    abbot.setFlag('abbot');
+    abbot.die('病に倒れた');
+    final ae = byId[buildEnding(abbot).handId]!;
+    expect(ae.id, isNot('p_byo_abbot'));
+    expect(isWarNow(ae), isFalse, reason: ae.id);
 
     // 泰平の岐路の死因で出る最期。
     final oi = make(1625);

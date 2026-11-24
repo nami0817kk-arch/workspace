@@ -162,7 +162,7 @@ List<SceneDef> buildEchoScenes() => [
     (g) => g.hasFlag('assassin') && g.active,
     (g, next) {
       g.ask('口封じ', 'あの仕事の依頼主が、秘密を知る者を消して回っているという噂を聞いた。', [
-        Choice.h('先に依頼主を探し出す', '逃げ回るより早い。相手も手練れを抱えている', () {
+        Choice.h('先に依頼主を探し出す', '逃げ回るより早い。相手も手練れを抱えていて、返り討ちに遭えば命はない', () {
           if (g.rng.chance(.25)) {
             g.die('かつての依頼主に、口封じに討たれた', 'ansatsu');
             return '探し当てたつもりが、待ち伏せされていた。';
@@ -217,7 +217,7 @@ List<SceneDef> buildEchoScenes() => [
     (g) => g.hasFlag('hostage') && g.l.female && g.active,
     (g, next) {
       g.ask('盟約が破れた', '実家と、人質として暮らす家との盟約が破れた。人質は斬られるのが習いだ。', [
-        Choice.h('夜陰にまぎれて逃げる', '生き延びれば、実家に帰れる', () {
+        Choice.h('夜陰にまぎれて逃げる', '逃げ延びれば、実家に帰れる。捕まれば、斬られる', () {
           if (g.rng.chance(.25)) {
             g.die('人質の身で逃げようとして捕らえられ、斬られた', 'seppuku');
             return '城の門で、見張りに見つかった。';
@@ -226,8 +226,8 @@ List<SceneDef> buildEchoScenes() => [
           g.mark('盟約の破れた夜、人質の城から逃げ延びた');
           return '月のない夜、城を抜け出し、実家にたどり着いた。';
         }),
-        Choice.h('覚悟を決めて残る', '城の主の情けにすがる', () {
-          if (g.rng.chance(.4)) {
+        Choice.h('覚悟を決めて残る', '城の主の情けにすがる。情けがなければ、人質として斬られる', () {
+          if (g.rng.chance(.25)) {
             g.die('盟約が破れ、人質として斬られた', 'seppuku');
             return '覚悟は、できていた。';
           }

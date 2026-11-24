@@ -875,4 +875,92 @@ void main() {
       expect(_digits.hasMatch(s), isFalse, reason: s);
     }
   });
+
+  test('1回目〜3回目の場面も、僧・忍び・野の者に村の書き出しが出ず、城主より上の手に村の言葉が出ない', () {
+    // 1回目〜3回目の大人の場面（4回目は上のテストで見ている）。
+    final ids = [
+      for (final e in kTraitScenesDone.entries)
+        if (!_fourth.contains(e.key))
+          for (final id in e.value)
+            if (!id.startsWith('tr_c_')) id,
+    ];
+    expect(ids.length, greaterThan(100));
+
+    /// [id] の場面が出る身分 [status] の人を [year] 年に作る（条件が合わなければ null）。
+    Game? build(String id, String status, int year) {
+      for (var s = 1000; s < 2200; s++) {
+        final rng = Rng(s * 7 + year);
+        final g = Game(rng: rng)..start(rollBirth(rng));
+        if (g.finished) continue;
+        final sc = g.adultScenes.firstWhere((x) => x.id == id);
+        final l = g.l;
+        final age = year - l.startYear;
+        if (age < sc.minAge || age > sc.maxAge || age < 16) continue;
+        if (status == 'high' && l.female) continue;
+        final trait = _ownerOf[id]!;
+        if (!l.traits.contains(trait)) l.traits.add(trait);
+        l
+          ..t = age * 2
+          ..hp = l.maxhp
+          ..ronin = false
+          ..fav = 50
+          ..rank = status == 'high' ? 8 : 0
+          ..maxRank = status == 'high' ? 8 : 0
+          ..lord = status == 'high' ? g.alive.first.name : null;
+        l.flags.removeWhere((f) => f == 'retired' || f == 'priesthood');
+        if (status == 'monk') g.setFlag('priesthood');
+        if (status == 'wild' || status == 'nin') g.setFlag('way_outlaw');
+        if (status == 'nin') g.setFlag('nukenin');
+        for (final f in kTraitPrev[id] ?? const <String>[]) {
+          g.setFlag(f);
+        }
+        final gap = kTraitGap[id];
+        if (gap != null) g.setFlag('tr_at:${gap.$1}:${g.year - 6}');
+        if (!sc.cond(g)) continue;
+        sc.run(g, () {});
+        return g.prompt == null ? null : g;
+      }
+      return null;
+    }
+
+    var opened = 0, highOpened = 0;
+    final scenes = <String>{};
+    for (final id in ids) {
+      for (final year in [1580, 1610]) {
+        for (final st in ['monk', 'wild', 'nin']) {
+          final g = build(id, st, year);
+          if (g == null) continue;
+          opened++;
+          scenes.add(id);
+          final p = g.prompt!;
+          for (final w in ['名主', '庄屋', '寄り合い', '近所', '村の', '隣村', '家の戸口']) {
+            expect(p.text.contains(w), isFalse, reason: '$id（$st・$year年）の書き出しに「$w」: ${p.text}');
+          }
+          for (final c in p.choices) {
+            expect(c.hint, isNotNull, reason: '$id: ${c.label}');
+            expect(_digits.hasMatch('${c.label}${c.hint}'), isFalse, reason: '$id: ${c.label}');
+            // 忍び・野の者の手に、村の役の言葉は出ない。
+            if (st != 'monk') {
+              for (final w in ['庄屋', '名主', '寄り合い', '上の者へ知らせる']) {
+                expect('${c.label}${c.hint}'.contains(w), isFalse, reason: '$id（$st）の手に「$w」: ${c.label}／${c.hint}');
+              }
+            }
+          }
+        }
+        // 城主より上（大名）の手に、村の者として語る言葉は出ない。
+        final h = build(id, 'high', year);
+        if (h == null) continue;
+        highOpened++;
+        for (final c in h.prompt!.choices) {
+          for (final w in ['村の者たちに', '上の者へ知らせる', '庄屋', '名主', '寄り合い']) {
+            expect('${c.label}${c.hint}'.contains(w), isFalse, reason: '$id（大名・$year年）の手に「$w」: ${c.label}／${c.hint}');
+          }
+        }
+      }
+    }
+    // ignore: avoid_print
+    print('【特性の場面の書き分け】僧・忍び・野の者に開いた書き出し $opened（場面 ${scenes.length}／${ids.length}）・大名に開いた場面 $highOpened');
+    expect(scenes.length, greaterThan(ids.length * .7));
+    expect(highOpened, greaterThan(60));
+  });
 }

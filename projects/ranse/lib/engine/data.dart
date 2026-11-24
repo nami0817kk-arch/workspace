@@ -725,7 +725,7 @@ final kTraits = <Trait>[
     '女の身で武芸に生きる。戦に出られ、武に秀でる',
     fx: (a) => a.bu += 12,
     ok: _onlyF,
-    w: 6,
+    w: 14,
   ), // 済: 戦える（game.dart ほか）。場面は4回目（trait_scenes4.dart）
   Trait(
     'fallen',
@@ -904,6 +904,10 @@ final kTraits = <Trait>[
 ];
 
 /// 女武者（女だけに付く。`Game.canFight`）。
+/// 女性のうち約3%に付くよう、付きやすさ（`w` 14）と、女性の「珍しい」の段の籤の上乗せ（[kOnnaExtraChance]）で合わせてある。
+/// 上乗せの分はそのまま女武者に回るので、女性のほかの「珍しい」特性の出やすさは変わらない。
+const kOnnaExtraChance = .02;
+
 final kTraitOnna = kTraits.firstWhere((t) => t.id == 'onna');
 
 final _traitById = {for (final t in kTraits) t.id: t};

@@ -387,9 +387,21 @@ String _eraDeathTail(Game g, String kind) => kind == 'tenju'
 /// 泰平の最期へ譲るのは、この年からに亡くなった人（元和偃武の翌年）。
 const kPeaceYieldFrom = 1616;
 
+/// 弱い形で譲りはじめる年（戦の絶えた世の始まり）。この年から [kPeaceYieldFrom] の前までは、戦を知る者ばかりの世なので、
+/// 戦の昔語りの最期はそのまま出し、「いま戦のただ中にいる」文（[kWarNowWords]）の最期だけを外して選び直す。
+const kPeaceSoftFrom = 1601;
+
 /// 戦の世の言い回し（称号と本文の、差し込み前の文字で見る。名に入る「兵衛」などに当たらないように）。
 final kWarWords = RegExp(
   '戦|陣|討死|討ち死に|籠城|落城|乱世|敵|軍勢|雑兵|乱取り|首級|首実検|兵|砦|鉄砲|国盗り|下剋上',
+);
+
+/// 「いま戦のただ中にいる」言い回し（現在の戦）。[kWarWords] に当たる最期のうち、これに当たるものだけが「現在の戦」で、
+/// 当たらないものは「昔語り」（かつての戦を振り返る・戦に明け暮れた一生をまとめる文）とみなす。
+/// 陣中や囲まれた城で息を引き取る・戦の世がまだ続いている前提の言葉。差し込み前の文字で見る。
+final kWarNowWords = RegExp(
+  '陣中で[^。]*(息を引き取|病に倒れ)|陣中で、[^。]*熱を出し|陣小屋|城中で病に倒れ|囲まれた[^。]*城で|'
+  '戦の世でも|この乱世に|兵を集めていた矢先',
 );
 
 final _peaceIds = {for (final e in kPeaceEndings) e.id};
@@ -405,16 +417,38 @@ bool isPeaceSideEnding(EndingDef e, String kind) =>
 /// 最期の称号と本文に、戦の世の言い回しがあるか。
 bool hasWarWords(EndingDef e) => kWarWords.hasMatch('${e.title}${e.text}');
 
-/// 選ばれた最期 [e] を、泰平の側の最期に譲るか。
+/// 最期の文が「現在の戦」（いま戦のただ中にいる）か。「乱世を生き抜いた」最期と泰平の最期は、新しい世の文なので当たらない。
+bool isWarNow(EndingDef e) =>
+    !isPeaceEnding(e) &&
+    !(e.kinds?.contains('era') ?? false) &&
+    kWarNowWords.hasMatch('${e.title}${e.text}');
+
+/// 最期の文が「戦の昔語り」（戦の言い回しはあるが、現在の戦ではない）か。
+bool isWarTale(EndingDef e) => hasWarWords(e) && !isWarNow(e);
+
+/// 選ばれた最期 [e] を、ほかの最期に譲るか（選び直す先は [yieldPool]）。
+/// - 一六〇一〜一五年（[kPeaceSoftFrom] から）: 「現在の戦」の最期だけが譲る。昔語りはそのまま。
+/// - 一六一六年（[kPeaceYieldFrom]）から: 戦の言い回しのある最期は譲る。ただし稀な最期の昔語り
+///   （北ノ庄の落城を思い返す女 など）は、戦を知る老いた者の最期として残す。
 bool yieldsToPeace(Game g, EndingDef e, String kind) {
   final l = g.l;
   if (l.dead == null || l.victory) return false;
-  if (g.year < kPeaceYieldFrom || !peaceTime(g)) return false;
+  if (g.year < kPeaceSoftFrom || !peaceTime(g)) return false;
   if (e.tier == Tier.phantom || isPeaceSideEnding(e, kind)) return false;
   // 自ら起こした戦での討死（大坂・島原のほか）は、戦の言葉のままでよい。
   if (kind == 'senshi' && !RegExp('大坂|島原').hasMatch(l.dead!)) return false;
+  if (g.year < kPeaceYieldFrom) return isWarNow(e);
+  if (e.tier == Tier.rare && isWarTale(e)) return false;
   return hasWarWords(e);
 }
+
+/// 譲った先の候補。一六一六年からは泰平の側の最期だけ、一六〇一〜一五年は「現在の戦」でない最期すべて
+/// （昔語りの既存の最期も、泰平の側の最期も、細かさで競う）。
+List<EndingDef> yieldPool(Game g, String kind) => [
+  for (final e in kHandEndings)
+    if (g.year >= kPeaceYieldFrom ? isPeaceSideEnding(e, kind) : !isWarNow(e))
+      e,
+];
 
 /// 手書きの最期がそろっている道（この道の人生には必ず手書きの最期が付く）。
 const kHandWays = {
@@ -443,17 +477,14 @@ Ending buildEnding(Game g) {
     kHandEndings,
     eraFits: (e) => eraEndingFits(g, e),
   );
-  // 泰平の世（一六一六年から）で亡くなった人に、戦の世の言葉の最期が当たったら、泰平の側の最期へ譲る。
+  // 戦の絶えた世で亡くなった人に、戦の世の言葉の最期が当たったら譲る（一六〇一〜一五年は「現在の戦」の文だけ。`yieldsToPeace`）。
   if (hand != null && yieldsToPeace(g, hand, kind)) {
     hand =
         findHandEnding(
           g,
           way,
           kind,
-          [
-            for (final e in kHandEndings)
-              if (isPeaceSideEnding(e, kind)) e,
-          ],
+          yieldPool(g, kind),
           eraFits: (e) => eraEndingFits(g, e),
         ) ??
         hand;

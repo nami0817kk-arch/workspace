@@ -751,7 +751,7 @@ List<SceneDef> buildHistoryScenes() {
       (g, next) {
         g.ask('三方ヶ原', '武田の大軍に、徳川の軍勢は総崩れになった。家康が逃げ遅れている。', [
           Choice.h('家康の身代わりとなって敵を引きつける', '主は逃げ延びるかもしれない。自分は助からないだろう', () {
-            if (g.rng.chance(.7)) {
+            if (g.rng.chance(.25)) {
               g.die('三方ヶ原で、家康の身代わりとなって討たれた', 'senshi');
               return '「我こそは家康なり」と叫び、敵の只中へ駆け込んだ。';
             }
@@ -792,8 +792,8 @@ List<SceneDef> buildHistoryScenes() {
       (g) => g.l.lord == '浅井' && g.l.rank >= 1 && g.active,
       (g, next) {
         g.ask('小谷城', '織田の大軍に小谷城が囲まれた。落城は近い。城には浅井長政の妻・お市と、三人の姫がいる。', [
-          Choice.h('お市と姫たちを城から落ち延びさせる', '血筋は残る。自分は城に戻れない', () {
-            if (g.rng.chance(.3)) {
+          Choice.h('お市と姫たちを城から落ち延びさせる', '血筋は残る。落ちる城の中を行く、命がけの役目だ', () {
+            if (g.rng.chance(.2)) {
               g.die('小谷城の落城の中、姫たちを逃がして力尽きた', 'senshi');
               return '姫たちを織田の陣へ送り届けたあと、矢を受けて倒れた。';
             }
@@ -801,7 +801,7 @@ List<SceneDef> buildHistoryScenes() {
             g.mark('小谷城の落城の日、お市と三人の姫を落ち延びさせた');
             return 'お市と姫たちを、無事に城の外へ送り出した。';
           }),
-          Choice.h('長政と運命を共にする', '最後まで主の側にいる', () {
+          Choice.h('長政と運命を共にする', '最後まで主の側にいる。ここで命を終えることになる', () {
             g.die('小谷城の落城で、浅井長政に殉じた', 'seppuku');
             return '長政に続き、城と運命を共にした。';
           }),
@@ -831,8 +831,8 @@ List<SceneDef> buildHistoryScenes() {
               : '馬防柵の内側で、鉄砲を構えて武田の騎馬を待つ。',
           takeda
               ? [
-                  Choice.h('命に従い突撃する', '武田の誇りだ。柵の向こうには鉄砲がある', () {
-                    if (g.rng.chance(.35)) {
+                  Choice.h('命に従い突撃する', '武田の誇りだ。柵の向こうの鉄砲の前へ、命を捨てに行くことになる', () {
+                    if (g.rng.chance(.25)) {
                       g.die('長篠の戦いで、鉄砲の前に散った', 'senshi');
                       return '柵の手前で、轟音とともに馬から落ちた。';
                     }
@@ -904,7 +904,7 @@ List<SceneDef> buildHistoryScenes() {
       (g) => g.l.lord == '武田' && g.l.rank >= 1 && g.l.rank < 8 && g.active,
       (g, next) {
         g.ask('天目山', '織田の大軍が甲斐に攻め入った。家臣は次々と寝返り、勝頼に従う者はわずかになった。', [
-          Choice.h('最後まで勝頼に従う', '武田の最期を見届ける', () {
+          Choice.h('最後まで勝頼に従う', '武田の最期を見届け、ここで主と共に果てる', () {
             g.die('天目山で、武田勝頼に殉じた', 'seppuku');
             return '天目山の麓で、勝頼と共に果てた。';
           }),
@@ -935,7 +935,7 @@ List<SceneDef> buildHistoryScenes() {
             g.mark('山崎の戦いで、秀吉に従い光秀を討った');
             return '天王山を駆け下り、明智の軍勢を打ち破った。';
           }),
-          Choice.h('光秀につく', '天下が変わるかもしれない。勝てば、の話だ', () {
+          Choice.h('光秀につく', '天下が変わるかもしれない。敗れれば、落ち武者として命を狙われる', () {
             if (g.rng.chance(.06)) {
               g.setFlag('history_yamazaki');
               g.l.merit += 60;
@@ -943,8 +943,18 @@ List<SceneDef> buildHistoryScenes() {
               g.mark('山崎で光秀に味方し、秀吉を退けた');
               return '秀吉の軍勢は崩れた。光秀の天下は、三日では終わらなかった――歴史が、変わった。';
             }
-            g.die('山崎の戦いで明智方として敗れ、落ち延びる途中で討たれた', 'senshi');
-            return '明智の軍勢は崩れた。落ち延びる竹藪の中で、槍に突かれた。';
+            if (g.rng.chance(.25)) {
+              g.die('山崎の戦いで明智方として敗れ、落ち延びる途中で討たれた', 'senshi');
+              return '明智の軍勢は崩れた。落ち延びる竹藪の中で、槍に突かれた。';
+            }
+            g.l.rank = 0;
+            g.l.lord = null;
+            g.l.troops = 0;
+            g.l.ronin = true;
+            g.l.hp -= 15;
+            g.j(-10);
+            g.mark('山崎で明智方として敗れ、身ひとつで落ち延びた');
+            return '明智の軍勢は崩れた。具足を脱ぎ捨て、夜の竹藪を抜けた。落ち武者狩りの松明を、息を殺してやり過ごした。主も位も、その夜に失った。';
           }),
           Choice.h(
             'どちらにもつかず様子を見る',
@@ -1064,7 +1074,7 @@ List<SceneDef> buildHistoryScenes() {
               g.mark('関ヶ原で東軍に加わった');
               return '昼過ぎ、西軍は崩れた。東軍の勝ちだ。';
             }),
-            Choice.h('西軍（石田三成）につく', '義はこちらにある。裏切り者が出なければ…', () {
+            Choice.h('西軍（石田三成）につく', '義はこちらにある。敗れれば、捕らえられて首を斬られることもある', () {
               if (g.rng.chance(.07)) {
                 g.setFlag('history_sekigahara');
                 l.merit += 50;
@@ -1072,7 +1082,7 @@ List<SceneDef> buildHistoryScenes() {
                 g.mark('関ヶ原で西軍を勝利に導いた');
                 return '小早川の軍勢が動かなかった。西軍が勝った――歴史が、変わった。';
               }
-              if (g.rng.chance(.3)) {
+              if (g.rng.chance(.22)) {
                 g.die('関ヶ原で西軍として敗れ、捕らえられて斬られた', 'seppuku');
                 return '西軍は崩れた。落ち延びる途中で捕らえられた。';
               }
@@ -1205,8 +1215,8 @@ List<SceneDef> buildHistoryScenes() {
           g.active,
       (g, next) {
         g.ask('長島', '伊勢長島の一向門徒が、織田の大軍に囲まれた。村の者にも門徒が多い。', [
-          Choice.h('門徒を助けに長島へ行く', '信じる者を見捨てない。囲みの中に入ることになる', () {
-            if (g.rng.chance(.4)) {
+          Choice.h('門徒を助けに長島へ行く', '信じる者を見捨てない。囲みの中へ入れば、生きては出られぬかもしれない', () {
+            if (g.rng.chance(.25)) {
               g.die('長島の一揆で、織田の囲みの中で焼かれた', 'sai');
               return '囲みの中で、炎に包まれた。';
             }
@@ -1547,8 +1557,8 @@ List<SceneDef> buildHistoryScenes() {
       (g) => _inRegion(g, ['越前']) && g.l.rank <= 1 && g.active,
       (g, next) {
         g.ask('越前一向一揆', '朝倉が滅んだあと、越前は一向門徒が治める国になった。そこへ織田の大軍が攻め寄せてきた。', [
-          Choice.h('門徒とともに山に立てこもる', '信心を貫く。織田は容赦しない', () {
-            if (g.rng.chance(.3)) {
+          Choice.h('門徒とともに山に立てこもる', '信心を貫く。織田は容赦しない。山狩りに遭えば、命はない', () {
+            if (g.rng.chance(.22)) {
               g.die('越前の一向一揆で、織田の掃討に遭って討たれた', 'senshi');
               return '山狩りの兵に見つかった。';
             }
