@@ -697,6 +697,8 @@ class HomeScreen extends StatelessWidget {
                           FilledButton(
                             key: const ValueKey('advance-button'),
                             onPressed: () => advanceToNextStop(context),
+                            // 長押しでまとめて進む(上の帯の進むボタンと同じ)。
+                            onLongPress: () => showSimAheadDialog(context),
                             child: Text(advanceButtonLabel(gameState) ??
                                 Tr.pick('次の節へ', 'Next matchday')),
                           ),

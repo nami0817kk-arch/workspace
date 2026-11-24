@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'player_detail_screen.dart';
+
 import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../logic/scout_knowledge.dart';
@@ -135,6 +137,9 @@ class _PlayerRow extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
+      // 押すと選手の詳細(他のクラブの選手も開ける)。
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+          builder: (_) => PlayerDetailScreen(playerId: p.id))),
       title: Text(Tr.pick(
           '${p.name}(${p.position.label}・${p.age}歳・${GameStateNation.nationLabel(gs.nationalityOf(p))})',
           '${p.name} (${p.position.label}, ${p.age}, ${GameStateNation.nationLabel(gs.nationalityOf(p))})')),

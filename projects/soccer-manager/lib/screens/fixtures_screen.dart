@@ -3,23 +3,20 @@ import 'package:provider/provider.dart';
 
 import '../models/league.dart';
 import '../models/league_theme.dart';
-import '../models/match_result.dart';
-import '../models/team.dart';
-import '../services/feedback_service.dart';
-import '../logic/calendar_engine.dart';
 import '../logic/country_coefficient.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/chip_switcher.dart';
-import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/club_emblem.dart';
-import '../widgets/match_widgets.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 import 'club_detail_screen.dart';
+import 'league_stats_screen.dart';
+import 'todo_navigation.dart';
+import '../logic/todo_advisor.dart';
 
 class FixturesScreen extends StatelessWidget {
   const FixturesScreen({super.key});
@@ -44,208 +41,98 @@ class FixturesScreen extends StatelessWidget {
     // 他国の1部の順位表。
     final foreign = gameState.foreignLeagueTables;
 
+    // 左メニューの「リーグ」の中(横画面)では、個人成績は隣のタブにある。
+    // 縦画面(単独の画面)では、ここのタブに入れる。
+    final withStats = !HideScreenBar.of(context);
+    final tabs = <(String, Widget)>[
+      (
+        Tr.pick('順位表', 'Table'),
+        _StandingsTab(
+          league: league,
+          userTeamId: userTeamId,
+          divisionTier: divisionTier,
+        ),
+      ),
+      if (withStats)
+        (Tr.pick('個人成績', 'Player stats'), const LeagueStatsScreen()),
+      if (otherDivisions.isNotEmpty)
+        (
+          Tr.pick('他の部', 'Other tiers'),
+          ChipSwitcher(items: [
+            for (final (tier, otherLeague) in otherDivisions)
+              (
+                Tr.pick('$tier部', 'Tier $tier'),
+                (_) => _StandingsTab(
+                      league: otherLeague,
+                      userTeamId: userTeamId,
+                      divisionTier: tier,
+                    ),
+              ),
+          ]),
+        ),
+      if (youthLeague != null)
+        (
+          Tr.pick('ユース', 'Academy'),
+          ListView(
+            padding: const EdgeInsets.only(bottom: 16),
+            children: [YouthLeagueTable(league: youthLeague)],
+          ),
+        ),
+      // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
+      if (foreign.isNotEmpty)
+        (
+          Tr.pick('他国', 'Abroad'),
+          ChipSwitcher(items: [
+            for (final (name, foreignLeague) in foreign)
+              (
+                name,
+                (_) => _StandingsTab(
+                      league: foreignLeague,
+                      userTeamId: userTeamId,
+                      divisionTier: 1,
+                      // その国のチャンピオンズカップの枠(係数の順位で
+                      // 3〜5)。その下の2クラブがヨーロッパカップ。
+                      continentalQualifyCount: context
+                          .read<GameState>()
+                          .championsSpotsFor(leagueThemeFromName(name) ??
+                              LeagueTheme.england),
+                      europaQualifyCount: CountryCoefficientEngine.europaSpots,
+                    ),
+              ),
+          ]),
+        ),
+    ];
+
+    // 日程の小タブは外した(2026-11-25。日程はカレンダーにある)。「まとめて
+    // 進む」は上の帯の進むボタンの長押しへ移した。
     return DefaultTabController(
-      // 他の部と他国は、それぞれ1つのタブにまとめ、中で選ぶ(タブが8つ並んで
-      // 横にはみ出していた)。
-      length: 2 +
-          (otherDivisions.isEmpty ? 0 : 1) +
-          (foreign.isEmpty ? 0 : 1) +
-          (youthLeague == null ? 0 : 1),
+      length: tabs.length,
       child: Scaffold(
         appBar: screenBar(
           context,
-          title: Tr.pick('日程・順位表', 'Fixtures & table'),
+          title: Tr.pick('順位表', 'League table'),
           // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
           // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
           leading: Navigator.of(context).canPop() ? const BackButton() : null,
-          scrollable: otherDivisions.isNotEmpty || foreign.isNotEmpty,
-          tabs: [
-            Tr.pick('順位表', 'Table'),
-            Tr.pick('日程', 'Fixtures'),
-            if (otherDivisions.isNotEmpty) Tr.pick('他の部', 'Other tiers'),
-            if (youthLeague != null) Tr.pick('ユース', 'Academy'),
-            // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
-            if (foreign.isNotEmpty) Tr.pick('他国', 'Abroad'),
-          ],
+          scrollable: tabs.length > 3,
+          tabs: [for (final t in tabs) t.$1],
           actions: [
-            IconButton(
-              icon: const Icon(Icons.query_stats),
-              tooltip: Tr.pick('順位予測シミュレーション', 'Projected final table'),
+            // アイコンだけでは何のボタンか分からなかった。字を添える。
+            TextButton.icon(
+              key: const ValueKey('projection-button'),
+              icon: const Icon(Icons.query_stats, size: 18),
+              label: Text(Tr.pick('順位の予想', 'Projection')),
               onPressed:
                   seasonComplete ? null : () => _showProjectionSheet(context),
-            ),
-            IconButton(
-              icon: const Icon(Icons.fast_forward),
-              tooltip: Tr.pick('まとめてシミュレーション', 'Sim ahead'),
-              onPressed:
-                  seasonComplete ? null : () => _showQuickSimDialog(context),
             ),
           ],
         ),
         drawer: const QuickAccessDrawer(),
         body: ResponsiveBody(
-          child: TabBarView(
-            children: [
-              _StandingsTab(
-                league: league,
-                userTeamId: userTeamId,
-                divisionTier: divisionTier,
-              ),
-              _ScheduleTab(league: league, userTeamId: userTeamId),
-              if (otherDivisions.isNotEmpty)
-                ChipSwitcher(items: [
-                  for (final (tier, otherLeague) in otherDivisions)
-                    (
-                      Tr.pick('$tier部', 'Tier $tier'),
-                      (_) => _StandingsTab(
-                            league: otherLeague,
-                            userTeamId: userTeamId,
-                            divisionTier: tier,
-                          ),
-                    ),
-                ]),
-              if (youthLeague != null)
-                ListView(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  children: [YouthLeagueTable(league: youthLeague)],
-                ),
-              if (foreign.isNotEmpty)
-                ChipSwitcher(items: [
-                  for (final (name, foreignLeague) in foreign)
-                    (
-                      name,
-                      (_) => _StandingsTab(
-                            league: foreignLeague,
-                            userTeamId: userTeamId,
-                            divisionTier: 1,
-                            // その国のチャンピオンズカップの枠(係数の順位で
-                            // 3〜5)。その下の2クラブがヨーロッパカップ。
-                            continentalQualifyCount: context
-                                .read<GameState>()
-                                .championsSpotsFor(leagueThemeFromName(name) ??
-                                    LeagueTheme.england),
-                            europaQualifyCount:
-                                CountryCoefficientEngine.europaSpots,
-                          ),
-                    ),
-                ]),
-            ],
-          ),
+          child: TabBarView(children: [for (final t in tabs) t.$2]),
         ),
       ),
     );
-  }
-
-  Future<void> _showQuickSimDialog(BuildContext context) async {
-    final gameState = context.read<GameState>();
-    final remainingMatchdays = gameState.save!.league.fixtures
-        .where((f) => f.result == null)
-        .map((f) => f.matchday)
-        .toSet()
-        .length;
-
-    final choice = await showDialog<int>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(Tr.pick('まとめてシミュレーション', 'Sim ahead')),
-        children: [
-          for (final n in [1, 3, 5])
-            if (n < remainingMatchdays)
-              SimpleDialogOption(
-                onPressed: () => Navigator.pop(dialogContext, n),
-                child: Text(Tr.pick('$n節先まで進める', 'Play $n matchdays')),
-              ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(dialogContext, remainingMatchdays),
-            child:
-                Text(Tr.pick('シーズン終了まで進める', 'Play to the end of the season')),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(Tr.pick('キャンセル', 'Cancel')),
-          ),
-        ],
-      ),
-    );
-    if (choice == null || choice <= 0 || !context.mounted) return;
-
-    FeedbackService.tap();
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
-                Text(Tr.pick('$choice節分をシミュレーションしています…',
-                    'Simulating $choice matchdays…')),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-    // 閉じる手段の無い進行中ダイアログを出しているので、**何があっても
-    // 必ず閉じる**。途中で例外が出ると、ぐるぐる回る円だけが残って操作が
-    // 一切できなくなる(アプリを再起動するしかない)。
-    final List<MatchResult> results;
-    try {
-      results = await gameState.simulateAheadMatchdays(choice);
-    } finally {
-      if (context.mounted) {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    }
-    if (!context.mounted) return;
-
-    final league = gameState.save!.league;
-    final userTeamId = gameState.userTeam.id;
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(Tr.pick('シミュレーション結果', 'Simulation results')),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: results.isEmpty
-              ? Text(
-                  Tr.pick('進行できる試合がありませんでした', 'There were no matches to play'))
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: results.length,
-                  itemBuilder: (context, i) {
-                    final r = results[i];
-                    final isHome = r.homeTeamId == userTeamId;
-                    final opponentId = isHome ? r.awayTeamId : r.homeTeamId;
-                    final opponentName =
-                        league.teams.firstWhere((t) => t.id == opponentId).name;
-                    final userGoals = isHome ? r.homeGoals : r.awayGoals;
-                    final oppGoals = isHome ? r.awayGoals : r.homeGoals;
-                    return ListTile(
-                      dense: true,
-                      title: Text(Tr.pick('第${r.matchday}節 vs $opponentName',
-                          'Matchday ${r.matchday} vs $opponentName')),
-                      trailing: Text(
-                        '$userGoals - $oppGoals',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    );
-                  },
-                ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(Tr.pick('閉じる', 'Close')),
-          ),
-        ],
-      ),
-    );
-    if (context.mounted) showAchievementUnlockNotification(context, gameState);
   }
 
   Future<void> _showProjectionSheet(BuildContext context) async {
@@ -627,18 +514,27 @@ class _StandingsTabState extends State<_StandingsTab> {
                   ],
                 ),
               );
-              // 他のクラブの行を押すと、そのクラブのページを開く。
+              // クラブの行を押すと、そのクラブのページを開く。自クラブは
+              // 選手の一覧(スカッド)へ。
               if (!isUser) {
                 return InkWell(
+                  key: ValueKey('standings-row-${team.id}'),
                   onTap: () => openClubPage(context, team),
                   child: row,
                 );
               }
               return Semantics(
+                button: true,
                 label: Tr.pick(
                     '自クラブ。${i + 1}位: ${team.name}、${r.played}試合 勝${r.won} 分${r.draw} 敗${r.lost} 得失点差${r.goalDiff}、${r.points}pt、戦力${team.overallRating}',
                     'Your club. ${i + 1}: ${team.name}, P${r.played} W${r.won} D${r.draw} L${r.lost} GD${r.goalDiff}, ${r.points} pts, squad ${team.overallRating}'),
-                child: ExcludeSemantics(child: row),
+                child: ExcludeSemantics(
+                  child: InkWell(
+                    key: ValueKey('standings-row-${team.id}'),
+                    onTap: () => openTodoPlace(context, TodoPlaces.squadList),
+                    child: row,
+                  ),
+                ),
               );
             },
           ),
@@ -646,98 +542,6 @@ class _StandingsTabState extends State<_StandingsTab> {
       ],
     );
   }
-}
-
-/// 消化済みの試合をタップした際に表示する、得点者・MOTMを含む簡易結果ダイアログ。
-Future<void> _showFixtureResultDialog(
-  BuildContext context,
-  MatchResult result,
-  Team home,
-  Team away,
-) {
-  String? nameOf(String? playerId) {
-    if (playerId == null) return null;
-    for (final t in [home, away]) {
-      for (final p in t.players) {
-        if (p.id == playerId) return p.name;
-      }
-    }
-    return null;
-  }
-
-  final goals = result.events
-      .where((e) => e.type == MatchEventType.goal)
-      .toList()
-    ..sort((a, b) => a.minute.compareTo(b.minute));
-  final motmName = nameOf(result.manOfTheMatchId);
-
-  return showDialog<void>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: Text(
-        '${home.name} ${result.homeGoals} - ${result.awayGoals} ${away.name}',
-      ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (goals.isEmpty)
-              Text(Tr.pick('得点者はいませんでした', 'Nobody scored'),
-                  style: TextStyle(color: SemanticColors.subtleText(context)))
-            else ...[
-              Text(Tr.pick('得点者', 'Scorers'),
-                  style: Theme.of(dialogContext).textTheme.titleSmall),
-              const SizedBox(height: 4),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 200),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    for (final g in goals)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text(
-                          Tr.pick(
-                              '${g.minute}\' ${g.scorerName ?? '不明'}${g.assistName != null ? '（アシスト: ${g.assistName}）' : ''}（${g.teamId == home.id ? home.name : away.name}）',
-                              "${g.minute}' ${g.scorerName ?? 'Unknown'}${g.assistName != null ? ' (assist: ${g.assistName})' : ''} (${g.teamId == home.id ? home.name : away.name})"),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-            MatchStatsBar(
-              result: result,
-              homeTeamName: home.name,
-              awayTeamName: away.name,
-            ),
-            if (motmName != null) ...[
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(Icons.star,
-                      color: SemanticColors.ink(context, Colors.amber, min: 3),
-                      size: 18),
-                  const SizedBox(width: 4),
-                  Expanded(
-                      child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
-                          'Man of the match: $motmName'))),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext),
-          child: Text(Tr.pick('閉じる', 'Close')),
-        ),
-      ],
-    ),
-  );
 }
 
 class _ZoneLegend extends StatelessWidget {
@@ -790,369 +594,5 @@ class _ZoneMark extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _ScheduleTab extends StatefulWidget {
-  final League league;
-  final String userTeamId;
-
-  const _ScheduleTab({required this.league, required this.userTeamId});
-
-  @override
-  State<_ScheduleTab> createState() => _ScheduleTabState();
-}
-
-class _ScheduleTabState extends State<_ScheduleTab> {
-  bool _showFullSchedule = false;
-  late int _selectedMatchday;
-  final _chipScrollController = ScrollController();
-
-  int get _totalMatchdays => widget.league.fixtures
-      .map((f) => f.matchday)
-      .reduce((a, b) => a > b ? a : b);
-
-  int? get _nextMatchday => widget.league.nextUnplayedFixture?.matchday;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedMatchday = _nextMatchday ?? _totalMatchdays;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_chipScrollController.hasClients) return;
-      final offset = ((_selectedMatchday - 1) * 76.0).clamp(
-        0.0,
-        _chipScrollController.position.maxScrollExtent,
-      );
-      _chipScrollController.jumpTo(offset);
-    });
-  }
-
-  @override
-  void dispose() {
-    _chipScrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final league = widget.league;
-    final userTeamId = widget.userTeamId;
-
-    final gameState = context.watch<GameState>();
-    return Column(
-      children: [
-        if (gameState.isUserDomesticCupMatchUpNext)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-            child: Card(
-              color: Theme.of(context).colorScheme.tertiaryContainer,
-              child: ListTile(
-                leading: const Icon(Icons.emoji_events_outlined),
-                title: Text(
-                    Tr.pick('国内カップ戦の出番です', 'You are up in the domestic cup')),
-                subtitle: Text(Tr.pick('進むボタンがカップ戦の日に止まって試合をします',
-                    'The advance button stops on the cup day and plays it')),
-              ),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child: SegmentedButton<bool>(
-            segments: [
-              ButtonSegment(
-                  value: false, label: Text(Tr.pick('自分の日程', 'My fixtures'))),
-              ButtonSegment(
-                  value: true, label: Text(Tr.pick('全日程', 'All fixtures'))),
-            ],
-            selected: {_showFullSchedule},
-            onSelectionChanged: (s) =>
-                setState(() => _showFullSchedule = s.first),
-          ),
-        ),
-        if (_showFullSchedule) ...[
-          SizedBox(
-            height: 44,
-            child: ListView.builder(
-              controller: _chipScrollController,
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: _totalMatchdays,
-              itemBuilder: (context, i) {
-                final md = i + 1;
-                final isNext = md == _nextMatchday;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: ChoiceChip(
-                    label: Text(isNext
-                        ? Tr.pick('第$md節 •', 'Matchday $md •')
-                        : Tr.pick('第$md節', 'Matchday $md')),
-                    selected: _selectedMatchday == md,
-                    onSelected: (_) => setState(() => _selectedMatchday = md),
-                  ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                CalendarEngine.formatDate(
-                    gameState.dateOfMatchday(_selectedMatchday)),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ),
-          const Divider(height: 1),
-          Expanded(
-            child: _MatchdayList(
-              league: league,
-              matchday: _selectedMatchday,
-              userTeamId: userTeamId,
-            ),
-          ),
-        ] else
-          Expanded(
-            child: _UserFixtureList(league: league, userTeamId: userTeamId),
-          ),
-      ],
-    );
-  }
-}
-
-class _MatchdayList extends StatelessWidget {
-  final League league;
-  final int matchday;
-  final String userTeamId;
-
-  const _MatchdayList({
-    required this.league,
-    required this.matchday,
-    required this.userTeamId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final fixtures =
-        league.fixtures.where((f) => f.matchday == matchday).toList();
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      itemCount: fixtures.length,
-      itemBuilder: (context, i) {
-        final f = fixtures[i];
-        final home = league.teams.firstWhere((t) => t.id == f.homeTeamId);
-        final away = league.teams.firstWhere((t) => t.id == f.awayTeamId);
-        final isUserMatch =
-            f.homeTeamId == userTeamId || f.awayTeamId == userTeamId;
-        final isDerby = context.read<GameState>().isRivalFixture(f);
-        final result = f.result;
-        final row = Container(
-          color: isUserMatch
-              ? Theme.of(context)
-                  .colorScheme
-                  .primaryContainer
-                  .withValues(alpha: 0.3)
-              : null,
-          child: ListTile(
-            onTap: result == null
-                ? null
-                : () => _showFixtureResultDialog(context, result, home, away),
-            leading: isDerby
-                ? Icon(
-                    Icons.local_fire_department,
-                    color: SemanticColors.ink(context, Colors.redAccent),
-                  )
-                : null,
-            title: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          home.name,
-                          textAlign: TextAlign.right,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      ClubEmblem(
-                        teamId: home.id,
-                        teamName: home.name,
-                        size: 22,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    result == null
-                        ? 'vs'
-                        : '${result.homeGoals} - ${result.awayGoals}',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      ClubEmblem(
-                        teamId: away.id,
-                        teamName: away.name,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(away.name, overflow: TextOverflow.ellipsis),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-        if (!isUserMatch) return row;
-        return Semantics(
-          label: Tr.pick(
-              '自クラブの試合。${home.name} vs ${away.name}、${result == null ? '未消化' : '${result.homeGoals} - ${result.awayGoals}'}',
-              "Your match. ${home.name} vs ${away.name}, ${result == null ? 'not played' : '${result.homeGoals} - ${result.awayGoals}'}"),
-          child: ExcludeSemantics(child: row),
-        );
-      },
-    );
-  }
-}
-
-class _UserFixtureList extends StatelessWidget {
-  final League league;
-  final String userTeamId;
-
-  const _UserFixtureList({required this.league, required this.userTeamId});
-
-  @override
-  Widget build(BuildContext context) {
-    final userFixtures = league.fixtures
-        .where(
-          (f) => f.homeTeamId == userTeamId || f.awayTeamId == userTeamId,
-        )
-        .toList()
-      ..sort((a, b) => a.matchday.compareTo(b.matchday));
-    final nextMatchday = league.nextUnplayedFixture?.matchday;
-
-    return ListView.builder(
-      itemCount: userFixtures.length,
-      itemBuilder: (context, i) {
-        final f = userFixtures[i];
-        final home = league.teams.firstWhere((t) => t.id == f.homeTeamId).name;
-        final away = league.teams.firstWhere((t) => t.id == f.awayTeamId).name;
-        final opponentId =
-            f.homeTeamId == userTeamId ? f.awayTeamId : f.homeTeamId;
-        final opponent = league.teams.firstWhere((t) => t.id == opponentId);
-        final result = f.result;
-        final isNext = f.matchday == nextMatchday;
-        final gameState = context.read<GameState>();
-        final isDerby = gameState.isRivalFixture(f);
-        final dateLabel = CalendarEngine.formatShortDate(
-            gameState.dateOfMatchday(f.matchday));
-        return Container(
-          color: isNext
-              ? Theme.of(context)
-                  .colorScheme
-                  .primaryContainer
-                  .withValues(alpha: 0.3)
-              : null,
-          child: ListTile(
-            // 終わった試合だけ、結果の詳しい中身を開ける。これからの試合の
-            // 相手の分析は監督の仕事なので開かない。
-            onTap: result == null
-                ? null
-                : () {
-                    final home = league.teams.firstWhere(
-                      (t) => t.id == f.homeTeamId,
-                    );
-                    final away = league.teams.firstWhere(
-                      (t) => t.id == f.awayTeamId,
-                    );
-                    _showFixtureResultDialog(context, result, home, away);
-                  },
-            leading: SizedBox(
-              width: 76,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                      width: 44,
-                      child: Text(Tr.pick(
-                          '第${f.matchday}節', 'Matchday ${f.matchday}'))),
-                  ClubEmblem(
-                    teamId: opponent.id,
-                    teamName: opponent.name,
-                    size: 24,
-                  ),
-                ],
-              ),
-            ),
-            subtitle: Text(dateLabel),
-            title: Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    '$home vs $away',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                if (isDerby) ...[
-                  const SizedBox(width: 6),
-                  Icon(
-                    Icons.local_fire_department,
-                    size: 16,
-                    color: SemanticColors.ink(context, Colors.redAccent),
-                  ),
-                ],
-              ],
-            ),
-            trailing: result == null
-                ? Text(
-                    isNext
-                        ? Tr.pick('次節', 'Next')
-                        : Tr.pick('未消化', 'Not played'),
-                    style: isNext
-                        ? const TextStyle(fontWeight: FontWeight.bold)
-                        : null,
-                  )
-                : Text(
-                    '${result.homeGoals} - ${result.awayGoals}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: _resultColor(
-                            context,
-                            result,
-                            userTeamId,
-                            f.homeTeamId,
-                          ),
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-          ),
-        );
-      },
-    );
-  }
-
-  Color? _resultColor(
-    BuildContext context,
-    MatchResult result,
-    String userTeamId,
-    String homeTeamId,
-  ) {
-    final userIsHome = homeTeamId == userTeamId;
-    final userGoals = userIsHome ? result.homeGoals : result.awayGoals;
-    final oppGoals = userIsHome ? result.awayGoals : result.homeGoals;
-    if (userGoals > oppGoals) return SemanticColors.positive(context);
-    if (userGoals < oppGoals) return SemanticColors.negative(context);
-    return SemanticColors.neutral(context);
   }
 }

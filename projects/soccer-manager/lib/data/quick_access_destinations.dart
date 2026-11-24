@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../screens/achievements_screen.dart';
-import '../screens/awards_screen.dart';
 import '../screens/best_eleven_screen.dart';
 import '../screens/reference_screens.dart';
 import '../screens/club_screen.dart';
@@ -13,8 +12,6 @@ import '../screens/finance_screen.dart';
 import '../screens/glossary_screen.dart';
 import '../screens/guide_screen.dart';
 import '../screens/hall_of_fame_screen.dart';
-import '../screens/league_ranking_screen.dart';
-import '../screens/news_screen.dart';
 import '../screens/owner_work_screen.dart';
 import '../screens/season_history_screen.dart';
 import '../screens/settings_screen.dart';
@@ -144,13 +141,6 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
-        icon: Icons.newspaper,
-        label: Tr.pick('クラブニュース', 'Club news'),
-        color: Colors.deepPurple.shade400,
-        builder: (_) => const NewsScreen(),
-        group: QuickAccessGroup.reference,
-      ),
-      QuickAccessDestination(
         icon: Icons.apartment,
         label: Tr.pick('施設・スタッフ', 'Facilities & staff'),
         color: Colors.blueGrey.shade400,
@@ -168,21 +158,6 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('カップ戦', 'Cups'),
         color: Colors.purple.shade400,
         builder: (_) => const CupScreen(),
-      ),
-      QuickAccessDestination(
-        icon: Icons.military_tech,
-        label: Tr.pick('個人タイトル', 'Individual awards'),
-        color: Colors.amber.shade700,
-        builder: (_) => const AwardsScreen(),
-        group: QuickAccessGroup.reference,
-        lockedReason: _needsFirstSeason,
-      ),
-      QuickAccessDestination(
-        icon: Icons.format_list_numbered,
-        label: Tr.pick('リーグランキング', 'League rankings'),
-        color: Colors.green.shade700,
-        builder: (_) => const LeagueRankingScreen(),
-        group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
         icon: Icons.settings,

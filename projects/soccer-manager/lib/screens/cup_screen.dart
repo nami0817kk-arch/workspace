@@ -8,6 +8,7 @@ import '../models/cup.dart';
 import '../models/team.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/cup_bracket.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
@@ -121,11 +122,12 @@ class _DomesticCupTab extends StatelessWidget {
         // 試合は全部、上の進むボタンから行う(2026-11-24。季の後も、ここの
         // 「次の試合をする」ではなく進むボタンがその日に止まる)。
         if (nextMatch != null && !userEliminated) const _CupByDateNote(),
-        for (final round in cup.rounds) ...[
+        // 組の多い最初の回戦は一覧で、組が8つ以下になった回戦から先は山の
+        // 形(トーナメント表)で出す(2026-11-25 FM のカップ戦の表)。
+        for (final round in cup.rounds.where((r) => r.length > _bracketMax))
           _RoundSection(
             title: CupEngine.roundLabel(round.first.round, totalRounds),
-            initiallyExpanded:
-                round.any((m) => m.result == null) || round == cup.rounds.last,
+            initiallyExpanded: round.any((m) => m.result == null),
             children: [
               for (final m in [
                 ...round.where(
@@ -136,7 +138,7 @@ class _DomesticCupTab extends StatelessWidget {
                 _BracketMatchCard(match: m, nameOf: nameOf, userId: userId),
             ],
           ),
-        ],
+        _domesticBracket(cup.rounds, totalRounds, nameOf, userId),
       ],
     );
   }
@@ -270,19 +272,32 @@ class _ContinentalCupTabState extends State<_ContinentalCupTab> {
               ),
           ],
         ),
-        if (cup.knockoutRounds.isNotEmpty)
+        // 決勝トーナメントは山の形(まだ組まれていない回戦は「未定」)。
+        if (cup.isGroupStageComplete || cup.knockoutRounds.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 6),
+            child: Text(Tr.pick('決勝トーナメント', 'Knockout stage'),
+                style: Theme.of(context).textTheme.titleSmall),
+          ),
+          CupBracket(
+            key: const ValueKey('continental-bracket'),
+            rounds: CupBracket.withPlaceholders([
+              for (final round in cup.knockoutRounds)
+                [for (final tie in round) _tieOfContinental(tie)],
+            ], knockoutTotal),
+            roundLabels: [
+              for (var r = 1; r <= knockoutTotal; r++)
+                ContinentalCupEngine.roundLabel(r, knockoutTotal),
+            ],
+            nameOf: nameOf,
+            userId: userId,
+          ),
+          // 2試合の内訳(第1戦・第2戦)は、自クラブの組だけ下に添える。
           for (final round in cup.knockoutRounds)
-            _RoundSection(
-              title: ContinentalCupEngine.roundLabel(
-                round.first.round,
-                knockoutTotal,
-              ),
-              initiallyExpanded: round == cup.knockoutRounds.last,
-              children: [
-                for (final tie in round)
-                  _TieCard(tie: tie, nameOf: nameOf, userId: userId),
-              ],
-            ),
+            for (final tie in round)
+              if (tie.teamAId == userId || tie.teamBId == userId)
+                _TieCard(tie: tie, nameOf: nameOf, userId: userId),
+        ],
       ],
     );
   }
@@ -691,15 +706,7 @@ class _FourClubSuperCupSection extends StatelessWidget {
             if (involved && !cup.isComplete && !cup.isEliminated(userId)) ...[
               const _CupByDateNote(),
             ],
-            for (final round in cup.rounds)
-              _RoundSection(
-                title: CupEngine.roundLabel(round.first.round, 2),
-                initiallyExpanded: round == cup.rounds.last,
-                children: [
-                  for (final m in round)
-                    _BracketMatchCard(match: m, nameOf: nameOf, userId: userId),
-                ],
-              ),
+            _domesticBracket(cup.rounds, 2, nameOf, userId),
           ],
         ),
       ),
@@ -732,4 +739,65 @@ class _CupByDateNote extends StatelessWidget {
           ],
         ),
       );
+}
+
+
+/// 山の形に出す回戦の組の数の上限。これより組の多い回戦は一覧で出す。
+const int _bracketMax = 8;
+
+/// 国内カップ(スーパーカップも)の1組を、山の形の表の組にする。
+BracketTie _tieOfCup(CupMatch m) {
+  if (m.isBye) {
+    final team = m.homeTeamId == byeTeamId ? m.awayTeamId : m.homeTeamId;
+    return BracketTie(
+        teamA: team, winnerId: team, note: Tr.pick('不戦勝', 'bye'));
+  }
+  final done = m.result != null;
+  return BracketTie(
+    teamA: m.homeTeamId,
+    teamB: m.awayTeamId,
+    scoreA: done ? m.goalsFor(m.homeTeamId) : null,
+    scoreB: done ? m.goalsFor(m.awayTeamId) : null,
+    winnerId: m.winnerId,
+    note: m.penaltyWinnerId != null
+        ? Tr.pick('PK', 'pens')
+        : m.extraTime
+            ? Tr.pick('延長', 'aet')
+            : null,
+  );
+}
+
+BracketTie _tieOfContinental(CupTie t) => BracketTie(
+      teamA: t.teamAId,
+      teamB: t.teamBId,
+      scoreA: t.legs.isEmpty ? null : t.goalsFor(t.teamAId),
+      scoreB: t.legs.isEmpty ? null : t.goalsFor(t.teamBId),
+      winnerId: t.winnerId,
+      note: t.penaltyWinnerId != null
+          ? Tr.pick('PK', 'pens')
+          : t.extraTime
+              ? Tr.pick('延長', 'aet')
+              : null,
+    );
+
+/// 国内カップの、組が[_bracketMax]以下になった回戦から決勝までの山の形の表。
+Widget _domesticBracket(List<List<CupMatch>> rounds, int totalRounds,
+    String Function(String) nameOf, String userId) {
+  final all = CupBracket.withPlaceholders(
+      [for (final r in rounds) [for (final m in r) _tieOfCup(m)]], totalRounds);
+  var start = all.indexWhere((r) => r.length <= _bracketMax);
+  if (start < 0) start = all.length - 1;
+  return Padding(
+    key: const ValueKey('cup-bracket'),
+    padding: const EdgeInsets.only(top: 8, bottom: 8),
+    child: CupBracket(
+      rounds: all.sublist(start),
+      roundLabels: [
+        for (var r = start + 1; r <= totalRounds; r++)
+          CupEngine.roundLabel(r, totalRounds),
+      ],
+      nameOf: nameOf,
+      userId: userId,
+    ),
+  );
 }

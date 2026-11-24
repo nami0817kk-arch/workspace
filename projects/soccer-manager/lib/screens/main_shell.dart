@@ -16,6 +16,7 @@ import 'registration_rules_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
+import 'league_stats_screen.dart';
 import 'home_screen.dart';
 import 'advance_flow.dart';
 import 'reference_screens.dart';
@@ -144,10 +145,14 @@ class _MainShellState extends State<MainShell> {
           menu: TodoMenu.league,
           title: Tr.pick('リーグ', 'League'),
           tabs: [
-            GroupTab(Tr.pick('順位・日程', 'Table & fixtures'),
+            // 日程はカレンダーにあるので、ここは順位表だけ(2026-11-25)。
+            GroupTab(Tr.pick('順位表', 'Table'),
                 (_) => const FixturesScreen()),
             GroupTab(Tr.pick('カップ戦', 'Cups'), (_) => const CupScreen()),
-            // ランキングと個人タイトルは見るだけなので、≡ の「資料」へ。
+            // 得点・アシスト・採点のランキングと個人タイトル(2026-11-25 に
+            // 資料から戻した)。
+            GroupTab(Tr.pick('個人成績', 'Player stats'),
+                (_) => const LeagueStatsScreen()),
           ],
         ),
         GroupPage(
@@ -557,6 +562,12 @@ class AdvanceButton extends StatelessWidget {
       // 次の予定がある日まで進む。行き先の日付と中身をボタンに
       // 書く(2026-11-22)。
       onPressed: gameState.isBusy ? null : () => advanceToNextStop(context),
+      // 長押しで「まとめて進む」(何節先まで・季の終わりまで)。リーグの
+      // 画面の右上にあったボタンを移した(2026-11-25)。
+      onLongPress: gameState.isBusy ||
+              (gameState.save?.league.isSeasonComplete ?? true)
+          ? null
+          : () => showSimAheadDialog(context),
       icon: Icon(advanceButtonIcon(gameState), size: 18),
       label: Text(
         advanceButtonLabel(gameState) ?? Tr.pick('次の節へ', 'Next matchday'),
@@ -564,7 +575,12 @@ class AdvanceButton extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     );
-    if (mustCount == 0) return button;
+    // 長押しできることは、読み上げにも伝える。
+    final withTip = Semantics(
+      onLongPressHint: Tr.pick('まとめて進む', 'Sim ahead'),
+      child: button,
+    );
+    if (mustCount == 0) return withTip;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -604,7 +620,7 @@ class AdvanceButton extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 1),
-        Flexible(child: button),
+        Flexible(child: withTip),
       ],
     );
   }
