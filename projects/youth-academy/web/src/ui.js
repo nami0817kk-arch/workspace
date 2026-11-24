@@ -1110,6 +1110,9 @@
     // 選手ごとの採点（2026-11-24「選手個々の評価も見れる」）。試合中に動く。上のボタンで自分と相手を切り替える
     const mrate = h('div', { class: 'mrate' });
     let rateSide = 'home';
+    let rateOpen = null; // 押した選手の細かい数を、その行の下に開く
+    const sumSt = (t) => { const o = { pa: 0, pc: 0, ta: 0, tk: 0, ic: 0, y: 0, r: 0 }; for (const id of Object.keys(t.players)) { const q = t.players[id]; const x = q.st || {}; o.pa += x.pa || 0; o.pc += x.pc || 0; o.ta += x.ta || 0; o.tk += x.tk || 0; o.ic += x.ic || 0; if (q.sentOff) o.r++; else if (q.yellow) o.y++; } return o; };
+    const pct = (a, b) => (b > 0 ? Math.round((a / b) * 100) + '%' : '-');
     if (textMode) {
       stage.classList.add('text');
       stage.append(feed, mrate, mstat);
@@ -1184,18 +1187,32 @@
         h('div', { class: 'rtabs' }, [['home', m.home.short], ['away', m.away.short]].map(([k, n]) => h('button', { class: rateSide === k ? 'on' : '', onclick: () => { rateSide = k; updText(); } }, n))),
         ...rt.lineup.map((sl) => rt.players[sl.pid]).filter(Boolean).map((p) => {
           const v = Math.max(3, Math.min(10, p.st.rating));
-          return h('div', { class: 'rrow' }, h('i', {}, String(p.num)), h('span', {}, surname(p)), p.st.goals ? h('em', {}, '⚽' + (p.st.goals > 1 ? p.st.goals : '')) : null, h('b', { class: rcls(v).trim() }, v.toFixed(1)));
-        })
+          const x = p.st;
+          const row = h('div', { class: 'rrow' + (rateOpen === p.id ? ' on' : ''), onclick: () => { rateOpen = rateOpen === p.id ? null : p.id; updText(); } }, h('i', {}, String(p.num)), h('span', {}, surname(p)), p.sentOff ? h('em', { class: 'cr' }) : p.yellow ? h('em', { class: 'cy' }) : null, x.goals ? h('em', {}, '⚽' + (x.goals > 1 ? x.goals : '')) : null, h('b', { class: rcls(v).trim() }, v.toFixed(1)));
+          if (rateOpen !== p.id) return row;
+          const cell = (n, val) => h('div', {}, h('small', {}, n), h('b', {}, String(val)));
+          return [row, h('div', { class: 'rdet' }, cell('パス', (x.pc || 0) + '/' + (x.pa || 0)), cell('成功率', pct(x.pc || 0, x.pa || 0)), cell('シュート', x.shots || 0), cell('得点', x.goals || 0), cell('アシスト', x.assists || 0), cell('タックル', (x.tk || 0) + '/' + (x.ta || 0)), cell('パスカット', x.ic || 0), x.saves ? cell('セーブ', x.saves) : null)];
+        }).flat()
       );
       const ps = m.live.poss;
       const tot = ps.home + ps.away;
       const hp = tot > 0 ? Math.round((ps.home / tot) * 100) : 50;
+      const sh = sumSt(m.home);
+      const sa = sumSt(m.away);
       mstat.replaceChildren(
         h('div', { class: 'shead' }, h('span', {}, m.home.short), h('span', {}, m.away.short)),
         h('div', { class: 'sbar' }, h('i', { style: 'width:' + hp + '%' })),
         statRow('ボール保持', hp + '%', 100 - hp + '%'),
         statRow('シュート', m.stats.home.shots, m.stats.away.shots),
         statRow('枠内', m.stats.home.onTarget, m.stats.away.onTarget),
+        statRow('パス', sh.pa, sa.pa),
+        statRow('パス成功率', pct(sh.pc, sh.pa), pct(sa.pc, sa.pa)),
+        statRow('タックル', sh.tk, sa.tk),
+        statRow('パスカット', sh.ic, sa.ic),
+        statRow('CK', m.stats.home.corners || 0, m.stats.away.corners || 0),
+        statRow('ファウル', m.stats.home.fouls || 0, m.stats.away.fouls || 0),
+        statRow('オフサイド', m.stats.home.offside || 0, m.stats.away.offside || 0),
+        statRow('警告・退場', sh.y + '・' + sh.r, sa.y + '・' + sa.r),
         h('div', { class: 'sgoals' }, scorers.length ? scorers.map((g) => h('div', { class: g.side === 'away' ? 'ag' : '' }, g.text)) : h('div', { class: 'none' }, '得点はまだありません'))
       );
     };

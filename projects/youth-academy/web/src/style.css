@@ -130,14 +130,22 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .mrate .rrow span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
 .mrate .rrow em{flex:none;font-style:normal;font-size:11px}
 .mrate .rrow b{flex:none;width:30px;text-align:right;font-variant-numeric:tabular-nums}
+.mrate .rrow{cursor:pointer}
+.mrate .rrow.on{background:#eef4ff}
+.mrate .rrow em.cy,.mrate .rrow em.cr{width:7px;height:10px;border-radius:2px;background:#f2c200}
+.mrate .rrow em.cr{background:#d23b2b}
+.mrate .rdet{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;background:#eef4ff;border-radius:0 0 8px 8px;padding:4px 6px 5px;margin-bottom:2px}
+.mrate .rdet div{display:flex;justify-content:space-between;align-items:baseline;gap:4px}
+.mrate .rdet small{font-size:10.5px;color:#5a6a84;white-space:nowrap}
+.mrate .rdet b{font-size:11.5px;color:var(--navy);font-variant-numeric:tabular-nums}
 .mrate .rrow b.hi{color:#1a8a4a}
 .mrate .rrow b.lo{color:#c8402f}
-.mstat{flex:none;width:180px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-s);padding:8px 10px;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.mstat{flex:none;width:190px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-s);padding:8px 10px;display:flex;flex-direction:column;gap:3px;overflow:auto;-webkit-overflow-scrolling:touch}
 .mstat .shead{display:flex;justify-content:space-between;font-weight:900;font-size:12px;color:var(--navy)}
 .mstat .sbar{flex:none;height:8px;border-radius:5px;background:#c8402f;overflow:hidden}
 .mstat .sbar i{display:block;height:100%;background:#1f6feb;transition:width .6s}
-.mstat .srow{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#5a6a84}
-.mstat .srow b{font-size:14px;color:var(--navy);min-width:38px;font-variant-numeric:tabular-nums}
+.mstat .srow{flex:none;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#5a6a84}
+.mstat .srow b{font-size:13px;color:var(--navy);min-width:38px;font-variant-numeric:tabular-nums}
 .mstat .srow b:last-child{text-align:right}
 .mstat .sgoals{border-top:1px dashed var(--line);padding-top:6px;display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:700;color:var(--navy)}
 .mstat .sgoals .ag{text-align:right;color:#a83224}

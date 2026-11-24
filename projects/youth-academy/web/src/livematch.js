@@ -48,6 +48,12 @@
     const E = lv.events;
     const p = e.pid ? this._lvP(e.pid) : null;
     const st = this.stats;
+    // 試合中の画面に出す細かい数（数えるだけ。結果は変えない）
+    if (e.sd && st[e.sd]) {
+      if (e.k === 'foul') st[e.sd].fouls = (st[e.sd].fouls || 0) + 1;
+      else if (e.k === 'offside') st[e.sd].offside = (st[e.sd].offside || 0) + 1;
+      else if (e.k === 'restart' && e.type === 'corner') st[e.sd].corners = (st[e.sd].corners || 0) + 1;
+    }
     if (e.k === 'shot') {
       if (p) p.st.shots++;
       st[e.sd].shots++;
