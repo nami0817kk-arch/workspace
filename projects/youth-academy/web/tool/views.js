@@ -495,9 +495,9 @@ async function clearEvents() {
   // 試合中
   btn('キックオフ').click();
   await sleep(300);
-  ok(!!d.querySelector('canvas') && !!d.querySelector('.scoreboard'), '試合の画面');
+  ok(!d.querySelector('.stage canvas') && !!d.querySelector('.feed') && !!d.querySelector('.mstat') && !!d.querySelector('.scoreboard'), '試合の画面（図は出さず、実況の流れと数字）');
   ok(txt().includes('止める') && txt().includes('自動停止') && txt().includes('結果まで'), '止めるボタン・自動停止・結果まで');
-  ok(!!d.querySelector('.comm .tx') && !!d.querySelector('.comm .prev'), '実況は最新と1つ前の2行');
+  ok(!!d.querySelector('.feed .fl') && txt().includes('ボール保持'), '実況の流れに開始の1行・右に試合の数字');
   btn('見どころ').click();
   btn('止める').click();
   let n = 0;

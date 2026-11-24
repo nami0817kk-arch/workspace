@@ -1103,7 +1103,14 @@
     // 速さのボタンはボードの外（上の帯）に出した（2026-11-16 ボードを大きく）
     const ctl = h('div', { class: 'ctl' });
     const bannerBox = h('div', {});
-    stage.append(cv, sceneHead, ctl, bannerBox);
+    // 一続きの試合は図を出さない（2026-11-24「俯瞰図はいらない」）。左に実況の流れ、右に試合の数字
+    const textMode = !!m.live;
+    const feed = h('div', { class: 'feed' });
+    const mstat = h('div', { class: 'mstat' });
+    if (textMode) {
+      stage.classList.add('text');
+      stage.append(feed, mstat);
+    } else stage.append(cv, sceneHead, ctl, bannerBox);
     const commMin = h('span', { class: 'min' }, "0'");
     // 開始の文は実際に蹴る側（2026-11-17：前はいつもこちらの攻撃と出ていた）
     const koText = 'キックオフ。' + (m.kickoffSide === 'away' ? m.away.short : m.home.short) + 'のボールで試合が始まります';
@@ -1111,11 +1118,13 @@
     // 1つ前の実況も小さく残す（2026-11-21「今の形を向上」：最新の1行だけで、少し前が見返せなかった）
     const commPrev = h('span', { class: 'prev' }, '');
     const comm = h('div', { class: 'comm' }, commMin, h('div', { class: 'cl' }, commTx, commPrev), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, 'タップで経過'));
-    wrap.append(top, stage, comm);
+    if (textMode) wrap.append(top, stage);
+    else wrap.append(top, stage, comm);
     main.append(wrap);
 
-    const R = new YA.Renderer(cv);
-    R.setMatch(m);
+    // 図を出さないときは、場面の時間だけを数える
+    const R = textMode ? { t: 0, update(dt) { this.t += dt; }, startScene() { this.t = 0; }, endScene() {}, draw() {}, resize() {}, basePositions() { return null; } } : new YA.Renderer(cv);
+    if (!textMode) R.setMatch(m);
     const S = (play = { m, R, mode: 'idle', clock: 0, paused: false, sheet: null, raf: 0, last: 0, shown: 0, pendingStop: false, speed: app.speed });
     S.onResize = () => R.resize();
     globalThis.addEventListener('resize', S.onResize);
@@ -1155,10 +1164,34 @@
       stage.append(h('div', { class: 'logpop', onclick: (e) => e.currentTarget.remove() }, m.log.slice(-10).reverse().map((l) => h('div', {}, h('b', {}, (l.ml || l.minute) + "'"), l.text))));
     };
     comm.onclick = logBox;
+    // 実況の流れ：新しいものを上に足す。見どころは札（playScene が作る）で出すので、ここでは飛ばす
+    let logShown = 0;
+    const scorers = [];
+    const feedAdd = (el) => { feed.prepend(el); while (feed.children.length > 60) feed.lastChild.remove(); };
+    const statRow = (name, a, b) => h('div', { class: 'srow' }, h('b', {}, String(a)), h('span', {}, name), h('b', {}, String(b)));
+    const updText = () => {
+      for (; logShown < m.log.length; logShown++) {
+        const l = m.log[logShown];
+        if (l.scene != null || !l.text) continue;
+        feedAdd(h('div', { class: 'fl' + (l.kind === 'flow' ? '' : ' key') }, h('b', {}, (l.ml || l.minute) + "'"), h('span', {}, l.text)));
+      }
+      const ps = m.live.poss;
+      const tot = ps.home + ps.away;
+      const hp = tot > 0 ? Math.round((ps.home / tot) * 100) : 50;
+      mstat.replaceChildren(
+        h('div', { class: 'shead' }, h('span', {}, m.home.short), h('span', {}, m.away.short)),
+        h('div', { class: 'sbar' }, h('i', { style: 'width:' + hp + '%' })),
+        statRow('ボール保持', hp + '%', 100 - hp + '%'),
+        statRow('シュート', m.stats.home.shots, m.stats.away.shots),
+        statRow('枠内', m.stats.home.onTarget, m.stats.away.onTarget),
+        h('div', { class: 'sgoals' }, scorers.length ? scorers.map((g) => h('div', { class: g.side === 'away' ? 'ag' : '' }, g.text)) : h('div', { class: 'none' }, '得点はまだありません'))
+      );
+    };
     const upd = () => {
       scoreHome.textContent = m.score.home;
       scoreAway.textContent = m.score.away;
       clock.textContent = m.minLabel() + "'";
+      if (textMode) updText();
     };
 
     function openSheet(reason) {
@@ -1171,7 +1204,7 @@
       const close = () => { m.closeWindow(m.home); sheet.remove(); S.sheet = null; S.paused = false; S.stopWait = false; stopBtn.textContent = '止める'; stopBtn.disabled = false; };
       const subChip = h('span', { class: 'chip gray' }, `交代 あと${5 - m.home.subsUsed}人`);
       const head = h('div', { class: 'sheet-top' }, h('div', { class: 'reason' }, `${m.minLabel()}'  ${titles[reason] || ''}   ${m.score.home} - ${m.score.away}`), subChip, h('button', { class: 'btn pri', style: 'min-width:92px', onclick: close }, '再開'));
-      const panel = tacticPanel(m.home, { sheet: true, match: m, tabs: [['sub', '交代'], ['role', '布陣・役割'], ['tactic', '戦い方'], ['instr', '指示'], ['shout', '声かけ']], onChange: () => { upd(); subChip.textContent = `交代 あと${5 - m.home.subsUsed}人`; S.R.base = S.R.basePositions(); }, state: S.panelState });
+      const panel = tacticPanel(m.home, { sheet: true, match: m, tabs: [['sub', '交代'], ['role', '布陣・役割'], ['tactic', '戦い方'], ['instr', '指示'], ['shout', '声かけ']], onChange: () => { upd(); subChip.textContent = `交代 あと${5 - m.home.subsUsed}人`; if (!textMode) S.R.base = S.R.basePositions(); }, state: S.panelState });
       S.panelState = panel.state;
       panelBox.append(panel);
       panel.style.cssText = 'flex:1;min-height:0';
@@ -1204,6 +1237,14 @@
       S.beatShown = -1;
       R.startScene(sc);
       R.poss = sc.side;
+      if (textMode) {
+        // 見どころの札：実況が1行ずつ足されていく。終わっても流れの中に残る
+        S.card = h('div', { class: 'fcard' + (sc.side === 'away' ? ' ag' : '') }, h('div', { class: 'fhead' }, h('b', {}, (sc.ml || sc.minute) + "'"), (sc.side === 'home' ? m.home.short : m.away.short) + 'の' + sc.typeName), h('div', { class: 'fbeats' }), h('div', { class: 'tagrow' }));
+        feedAdd(S.card);
+        feed.scrollTop = 0;
+        S.tags = fxToShow(sc);
+        return;
+      }
       sceneHead.replaceChildren(h('div', { class: 'scene-title' }, h('b', {}, (sc.ml || sc.minute) + "'"), sc.typeName), h('div', { class: 'tagrow' }));
       // 札は攻めているゴールと反対の隅へ（2026-11-23：左のゴールを攻める場面で、左上の札がシュートやセーブを隠していた）。ホームは右、アウェイは左へ攻める
       sceneHead.classList.toggle('right', sc.side === 'away');
@@ -1219,17 +1260,20 @@
       S.mode = 'idle';
       const lastBeat = sc.beats[sc.beats.length - 1].text;
       setComm(sc.ml || sc.minute, lastBeat);
-      upd();
       if (sc.goal) {
         const sp = (sc.side === 'home' ? m.home : m.away).players[sc.scorer];
         const asp = sc.assist ? (sc.side === 'home' ? m.home : m.away).players[sc.assist] : null;
-        bannerBox.replaceChildren(h('div', { class: 'banner' + (sc.side === 'away' ? ' opp' : '') }, h('div', { class: 'big' }, sc.side === 'home' ? 'GOAL!' : '失点'), h('div', { class: 'small' }, `${sp.num}番 ${sp.name}` + (asp ? `（アシスト ${surname(asp)}）` : ''))));
+        if (textMode) {
+          scorers.push({ side: sc.side, text: (sc.ml || sc.minute) + "' " + surname(sp) + (asp ? '（' + surname(asp) + '）' : '') });
+          S.card.append(h('div', { class: 'fgoal' }, h('b', {}, sc.side === 'home' ? 'GOAL!' : '失点'), `${sp.num}番 ${sp.name}` + (asp ? `（アシスト ${surname(asp)}）` : '')));
+        } else bannerBox.replaceChildren(h('div', { class: 'banner' + (sc.side === 'away' ? ' opp' : '') }, h('div', { class: 'big' }, sc.side === 'home' ? 'GOAL!' : '失点'), h('div', { class: 'small' }, `${sp.num}番 ${sp.name}` + (asp ? `（アシスト ${surname(asp)}）` : ''))));
         S.hold = (YA.MOVE.celeb || 2.6) - 0.4; // 得点の喜び（render の celeb）が終わるまで次へ進まない
         YA.sfx.play(sc.side === 'home' ? 'goal' : 'concede');
       } else {
-        S.hold = 0.5;
+        S.hold = textMode ? 1.2 : 0.5; // 字で読むので、次へ進む前に少し長く置く
         YA.sfx.play(sc.outcome === 'saved' ? 'save' : sc.outcome === 'missed' || sc.outcome === 'post' ? 'miss' : null);
       }
+      upd();
       S.holdScene = true;
     }
 
@@ -1275,12 +1319,12 @@
           runR(dt * speedK());
           const sc = S.sc;
           // 実況の進み
-          for (let i = S.beatShown + 1; i < sc.beats.length; i++) if (R.t >= sc.beats[i].at) { setComm(sc.ml || sc.minute, sc.beats[i].text); S.beatShown = i; }
+          for (let i = S.beatShown + 1; i < sc.beats.length; i++) if (R.t >= sc.beats[i].at) { setComm(sc.ml || sc.minute, sc.beats[i].text); S.beatShown = i; if (textMode) S.card.querySelector('.fbeats').append(h('div', { class: i === sc.beats.length - 1 ? 'last' : '' }, sc.beats[i].text)); }
           // 効いた特性・性格の札（少し遅れて出す）
-          const row = sceneHead.querySelector('.tagrow');
+          const row = (textMode ? S.card : sceneHead).querySelector('.tagrow');
           while (S.tagShown < S.tags.length && R.t >= 1.3 + S.tagShown * 0.55) {
             const f = S.tags[S.tagShown++];
-            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'gold' ? '金特性' : f.kind === 'awake' ? '覚醒' : f.kind === 'pers' ? '性格' : f.kind === 'habit' ? '癖' : f.kind === 'combo' ? '組み合わせ' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}：${f.text}`)));
+            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'gold' ? '金特性' : f.kind === 'awake' ? '覚醒' : f.kind === 'pers' ? '性格' : f.kind === 'habit' ? '癖' : f.kind === 'combo' ? '組み合わせ' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}` + (f.text ? `：${f.text}` : ''))));
           }
           if (R.t >= sc.dur) endScene();
         } else {
@@ -1316,6 +1360,7 @@
     YA.sfx.play('whistle');
     // 場面のあとで止める：場面が終わったら次の step が stop を返す
     setComm(0, koText);
+    if (textMode) { feedAdd(h('div', { class: 'fl key' }, h('b', {}, "0'"), h('span', {}, koText))); updText(); }
   }
 
   // ---------- 試合後 ----------
