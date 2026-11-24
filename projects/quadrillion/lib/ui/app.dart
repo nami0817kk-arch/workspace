@@ -606,7 +606,11 @@ class EndScreen extends StatelessWidget {
               const SizedBox(height: 6),
               Text(tx(s.won ?? s.over), style: ts(size: 15, height: 1.5)),
               const SizedBox(height: 4),
-              Muted('${nmL(s.pres.name)}${s.gen > 1 ? tr('（{0}代目）', [s.gen]) : ''}${tr('・')}${ym(s.year, s.q)}'),
+              Row(children: [
+                presFace(s, size: faceBig),
+                const SizedBox(width: 10),
+                Expanded(child: Muted('${nmL(s.pres.name)}${s.gen > 1 ? tr('（{0}代目）', [s.gen]) : ''}${tr('・')}${ym(s.year, s.q)}')),
+              ]),
               const SizedBox(height: 14),
               Panel(
                 border: win ? Pal.gold : Pal.line,

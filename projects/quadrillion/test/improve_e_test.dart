@@ -236,8 +236,8 @@ void main() {
         await p.reveal(find.byKey(const ValueKey('face-legend')));
         final legend = find.descendant(of: find.byKey(const ValueKey('face-legend')), matching: find.byType(RichText));
         final text = tester.widget<RichText>(legend.first).text.toPlainText();
-        expect(text, contains(tr('顔の色はいちばん高い能力')));
-        expect(text, contains(tr('輪つきは社長と相棒')));
+        expect(text, contains(tr('顔の縁の色はいちばん高い能力')));
+        expect(text, contains(tr('金の輪は社長と相棒')));
         for (final k in abKeys) {
           expect(text, contains(ABN[k]!));
         }

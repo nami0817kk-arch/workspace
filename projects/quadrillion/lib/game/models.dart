@@ -35,6 +35,12 @@ class Person {
   bool auto;
   int rej;
 
+  /// 顔の絵（faces.dart の FACES の id。1.0.0+21 から。古いセーブには無く、読み込んだときに割り当てる。15歳までの子どもは null）
+  String? face;
+
+  /// 顔を決めたときの年代（0 〜34歳・1 35〜54歳・2 55歳〜）。これより上の年代になったら顔を選び直す
+  int? fb;
+
   Person({
     required this.id,
     required this.name,
@@ -56,6 +62,8 @@ class Person {
     this.kid = false,
     this.auto = false,
     this.rej = 0,
+    this.face,
+    this.fb,
   }) : off = off ?? {};
 
   Map<String, dynamic> toJson() => {
@@ -79,6 +87,8 @@ class Person {
         'kid': kid,
         'auto': auto,
         'rej': rej,
+        if (face != null) 'face': face,
+        if (fb != null) 'fb': fb,
       };
 
   factory Person.fromJson(Map<String, dynamic> j) => Person(
@@ -102,6 +112,8 @@ class Person {
         kid: j['kid'] == true,
         auto: j['auto'] == true,
         rej: _i(j['rej']),
+        face: j['face'] as String?,
+        fb: _in(j['fb']),
       );
 }
 
@@ -110,10 +122,16 @@ class President {
   int age;
   List<String> traits;
   Map<String, int> ab;
-  President({required this.name, required this.age, required this.traits, required this.ab});
-  Map<String, dynamic> toJson() => {'name': name, 'age': age, 'traits': traits, 'ab': ab};
-  factory President.fromJson(Map<String, dynamic> j) =>
-      President(name: j['name'] as String, age: _i(j['age']), traits: _sl(j['traits']), ab: _abFrom(j['ab']));
+
+  /// 顔の絵（1.0.0+21 から。古いセーブには無い）
+  String? face;
+
+  /// 顔を決めたときの年代（[Person.fb] と同じ）
+  int? fb;
+  President({required this.name, required this.age, required this.traits, required this.ab, this.face, this.fb});
+  Map<String, dynamic> toJson() => {'name': name, 'age': age, 'traits': traits, 'ab': ab, if (face != null) 'face': face, if (fb != null) 'fb': fb};
+  factory President.fromJson(Map<String, dynamic> j) => President(
+      name: j['name'] as String, age: _i(j['age']), traits: _sl(j['traits']), ab: _abFrom(j['ab']), face: j['face'] as String?, fb: _in(j['fb']));
 }
 
 /// 仕掛かり中の打ち手（開発・建設・海外進出）
@@ -415,6 +433,13 @@ class Company {
   int? locRiv;
   double locRivPct;
 
+  // ===== 社長の顔の絵（1.0.0+21 から。宿敵の会社だけが持つ。古いセーブには無い） =====
+  /// 顔の絵と、それを割り当てたときの社長の名前（代替わりで名前が変わったら割り当て直す）
+  String? pf, pfn;
+
+  /// 顔を決めたときの社長の年代（[Person.fb] と同じ）
+  int? pfb;
+
   Company({
     required this.id,
     required this.name,
@@ -445,6 +470,9 @@ class Company {
     this.loc,
     this.locRiv,
     this.locRivPct = 0,
+    this.pf,
+    this.pfn,
+    this.pfb,
   })  : biz = biz ?? [],
         revHist = revHist ?? [];
 
@@ -478,6 +506,9 @@ class Company {
         'loc': loc,
         'locRiv': locRiv,
         'locRivPct': locRivPct,
+        if (pf != null) 'pf': pf,
+        if (pfn != null) 'pfn': pfn,
+        if (pfb != null) 'pfb': pfb,
       };
 
   factory Company.fromJson(Map<String, dynamic> j) => Company(
@@ -510,6 +541,9 @@ class Company {
         loc: j['loc'] as String?,
         locRiv: _in(j['locRiv']),
         locRivPct: _d(j['locRivPct']),
+        pf: j['pf'] as String?,
+        pfn: j['pfn'] as String?,
+        pfb: _in(j['pfb']),
       );
 }
 

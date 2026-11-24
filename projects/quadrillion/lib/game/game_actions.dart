@@ -1416,6 +1416,11 @@ extension GameActions on Game {
     final p = mkPerson(.4);
     p.name = c.presName;
     p.age = jsRound(c.presAge).toInt();
+    // 宿敵の社長だった人は、同じ顔のまま部下になる
+    if (c.pfn == c.presName) {
+      p.face = c.pf;
+      p.fb = c.pfb;
+    }
     staff.add(p);
     if (sh.riv.containsKey(c.id)) {
       sh.float += sh.riv[c.id]!;

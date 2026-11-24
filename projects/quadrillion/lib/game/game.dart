@@ -7,12 +7,14 @@ import 'dart:math' as math;
 
 import '../l10n/l10n.dart';
 import 'data.dart';
+import 'faces.dart';
 import 'format.dart';
 import 'models.dart';
 import 'models_static.dart';
 
 export '../l10n/l10n.dart';
 export 'data.dart';
+export 'faces.dart';
 export 'format.dart';
 export 'models.dart';
 export 'models_static.dart';
@@ -25,6 +27,7 @@ part 'game_local.dart';
 part 'game_achieve.dart';
 part 'game_mid.dart';
 part 'game_deleg.dart';
+part 'game_faces.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -553,6 +556,7 @@ class Game {
     history = [];
     chron('found', M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
     trackPeaks();
+    ensureFaces();
   }
 
   void normalizeAll(bool init) {
@@ -1035,6 +1039,8 @@ class Game {
     } else {
       s.noteInds();
     }
+    // 顔の絵は 1.0.0+21 から。古いセーブの人には、読み込んだときに割り当てる
+    s.ensureFaces();
     return s;
   }
 }
