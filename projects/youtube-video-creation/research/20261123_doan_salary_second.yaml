@@ -1,0 +1,132 @@
+# 取材メモ（2026年11月23日）堂安律の基本給はフランクフルトで主将コッホに次ぐ2位タイ（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 題材の元: まとめサイト footballnet 60146715（根拠にはしない）。スレの1の引用元は FOOTBALL TRIBE（日本語）2026-11-20 → それが「ドイツ『ビルト』が16日に特集」と書いていた。
+# 元のドイツ紙: BILD 2026-11-17 09:28「Eintracht Frankfurt: Gehälter der Bundesliga-Stars enthüllt!」（Johannes Wolf / Marc Schmidt）
+#   https://www.bild.de/sport/fussball/eintracht-frankfurt-gehaelter-der-bundesliga-stars-enthuellt-6afb0f2f8c74195fa20c321a
+#   → 有料（BILDplus）。読めたのは導入だけ: ネットに出回る表では主将コッホ（30）が基本給約600万ユーロとされるが、BILD が「実際に稼げる額」を明かす、という前置き。本文の数字は読めていない。
+#   （FOOTBALL TRIBE は「16日」と書くが、BILD のサイトの掲載は 17日 09:28。→ 台本では日付を言わない）
+# ユーロの数字を確かめたもの: 90min.de（ドイツ語）2026-11-17「Gehaltsliste enthüllt: Das verdienen die Eintracht-Stars」（Jan Kupitz。BILD の報道として全文で紹介）
+#   https://www.90min.de/gehaltsliste-enthullt-das-verdienen-die-eintracht-stars
+#   ・基本給: コッホ 400万ユーロ（チーム最高）／ブルカルト 300万〜350万／堂安 300万〜350万 → 堂安はブルカルトと並ぶ2位タイ。
+#   ・次の段: ブラシエ・アトゥボル・オニェディカ 約250万／シャイビ・ウズン・クナウフ・ゲッツェ 約200万（ゲッツェは昨夏の延長で下げた）。
+#   ・成果で払う仕組み: 基本給は比較的低く、勝てばボーナスが大きい。コッホは最大300万ユーロのボーナス（基本給がほぼ倍）。ブルカルトや堂安も「理屈の上では同じくらいのボーナス」。
+#     ただしチャンピオンズリーグ出場権などが要る。現実的なボーナスは150万〜200万ユーロ。
+#   ※90min の写真は Getty なので使わない。
+# 食い違い（気をつけた点）:
+#   ・FOOTBALL TRIBE は「堂安は最大600万ユーロ（約10億8000万円）、コッホは最大700万ユーロ」と書く。90min は堂安の最大額を数字で書かず「コッホと同じくらいのボーナス（＝最大300万）」とだけ書く。
+#     → 台本は 90min の言い方に合わせ、「基本給の上限350万＋ボーナス300万＝最大650万ユーロ」を**自分の計算（見立て）**として言う。600万とは言わない。
+#   ・FOOTBALL TRIBE の円は 1ユーロ＝約180円。こちらは ECB の参照レート 2026-11-20 の 1ユーロ＝174.35円で計算し直した（下）。
+#   ・FOOTBALL TRIBE の「フライブルク時代の年俸84万ユーロ」「アル・イテハドから900万ユーロの提示」はドイツの元記事を読めていないので使わない。
+#   ・BILD 本文が有料で読めないため、数字は BILD を紹介した 90min（ドイツの媒体）どまり。確度は 報道。
+# 円の換算（自分で計算。ECB 参照レート 2026-11-20、1ユーロ＝174.35円 https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml）:
+#   300万ユーロ＝5億2305万円（約5億2000万円）／350万＝6億1023万円（約6億1000万円）／400万＝6億9740万円（約7億円）
+#   ボーナス最大300万＝約5億2000万円／現実的 150万〜200万＝2億6153万〜3億4870万円（約2億6000万〜3億5000万円）
+#   最大の計: 350万＋300万＝650万ユーロ＝11億3328万円（約11億3000万円）。下限で 300万＋300万＝600万＝約10億5000万円。
+# 前の本との重なり: 堂安の本は 11/11 asiacup・11/14 last_captain・11/15 brazil_captain・11/18 captain_words（どれも代表の話）。年俸の話は初出。
+# 【言わないこと】他人の年俸の細かい内訳（ゲッツェの旧契約など）／サウジの話／ネットの年俸表／得点が無い等のプレーの評価／「高すぎる」「安い」の感想。
+# 写真: フランクフルトの写真で代理店でないものが見つからなかった（BILD は picture alliance、90min は Getty、FOOTBALL TRIBE はアフロ、Commons に今季のものは無い）。
+#   ゲキサカのフォトニュース（11月の日本代表。撮影 Koki NAGAHAMA/GEKISAKA）から4枚: 01＝ブラジル戦の顔（463286_3）、02＝パラグアイ戦の顔（463418_18）、03＝ブラジル戦のキック（463286_7）、04＝ブラジル戦の2日後の練習の行き（463303_11）。
+#   photopool は主写真しか見ず、鎌田大地（463286 の主写真）と BILD のコッホを拾ったので外し、本人の写真を目で選んで pressphoto で取り込み facecrop で切った。
+#   _pool.png を見た: 4枚とも堂安律本人。元の写真の右下に撮影者の表記「©Koki NAGAHAMA/GEKISAKA」があり、02_v・03_v の右下に一部が残るので使わない。01_v・04_v・_w は表記が切れて入っていない。
+#   代表のユニフォーム姿で、フランクフルトの写真ではない。11/18 の本（04 は 463135）とは別の写真。
+# 本人の言葉: 無し（年俸の話に本人は答えていない）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [堂安律, フランクフルト, ロビン・コッホ]
+
+short_style: X
+short_hook_word: 年俸はチーム2位
+short_photos:
+  - assets/images/20261123_doan_salary_second/01_v.jpg
+  - assets/images/20261123_doan_salary_second/04_v.jpg
+  - assets/images/20261123_doan_salary_second/01_v.jpg
+  - assets/images/20261123_doan_salary_second/04_v.jpg
+short_question: 堂安律は、ボーナスまで満額で受け取るシーズンにできると思いますか。
+short_telops: []
+
+theme:
+  id: doan_salary_second
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 堂安律がフランクフルトでもらう基本給。主将コッホのすぐ下に並んだ額
+  hook: ""
+  question: フランクフルトで、堂安律の年俸はチームの何番目なのか
+  takeaway: 堂安の基本給は300万〜350万ユーロで、主将コッホの400万に次ぐ2位タイ。ボーナスがコッホと同じ最大300万なら、合計は最大650万ユーロ、約11億3000万円になる計算
+
+thumbnail:
+  layout: face
+  line1: 堂安律 フランクフルトの年俸
+  line2: チーム2位タイ
+  tags: [堂安律, フランクフルト]
+  photo: assets/images/20261123_doan_salary_second/01_w.jpg
+  short_photo: assets/images/20261123_doan_salary_second/01_v.jpg
+
+answer: 基本給は300万〜350万ユーロで、主将コッホに次ぐ2位タイ
+watch: ボーナスの条件の1つは、チャンピオンズリーグの出場権
+
+sections:
+  - id: what
+    main: true
+    heading: フランクフルトで、堂安律の基本給はチームの何番目なのか
+    tier: 報道
+    telop: 堂安律の基本給、フランクフルトで2位タイ
+    say:
+      - text: フランクフルトの堂安律の基本給は、チームで2位タイ。ドイツで報じられました。
+        image: assets/images/20261123_doan_salary_second/01_w.jpg
+      - text: 堂安の基本給は、1年で300万から350万ユーロ。日本円で、約5億2000万から6億1000万円です。
+        card: {type: table, title: フランクフルト 基本給（年）, columns: [選手, 基本給], rows: [[コッホ（主将）, 400万ユーロ], [堂安律, 300万〜350万ユーロ], [ブルカルト, 300万〜350万ユーロ], [ブラシエほか3人, 約250万ユーロ]], highlight_row: 1}
+      - text: いちばん上は、主将のロビン・コッホで400万ユーロ。
+        card: {type: table, title: フランクフルト 基本給（年）, columns: [選手, 基本給], rows: [[コッホ（主将）, 400万ユーロ], [堂安律, 300万〜350万ユーロ], [ブルカルト, 300万〜350万ユーロ], [ブラシエほか3人, 約250万ユーロ]], highlight_row: 0}
+        image: assets/images/20261123_doan_salary_second/04_w.jpg
+      - text: 堂安は、フォワードのブルカルトと並んで、その次です。
+        card: {type: table, title: フランクフルト 基本給（年）, columns: [選手, 基本給], rows: [[コッホ（主将）, 400万ユーロ], [堂安律, 300万〜350万ユーロ], [ブルカルト, 300万〜350万ユーロ], [ブラシエほか3人, 約250万ユーロ]], highlight_row: 2}
+        image: assets/images/20261123_doan_salary_second/01_w.jpg
+    official: false
+    sources:
+      - https://www.90min.de/gehaltsliste-enthullt-das-verdienen-die-eintracht-stars
+      - https://www.bild.de/sport/fussball/eintracht-frankfurt-gehaelter-der-bundesliga-stars-enthuellt-6afb0f2f8c74195fa20c321a
+      - https://web.gekisaka.jp/photonews/japan/detail/?463418-463418-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?463286-463286-pn
+  - id: bonus
+    heading: 堂安律の給料は、基本給だけで決まるのか
+    tier: 報道
+    telop: フランクフルトは成果で払う仕組み。ボーナスの条件はCL出場権など
+    say:
+      - text: ただ、フランクフルトの給料は、基本給だけでは決まりません。
+        card: none
+        emph: true
+        image: assets/images/20261123_doan_salary_second/04_w.jpg
+      - text: 基本給をおさえめにして、勝てばボーナスが大きくなる仕組みです。
+      - text: コッホは、ボーナスだけで最大300万ユーロ。基本給がほぼ倍になります。
+        image: assets/images/20261123_doan_salary_second/01_w.jpg
+      - text: 堂安律も、理屈の上では同じくらいのボーナスを狙えるといいます。
+        image: assets/images/20261123_doan_salary_second/04_w.jpg
+      - text: ただし満額には、ヨーロッパの最高峰の大会、チャンピオンズリーグに出る権利などが要ります。
+      - text: 現実的なボーナスは、150万から200万ユーロと見られています。
+        image: assets/images/20261123_doan_salary_second/01_w.jpg
+    official: false
+    sources:
+      - https://www.90min.de/gehaltsliste-enthullt-das-verdienen-die-eintracht-stars
+      - https://www.bild.de/sport/fussball/eintracht-frankfurt-gehaelter-der-bundesliga-stars-enthuellt-6afb0f2f8c74195fa20c321a
+      - https://web.gekisaka.jp/photonews/japan/detail/?463418-463418-pn
+      - https://web.gekisaka.jp/photonews/japan/detail/?463286-463286-pn
+  - id: view
+    viewpoint: true
+    heading: ボーナスまで届いたら、堂安律の年俸はいくらになるのか
+    tier: 背景
+    telop: 基本給350万＋ボーナス300万＝最大650万ユーロ
+    say:
+      - text: 見立てです。堂安律の基本給の上限に、コッホと同じ最大のボーナスを足すと、650万ユーロ。
+        card: {type: convert, title: 堂安律 ボーナスまで届いたら, from: [650万, ユーロ, 基本給350万＋ボーナス300万], to: [約11億3000万, 円, 1ユーロ＝174.35円（11月20日）], via: ×174.35}
+      - text: 日本円で、約11億3000万円になる計算です。
+        emph: true
+      - text: 見込まれる額のボーナスでも、合計は450万から550万ユーロ。主将の基本給を上回ります。
+        card: none
+    official: false
+    sources:
+      - https://www.90min.de/gehaltsliste-enthullt-das-verdienen-die-eintracht-stars
+      - https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml

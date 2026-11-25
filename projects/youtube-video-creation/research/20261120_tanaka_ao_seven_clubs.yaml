@@ -1,0 +1,129 @@
+# 取材メモ（2026年11月20日）田中碧、リーズが契約延長の話し合いへ。プレミアなど複数クラブが関心と報道（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-20。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ日本語版 2026-11-19 8:55pm「南野拓実と共闘も？田中碧にリバプールなど7クラブ以上関心！リーズは契約延長交渉へ「代理人と交渉」」
+#   https://football-tribe.com/japan/2026/11/19/361496/
+# 報道の出どころ（元記事を直接読んだ）:
+#   ・TEAMtalk（英）2026-11-19 9:17 AM（現地時刻の表記）の独占記事（Graeme Bailey & James Marshment）「Leeds United to open talks to extend Ao Tanaka deal amid interest from four Prem sides - Exclusive」
+#     https://www.teamtalk.com/leeds-united/ao-tanaka-contract-extension-talks-man-utd-spurs-liverpool-chelsea-interest-exclusive
+#   ・トライブは「チームトークが18日に伝えた」と書くが、記事の日付表示は 19 Nov 2026（記事の食い違い）。台本は日付を言わない。
+#   ・トライブの「エクレム・コヌル氏」の引用（チェルシー・リバプール・モナコの記述）は、TEAMtalk の本文には無い（別の出どころ。確かめていない）。→ 台本は TEAMtalk の本文だけで作る。コヌルの話は使わない。
+#   ・トライブの「ユナイテッドとトッテナムは2027年夏の獲得を狙っている」は TEAMtalk の本文に無い（TEAMtalk は「夏にレーダーにあったが動かず、いまも把握している」）。→ 使わない。
+# TEAMtalk の本文で確かめたこと（確度は報道・1社。クラブの公式発表ではない）:
+#   ・リーズは田中と代理人に新契約の話し合いを始める準備をしている（"preparing to open discussions"）。現契約はあと18か月余り（"just over 18 months remaining"。トライブは2028年6月と書く）。
+#   ・ファルケ監督が新契約を提示する流れの中心にいる（"played a leading role"）。クラブは田中を重要な選手と見ている。
+#   ・関心（本文のとおり）: マンチェスター・ユナイテッドとトッテナムは夏に田中をレーダーに載せていたが動かず、いまも把握している／チェルシーとリバプールは今季、田中を視察した／モナコは田中の出来に好印象（2027年に向けた中盤の後継候補）／
+#     RB ライプツィヒは夏に田中を検討したが、最終的にローマのエル・アイナウイを獲った／ブンデスリーガの複数クラブも好印象。
+#   → 「7クラブ以上」はトライブの数え方。自分で数えると、名前が挙がったのはユナイテッド・トッテナム・チェルシー・リバプール・モナコ・ライプツィヒの6クラブ（ブンデスの複数クラブは名前なし）。うち今季の視察と書かれたのはチェルシーとリバプールの2クラブ。台本は「6クラブの名前」で言う。
+# ESPN で確かめたこと（site.api.espn.com eng.1）:
+#   ・リーズのプレミア今季: 10試合消化、勝点14、9位。田中は10試合のうち8試合で先発（8/22 フォレスト戦・8/30 ブレントフォード戦は先発でない）。
+#   ・ブラジル戦（fifa.friendly event=401916337、2026-11-14）日本 3-2 ブラジル。田中は先発（CM-R）、86分に佐野航大と交代。TEAMtalk は「素晴らしい出来」と書くが、これは記事の評価で台本では「報道は高く評価」と断る。
+# 前の本との重なり: 11/18 の田中碧（20261118_tanaka_ao_speech＝約2分半の熱弁、森保監督に伝えた思い）は本人の言葉の話。今回は欧州クラブの関心とリーズの契約。covered.yaml に田中×契約・移籍の題は無し（tanaka_mitoma_words・tanaka_leeds_first_win・tanaka_brazil_rematch・tanaka_ao_speech は別の話）。
+# 【言わないこと】「7クラブ以上」／コヌルの発言／「2027年夏を狙う」／南野との共闘の話（トライブの推測）／契約の終了月（記事どうしで表現が違う。「あと1年半あまり」）／移籍金・年俸／獲得に動く・移籍するという断定。
+# 写真の出どころ（目で見た）: 01＝TEAMtalk の記事の主写真（リーズの黄色いユニフォーム。画像のファイル名は記事の見出しで、代理店表記は無い。顔は田中と見たが、キャプションは「ファルケ監督が新契約を後押し」で本人名の明記は無い）／02＝サッカーキング 11/18（田中本人）／03＝ゲキサカ 463067（11/13、田中本人の練習の写真）。ゲキサカ 463387 の主写真は背番号28（福田師王）の別人だったので外した。トライブの主写真はアフロ表記なので使っていない。
+#   https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+#   https://web.gekisaka.jp/news/japan/detail/?463067-463067-fl
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [田中碧, リーズ, リバプール, 日本代表]
+
+short_style: X
+short_hook_word: 田中碧に6クラブ
+short_photos:
+  - assets/images/20261120_tanaka_ao_seven_clubs/02_v.jpg
+  - assets/images/20261120_tanaka_ao_seven_clubs/01_v.jpg
+  - assets/images/20261120_tanaka_ao_seven_clubs/03_v.jpg
+short_question: 田中碧は、リーズと契約を延ばすと思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_ao_seven_clubs
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧、リーズが契約延長の話し合いへ。名前が挙がった6クラブとは
+  hook: ""
+  question: 田中碧に関心を寄せるとされるクラブは、どこなのか
+  takeaway: 報道で名前が挙がったのは6クラブ。今季の視察と書かれたのはチェルシーとリバプールの2つで、ユナイテッドとトッテナムは夏に動かず、ライプツィヒは別の選手を獲った。リーズは先に契約延長を動かす構え
+
+thumbnail:
+  layout: face
+  line1: 田中碧 リーズが契約延長へ
+  line2: 6クラブの名前が浮上
+  tags: [田中碧, リーズ, リバプール]
+  photo: assets/images/20261120_tanaka_ao_seven_clubs/02_w.jpg
+  short_photo: assets/images/20261120_tanaka_ao_seven_clubs/02_v.jpg
+
+answer: 名前が挙がったのは6クラブ。リーズは先に契約延長の話し合いを始める
+watch: リーズが、田中との契約延長の話し合いを始めるか
+
+sections:
+  - id: what
+    main: true
+    heading: 田中碧に関心があるとされるクラブは、どこなのか
+    tier: 報道
+    telop: 田中碧、リーズが契約延長へ。6クラブの名前が浮上
+    say:
+      - text: リーズの田中碧に、チェルシーやリバプールなど6クラブが関心、と報じられました。
+        image: assets/images/20261120_tanaka_ao_seven_clubs/02_w.jpg
+        emph: true
+      - text: クラブの公式発表ではなく、イギリスの報道です。
+      - text: 名前が挙がったのは、チェルシーとリバプール。
+        card: {type: table, title: 報じられた田中碧への関心, columns: [クラブ, 報じられた中身], rows: [[チェルシー, 今季、田中を視察], [リバプール, 今季、田中を視察], [マンチェスター・ユナイテッド, 夏に候補入り。動かず], [トッテナム, 夏に候補入り。動かず], [モナコ, 田中の出来に好印象], [ライプツィヒ, 夏に検討。別の選手を獲得]], highlight_row: 0}
+        image: assets/images/20261120_tanaka_ao_seven_clubs/03_w.jpg
+        emph: true
+      - text: マンチェスター・ユナイテッドと、トッテナム。
+        card: {type: table, title: 報じられた田中碧への関心, columns: [クラブ, 報じられた中身], rows: [[チェルシー, 今季、田中を視察], [リバプール, 今季、田中を視察], [マンチェスター・ユナイテッド, 夏に候補入り。動かず], [トッテナム, 夏に候補入り。動かず], [モナコ, 田中の出来に好印象], [ライプツィヒ, 夏に検討。別の選手を獲得]], highlight_row: 2}
+      - text: そして、モナコとライプツィヒの6クラブです。
+        card: {type: table, title: 報じられた田中碧への関心, columns: [クラブ, 報じられた中身], rows: [[チェルシー, 今季、田中を視察], [リバプール, 今季、田中を視察], [マンチェスター・ユナイテッド, 夏に候補入り。動かず], [トッテナム, 夏に候補入り。動かず], [モナコ, 田中の出来に好印象], [ライプツィヒ, 夏に検討。別の選手を獲得]], highlight_row: 4}
+      - text: 一方のリーズは、田中碧と代理人に新契約の話し合いを始める準備をしているといいます。
+        card: none
+        image: assets/images/20261120_tanaka_ao_seven_clubs/02_w.jpg
+      - text: 現在の契約は、あと1年半あまり。リーズのファルケ監督も、新契約に前向きだといいます。
+        card: none
+    official: false
+    sources:
+      - https://www.teamtalk.com/leeds-united/ao-tanaka-contract-extension-talks-man-utd-spurs-liverpool-chelsea-interest-exclusive
+      - https://football-tribe.com/japan/2026/11/19/361496/
+  - id: game
+    heading: 田中碧は、今季のリーズでどんな存在なのか
+    tier: 報道
+    telop: プレミア10試合中8試合で先発。リーズは9位
+    say:
+      - text: 田中碧は今季、イングランド1部のプレミアリーグで、10試合のうち8試合に先発しています。
+        card: {type: table, title: 今季のリーズ（プレミアリーグ）, columns: [項目, 数字], rows: [[消化試合, 10], [順位, 9位], [田中の先発, 8試合]], highlight_row: 2}
+        image: assets/images/20261120_tanaka_ao_seven_clubs/02_w.jpg
+      - text: リーズは10試合を終えて9位です。
+        card: none
+      - text: 代表でも、14日のブラジル戦に先発しました。
+        card: none
+        image: assets/images/20261120_tanaka_ao_seven_clubs/03_w.jpg
+      - text: 報道は、日本が3対2で勝ったこの試合の出来も、高く評価しています。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/standings/_/league/eng.1
+      - https://www.teamtalk.com/leeds-united/ao-tanaka-contract-extension-talks-man-utd-spurs-liverpool-chelsea-interest-exclusive
+  - id: view
+    viewpoint: true
+    heading: 田中碧に関心を寄せる6クラブのうち、いま動いているのはどこか
+    tier: 背景
+    telop: 今季の視察はチェルシーとリバプールの2つ
+    say:
+      - text: 見立てです。視察の報道があるのは、チェルシーとリバプールの2クラブです。
+        card: {type: table, title: 6クラブの内訳, columns: [報じられた中身, クラブ数], rows: [[今季の視察, 2], [夏に動かず, 2], [別の選手を獲得, 1], [出来に好印象, 1]], highlight_row: 0}
+        image: assets/images/20261120_tanaka_ao_seven_clubs/03_w.jpg
+      - text: マンチェスター・ユナイテッドとトッテナムは、夏に動きませんでした。
+        card: none
+        emph: true
+      - text: ライプツィヒは別の選手を獲り、モナコは好印象を示した段階です。
+        card: none
+      - text: リーズは、田中碧への関心が広がる前に契約延長を動かす構えです。話し合いが始まるかが、次の見どころです。
+        card: none
+        image: assets/images/20261120_tanaka_ao_seven_clubs/02_w.jpg
+    official: false
+    sources:
+      - https://www.teamtalk.com/leeds-united/ao-tanaka-contract-extension-talks-man-utd-spurs-liverpool-chelsea-interest-exclusive
+      - https://football-tribe.com/japan/2026/11/19/361496/

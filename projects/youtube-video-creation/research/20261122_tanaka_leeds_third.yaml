@@ -1,0 +1,150 @@
+# 取材メモ（2026年11月22日）田中碧、プレミアで「上回る選手はわずか2人」＝タックル成功数（90分あたり）で3位。リーズ公式でファルケ監督が語った（ニュースのショート。見せ方 Y＝監督が伝えた本人の一言から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ日本語版 2026-11-21 19:44（JST）「田中碧がプレミアリーグで3位に！「上回る選手はわずか2人しかいない」」 https://football-tribe.com/japan/2026/11/21/361572/（RSS の全文を読んだ）
+#   → トライブは見出しに「3位」とだけ書き、何の指標かは本文の2か所（Gradient Sports の「90分あたりのタックル成功数」）。見出しの「3位」は元記事の言い換え。
+# 一次の出どころ（本文を全部読んだ）:
+#   ・リーズ公式サイト 2026-11-21「Ao Tanaka's four-word Brazil reunion and the missing piece he's started to find」（Daniel Farke assesses Japan international's recent form）
+#     https://www.leedsunited.com/en/news/ao-tanakas-four-word-brazil-reunion-and-the-missing-piece-hes-started-to-find
+#     ・"No midfielder in the Premier League presses passing lanes more than Tanaka, who is Leeds' best tackler on Gradient Sports data."（クラブの文。データ元は Gradient Sports）
+#     ・"Gradient say only two players in the Premier League win more tackles per 90 minutes than the Japan international."（＝90分あたりのタックル成功数で上回るのは2人＝3位。最低出場時間などの条件は書かれていない。台本では「Gradientのデータで」と断る）
+#     ・ファルケ: "Everyone seems to speak about Ao Tanaka. The only one who never seems to speak is Ao Tanaka himself. So we had a short conversation about how it was for him to see Lucas Perri in the game against Brazil. Ao said, 'I said hello...and goodbye. That's it.' So this is how Ao Tanaka is. So he is not a man of many words, but of many skills on the football pitch. And we all love him."
+#       （ペリ＝リーズから今季トリノへレンタル中のGK。ブラジル戦で再会。「元同僚」はクラブ文の "former colleague"）
+#     ・ファルケ: "Strong in the duels, still sometimes decision-making and in front of the goal he can be a bit calmer. But overall, I think he's on a really good path to mature more and more. And if you do this, then you become more and more important for us. And we're all happy that he is in such a shape at the moment."
+#     ・ファルケ: "it's important for a player once you're mature that on the weaker days you're still a six or a seven out of 10. And this is what he's doing."
+#   ・リーズ公式 試合記録 https://www.leedsunited.com/en/news/leeds-united-roar-out-of-international-break-with-rout-of-chelsea-at-stamford-bridge
+#   ・日刊スポーツ 2026-11-22 https://www.nikkansports.com/soccer/world/news/202611220000037.html : 田中は先発し後半41分までプレー、リーグ戦9試合連続スタメン、勝ち点17で暫定6位、チェルシーの本拠地で27年ぶりの勝ち星。ファルケ「勝利に値するプレーをした」（BBC のインタビュー）。
+# ESPN（site.api.espn.com summary eng.1 event=401879236、11/21 15:00 UTC）:
+#   チェルシー 1-4 リーズ。25分 エメガ（チェルシー）／28分 オカフォー／53分 カルバート=ルーウィン（PK）／58分 オカフォー／90+1分 アーロンソン。田中は先発、86分にロドンと交代。順位表は リーズ 11試合 勝ち点17、6位。
+#   田中の個人成績（ESPN summary の rosters stats）: シュート3本・枠内1本・ファウル4・被ファウル1・得点アシストなし。日刊スポーツは「前半46分に敵陣中央でボールを奪い、ペナルティーエリア手前から右足でミドル」（ESPN の数字と矛盾しない）。
+# 食い違い: 田中の交代はリーズ公式 87分・ESPN 86分・日刊「後半41分」（=86分）。台本は分を言わず「終盤まで」。27年ぶりは日刊の記述1社（クラブ公式は「famous away victory」と書くだけ）→ 台本は「日刊スポーツによれば」とは言わず使わない（27年は入れない）。
+#   「9試合連続先発」は日刊の記述。自分でも数えた: 11/20 のメモで10試合中8先発（先発でなかったのは 8/22・8/30）→ 11試合目も先発で 9試合連続（3試合目から）。一致。
+# 前の本との重なり: 11/20 tanaka_ao_seven_clubs（契約延長・複数クラブの関心）／11/18 tanaka_ao_speech（本人の熱弁）／11/13 tanaka_brazil_rematch（ブラジル戦）／10/20 tanaka_ao_mystery_rating。
+#   → 今回の初出: Gradient のタックル成功数で3位・パスコースを抑える数字・ファルケ監督の「無口だが技の多い人」「あいさつとさよなら」・チェルシー戦4発の翌日。
+# 【言わないこと】他クラブの関心・契約・移籍（11/20 の話）／27年ぶり（1社）／タックル成功の実数（元の文に無い）／「90分あたり」の最低出場時間（不明）。
+# 本人の言葉: あり。田中碧の言葉（「あいさつして、さよならを言った。それだけ」）を、ファルケ監督が伝えたもの（リーズ公式）。ファルケの言葉も同じ記事。Y。台本は私が日本語にした訳。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 3枚。02＝リーズ公式の画像（日本対ブラジル戦の田中本人。顔を切り出した版）、03＝ゲキサカ 463067 の田中本人（日本代表の練習）、04＝リーズ公式（leedsunited.com）の「Ao_Tanaka_vs_Chelsea」＝今日のチェルシー戦のドリブルする田中本人（黄色いユニフォーム。画面の中の田中は小さい）。_pool.png を目で見た。透かし・代理店表記なし。02・03 は 11/18〜11/20 の本でも使った写真（今日の写真が取れたのは04だけ）。
+slot: japanese
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [田中碧, リーズ, ファルケ監督, チェルシー]
+
+short_style: Y
+short_hook_quote: 田中碧は、言葉の多い人ではありません。
+short_photos:
+  - assets/images/20261122_tanaka_leeds_third/02_v.jpg
+  - assets/images/20261122_tanaka_leeds_third/03_v.jpg
+  - assets/images/20261122_tanaka_leeds_third/04_v.jpg
+short_question: 田中碧は、この数字をいつまで保てると思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_leeds_third
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧、プレミアで「3位」。何の数字で、監督は何と言ったのか
+  hook: ""
+  question: プレミアで「上回る選手はわずか2人」と言われた田中碧の数字は何で、ファルケ監督は何と語ったのか
+  takeaway: 田中碧は、データ会社グラディエントの集計で、90分あたりのタックル成功数がプレミア3位。パスコースを抑える数字はMFで最多と、クラブが伝えた。リーグ戦は9試合続けて先発している
+
+thumbnail:
+  layout: face
+  line1: 田中碧 プレミア3位
+  line2: 上回るのは2人だけ
+  tags: [田中碧, リーズ]
+  photo: assets/images/20261122_tanaka_leeds_third/02_w.jpg
+  short_photo: assets/images/20261122_tanaka_leeds_third/02_v.jpg
+
+answer: 90分あたりのタックル成功数でプレミア3位。パスコースを抑える数字もMFで最多
+watch: 11月28日（日本時間29日0時）、ホームのコヴェントリー戦
+
+sections:
+  - id: what
+    main: true
+    heading: ファルケ監督は、田中碧のことをどう語ったのか
+    tier: 報道
+    telop: ファルケ監督「多くの技を持っている」
+    say:
+      - voice: ファルケ監督
+        text: 田中碧は、言葉の多い人ではありません。
+        emph: true
+        image: assets/images/20261122_tanaka_leeds_third/02_w.jpg
+      - voice: ファルケ監督
+        text: でも、ピッチの上では、たくさんの技を持っている。
+        cont: true
+      - voice: ファルケ監督
+        text: 私たちはみんな、彼が大好きです。
+        cont: true
+      - text: リーズのファルケ監督が、日本代表の田中碧を語った言葉です。
+        short_only: true
+      - text: 監督の言う無口さは、こんな一言にも出ています。
+        image: assets/images/20261122_tanaka_leeds_third/04_w.jpg
+      - text: 日本代表のブラジル戦で、リーズの元同僚と再会した田中。
+      - text: 監督が「どうだった？」と聞くと、田中はこう答えたそうです。
+      - voice: 田中碧
+        text: あいさつして、さよならを言った。
+      - voice: 田中碧
+        text: それだけです。
+        cont: true
+      - text: 言葉は少なくても、数字は雄弁です。
+        image: assets/images/20261122_tanaka_leeds_third/03_w.jpg
+      - text: プレミアの守備の数字で、田中は上から3番目に入っています。
+      - text: 90分あたりのタックル成功数です。
+      - text: データ会社の集計で、田中を上回る選手は、わずか2人。
+        image: assets/images/20261122_tanaka_leeds_third/02_w.jpg
+      - text: 相手のパスの通り道をふさぐ動きでも、
+      - text: ミッドフィールダーで最多だと、クラブは伝えています。
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/ao-tanakas-four-word-brazil-reunion-and-the-missing-piece-hes-started-to-find
+      - https://football-tribe.com/japan/2026/11/21/361572/
+  - id: game
+    heading: チェルシーに4対1。田中碧はどんな試合をしたのか
+    tier: 報道
+    telop: チェルシー 1-4 リーズ。田中は先発
+    say:
+      - text: 21日、田中碧のリーズは、敵地でチェルシーに4対1で勝ちました。
+        card: {type: table, title: チェルシー 1-4 リーズ, columns: [分, 得点], rows: [[25分, エメガ（チェルシー）], [28分, オカフォー], [53分, カルバート＝ルーウィン（PK）], [58分, オカフォー], [90分＋1, アーロンソン]], highlight_row: 1}
+        image: assets/images/20261122_tanaka_leeds_third/03_w.jpg
+      - text: 先に点を取られましたが、そこから逆転しました。
+      - text: 田中は先発。終盤までピッチに立ちました。
+      - text: シュートは3本。うち1本は枠に飛びました。
+        card: none
+        image: assets/images/20261122_tanaka_leeds_third/04_w.jpg
+      - text: リーグ戦では、9試合続けての先発です。
+      - text: リーズは勝ち点17で6位。今季初めての2連勝でした。
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/leeds-united-roar-out-of-international-break-with-rout-of-chelsea-at-stamford-bridge
+      - https://www.nikkansports.com/soccer/world/news/202611220000037.html
+      - https://www.espn.com/soccer/match/_/gameId/401879236
+  - id: view
+    viewpoint: true
+    heading: 監督は、田中のどこに伸びしろを見ているのか
+    tier: 背景
+    telop: 「1対1に強い。判断はもう少し」
+    say:
+      - text: 見立てです。田中碧の数字を並べると、守備の強みがはっきりします。
+        card: {type: table, title: 田中碧の数字（グラディエントのデータ）, columns: [項目, 田中碧], rows: [[90分あたりのタックル成功, プレミア3位], [パスコースを抑える, MFで最多], [タックル成功の数, リーズ内で最多]], highlight_row: 0}
+      - text: 監督は、強みと課題を、こう分けています。
+        card: none
+      - voice: ファルケ監督
+        text: 1対1の競り合いには強い。
+      - voice: ファルケ監督
+        text: ただ、判断力と、
+        cont: true
+      - voice: ファルケ監督
+        text: ゴール前での落ち着きには、まだ伸びる余地がある。
+        cont: true
+      - voice: ファルケ監督
+        text: でも、成熟への道を着実に歩んでいます。
+        cont: true
+      - text: 調子の悪い日でも、10点満点の採点で6か7。
+      - text: その安定感を、田中は見せ始めています。
+      - text: 次は11月28日、日本時間29日0時にホームでコヴェントリーと戦います。
+    official: false
+    sources:
+      - https://www.leedsunited.com/en/news/ao-tanakas-four-word-brazil-reunion-and-the-missing-piece-hes-started-to-find
+      - https://www.espn.com/soccer/match/_/gameId/401879227

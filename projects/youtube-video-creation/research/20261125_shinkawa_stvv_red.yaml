@@ -1,0 +1,167 @@
+# 取材メモ（2026年11月25日）シント＝トロイデンの19歳FW新川志音、移籍後初ゴールの次の試合で一発退場（ニュースのショート。見せ方 Y＝元審判グミエニの言葉から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: フットボールゾーン 686956「19歳日本人が欧州初弾→次節にまさかの退場」（全文） https://www.football-zone.net/archives/686956
+#   → 主写真は「Belga Image/アフロ」なので使わない。記事中の反応はDAZN公式Xへの返信の抜き書き（全文ではない）なので反応には使わない。
+# 試合データ（ESPN bel.1。site.web.api.espn.com summary の keyEvents と rosters。11/25 取得）:
+#   11/21 シャルルロワ 2-2 シント＝トロイデン（event=401878940、アウェー）:
+#     18分 ムベンバ（シャルルロワ）先制／25分 新川 レッドカード／27分 セバウイ（STVV）同点／54分 シャイドレール（シャルルロワ）／
+#     57分 ハリフィ（シャルルロワ）レッドカード（2枚目の警告＝トゥルイネール）／89分 ピュペ（STVV）同点／90+4分 コネ（シャルルロワGK）レッドカード
+#     新川は先発（rosters starter=True）。荒木は85分から途中出場、小久保・谷口は先発。
+#   11/8 シント＝トロイデン 4-1 ズルテ・ワレヘム（event=401878944、ホーム）: 7分 新川のゴール（先制）。新川は先発し途中交代。
+# 食い違い: 退場の分。ESPN は25分（カードが出た時刻）、トゥルイネール（地元ファンサイト）は「21分」、Voetbalbelgie は「17分の失点の2分後に遅れて入った」→ VAR を見て判定するまでの時間差と読める。
+#   → 台本では分を言わず「前半20分過ぎ」と言う（フットボールゾーンの言い方とも合う）。失点は ESPN の18分で一致（Voetbalbelgie は17分）。
+# 読んだ記事（全文）:
+#   Voetbalkrant 2026-11-22「Twee rode kaarten zorgen voor discussie: Gumienny velt duidelijk oordeel」 https://www.voetbalkrant.com/nieuws/2026-11-22/twee-rode-kaarten-zorgen-voor-discussie-gumienny-velt-duidelijk-oordeel
+#     元審判セルジュ・グミエニがヘット・ベラング・ファン・リンブルグ（HBVL）で判定を見た。新川は相手のアキレス腱のあたりへ危なく入った（地の文 "gevaarlijk door op de achillespees"）。
+#     "Ongelukkig, maar ook hier haalde men terecht de rode kaart boven. Het zijn vieze beelden."（新川は意図して反則したのではない、が地の文）
+#     "Als je zulke duels steeds met maximale intensiteit aangaat, moet je er als speler wel voor zorgen dat je de bal speelt. Anders wordt het wel heel onvoorzichtig en gebeuren er akelige fouten."
+#   Voetbalbelgie「Ex-scheidsrechter over rode kaart STVV'er Shinkawa: "Vieze beelden"」 https://www.voetbalbelgie.be/artikel/ex-scheidsrechter-over-rode-kaart-stvver-shinkawa-vieze-beelden
+#     "De fout van Shion Shinkawa in Charleroi gebeurde onbewust. Ongelukkig, maar ook hier haalde men terecht de rode kaart boven. Het zijn vieze beelden"（HBVL から）
+#     地の文: 19歳。STVVで13試合目にして初めてのカード。その13試合で3アシスト・1得点。サガン鳥栖では35試合で警告1枚。
+#     地の文: 新川は出場停止で、日曜（29日）のゲンク戦（リンブルフのダービー）に出られない。STVVは木曜にハイドゥク・スプリトと対戦。
+#   Voetbalbelgie「Discutabele rode kaart in Charleroi-STVV」 https://www.voetbalbelgie.be/artikel/discutabele-rode-kaart-in-charleroi-stvv
+#     主審ベルト・プットが VAR を聞いて、スローの映像を見に行った。「実際の速さでは濃い黄色（警告に近い）、スローは反則を重く見せがち」と書く → 判定の議論の材料。
+#   Voetbalkrant 2026-11-21「De Roeck is tevreden, maar blijft toch met dubbel gevoel achter na punt voor STVV」 https://www.voetbalkrant.com/nieuws/2026-11-21/de-roeck-is-tevreden-maar-blijft-toch-met-dubbel-gevoel-achter-na-punt-voor-stvv
+#     デ・ルック監督（Sporza の引用）: "Proficat aan mijn jongens voor de prestatie, zeker met tien tegen elf" "We hebben goed de controle gehouden."
+#     "Op voorhand zeg je een puntje op Charleroi is altijd goed, maar gezien het spelverloop vond ik dat we meer aanspraak hadden op de drie punten dan Charleroi."
+#     → 新川個人への言葉ではない（チームの話）。台本では「10人で」の1行だけ使う。
+#   Truineer「Charleroi-STVV: 2-2」 https://www.truineer.be/2026/11/charleroi-stvv-2-2/  ファウルの相手はアイハム・ウスー。試合の流れは ESPN と一致。
+# 順位（ESPN bel.1 standings、11/25 取得）: シャルルロワ 12試合 勝ち点28 3位。シント＝トロイデン 12試合 勝ち点12 11位。
+#   → シャルルロワは勝てば首位に並ぶ試合だった（Voetbalkrant 見出し「Charleroi laat kans op leidersplaats liggen」）。題から離れるので言わない。
+# 自分で数えたもの: STVVが10人だった時間＝25分の退場から57分のハリフィ退場まで32分。そのあとは10人対10人。
+# 本人の言葉: 新川本人の試合後の言葉は見つからなかった（STVV公式のニュース一覧・Voetbalkrant・Voetbalbelgie・HBVL/Nieuwsblad の見出しを当たった。HBVL・Nieuwsblad は 403 で本文は読めず。本人のX・Instagramはブラウザの道具を使わない決まりで見ていない）。
+#   → 語り手は元審判グミエニ（名前と媒体が特定できる識者）。その言葉から始める → Y。
+# 反応: 0件（作らない。DAZN の投稿への返信はフットボールゾーンが抜き書きしたもので全文が取れない。approve は --no-voices）。
+# 【入れないこと】荒木がGKの退場を誘った場面（本筋から外れる）・中継のテロップの小久保の誤表示・ゲンクのスメッツの退場（グミエニが同じ記事で扱った別の場面）・ハイドゥク戦。
+# 写真（目で見たものを下に書く。assets/images/20261125_shinkawa_stvv_red/_pool.png）:
+#   01＝デ・ルック監督（Voetbalkrant の監督の記事の主写真。代理店の表記なし）
+#   02＝新川志音（Commons「Azerbaijan U-20 v. Japan U-20, 6 October 2026 (78043)」CC BY-SA 4.0 Aykhan Zayedzadeh。分類 Category:Shion Shinkawa。U-20日本代表の練習着）
+#     02_w・02_v は手で切った（facecrop の切り方は顔のアップすぎた）。02_w_v は 02_v の写し（ショートで縦版を拾わせるため）
+#   _pair2/01＝デ・ルック（左）＋新川（右）（tools/pairphoto.py）
+#   外したもの: Voetbalkrant の新川の写真（U-20代表、画像に「PHOTO NEWS」の透かし＝ベルギーの写真代理店）、
+#     STVV公式の加入発表の写真（1440x595 で人が小さく、ショートで3.2倍に伸びる）、グミエニの Commons の写真（171x238 で小さすぎる。元の Lokobjk 63.jpg も 800x533）、
+#     Truineer の試合写真（新川が写っていない）、Voetbalkrant のスメッツ（ゲンク）の写真、フットボールゾーンの主写真（Belga Image/アフロ）
+#   新川のシント＝トロイデンの試合姿で、代理店でない大きな写真は見つからなかった。
+#   写真の出どころ候補:
+#     STVV公式 加入発表 https://stvv.com/nl/nieuws/artikel/stvv-neemt-shion-shinkawa-over-van-sagan-tosu
+#     Voetbalkrant https://www.voetbalkrant.com/nieuws/2026-03-04/een-type-radzinski-stvv-stoomt-spits-helemaal-klaar-voor-het-grote-werk
+#     Commons https://commons.wikimedia.org/wiki/File:Azerbaijan_U-20_v._Japan_U-20,_6_October_2026_(78043).jpg （CC BY-SA 4.0 Aykhan Zayedzadeh）
+#     Commons https://commons.wikimedia.org/wiki/File:Azerbaijan_U-20_v._Japan_U-20,_6_October_2026_(21377).jpg （CC BY-SA 4.0 Aykhan Zayedzadeh）
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [新川志音, シント＝トロイデン, シャルルロワ]
+
+short_style: Y
+short_hook_quote: 不運でした。それでも、レッドカードは正しい判定です。
+short_photos:
+  - assets/images/20261125_shinkawa_stvv_red/02_v.jpg
+  - assets/images/20261125_shinkawa_stvv_red/01_v.jpg
+  - assets/images/20261125_shinkawa_stvv_red_pair2/01_v.jpg
+short_question: 新川志音へのレッドカード、あなたは妥当だと思いますか。
+short_telops: []
+
+theme:
+  id: shinkawa_stvv_red
+  league: japan
+  league_name: ベルギー1部
+  prefix: ""
+  title: 新川志音、初ゴールの次の試合で一発退場。元審判はあの判定をどう見たか
+  hook: ""
+  question: 初ゴールの次の試合で退場になった新川志音の判定を、元審判はどう見たのか
+  takeaway: 新川が退場した25分から相手の退場の57分まで、STVVは32分間を10人で戦い、それでも2-2で勝ち点1を持ち帰った。新川にとってはSTVVでの13試合で初めてのカードだった
+
+thumbnail:
+  layout: face
+  photo: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+  short_photo: assets/images/20261125_shinkawa_stvv_red/02_v.jpg
+  line1: 新川志音 19歳
+  line2: 初ゴールの次に一発退場
+  tags: [新川志音, シント＝トロイデン]
+
+answer: 意図した反則ではなく不運。それでもレッドは正しい判定だった、と元審判は見た
+watch: 29日のゲンク戦（出場停止）
+
+sections:
+  - id: what
+    main: true
+    heading: 新川志音の一発退場を、元審判はどう見たか
+    tier: 報道
+    telop: 元審判「不運。でもレッドは正しい」
+    say:
+      - text: シント＝トロイデンの19歳、新川志音。
+      - text: 21日のシャルルロワ戦で、一発退場になりました。
+      - text: 前半20分過ぎ、新川のスパイクの裏が、相手のアキレス腱のあたりに入りました。
+        image: assets/images/20261125_shinkawa_stvv_red/03_w.jpg
+      - text: 主審はビデオ判定の助言で映像を見直し、レッドカードを出しました。
+      - text: 普通の速さで見れば警告ほどに見えた、という声もあり、判定には賛否が分かれました。
+      - text: ベルギーの元審判、セルジュ・グミエニは、この場面をこう見ています。
+        image: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+      - voice: グミエニ
+        text: 新川のファウルは、わざとではありません。
+        image: assets/images/20261125_shinkawa_stvv_red/03_w.jpg
+      - voice: グミエニ
+        text: 不運でした。それでも、レッドカードは正しい判定です。
+        image: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+        emph: true
+      - voice: グミエニ
+        text: 球際に全力で行くなら、
+        cont: true
+      - voice: グミエニ
+        text: 選手はボールを蹴りにいかなければいけません。
+        cont: true
+      - text: もともと新川は、カードの少ない選手です。
+        image: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+      - text: この退場が、ベルギーでの13試合で初めてのカードでした。
+        image: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+        card: {type: table, title: 新川志音 受けたカード, columns: [所属, 試合, カード], rows: [[サガン鳥栖, 35試合, 警告1], [シント＝トロイデン, 13試合, 退場1]], highlight_row: 1}
+      - text: サガン鳥栖でも、35試合で警告は1枚だけです。
+        card: {type: table, title: 新川志音 受けたカード, columns: [所属, 試合, カード], rows: [[サガン鳥栖, 35試合, 警告1], [シント＝トロイデン, 13試合, 退場1]], highlight_row: 0}
+    official: false
+    quotes_from: [ヘット・ベラング・ファン・リンブルグ]
+    sources:
+      - https://www.voetbalkrant.com/nieuws/2026-11-22/twee-rode-kaarten-zorgen-voor-discussie-gumienny-velt-duidelijk-oordeel
+      - https://www.voetbalbelgie.be/artikel/ex-scheidsrechter-over-rode-kaart-stvver-shinkawa-vieze-beelden
+      - https://www.voetbalbelgie.be/artikel/discutabele-rode-kaart-in-charleroi-stvv
+      - https://www.espn.com/soccer/match/_/gameId/401878940
+      - https://www.football-zone.net/archives/686956
+  - id: before
+    heading: 退場の2週間前に決めた、移籍後初ゴール
+    tier: 報道
+    telop: 11月8日 ズルテ・ワレヘム戦で移籍後初ゴール
+    say:
+      - text: その前の試合は、11月8日のズルテ・ワレヘム戦。
+      - text: 新川は7分に、先制点を決めていました。
+        card: {type: table, title: 新川志音 この2試合, columns: [日付, 相手, 新川], rows: [[11月8日, ズルテ・ワレヘム（4-1）, 7分に先制点], [11月21日, シャルルロワ（2-2）, 前半に一発退場]], highlight_row: 1}
+      - text: ベルギーへ来て初めてのゴールでした。
+      - text: 代表ウィークをはさんで迎えたシャルルロワ戦で、チームは早々に10人になりました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401878944
+      - https://www.football-zone.net/archives/686956
+  - id: view
+    viewpoint: true
+    heading: 10人になったシント＝トロイデンは、どう戦ったか
+    tier: 背景
+    telop: 10人で32分、それでも2-2
+    say:
+      - text: 見立てです。新川の退場から、相手にも退場者が出るまでの32分間。
+      - text: 試合の3分の1を超える時間を、シント＝トロイデンは1人少ないまま戦いました。
+        card: {type: timeline, title: シャルルロワ 2-2 シント＝トロイデン, rows: [[18分, シャルルロワが先制], [25分, 新川がレッドカード], [27分, セバウイが同点], [54分, シャルルロワが勝ち越し], [57分, シャルルロワにも退場者], [89分, ピュペが同点]], focus: 25分}
+      - text: それでも最後は2対2に追いつき、勝ち点1を持ち帰りました。
+      - voice: デ・ルック監督
+        image: assets/images/20261125_shinkawa_stvv_red_pair2/01.jpg
+        text: 選手たちを褒めたい。
+      - voice: デ・ルック監督
+        text: とくに、10人対11人の時間がありましたから。
+        cont: true
+      - text: ただ、新川本人は出場停止。29日のゲンク戦には出られません。
+        image: assets/images/20261125_shinkawa_stvv_red/02_w.jpg
+        card: none
+    official: false
+    quotes_from: [スポルザ]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401878940
+      - https://www.voetbalkrant.com/nieuws/2026-11-21/de-roeck-is-tevreden-maar-blijft-toch-met-dubbel-gevoel-achter-na-punt-voor-stvv
+      - https://www.truineer.be/2026/11/charleroi-stvv-2-2/

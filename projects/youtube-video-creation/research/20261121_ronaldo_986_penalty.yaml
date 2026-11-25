@@ -1,0 +1,121 @@
+# 取材メモ（2026年11月21日）C・ロナウド、通算986点目を決めた4分後にPKを外し、アル・ナスルは逆転負け（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は見つからず）
+# 取材: 2026-11-21。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・ESPN「Cristiano Ronaldo edges closer to 1,000 goals but misses penalty in Al Nassr loss」（now.core.api.espn.com/v1/sports/news/50543354、PA）:
+#       15分にフェリックスのアシストから、ファーへのボレーで先制＝通算986点目・今季クラブで公式戦10点目／その4分後、ナワフ・アル＝ブシャイルが倒されて得たPKがポストに当たる／
+#       今季アル・ナスルでのPKは2本とも失敗／前半終了間際にガレーノ（ブラジル人MF）がエリア外から同点／後半、イヴァン・トニーのPK（今季14点目）で勝ち越し、4分後にロジェ・イバニェス／
+#       アル・ナスルは3位のまま・今季リーグ2敗目、アル・アハリは4位に上がり勝ち点差4／
+#       「986には10月23日のファイサリー戦の議論のあるゴール（サウジ・プロリーグはロナウドの得点と認定、データ会社オプタはオウンゴール）が含まれる」／ロナウドは今月（11月）の初めにポルトガル代表から引退。
+#   ・ESPN ゴールトラッカー（espn.com/soccer/story/_/id/46751020、WebFetch）: 986点目＝2026-11-20 アル・アハリ 3-1 アル・ナスル／985点目＝2026-10-29 アル・ナスル 5-3 アル・ホルード（81分、後半のハットトリックの3点目）／通算986点は1,344試合（1試合0.73点）、代表143点（225試合）。1000点まで14。
+#   ・ESPN の試合データ（site.api.espn.com summary event=401900905、ksa.1、11/20 17:30 UTC）: アル・アハリ 3-1 アル・ナスル。14分 ロナウド（得点）／18分 ロナウド PK失敗／45+1分 ガレーノ／71分 トニー（PK）／75分 イバニェス。ロナウドは先発・交代なし（フル出場）。
+#   ・AS「Drama Cristiano y... ¡986!」（requests、スペイン語）: 「3-1の敗戦、ゴールとPK失敗。1000点まであと14」／FM（Foot Mercato）も「986点目、14点で1000」。
+#   ・ESPN scoreboard（ksa.1 2026-11-28）: アル・ナスル at アル・ハゼム 11/28 12:15 UTC。
+# 食い違い（気をつけた点）:
+#   ・先制点の分: ESPN 試合データは14分、ESPN 記事は15分、AS は13分、FM の速報は12分。→ 台本は分を言わず「PKはその4分後」とだけ言う（14→18は試合データで一致）。表の分は ESPN 試合データ（14・45+1・71・75。AS は 70・74 と1分ずれ）。
+#   ・得点の数え方: 986 にはサウジ・リーグが認めたがオプタはオウンゴールとする10/23の1点が含まれる（ESPN）。→ 見立てで、14点残り（リーグの数え方）と15点残り（統計会社の数え方）を並べる。「ずっと正しい数」とは言わない。
+#   ・依頼文の「逆転負け」: 先制したのはアル・ナスルで、同点（前半終了間際）→勝ち越し→追加点。逆転負けで合う（ESPN は「slipped to a 3-1 defeat」）。
+#   ・ロナウドの先制ゴールの形: ESPN は「ボレー」、FM は「背中向きで受け、振り向いて巻くショット」。食い違うので形は言わない。
+#   ・サウジの試合だが、ユーザーの指示どおり「記録の話」として扱う（欧州7リーグ外）。順位や試合の内容に深入りしない。
+# 前の本との重なり: 20261030_ronaldo_hattrick_985（985点・ハットトリック・5回分）／20261106_ronaldo_portugal_retire／20261115_portugal_no7_ronaldo（代表の7番）。
+#   → 今回の初出: 986点目と同じ試合のPK失敗・逆転負け・986の数え方の食い違い（14点か15点か）。ハットトリック・5回分の計算は繰り返さない。
+# 【言わないこと】ロナウドの衰え・ゴールの質の評価／サウジのリーグの強さ／ポルトガル代表の引退の経緯／ロナウドがミスをして落ち込んだ様子（取っていない）／1000点に届く日付の予想。
+# 写真: 使うのは Commons の3枚（03〜05。Bryan Berlin、CC BY-SA 4.0、2026-07-02 ポルトガル代表のユニフォーム＝今回の試合の写真ではない）。_pool.png を目で見た: 本人、透かし無し。FM・AS の主写真2枚（アル・ナスルのユニフォーム）は小さく、ショートで2.3〜2.8倍に伸びるので使わない（フォルダには残してある）。代理店表記なし。
+# 本人の言葉: 見つからず（試合後の投稿・コメントは ESPN・AS・FM のどれにも無い）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: other_1
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [クリスティアーノ・ロナウド]
+
+short_style: X
+short_hook_word: 986点目とPK失敗
+short_photos:
+  - assets/images/20261121_ronaldo_986_penalty/03_v.jpg
+  - assets/images/20261121_ronaldo_986_penalty/04_v.jpg
+  - assets/images/20261121_ronaldo_986_penalty/05_v.jpg
+  - assets/images/20261121_ronaldo_986_penalty/04_v.jpg
+short_question: ロナウドは、28日のアル・ハゼム戦で987点目を決めると思いますか。
+short_telops: []
+
+theme:
+  id: ronaldo_986_penalty
+  league: ""
+  league_name: ""
+  prefix: ""
+  title: ロナウドがPKを外した試合。通算986点目の直後に起きたこと
+  hook: ""
+  question: 986点目を決めた試合で、ロナウドに何が起きたのか
+  takeaway: 986点には、リーグが認めて統計会社はオウンゴールとする1点が含まれる。リーグの数え方なら1000点まであと14点、統計会社の数え方なら15点
+
+thumbnail:
+  layout: face
+  line1: ロナウド 通算986点目
+  line2: 4分後にPK失敗
+  tags: [クリスティアーノ・ロナウド, アル・ナスル]
+  photo: assets/images/20261121_ronaldo_986_penalty/03_w.jpg
+  short_photo: assets/images/20261121_ronaldo_986_penalty/03_v.jpg
+
+answer: 先制の986点目のあとPKを外し、アル・ナスルは1対3で逆転負け
+watch: 28日のアル・ハゼム戦（アウェー）
+
+sections:
+  - id: what
+    main: true
+    heading: 986点目を決めたロナウドは、その4分後に何をしたのか
+    tier: 報道
+    telop: ロナウド、通算986点目。その4分後にPKを外す
+    say:
+      - text: ロナウドが、20日のアル・アハリ戦で先制。通算986点目です。
+        image: assets/images/20261121_ronaldo_986_penalty/04_w.jpg
+      - text: ところが、その4分後。アル・ナスルが得たPKを、ロナウドが蹴りました。
+        image: assets/images/20261121_ronaldo_986_penalty/03_w.jpg
+      - text: シュートはポストに当たり、決まりませんでした。
+      - text: 今季のアル・ナスルでのPKは、これで2本とも失敗です。
+        emph: true
+        image: assets/images/20261121_ronaldo_986_penalty/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50543354/cristiano-ronaldo-goal-1000-al-nassr-penalty-miss
+      - https://as.com/futbol/internacional/drama-cristiano-y-986-f202611-n/
+      - https://www.footmercato.net/a1929147015761192339-al-nassr-le-986e-but-en-carriere-de-cr7
+      - https://www.espn.com/soccer/match/_/gameId/401900905
+  - id: game
+    heading: 先制したアル・ナスルは、なぜ1対3で負けたのか
+    tier: 報道
+    telop: アル・アハリ 3-1 アル・ナスル。前半終了間際に同点、後半に2点
+    say:
+      - text: ロナウドの先制のあと、アル・ナスルは前半の終わりに追いつかれました。
+        card: {type: table, title: アル・アハリ 3-1 アル・ナスル, columns: [分, 得点], rows: [[14分, ロナウド（アル・ナスル）], [45+1分, ガレーノ], [71分, トニー（PK）], [75分, イバニェス]], highlight_row: 0}
+        image: assets/images/20261121_ronaldo_986_penalty/04_w.jpg
+      - text: ガレーノが、ペナルティエリアの外から決めました。
+        card: none
+      - text: 後半はトニーのPKで逆転され、4分後にもう1点を取られました。
+        image: assets/images/20261121_ronaldo_986_penalty/03_w.jpg
+      - text: 順位は、アル・ナスルが3位のまま。アル・アハリは勝ち点4差の4位です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401900905
+      - https://www.espn.com/soccer/story/_/id/50543354/cristiano-ronaldo-goal-1000-al-nassr-penalty-miss
+  - id: view
+    viewpoint: true
+    heading: 通算986点は、1000点まであと何点なのか
+    tier: 背景
+    telop: 1000点まで、リーグの数え方なら14点。統計会社の数え方なら15点
+    say:
+      - text: 見立てです。ロナウドの通算ゴールには、数え方に議論のある1点が含まれます。
+        image: assets/images/20261121_ronaldo_986_penalty/05_w.jpg
+      - text: 10月23日のファイサリー戦の1点です。
+      - text: サウジのリーグは得点と認め、統計会社はオウンゴールとしています。
+        card: {type: table, title: 通算ゴールの数え方, columns: [数え方, 通算, 1000点まで], rows: [[リーグの記録, 986点, 14点], [統計会社の記録, 985点, 15点]], highlight_row: 0}
+      - text: 1000点まで、リーグの数え方ならあと14点。統計会社なら、あと15点です。
+      - text: 通算ゴールの平均は、1試合あたり0.73点。
+        card: none
+        image: assets/images/20261121_ronaldo_986_penalty/04_w.jpg
+      - text: この平均なら、1000点まであと14点は、およそ19試合ぶんです。
+        emph: true
+      - text: 次の試合は28日、アウェーでアル・ハゼムと対戦。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/46751020/cristiano-ronaldo-goal-tracker-road-1000-career-goals
+      - https://www.espn.com/soccer/story/_/id/50543354/cristiano-ronaldo-goal-1000-al-nassr-penalty-miss

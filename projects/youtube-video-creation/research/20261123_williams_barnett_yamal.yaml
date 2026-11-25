@@ -1,0 +1,144 @@
+# 取材メモ（2026年11月23日）トッテナムの18歳ルカ・ウィリアムズ＝バーネット、プレミア初先発で初ゴール。デ・ゼルビ監督「ヤマルの水準に届くと思う」（ニュースのショート。見せ方 Y＝監督の言葉から始める）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: Sky Sports 2026-11-22「Luca Williams-Barnett: Tottenham boss Roberto De Zerbi compares teenager to Lamine Yamal after Ipswich heroics」（requests で全文。英語）
+#   ・デ・ゼルビ（試合後）: "Luca is a special player." ／ "I'm not surprised because his talent is bigger than you think."
+#     木曜に本人へ2つだけ頼んだ: "To play like he plays on the park with his friends, with the same freedom." ／ "to work hard without the ball, like [Ousmane] Dembele, like Raphinha, like [Lamine] Yamal, because ... the first defenders are the attackers."
+#     ヤマルの水準に届くかと聞かれて "Yes, I think so."
+#     バスの中で "he was watching on YouTube Ronaldinho, Hazard, Neymar." ／ "The football is magic, no?"
+#     先発は10日前に決めていた（"I decided to play today with Luca from 10 days"）。
+#   ・（Sky の地の文）18歳。10歳でルートンからトッテナムの下部組織へ。プレミア初先発。15分に先制点、51分のソランケの得点もお膳立てしたが、GK ウォルトンが触れたためアシストは記録されず。
+#     18歳51日。記録されていれば、プレミアの1試合で得点とアシストの両方をした2番目に若い選手だった（最年少はマイケル・オーウェン、1997年12月に17歳364日）。
+#     イングランドの U15〜U19 の各代表。昨季9月にトーマス・フランク前監督のもとカラバオカップでデビュー。
+#   ・ソランケ（Sky Sports）: "No, you have to give that to him! It's just a tiny touch." ／ "Luca was magnificent today."
+#   → 台本の言葉は、この英語を私が日本語にしたもの。
+# ESPN の試合データ（site.api.espn.com summary eng.1 event=401878754、11/21 15:00 UTC）:
+#   トッテナム 2-0 イプスウィッチ。15分 ウィリアムズ＝バーネット（左足、アシスト ポロ）／51分 ソランケ（アシスト表記なし）／52分 ウィリアムズ＝バーネットに警告（得点後の喜び方 "excessive celebration"）／64分 サヴィオと交代。
+#   → ESPN もアシストを付けていない（Sky の地の文と一致）。
+# 食い違い: Sky の見出しは「Saturday's 2-0 win」、試合は 11/21（土）。依頼文の「10代」は 18歳で一致。ソランケの得点はESPN 51分、Sky も 51st-minute で一致。
+# ESPN 順位表（eng.1、11/23 取得）: トッテナム 11試合4勝3分4敗 勝ち点15 9位。
+# ESPN scoreboard（eng.1 2026-11-29）: Tottenham Hotspur at Sunderland 14:05 UTC＝日本時間 11/29 23:05。
+# 自分で数えたもの: オーウェン 17歳364日 と、ウィリアムズ＝バーネット 18歳51日 の差は52日（365−364＋51）。
+# 前の本との重なり: 20261020_tottenham_first_win_maddison・20261020_suzuki_yui_spurs_interest（トッテナムの別の話）。ウィリアムズ＝バーネットは初出。
+# 【言わないこと】得点後の警告の中身（喜び方）／イプスウィッチの前田大然（56分に交代。題から離れる）／移籍・契約の話／ヤマルとの数字の比べ（本人どうしを数字で比べる材料がない）。
+# 本人の言葉: 本人の試合後の言葉は見つからず（Sky・Guardian の見出しに無い）。デ・ゼルビ監督の言葉 → Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 3枚。01〜03＝Commons「Luca Williams-Barnett No.1〜3 31.10.26」（Ecco4k、CC BY 4.0。説明「Tottenham vs Crystal Palace, 31.10.26」＝プレミアのデビュー戦の試合後のスタンドからの写真。今回のイプスウィッチ戦ではない）。
+#   一覧を目で見た: 3枚とも同じ人（トッテナムのユニフォーム、巻き毛）。透かしなし。代理店ではない。
+#   デ・ゼルビ監督の写真は Commons に2019年の小さい1枚（411x568）しか無く、伸びるので使わない。記事の写真は Sky（放送局）で取り込めない。
+#   追加: 3枚とも近くから撮った縦の写真で、16:9 に切ると顔が大きくなりテロップが顎にかかる（preview4 で ×）。そこで冒頭・アシストの節は、ヤマル（20261123_yamal_pk_comeback/02、Commons CC BY-SA）と本人を並べた1枚
+#   （assets/images/20261123_williams_barnett_yamal_pair/01.jpg、tools/pairphoto.py）にした。ショートでは本人の縦版を使う（pair/01_v と 0N_w_v は本人の 0N_v の写し）。
+slot: foreign
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [ルカ・ウィリアムズ＝バーネット, デ・ゼルビ監督, トッテナム, イプスウィッチ, ラミン・ヤマル, ソランケ]
+
+short_style: Y
+short_hook_quote: ヤマルの水準に届くか？ ええ、届くと思います。
+short_photos:
+  - assets/images/20261123_williams_barnett_yamal/01_v.jpg
+  - assets/images/20261123_williams_barnett_yamal/03_v.jpg
+  - assets/images/20261123_williams_barnett_yamal/02_v.jpg
+short_question: ウィリアムズ＝バーネットは、ヤマルのような選手になれると思いますか。
+short_telops: []
+
+theme:
+  id: williams_barnett_yamal
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 18歳ウィリアムズ＝バーネットが初ゴール。監督がヤマルの名を出した理由
+  hook: ""
+  opening_image: assets/images/20261123_williams_barnett_yamal_pair/01.jpg
+  question: 初先発で初ゴールの18歳について、デ・ゼルビ監督は何を語ったのか
+  takeaway: 18歳51日のウィリアムズ＝バーネットは、初先発で得点し、もう1点もお膳立てした。アシストが記録されていれば、プレミアで得点とアシストを同じ試合で記録した2番目に若い選手だった
+
+thumbnail:
+  layout: face
+  line1: トッテナム 18歳の初ゴール
+  line2: 監督「ヤマルに届く」
+  tags: [トッテナム]
+  photo: assets/images/20261123_williams_barnett_yamal/01_w.jpg
+  short_photo: assets/images/20261123_williams_barnett_yamal/01_v.jpg
+
+answer: 「特別な選手」。ヤマルの水準に届くと思うと答え、ヤマルのようにボールの無いところでも走れと頼んでいた
+watch: 29日のサンダーランド戦（日本時間29日23時5分）
+
+sections:
+  - id: what
+    main: true
+    heading: 初先発で初ゴールの18歳を、デ・ゼルビ監督はどう語ったのか
+    tier: 報道
+    telop: デ・ゼルビ監督「ヤマルの水準に届くと思う」
+    say:
+      - voice: デ・ゼルビ監督
+        text: ヤマルの水準に届くか？ ええ、届くと思います。
+        emph: true
+      - voice: デ・ゼルビ監督
+        text: ルカは、特別な選手です。
+        cont: true
+      - text: トッテナムのデ・ゼルビ監督が、18歳のルカ・ウィリアムズ＝バーネットについて話した言葉です。
+      - text: 21日のイプスウィッチ戦。ウィリアムズ＝バーネットは、プレミアリーグで初めて先発しました。
+      - text: そして15分、左足で先制点。2対0の勝利の1点目でした。
+        image: assets/images/20261123_williams_barnett_yamal/03_w.jpg
+      - text: 監督が名前を出したヤマルは、バルセロナで10代のうちから世界のトップに立った選手です。
+      - text: 試合の前、監督はそのヤマルを例に、本人に2つだけ頼んでいたといいます。
+      - voice: デ・ゼルビ監督
+        text: 公園で友だちとやるときのように、自由にプレーすること。
+      - voice: デ・ゼルビ監督
+        text: そして、ボールが無いときも走ること。
+        cont: true
+      - voice: デ・ゼルビ監督
+        text: ラフィーニャや、ヤマルのように。
+        cont: true
+      - text: 監督は、試合前のバスの中の様子も明かしました。
+        image: assets/images/20261123_williams_barnett_yamal/02_w.jpg
+      - voice: デ・ゼルビ監督
+        text: 彼はユーチューブで、
+      - voice: デ・ゼルビ監督
+        text: ロナウジーニョやアザール、ネイマールを見ていました。
+        cont: true
+      - voice: デ・ゼルビ監督
+        text: サッカーは魔法ですね。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13615058/luca-williams-barnett-tottenham-boss-roberto-de-zerbi-compares-teenager-to-lamine-yamal-after-ipswich-heroics
+      - https://www.espn.com/soccer/match/_/gameId/401878754
+  - id: assist
+    heading: 2点目のお膳立ては、なぜアシストにならなかったのか
+    tier: 報道
+    telop: 2点目のお膳立ては、アシストに数えられず
+    say:
+      - text: 51分の2点目も、ウィリアムズ＝バーネットのドリブルから生まれました。
+        image: assets/images/20261123_williams_barnett_yamal_pair/01.jpg
+      - text: 左から持ち込んだ低いクロスを、FWのソランケが押し込みます。
+      - text: ただ、途中で相手のキーパーがボールに触れていたため、アシストは記録されませんでした。
+      - text: 決めたトッテナムのFW、ソランケは、こう話しています。
+      - voice: ソランケ
+        text: いや、あれは彼のアシストにしないと。
+      - voice: ソランケ
+        text: キーパーは、ほんの少し触っただけです。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13615058/luca-williams-barnett-tottenham-boss-roberto-de-zerbi-compares-teenager-to-lamine-yamal-after-ipswich-heroics
+      - https://www.espn.com/soccer/match/_/gameId/401878754
+  - id: view
+    viewpoint: true
+    heading: アシストが付いていたら、どんな記録になっていたのか
+    tier: 背景
+    telop: 18歳51日。オーウェンに次ぐ記録まであと一歩
+    say:
+      - text: 見立てです。ウィリアムズ＝バーネットは、18歳51日でした。
+        card: {type: table, title: プレミアの1試合で得点とアシスト（最年少）, columns: [選手, 年齢, 時期], rows: [[マイケル・オーウェン, 17歳364日, 1997年12月], [ウィリアムズ＝バーネット, 18歳51日, 2026年11月（アシストは記録されず）]], highlight_row: 1}
+        image: assets/images/20261123_williams_barnett_yamal/03_w.jpg
+      - text: アシストが付いていれば、1試合で得点とアシストを記録した、プレミアで2番目に若い選手でした。
+      - text: いちばん若いのは、1997年のマイケル・オーウェンの17歳364日。その差は、わずか52日でした。
+        card: none
+      - text: 記録にはあと一歩。18歳の次の出番にも注目です。
+      - text: トッテナムの次の試合は29日、敵地でのサンダーランド戦。日本時間では29日の午後11時5分です。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13615058/luca-williams-barnett-tottenham-boss-roberto-de-zerbi-compares-teenager-to-lamine-yamal-after-ipswich-heroics
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings

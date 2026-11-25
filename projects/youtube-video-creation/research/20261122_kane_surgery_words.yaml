@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月22日）ケイン、足首のじん帯の手術は成功。本人がインスタで語った「粘り強さと成長を見せるチャンス」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・ESPN（ESPN News Services）2026-11-21 11:14 UTC「Harry Kane vows to be back for 'business end of the season' after ankle surgery」（now.core.api.espn.com/v1/sports/news/50548680 で全文）https://www.espn.com/soccer/story/_/id/50548680/harry-kane-injury-bayern-munich
+#       手術: "Bayern Munich said the operation on the injury, sustained in Friday's 1-1 draw with Cologne, was a success but the 33-year-old is expected to be out for months" ＝バイエルンが「手術は成功」と発表、離脱は数か月の見込み。
+#       診断: "torn the syndesmotic ligament and 'will therefore be sidelined for the next few months.'"（11/20 のクラブ発表を引いたもの）。
+#       本人の投稿（Instagram、ESPN が全文を載せた原文）:
+#         "The highs and lows of life! Obviously very disappointed to get this injury but as always it's an opportunity to show resilience and improvement going into 2027.
+#          I'll be back fresh and ready to go for the business end of the season!
+#          'Tough times don't last, tough people do' -- my guy @edelman11 told me this one!
+#          Thank you for all the messages! Alles gut."
+#       → 台本の言葉は、この原文を私が日本語にしたもの（訳したと台本の前置きで断る）。Alles gut＝ドイツ語で「万事順調／大丈夫」。
+#       ESPN は「3月のネーションズリーグ準々決勝（ノルウェー、2戦）に間に合うかが焦点」と書く（昨日の本で出し済み → 今回は入れない）。
+#       Instagram そのものの投稿日時は見ていない（ESPN の掲載が 11/21 11:14 UTC ＝日本時間 11/21 20:14 なので、投稿はそれ以前）。台本は「21日」と言わず「手術のあと」と書く。
+#   ・昨日の本（20261121_kane_ankle_ligament）の診断・離脱期間: Guardian 2026-11-20 のクラブ声明全文（左足首のシンデスモーシス靭帯の断裂・「今後数か月」）／エーベルの「約3か月」は ESPN 50543079。→ 診断と離脱期間はクラブ発表（ESPN が両日とも引用）で一致。
+# 次の試合: 昨日（11/21）の取材で ESPN scoreboard を確認済み（uefa.champions 11/25 20:00 UTC バイエルン at リール／ger.1 11/28 バイエルン at ハンブルガーSV）。ケインの欠場は「数か月」の発表から。
+# 食い違い（気をつけた点）:
+#   ・ESPN 記事は 156ゴール・163試合（バイエルン移籍後3年）と書く。ESPN のみ（ほかで未確認）→ 台本では使わない。
+#   ・手術の日・執刀の詳細・復帰日は発表なし → 言わない。「約3か月なら2月下旬」は昨日の見立て（出し済み）なので繰り返さない。
+#   ・Instagram 原文の確認はESPN の転載のみ（Instagram 自体は取得していない）。確度は 報道。
+# 前の本との重なり: 11/21 kane_ankle_ligament（診断・離脱・コンパニの言葉・CL欠場・「手術は協議中」）、11/20 kane_benzema_admirer、11/13 kane_126_caps、11/6 kane_bayern_2029。
+#   → 今回の初出: 手術が終わり成功したこと／ケイン本人の言葉（「粘り強さと成長」「シーズンの大詰め」）。
+# 【言わないこと】復帰の日付の見立て（昨日出し済み）／ケルン選手の名前／オリーズ／コンパニの言葉／契約・年俸／私生活。
+# 写真: Commons の CC BY-SA 4.0（Bryan Berlin、2026-06-27 イングランド対パナマ）3枚。今回の手術の写真ではない（イングランド代表の姿）。昨日の本の写真（ガーナ戦）とは別の写真。ESPN 記事の主写真2枚はけがの場面で配信元も不明のため外した。_pool.png と _w を目で見た: 本人、透かし無し。
+# 本人の言葉: あり（Instagram の投稿、ESPN が全文を掲載）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [ハリー・ケイン]
+
+short_style: Y
+short_hook_quote: 人生には浮き沈みがある。
+short_photos:
+  - assets/images/20261122_kane_surgery_words/04_v.jpg
+  - assets/images/20261122_kane_surgery_words/01_v.jpg
+  - assets/images/20261122_kane_surgery_words/05_v.jpg
+  - assets/images/20261122_kane_surgery_words/04_v.jpg
+short_question: ケインは、シーズンの大詰めにどんな姿で戻ってくると思いますか。
+short_telops: []
+
+theme:
+  id: kane_surgery_words
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ケイン、足首の手術が成功。本人が投稿した「粘り強さと成長を見せるチャンス」
+  hook: ""
+  question: 手術を終えたケインは、自分のけがをどう語ったのか
+  takeaway: バイエルンは手術の成功を発表。ケインはインスタグラムで「シーズンの大詰めには万全の状態で戻る」と宣言した
+
+thumbnail:
+  layout: face
+  line1: ケイン 手術は成功
+  line2: 本人「大詰めには万全で戻る」
+  tags: [ハリー・ケイン, バイエルン]
+  photo: assets/images/20261122_kane_surgery_words/04_w.jpg
+  short_photo: assets/images/20261122_kane_surgery_words/04_v.jpg
+
+answer: 手術は成功。ケインは「2027年に向けて粘り強さと成長を見せるチャンス」と語り、大詰めの復帰を約束した
+watch: 25日のリール戦、28日のハンブルガーSV戦
+
+sections:
+  - id: what
+    main: true
+    heading: ケインの手術は成功したのか。本人は何と語ったのか
+    tier: 報道
+    telop: ケインの足首の手術は成功。本人がインスタで語った
+    say:
+      - text: 左足首のじん帯を痛めていたケインが、手術を受けました。
+        image: assets/images/20261122_kane_surgery_words/04_w.jpg
+      - text: バイエルンは、手術は成功だったと発表しています。
+        image: assets/images/20261122_kane_surgery_words/01_w.jpg
+      - text: 離脱は、これまでの発表どおり数か月の見込みです。
+      - text: そのケインが、インスタグラムに投稿しました。英語の原文を訳してお伝えします。
+        image: assets/images/20261122_kane_surgery_words/04_w.jpg
+      - voice: ケイン
+        text: 人生には浮き沈みがある。
+        emph: true
+      - voice: ケイン
+        text: このけがは本当に残念です。
+        cont: true
+      - voice: ケイン
+        text: でも、いつもどおり、
+        cont: true
+      - voice: ケイン
+        text: 2027年に向けて、粘り強さと成長を見せるチャンスです。
+        cont: true
+      - voice: ケイン
+        text: シーズンの大詰めには、万全の状態で戻ってきます。
+        cont: true
+        image: assets/images/20261122_kane_surgery_words/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50548680/harry-kane-injury-bayern-munich
+      - https://www.espn.com/soccer/story/_/id/50543079/harry-kane-injury-bayern-munich
+  - id: words
+    heading: ケインは、友人から教わったどんな言葉を、投稿に添えたのか
+    tier: 報道
+    telop: 「苦しい時は続かない、強い人は続く」
+    say:
+      - text: 投稿には、友人から教わった言葉も添えられていました。
+        card: none
+      - voice: ケイン
+        text: 苦しい時は続かない。強い人は続く。
+        emph: true
+        image: assets/images/20261122_kane_surgery_words/04_w.jpg
+      - voice: ケイン
+        text: 友人のジュリアン・エデルマンが、教えてくれた言葉です。
+        cont: true
+      - voice: ケイン
+        text: たくさんのメッセージを、ありがとう。
+        cont: true
+      - voice: ケイン
+        text: アレス・グート。大丈夫です。
+        cont: true
+        image: assets/images/20261122_kane_surgery_words/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50548680/harry-kane-injury-bayern-munich
+  - id: view
+    viewpoint: true
+    heading: 手術のあと、ケインの目標はどこに置かれたのか
+    tier: 背景
+    telop: 目標は「シーズンの大詰め」
+    say:
+      - text: 見立てです。本人が目標に置いたのは、日付ではなく、シーズンの大詰めでした。
+        card: {type: table, title: ケインの投稿のことば, columns: [ことば, 意味], rows: [[粘り強さと成長, けがを成長の機会と見る], [2027年に向けて, 来年を見据えている], [シーズンの大詰め, 万全で戻る時期]], highlight_row: 2}
+        image: assets/images/20261122_kane_surgery_words/01_w.jpg
+        emph: true
+      - text: 復帰の日付は、クラブも本人も、まだ示していません。
+        card: none
+      - text: バイエルンは次、25日にリール戦、28日にハンブルガーSV戦です。
+        card: none
+      - text: ケインは、そのどちらにも出られません。
+        image: assets/images/20261122_kane_surgery_words/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50548680/harry-kane-injury-bayern-munich

@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月22日）FIFPRO、バイエルンのムシアラの契約をめぐる公の発言を批判「クラブには注意義務がある」（ニュースのショート。見せ方 Y＝FIFPRO声明の一文から始める。ムシアラ本人の言葉は無い）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 原文（FIFPRO 公式サイト）: https://www.fifpro.org/en/articles/2026/11/fifpro-statement-bayern-munichs-public-comments-on-jamal-musiala（日付 21/11/2026、requests で全文）。BBC の記事の「a Fifpro statement」リンクから辿った。
+#   原文の要点（英語。訳は台本側）:
+#     "FIFPRO is deeply concerned by the repeated public statements from FC Bayern Munich's leadership calling into question the contract of Jamal Musiala as he returns from injury."
+#     "Bayern's honorary president, chief executive and former chief executive have all publicly questioned Musiala's contract in quick succession. In FIFPRO's view, this is a coordinated strategy to put pressure on Musiala and his representatives ahead of any negotiations. A club of Bayern's standing should know better."
+#     "Bayern has a duty of care to Musiala. Across professional football, uncertainty about a player's future can take a toll on their mental health, particularly when they are recovering from injury. ... Any concerns about his contract should be raised privately with him and his representatives."
+#     "Contracts are there to be respected. An injury or a dip in form gives a club no grounds to reopen terms it agreed to, just as a run of outstanding performances gives a player no automatic right to a pay rise. Clubs, leagues and player unions have agreed at FIFA level that contractual stability is a core principle of the game. It protects clubs as much as it protects players."
+#   → 「注意義務」が指しているのは、復帰の扱い（起用・リハビリ）ではなく、クラブ幹部が契約について公の場で疑問を口にし続けること（依頼文の「負傷後の復帰の扱い」は半分だけ合う。「復帰の途中の選手に、将来への不安を与えるな」という意味）。
+# 本文を読んだもの:
+#   ・BBC Sport 2026-11-21「Fifpro criticises Bayern Munich for Musiala comments」（requests）／ESPN 2026-11-21 17:18 UTC（now.core.api.espn.com/v1/sports/news/50550461、声明の全文を引用）／Guardian 2026-11-21 の欧州サッカーまとめ（requests）。声明の文言は3社とも FIFPRO 原文と一致。
+#   ・契約: 2025年2月に延長、2030年まで（BBC・Guardian）。2025年の契約額の報道（ESPN）は台本に入れない。
+#   ・ESPN の試合データ（ger.1 event=401884736）: 11/20 バイエルン 1-1 ケルン。70分 ライマーに代わってムシアラが交代出場（ESPN 記事の「20-minute outing」は残り20分と一致）。BBC: 9/18 のウニオン・ベルリン戦（7-0）以来の出場、今季5試合2得点1アシスト。
+#   ・ESPN scoreboard: 次はバイエルン at リール 11/25 20:00 UTC（日本時間26日5:00）、ger.1 11/28 バイエルン at ハンブルガーSV。
+# 食い違い（気をつけた点）:
+#   ・出場の分: BBC は「70分すぎ」、ESPN 記事は「20分間」、試合データは70分交代＝一致。
+#   ・発言をした3人: BBC＝名誉会長ヘーネス・CEOドレーセン・前CEOルンメニゲ。ESPN は「取締役のルンメニゲ」とも書く（Guardian は「監査役会のメンバー」）。→ 台本は FIFPRO の言い方のまま「名誉会長・CEO・前CEO」だけ言い、名前と肩書は出さない。
+#   ・Guardian・BBC・ESPN は声明の背景として健康上の問題の話にも触れる。→ 【言わないこと】に入れ、台本は FIFPRO 声明の「けがから復帰する」「契約を公に疑問視」だけで組む（本人が公にした病名・診断も入れない）。
+#   ・ESPN の原文の一部「Making Musiala's health and future a matter of public debate」は、健康の話に触れるので台本に入れない（他の段落で足りる）。
+# 前の本との重なり: 20261121_kit_bayern ほか（別の話）。ムシアラ関連の過去回は 9/11 の復帰ゴールのみ。FIFPRO の声明は初出。
+# 【言わないこと】ムシアラの病気・診断・倒れた件（健康の詳細）／ヘーネス・ルンメニゲの発言の中身（健康・金額）／契約の金額／移籍の可能性／ムシアラの私生活／法的な手続き（契約の争いは法的な話ではなく公の発言の話に限る）。
+# 写真: Commons 3枚（Bryan Berlin・YantsImages、CC BY-SA 4.0、2026-06-25 ドイツ対エクアドル）。今回の試合の写真ではない。_pool.png を目で見た: 本人、透かし無し。代理店の写真（BBC は Getty、ESPN は配信元不明）は外した。
+# 本人の言葉: 見つからず（ムシアラ本人の今回の件への発言は BBC・ESPN・Guardian のどれにも無い）。FIFPRO の声明を「声明の言葉」として Y の冒頭に使う（組織の声明の訳と明記）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [ジャマル・ムシアラ, バイエルン, FIFPRO]
+
+short_style: Y
+short_hook_quote: バイエルンには、ムシアラに対する注意義務があります。
+short_photos:
+  - assets/images/20261122_musiala_fifpro/01_v.jpg
+  - assets/images/20261122_musiala_fifpro/02_v.jpg
+  - assets/images/20261122_musiala_fifpro/03_v.jpg
+  - assets/images/20261122_musiala_fifpro/01_v.jpg
+short_question: クラブの幹部は、契約の話を公の場でしてよいと思いますか。
+short_telops: []
+
+theme:
+  id: musiala_fifpro
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ムシアラへの「注意義務」。フィフプロは何に怒ったのか
+  hook: ""
+  question: FIFPROは、バイエルンの何を批判したのか
+  takeaway: FIFPROが問題にしたのは、名誉会長・CEO・前CEOの3人が短い間に契約を公に疑問視したこと。ムシアラは2030年まで契約があり、9月18日以来の出場を70分から果たしたばかりだった
+
+thumbnail:
+  layout: face
+  line1: ムシアラ FIFPRO声明
+  line2: クラブには注意義務
+  tags: [ジャマル・ムシアラ, バイエルン]
+  photo: assets/images/20261122_musiala_fifpro/01_w.jpg
+  short_photo: assets/images/20261122_musiala_fifpro/01_v.jpg
+
+answer: 幹部3人が契約を公に疑問視し続けたことを、FIFPROが「注意義務」に反すると批判した
+watch: 25日のリール戦（日本時間26日）
+
+sections:
+  - id: what
+    main: true
+    heading: FIFPROは、バイエルンの何を批判したのか
+    tier: 報道
+    telop: FIFPRO、バイエルンを批判。ムシアラの契約を公に疑問視
+    say:
+      - text: 世界の選手会、フィフプロが、バイエルンを批判しました。
+        image: assets/images/20261122_musiala_fifpro/02_w.jpg
+      - text: ムシアラの契約をめぐる発言が理由です。
+      - voice: FIFPRO声明
+        text: バイエルンには、ムシアラに対する注意義務があります。
+        emph: true
+        image: assets/images/20261122_musiala_fifpro/01_w.jpg
+      - voice: FIFPRO声明
+        text: 選手の将来がはっきりしないと、心の負担になりえます。
+        cont: true
+      - voice: FIFPRO声明
+        text: とくに、けがから復帰する途中では、そうです。
+        cont: true
+      - text: バイエルンの幹部3人が、短い間に続けて、ムシアラの契約を公に疑問視しました。
+      - text: 名誉会長と、最高経営責任者と、その前任者です。
+      - text: フィフプロは、これを「ムシアラ側に圧力をかける、連携した戦略」だと見ています。
+        image: assets/images/20261122_musiala_fifpro/03_w.jpg
+      - voice: FIFPRO声明
+        text: バイエルンほどのクラブなら、もっと分かっているはずです。
+    official: false
+    sources:
+      - https://www.fifpro.org/en/articles/2026/11/fifpro-statement-bayern-munichs-public-comments-on-jamal-musiala
+      - https://www.bbc.co.uk/sport/football/articles/c9x2evr1rg85o
+      - https://www.espn.com/soccer/story/_/id/50550461/fifpro-bayern-munich-jamal-musiala-rummenigge
+  - id: game
+    heading: FIFPROは、クラブに何を求めたのか
+    tier: 報道
+    telop: 契約の懸念は、本人と代理人に非公開で伝えるべき
+    say:
+      - text: フィフプロが求めたのは、非公開での連絡です。
+      - text: 契約への懸念は、本人と代理人に直接伝えるべきだ、という考えです。
+        image: assets/images/20261122_musiala_fifpro/01_w.jpg
+      - voice: FIFPRO声明
+        text: 契約は、守られるべきものです。
+        emph: true
+      - voice: FIFPRO声明
+        text: けがや不調は、クラブに条件の見直しを求める理由になりません。
+        cont: true
+      - text: ムシアラは、20日のケルン戦で、70分から途中出場しました。
+        image: assets/images/20261122_musiala_fifpro/02_w.jpg
+      - text: 試合は1対1の引き分けでした。9月18日以来、2か月ぶりの出場でした。
+    official: false
+    sources:
+      - https://www.fifpro.org/en/articles/2026/11/fifpro-statement-bayern-munichs-public-comments-on-jamal-musiala
+      - https://www.espn.com/soccer/match/_/gameId/401884736
+      - https://www.bbc.co.uk/sport/football/articles/c9x2evr1rg85o
+  - id: view
+    viewpoint: true
+    heading: FIFPROの声明は、何を物差しにしているのか
+    tier: 背景
+    telop: ムシアラは2030年まで契約。今季は5試合2得点1アシスト
+    say:
+      - text: 見立てです。声明の物差しは、契約は選手の数字で変わらない、という原則です。
+        card: {type: table, title: ムシアラ 今季のバイエルン, columns: [項目, 数字], rows: [[契約, 2030年まで], [出場, 5試合], [得点, 2点], [アシスト, 1]], highlight_row: 0}
+        image: assets/images/20261122_musiala_fifpro/03_w.jpg
+      - text: ムシアラは2025年2月に、2030年までの契約を結んでいます。
+        card: none
+      - text: 9月18日以来の出場だった20日を含めて、今季は5試合で2得点1アシストです。
+      - voice: FIFPRO声明
+        text: 契約が守られることは、サッカーの中心的な原則です。
+        emph: true
+      - voice: FIFPRO声明
+        text: クラブ、リーグ、選手会が、フィファのレベルで合意しています。
+        cont: true
+    official: false
+    sources:
+      - https://www.fifpro.org/en/articles/2026/11/fifpro-statement-bayern-munichs-public-comments-on-jamal-musiala
+      - https://www.bbc.co.uk/sport/football/articles/c9x2evr1rg85o

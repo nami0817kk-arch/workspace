@@ -1,0 +1,133 @@
+# 取材メモ（2026年11月15日）メッシ不在の初戦に敗れたアルゼンチン。スカローニ監督が語った「立て直し」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。ESPN の記事本文は requests では 202（空）、WebFetch は要約になるため、ESPN の記事API（now.core.api.espn.com/v1/sports/news/50476278）で全文を読んだ。
+#   検索エンジンのAI要約・ブラウザの道具は使っていない。試合データは site.api.espn.com（fifa.friendly, event 401930876）。
+# 出典で確かめたこと:
+#   ・ESPN 記事「Uruguay beat Argentina in first match since Messi's retirement」（ESPN News Services、2026-11-14 03:23Z、AP の情報を含む）:
+#       アルゼンチンはウルグアイに 1-2 で敗戦（親善試合、ブエノスアイレスのラ・ボンボネーラ）。メッシが10月上旬に代表引退してから初めての試合。
+#       スカローニ監督は今週、2030年までの契約延長に署名。メッシの最後の公式戦はW杯決勝（スペインに 0-1、ニュージャージー）。先月ベナン戦の親善試合で別れを告げた。
+#       メッシの代表通算 207試合125得点（記事）。スタンドは満員にならなかった（記事）。背番号10は誰にも付けなかった（後継は未定、付ける義務が無いので空けておく、と監督が説明）。
+#       スカローニの言葉（記事の引用＝英語。**元はスペイン語の発言の英訳。スペイン語の原文記事は探したが見つからなかった**）:
+#         "We have to rebuild without Leo Messi, and we have the talent to bounce back from this loss."
+#         "The match was good, beyond the final result; we performed well in the second half. It gives me things to analyze. We knew it would be difficult, and now we have to keep working."
+#       アルバレスの言葉（記事）: "…It's a new era, with a lot of young guys. We have to keep working to carry on the legacy left by the others."
+#       次戦: アルゼンチンは火曜にコルドバでコスタリカ戦。
+#   ・ESPN の試合データ（event 401930876、2026-11-13 23:00Z キックオフ、Alberto José Armando (La Bombonera)）:
+#       前半 0-0。48分 バレルディのオウンゴール／53分 マキシ・アラウホ（アシスト デ・アラスカエタ）／73分 ジュリアン・アルバレス（アシスト プレスティアンニ）。90+5分終了 1-2。
+#   ・ESPN の日程（fifa.friendly scoreboard 20261117）: 2026-11-17 23:00Z コスタリカ対アルゼンチン（現地の火曜）。
+# 食い違い・扱い:
+#   ①「立て直し」: 依頼文の見出しは「立て直し」。記事の言葉は "rebuild"（作り直す）。台本の訳は「立て直す」で、本人の訳としてそのまま。
+#   ②記事は「メッシ引退」を事実として書いている（10月上旬）。メッシが引退したか代表を離れたかの推測は書かない。出典のとおり「代表引退」とだけ言う。
+#   ③背番号10の件・契約延長・スタンドが満員にならなかった件は記事の記述（AP）。台本では背番号10と契約延長だけ使い、観客の件は使わない。メッシの通算記録（207試合125得点）は見立てに比べる物差しが無く落とした。
+#   ④写真: ESPN の写真は AP（Gustavo Garello）なので使わない。Commons の CC BY-SA 4.0 の 2026-07-19 W杯決勝の写真（Bryan Berlin）などを使う。
+#       01 = 2026年7月 アルゼンチン対スペイン戦のベンチ前（CC BY-SA 4.0）／02・03 = 2022年のコロンビア戦のタッチライン（CC）。顔は小さい（全身）。
+#       Messi の Commons 写真は切り出しで顔が端に寄ったため外した。縦3枚。
+# 本人の言葉: あり（上。英語の訳）。Y。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月15日"
+format: quote
+no_main: true
+people: [リオネル・スカローニ, アルゼンチン代表, ウルグアイ代表, リオネル・メッシ, フリアン・アルバレス]
+
+short_style: Y
+short_hook_quote: メッシのいない代表を、立て直さなければなりません。
+
+short_photos:
+  - assets/images/20261115_scaloni_no_messi/01_v.jpg
+  - assets/images/20261115_scaloni_no_messi/03_v.jpg
+  - assets/images/20261115_scaloni_no_messi/02_v.jpg
+short_question: メッシ後のアルゼンチンは、次のコスタリカ戦で立て直せると思いますか。
+short_telops: []
+
+theme:
+  id: scaloni_no_messi
+  league: england
+  league_name: アルゼンチン代表
+  prefix: ""
+  title: メッシのいない初戦に敗れたアルゼンチン。スカローニ監督が語った「立て直し」
+  hook: ""
+  question: メッシ引退後の初戦で、スカローニ監督は何を語ったのか
+  takeaway: ウルグアイに1-2で敗れ、背番号10は空いたまま。監督は「メッシなしで立て直す」と語り、次は火曜のコスタリカ戦
+
+thumbnail:
+  layout: face
+  line1: メッシ不在の初戦
+  line2: スカローニの言葉
+  tags: [スカローニ, アルゼンチン代表]
+  photo: assets/images/20261115_scaloni_no_messi/01_w.jpg
+  short_photo: assets/images/20261115_scaloni_no_messi/01_v.jpg
+
+answer: メッシなしで立て直す。この敗戦のあとでも、立て直せる才能はある
+watch: 火曜のコスタリカ戦（コルドバ）
+
+sections:
+  - id: what
+    main: true
+    heading: メッシのいない初戦のあと、スカローニ監督が語ったこと
+    tier: 報道
+    telop: スカローニ「メッシなしで立て直す」
+    say:
+      - text: メッシが10月上旬に代表を引退したあと、初めての試合で、アルゼンチン代表は敗れました。
+      - voice: スカローニ
+        text: メッシのいない代表を、立て直さなければなりません。
+        emph: true
+      - voice: スカローニ
+        text: この敗戦のあとでも、立て直せるだけの才能はあります。
+        cont: true
+      - text: 相手はウルグアイ。13日にブエノスアイレスで行われた親善試合は、ウルグアイが2対1で勝ちました。
+        image: assets/images/20261115_scaloni_no_messi/03_w.jpg
+      - text: 監督はこの試合を、こう振り返りました。
+        image: assets/images/20261115_scaloni_no_messi/02_w.jpg
+      - voice: スカローニ
+        text: 結果をのぞけば、いい試合でした。
+      - voice: スカローニ
+        text: 後半はよくできていました。
+        cont: true
+      - voice: スカローニ
+        text: 振り返ることがたくさんあります。
+        cont: true
+      - voice: スカローニ
+        text: 難しいと分かっていたので、これからも続けるだけです。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50476278/scaloni-calls-rebuild-argentina-fall-first-messi
+      - https://now.core.api.espn.com/v1/sports/news/50476278
+  - id: game
+    heading: 後半に3つの得点が動いた、ウルグアイ戦
+    tier: 報道
+    telop: アルゼンチン 1-2 ウルグアイ
+    say:
+      - text: ウルグアイが2対1で勝った試合は、前半に点が入りませんでした。
+        card: {type: table, title: アルゼンチン 1-2 ウルグアイ（13日）, columns: [分, 得点], rows: [[48分, バレルディのオウンゴール], [53分, アラウホ（ウルグアイ）], [73分, アルバレス（アルゼンチン）]], highlight_row: 2}
+        image: assets/images/20261115_scaloni_no_messi/01_w.jpg
+      - text: スカローニ監督のチームは、後半に動きました。
+      - text: ウルグアイが2点を先に取り、アルバレスが73分に1点を返しました。
+      - voice: アルバレス
+        text: 新しい時代です。若い選手がたくさんいます。
+      - voice: アルバレス
+        text: 先に代表を支えた人たちが残したものを、
+        cont: true
+      - voice: アルバレス
+        text: 続けていかなければなりません。
+        cont: true
+        image: assets/images/20261115_scaloni_no_messi/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401930876
+      - https://www.espn.com/soccer/story/_/id/50476278/scaloni-calls-rebuild-argentina-fall-first-messi
+  - id: view
+    viewpoint: true
+    heading: 空いたままの背番号10と、契約を延ばしたスカローニ
+    tier: 報道
+    telop: 背番号10は空いたまま
+    say:
+      - text: 見立てです。スカローニ監督は今週、2030年までの契約の延長に署名しました。
+        image: assets/images/20261115_scaloni_no_messi/03_w.jpg
+      - text: この試合、背番号10は、誰にも付けられませんでした。後継はまだ決まっていません。
+        image: assets/images/20261115_scaloni_no_messi/01_w.jpg
+      - text: 次は火曜のコスタリカ戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50476278/scaloni-calls-rebuild-argentina-fall-first-messi
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/scoreboard?dates=20261117

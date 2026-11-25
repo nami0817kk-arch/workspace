@@ -1,0 +1,155 @@
+# 取材メモ（2026年11月23日）ポチェッティーノの初陣でマンUがリバプールに0対4、19位。主将ブルーノ・フェルナンデス「とても痛い」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: A Bola 2026-11-22 20:24 UTC「Bruno Fernandes reage ao 19.º lugar do Man. United: «É muito doloroso»」（本文を requests で全文読んだ。ポルトガル語）
+#   ・ブルーノは主将として試合後に話した。順位表を見てどう感じるかと聞かれて「É muito doloroso, dói imenso. É um momento difícil para nós, mas somos os únicos que podemos sair desta situação」
+#   ・ほかに「Foi um jogo difícil. … Passados 15 minutos, o panorama do jogo mudou completamente」「Todos se esforçaram muito, não tivemos medo」「concentrar-nos no próximo jogo da Liga dos Campeões」
+# 英語の原文（試合後の Sky Sports の取材。Manchester Evening News 2026-11-22 21:17「Everything said on Leny Yoro red…」が全文を引用）:
+#   "It's one that needs to be looked at. We have far too many meetings with the referees for this to happen to us again."
+#   "It's very clear they show us if the player is not in control of the ball, it's never a red card. Isak kicks the ball forward, the ball goes into the hands of Senne."
+#   "Isak has got no control of the ball, he has no chance to get on the ball. He puts his leg across to try to get some advantage from Leny. I can understand the fall, but it's never a red card."
+#   → A Bola の審判の部分は、この英語のポルトガル語訳と一致。
+#   食い違い: 「É muito doloroso, dói imenso…」の英語の原文は見つからなかった（Sky Sports・MEN・BBC・Guardian・ESPN・manutd.com を当たった）。この部分は A Bola のポルトガル語を私が日本語にした訳。
+#   「とても痛い」は依頼文どおり A Bola の «É muito doloroso»。台本の言葉はすべて訳。
+# ESPN の試合データ（site.api.espn.com summary eng.1 event=401878755、11/22 16:30 UTC、アンフィールド）:
+#   リバプール 4-0 マンU。8分 ヨロ（マンU）一発退場／10分 ソボスライ（FK）／13分 ヴィルツ（アシスト ングモハ）／66分 ングモハ（アシスト バルコラ）／82分 ムニョス（アシスト ヴィルツ）。22分 マグワイアがエムベウモと交代。
+# ESPN（Mark Ogden）2026-11-22: ポチェッティーノのマンU初陣。ヨロはイサクへのファウルで8分に退場、80分以上を10人で戦った。マンUはリーグで1勝しかしておらず、それは8月。11試合で勝ち点8。
+#   「100年で最悪の、マンU監督の初陣」（"the worst start for a United boss in 100 years"）・「1972-73以来の最悪のシーズンの出だし」。次はCLのスポルティング戦（ポルトガル、水曜）、リーグは土曜にホームでブレントフォード戦。
+#   ポチェッティーノ（Sky Sports）: "So painful. So disappointed." → 監督の言葉は今回は使わない（ブルーノの回にする）。
+# ESPN 順位表（eng.1 standings、11/23 取得）: 16位イプスウィッチ 勝ち点11／17位フォレスト 9／18位サンダーランド 9／19位マンU 11試合1勝5分5敗 勝ち点8／20位パレス 7。
+# ESPN scoreboard（uefa.champions 2026-11-25）: Manchester United at Sporting CP 20:00 UTC＝日本時間 11/26 5:00。
+# 自分で数えたもの: 残留できる16位（イプスウィッチ 勝ち点11）まで、マンU（8）は3点差。4失点はすべて退場（8分）のあと。
+# 前の本との重なり: 20261108_man_united_relegation_zone／20261114_pochettino_tears_manutd／20261120_pochettino_manutd_first_words（就任の言葉）／20261114_bruno_rejects_second_offer・20261119_bruno_30_goals。
+#   → 初陣の結果・19位・ブルーノの試合後の言葉は初出。契約の話（11/22 の ESPN）は触れない。
+# 【言わないこと】ブルーノの契約／デ・リフトの起用の是非（ESPN の評）／ロイ・キーンらの評／審判の判定が正しいかの判断（ブルーノの言い分として出すだけ）。
+# 本人の言葉: あり（ブルーノ。上のポルトガル語と英語の訳）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 4枚。03＝A Bola の主写真（リバプール戦のブルーノ。配信元の表記は記事に無く確かめられない＝引き受ける危険）、04〜06＝Commons（Bryan Berlin 等、CC BY-SA。04 は2026年のPSGとのプレシーズン・マンUのユニフォーム、05・06 はポルトガル代表）。
+#   ESPN の主写真2枚は説明が Getty/PA なので外した（しかも1枚はファン、1枚はザークツィー）。_pool と一覧を目で見た: 本人、透かしなし。06_w は頭の上が切れるので本文に使わない。
+slot: foreign
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [ブルーノ・フェルナンデス, ポチェッティーノ監督, マンチェスター・ユナイテッド, リバプール, ヨロ, イサク]
+
+short_style: Y
+short_hook_quote: とても痛い。本当に、つらいです。
+short_photos:
+  - assets/images/20261123_bruno_painful_19th/03_v.jpg
+  - assets/images/20261123_bruno_painful_19th/04_v.jpg
+  - assets/images/20261123_bruno_painful_19th/05_v.jpg
+short_question: マンチェスター・ユナイテッドは、この順位から抜け出せると思いますか。
+short_telops: []
+
+theme:
+  id: bruno_painful_19th
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: マンU、ポチェッティーノの初陣で4失点。19位の現状に主将ブルーノ「とても痛い」
+  hook: ""
+  question: ポチェッティーノの初陣で4失点し19位のマンU。主将ブルーノは何を語ったのか
+  takeaway: マンUは11試合で勝ち点8の19位。残留できる16位までは3点差で、ブルーノは「抜け出せるのは自分たちだけ」と話した
+
+thumbnail:
+  layout: face
+  line1: マンU 初陣で4失点 19位
+  line2: ブルーノ「とても痛い」
+  tags: [ブルーノ, マンU]
+  photo: assets/images/20261123_bruno_painful_19th/03_w.jpg
+  short_photo: assets/images/20261123_bruno_painful_19th/03_v.jpg
+
+answer: 19位は「とても痛い」。それでも、ここから抜け出せるのは自分たちだけだと話した
+watch: 25日のスポルティング戦（日本時間26日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: 初陣で4失点の19位。主将ブルーノは何を語ったのか
+    tier: 報道
+    telop: ブルーノ「とても痛い。本当に、つらい」
+    say:
+      - voice: ブルーノ・フェルナンデス
+        text: とても痛い。本当に、つらいです。
+        emph: true
+        image: assets/images/20261123_bruno_painful_19th/03_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: いまは、ぼくたちにとって難しい時期です。
+        cont: true
+      - text: マンUの主将、ブルーノ・フェルナンデスが、19位という順位について語った言葉です。
+        short_only: true
+      - text: 22日、新監督ポチェッティーノの初めての試合。マンUは敵地でリバプールに0対4で敗れました。
+      - text: 8分、ディフェンダーのヨロが、リバプールのFWイサクを倒して退場。80分以上を10人で戦いました。
+        image: assets/images/20261123_bruno_painful_19th/04_w.jpg
+      - text: この判定に、ブルーノは強く反論しています。
+        image: assets/images/20261123_bruno_painful_19th/05_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: イサクは、ボールを持てていなかった。
+      - voice: ブルーノ・フェルナンデス
+        text: ボールは、キーパーの手に入っていました。
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: 倒れたのは分かります。
+        cont: true
+        image: assets/images/20261123_bruno_painful_19th/04_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: でも、あれは絶対にレッドカードではない。
+        cont: true
+      - text: 4点は、すべて退場のあとに奪われています。
+        image: assets/images/20261123_bruno_painful_19th/03_w.jpg
+      - text: 11試合で勝ち点8。順位は20チーム中の19位のままです。
+        card: {type: stats, title: マンU 今季のプレミアリーグ, items: [[11, 試合, 1勝5分5敗], [8, 勝ち点, ], [19, 位, 20チーム中]], focus: 2}
+        image: assets/images/20261123_bruno_painful_19th/05_w.jpg
+      - text: 下の3チームが2部に落ちる、降格圏です。
+      - text: それでもブルーノは、こう続けました。
+        card: none
+        image: assets/images/20261123_bruno_painful_19th/04_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: この状況から抜け出せるのは、ぼくたちだけです。
+        emph: true
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/bruno-fernandes-reage-ao-19o-lugar-do-man-united-e-muito-doloroso-2026112219551696166
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/man-united-leny-yoro-red-34951312
+      - https://www.espn.com/soccer/story/_/id/50563684/liverpool-ruin-pochettino-manchester-united-debut
+  - id: game
+    heading: 8分の退場から、リバプールに4点を奪われるまで
+    tier: 報道
+    telop: リバプール 4-0 マンU。8分にヨロが退場
+    say:
+      - text: ヨロの退場で得たフリーキックを、10分にリバプールのソボスライが直接決めました。
+        image: assets/images/20261123_bruno_painful_19th/03_w.jpg
+        card: {type: table, title: リバプール 4-0 マンU, columns: [分, 出来事], rows: [[8分, ヨロ退場（マンU）], [10分, ソボスライ（FK）], [13分, ヴィルツ], [66分, ングモハ], [82分, ムニョス]], highlight_row: 0}
+      - text: 3分後には、同じリバプールのヴィルツが2点目。
+      - text: 後半にも2点を奪われました。
+        card: none
+      - text: ブルーノは、試合をこう振り返っています。
+        image: assets/images/20261123_bruno_painful_19th/04_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: 15分を過ぎて、試合の様子はまったく変わってしまった。
+      - voice: ブルーノ・フェルナンデス
+        text: それでも、みんな必死に走りました。怖がってはいなかった。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401878755
+      - https://www.abola.pt/noticias/bruno-fernandes-reage-ao-19o-lugar-do-man-united-e-muito-doloroso-2026112219551696166
+  - id: view
+    viewpoint: true
+    heading: 19位のマンUは、残留できる16位からどれだけ離れているのか
+    tier: 背景
+    telop: 残留できる16位まで、勝ち点3
+    say:
+      - text: 見立てです。いまのプレミアリーグの下のほうの順位は、こうです。
+        card: {type: table, title: プレミアリーグ 下位の順位, columns: [順位, チーム, 勝ち点], rows: [[16位, イプスウィッチ, 11], [17位, フォレスト, 9], [18位, サンダーランド, 9], [19位, マンU, 8], [20位, パレス, 7]], highlight_row: 3}
+      - text: 残留できる16位までは、勝ち点3の差です。
+      - text: ただ、マンUのリーグでの勝利は、8月の1回だけ。
+        card: none
+      - text: 次の試合は25日。リーグ戦とは別の大会、チャンピオンズリーグです。
+      - text: ヨーロッパのクラブ王者を決める大会で、敵地でスポルティングと戦います。
+      - text: 日本時間では、26日の午前5時です。
+      - voice: ブルーノ・フェルナンデス
+        text: いまは今日のことを忘れて、次の試合に集中するしかない。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.espn.com/soccer/story/_/id/50563730/pochettino-painful-man-united-loss-liverpool

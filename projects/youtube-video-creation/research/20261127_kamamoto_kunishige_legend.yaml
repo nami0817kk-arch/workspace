@@ -1,0 +1,354 @@
+# 釜本邦茂（元日本代表 FW）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-27。型は 11/25 の名波浩と同じ6節（「あの大会」＝1968年のメキシコ五輪、「見立て」＝1試合あたりの点）。
+# **情報の時点は 2026-11-21。**いまの年齢は出さない。引退後の仕事（監督・議員）は言わない。私生活・女子サッカーは入れない。
+# 題材を選んだ理由：引退した日本人の最大の大物。日本代表の国際Aマッチ75点は歴代最多（JFA 2025-08-10 の発表）。既出の国内レジェンド（scripts/*_legend.md 25人）・posted.json・covered.yaml・picks に無い。同じ日の別シリーズ（ケイン・ヤマル×ニコ・ドルトムントのスタジアム・謎「日本人選手はなぜドイツに多いのか」）にも主役で出ない。
+# 引退と死去は一次情報で確認：JFA「釜本邦茂氏が逝去」（2025-08-10。2025年8月10日、肺炎で大阪府内の病院で死去。日本代表1964〜1977年、Aマッチ76試合75得点、メキシコ五輪7得点で得点王、JSL 251試合202得点・得点王7回）。現役の最後は1984年（引退試合 1984-08-25）。
+# 数字の出どころ：日本語版 Wikipedia「釜本邦茂」（raw の wikitext を読んだ）、「1968年メキシコシティーオリンピックのサッカー競技」（試合表）、JFA の訃報。
+# - JSL年別 試合-得点：67 14-14、68 14-14、69 12-10、70 14-16、71 14-11、72 14-11、73 16-9、74 18-21、75 17-17、76 18-15、77 18-20、78 18-15、79 18-7、80 18-10、81 18-11、82 8-1、83 2-0＝251試合202点（自分で足して一致）。
+# - 日本代表：Aマッチ76試合75点（JFA 基準。Wikipedia は FIFA 基準 84試合80点・総通算231試合153点も併記。本文と表で 231/153 と 233/154 が食い違う。台本は JFA の76試合75点だけを使う）。
+# - メキシコ五輪（1968）：10/14 ナイジェリア 3-1（釜本 24・72・89分）、10/16 ブラジル 1-1（渡辺正）、10/18 スペイン 0-0、10/20 準々決勝 フランス 3-1（釜本 27・59分、渡辺 70分）、10/22 準決勝 ハンガリー 0-5、10/24 3位決定戦 メキシコ 2-0（釜本 20・40分）。日本の9点のうち7点（約78%）。7点のうち4点は杉山隆一のアシスト（Wikipedia 本文）。
+# - 1967-09-27 五輪予選のフィリピン戦 15-0 で釜本6点（Wikipedia）。
+# - 肝炎：Wikipedia は「1969年6月16日、代表合宿中に倒れウイルス性肝炎で入院、10月の予選は欠場」と「1970年にウイルス性肝炎」の2か所で食い違う。年別のAマッチ表は1969年が0試合なので、台本は1969年で書いた。
+# - 1981-11-01 本田技研戦で通算200・201点。1982-05-20 右足首アキレス腱断裂、1983-11-03 に復帰。1984-08-25 国立で引退試合（ペレ・オヴェラートが出場、釜本は前半15分に得点）。
+# - 本人の言葉：Number Web（二宮寿朗、2025-08-13）の生前のインタビュー。ナイジェリア戦の1点目のあとについて「楽にシュートを打てば、全部入るっていう感覚になりましたよ」。
+# 写真：Number Web の記事の写真（引退試合。©Makoto Kemmisaki）。代理店ではない。
+watch: 毎日、数字でサッカーを読み解きます
+title: 釜本邦茂は、どんな選手だった？ メキシコ五輪、日本の9点のうち何点を取ったのか
+format: news
+short_title: 釜本邦茂は、どんな選手だった？
+series: レジェンドの紹介
+topic: 釜本邦茂
+date: 2026年11月21日
+slot: other_1
+people:
+- 釜本邦茂
+theme:
+  id: legend_kamamoto_kunishige_legend
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 釜本邦茂
+  title: 釜本邦茂は、どんな選手だった？ メキシコ五輪、日本の9点のうち何点を取ったのか
+  question: フォワードの釜本邦茂は、日本が銅メダルを取った1968年のメキシコ五輪で、どれだけ点を取ったのか
+  takeaway: 釜本邦茂はメキシコ五輪の6試合で7点を取り、日本の9点のうち約78%を1人で取った。1試合あたりは約1.17点で、日本リーグの約0.80点、日本代表の約0.99点を上回る。日本代表の75点は、11月21日時点でも男子の歴代最多
+  nameplate: 釜本邦茂｜元日本代表 FW
+  opening_image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+  end_bg: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 釜本邦茂、代表76試合75点
+  line2: メキシコ五輪で7点、得点王
+  tags:
+  - 日本
+  photo: assets/images/20261127_kamamoto_kunishige_legend/01_w.jpg
+  board: assets/images/20261127_kamamoto_kunishige_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261127_kamamoto_kunishige_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 1968年のメキシコ五輪で、日本の点を取り続けたのは誰だったのか
+  tier: 報道
+  telop: 1968年、メキシコ五輪の銅メダル
+  card: &hookcard
+    type: stats
+    title: 釜本邦茂 元日本代表FW
+    items:
+    - - '75'
+      - 点
+      - 日本代表（76試合）
+    - - '202'
+      - 点
+      - 日本リーグ（251試合）
+    - - '7'
+      - 点
+      - メキシコ五輪（得点王）
+    focus: 0
+  say:
+  - text: 1968年、メキシコシティのオリンピック。日本は、銅メダルを取ります。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: none
+  - text: 6試合で、日本が取った点は9点。
+    card: none
+  - text: そのうち7点を、1人の選手が取りました。
+    card: none
+    emph: true
+  - text: 大会で、いちばん多くの点を取った選手です。
+    card: none
+  - text: その選手が、釜本邦茂です。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *hookcard, focus: 2}
+    callword: 釜本邦茂
+  - text: 国と国の正式な試合、国際Aマッチで取った点は75点。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *hookcard, focus: 0}
+  - text: 国内の日本リーグでも、点を取り続けた選手です。
+    card: {<<: *hookcard, focus: 1}
+  quotes_from: []
+  sources: &src
+  - https://ja.wikipedia.org/wiki/%E9%87%9C%E6%9C%AC%E9%82%A6%E8%8C%82
+  - https://ja.wikipedia.org/wiki/1968%E5%B9%B4%E3%83%A1%E3%82%AD%E3%82%B7%E3%82%B3%E3%82%B7%E3%83%86%E3%82%A3%E3%83%BC%E3%82%AA%E3%83%AA%E3%83%B3%E3%83%94%E3%83%83%E3%82%AF%E3%81%AE%E3%82%B5%E3%83%83%E3%82%AB%E3%83%BC%E7%AB%B6%E6%8A%80
+  - https://www.jfa.jp/about_jfa/news/00035377/
+  - https://number.bunshun.jp/articles/-/866878
+- id: data
+  heading: 釜本邦茂は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 釜本邦茂の基礎DATA
+  card: &datacard
+    type: table
+    title: 釜本邦茂
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1944年4月15日・京都府京都市生まれ
+    - - ポジション
+      - フォワード
+    - - 所属したクラブ
+      - 早稲田大学 → ヤンマー（1967〜1984年）
+    - - 日本リーグ通算
+      - 251試合202得点・得点王7回
+    - - 日本代表
+      - 76試合75得点（1964〜1977年）
+    - - 主な記録
+      - メキシコ五輪 得点王・銅メダル（1968年）
+    - - 現役を退く
+      - 1984年（8月25日に引退試合）
+    highlight_row: 0
+  say:
+  - text: 釜本邦茂の生まれは1944年、京都市。ポジションは、点を取るフォワードです。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: 早稲田大学から、1967年にヤンマーへ入りました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: 日本リーグの得点王には、7回なっています。
+    card: {<<: *datacard, highlight_row: 3}
+  - text: 日本代表では、1964年から1977年まで戦いました。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *datacard, highlight_row: 4}
+  - text: そして、1968年のメキシコ五輪で得点王になります。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *datacard, highlight_row: 5}
+  quotes_from: []
+  sources: *src
+- id: road
+  heading: 大学生だった釜本邦茂は、どうやってメキシコへたどり着いたのか
+  tier: 報道
+  telop: 1964年、東京五輪に出る
+  card: &roadcard
+    type: timeline
+    title: 釜本邦茂の歩み
+    rows:
+    - - 1964年
+      - 東京五輪に出る。日本はベスト8
+    - - 1967年
+      - ヤンマーに入る。日本リーグ14試合14点
+    - - 1967年9月
+      - 五輪のアジア予選。フィリピン戦で6点
+    - - 1968年
+      - メキシコ五輪へ
+    highlight_row: 0
+  say:
+  - text: 釜本邦茂は早稲田大学で、関東大学リーグの得点王に、4年続けてなりました。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: none
+  - text: 1964年、東京オリンピックに出ます。日本はベスト8でした。
+    card: {<<: *roadcard, highlight_row: 0}
+  - text: 1967年、ヤンマーに入ります。日本リーグの1年目は、14試合で14点。
+    card: {<<: *roadcard, highlight_row: 1}
+  - text: 1試合に1点のペースです。
+    card: {<<: *roadcard, highlight_row: 1}
+    emph: true
+  - text: 同じ年の9月、オリンピックのアジア予選。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *roadcard, highlight_row: 2}
+  - text: フィリピン戦で、1人で6点を取りました。試合は15対0の勝ちです。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *roadcard, highlight_row: 2}
+    emph: true
+  - text: 日本は予選を抜け、1968年、メキシコへ向かいます。
+    card: {<<: *roadcard, highlight_row: 3}
+  quotes_from: []
+  sources: *src
+- id: mexico
+  heading: 1968年のメキシコ五輪で、釜本邦茂はどの試合で点を取ったのか
+  tier: 報道
+  telop: 1968年、メキシコ五輪の6試合
+  main: true
+  card: &mexcard
+    type: table
+    title: メキシコ五輪の日本
+    columns:
+    - 日付
+    - 相手
+    - 結果
+    - 釜本の点
+    rows:
+    - - 10月14日
+      - ナイジェリア
+      - 3対1で勝ち
+      - '3'
+    - - 10月16日
+      - ブラジル
+      - 1対1
+      - '0'
+    - - 10月18日
+      - スペイン
+      - 0対0
+      - '0'
+    - - 10月20日
+      - フランス
+      - 3対1で勝ち
+      - '2'
+    - - 10月22日
+      - ハンガリー
+      - 0対5で負け
+      - '0'
+    - - 10月24日
+      - メキシコ
+      - 2対0で勝ち
+      - '2'
+    highlight_row: 0
+  say:
+  - text: 1968年のメキシコ五輪。初戦で、釜本邦茂は3点を取ります。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *mexcard, highlight_row: 0}
+    emph: true
+  - text: 1点目で、肩の力が抜けたそうです。
+    card: none
+  - voice: 釜本邦茂
+    text: 楽にシュートを打てば、全部入るっていう感覚になりましたよ。
+    card: none
+  - text: 相手はナイジェリア。点は24分、72分、89分でした。
+    card: {<<: *mexcard, highlight_row: 0}
+  - text: このハットトリックで、日本は3対1で勝ちます。
+    card: {<<: *mexcard, highlight_row: 0}
+  - text: ブラジルとは1対1の引き分け、スペインとも0対0の引き分け。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *mexcard, highlight_row: 2}
+  - text: 日本は、グループを2位で抜けます。
+    card: none
+  - text: 10月20日、準々決勝のフランス戦。釜本邦茂は2点を取り、3対1で勝ちます。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *mexcard, highlight_row: 3}
+  - text: 準決勝は、ハンガリーに0対5で敗れます。
+    card: {<<: *mexcard, highlight_row: 4}
+  - text: 残るのは、10月24日の3位決定戦。相手は、地元のメキシコです。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *mexcard, highlight_row: 5}
+  - text: 釜本邦茂は、20分と40分に点を取りました。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *mexcard, highlight_row: 5}
+    emph: true
+  - text: 2対0で勝って、日本は銅メダルです。
+    card: none
+  - text: 7点のうち4点は、杉山隆一のアシストから生まれました。
+    card: none
+  - text: 釜本邦茂は、この大会の得点王になりました。
+    card: none
+    emph: true
+  quotes_from:
+  - https://number.bunshun.jp/articles/-/866878
+  sources: *src
+- id: after
+  heading: メキシコのあと、釜本邦茂はどんな形で現役を終えたのか
+  tier: 報道
+  telop: 1984年、引退試合
+  card: &aftercard
+    type: table
+    title: 釜本邦茂の日本リーグ
+    columns:
+    - 年
+    - 試合
+    - 得点
+    rows:
+    - - '1974'
+      - '18'
+      - '21'
+    - - '1977'
+      - '18'
+      - '20'
+    - - '1981'
+      - '18'
+      - '11'
+    - - '1982'
+      - '8'
+      - '1'
+    - - '1983'
+      - '2'
+      - '0'
+    highlight_row: 0
+  say:
+  - text: 1969年6月、釜本邦茂は代表の合宿中に倒れ、肝炎で入院します。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: none
+  - text: この年の10月、ワールドカップの予選には出られませんでした。
+    card: none
+  - text: 日本リーグで1年にいちばん多く取ったのは、1974年の21点です。
+    card: {<<: *aftercard, highlight_row: 0}
+  - text: 1977年も、18試合で20点を取りました。
+    card: {<<: *aftercard, highlight_row: 1}
+  - text: この年の9月、日本代表から退きます。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: 1981年11月1日、日本リーグの通算200点に届きます。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 1982年5月、右のアキレス腱を切ります。
+    card: {<<: *aftercard, highlight_row: 3}
+    emph: true
+  - text: 1983年11月にピッチへ戻りましたが、この年の出場は2試合でした。
+    card: {<<: *aftercard, highlight_row: 4}
+  - text: 1984年8月25日、国立競技場で引退試合が開かれます。
+    card: none
+  - text: ペレも出たこの試合で、釜本邦茂は前半15分にゴールを決めました。
+    card: none
+  - text: 釜本邦茂は2025年8月10日に、亡くなりました。
+    card: none
+  quotes_from: []
+  sources: *src
+- id: view
+  heading: 釜本邦茂の点は、どの舞台でいちばん速く積み上がったのか
+  tier: 背景
+  telop: 日本の9点のうち、7点が釜本邦茂
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 釜本邦茂の1試合あたりの得点
+    columns:
+    - 舞台
+    - 試合
+    - 得点
+    - 1試合あたり
+    rows:
+    - - 日本リーグ
+      - '251'
+      - '202'
+      - 約0.80
+    - - 日本代表
+      - '76'
+      - '75'
+      - 約0.99
+    - - メキシコ五輪
+      - '6'
+      - '7'
+      - 約1.17
+    highlight_row: 0
+  say:
+  - text: 最後に、釜本邦茂の点を、1試合あたりで比べます。
+    image: assets/images/20261127_kamamoto_kunishige_legend/01_r.jpg
+    card: none
+  - text: 日本リーグは、251試合で202点。1試合あたり約0.80点です。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 日本代表は、76試合で75点。約0.99点です。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: メキシコ五輪は、6試合で7点。約1.17点でした。
+    card: {<<: *viewcard, highlight_row: 2}
+    emph: true
+    mark: {"kind": "circle", "row": 2, "col": "1試合あたり"}
+  - text: メキシコ五輪は、日本の点の約78%を、1人で取った大会でした。
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: そして日本代表の75点は、11月21日時点でも、男子の歴代最多です。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  quotes_from: []
+  sources: *src

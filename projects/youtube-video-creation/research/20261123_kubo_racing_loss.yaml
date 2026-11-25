@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月23日）久保建英が68分から途中出場、レアル・ソシエダはラシンに2対3で敗戦。スペイン紙の評価は厳しかった（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元（全文を読んだ）:
+#   ・サッカーキング 2026-11-23「久保建英途中出場のソシエダ、2点ビハインドから一時同点も敗戦…ラシンが連勝」 https://www.soccer-king.jp/news/world/esp/20261123/2230345.html
+#       6分 ザビリ（ルケのクロス）／8分 ザビリがGKレミロにプレスをかけて奪い無人のゴールへ／45+1分 オヤルサバル（セルヒオ・ゴメスのクロス、左足）／60分 ゲデス（ショートコーナーからエリア外のミドル）／66分 ザビリがレミロに倒されPK→カナレスが決める（得点者一覧は68分）／直後に久保がソレールに代わって出場。75分 オスカルソンの決定機、終盤にオヤルサバルの同点の好機。次は26日EL C・パレス戦、29日セビージャ戦。
+#   ・フットボールチャンネル 2026-11-23「ソシエダMF久保建英、途中出場もスペイン紙は辛らつ評価「代役候補ではない」…」 https://www.footballchannel.jp/2026/11/23/post1058704/
+#       スペイン紙『AS』（22日「ソシエダの合格点と落第点。これほど決定機を逃していては勝てない」）: 久保について「25分間プレーしたが、ほとんど存在感がなかった」「現時点ではバレネチェアの代役候補ではない」（負傷離脱中のアンデル・バレネチェア）。
+#       『Mundo Deportivo』:「存在感なし」「2-3となった後に投入されたが、見せ場はほとんどなかった」。『ElDesmarque』: 10点満点中4.5点「突破力を発揮する場面はごくわずかだった」。
+# スペイン紙の原文まで辿った:
+#   ・Mundo Deportivo 2026-11-22 18:18 CET「El 1x1 de la Real Sociedad ante el Racing」（Unai Valverde、全文を requests で読んだ） https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254158/1x1-real-sociedad-racing.html
+#       Kubo:「Intrascendente」（見出し）／"Entró tras el 3-2. Muy poco."（3-2になった後に入った。ほとんど何もなかった）。台本は「2対3になったあとに入った」と、ソシエダ側から見たスコアで訳した（題の「2対3の負け」と数字の向きをそろえるため。意味は同じ）。→ フットボールチャンネルの訳と一致。
+#   ・AS「Aprobados y suspensos de la Real Sociedad: fallando tanto es imposible」 https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-fallando-tanto-es-imposible-f202611-n/
+#       → 記事は AS の一覧で存在を確かめた（題がフットボールチャンネルの訳「これほど決定機を逃していては勝てない」と一致）。**本文は 403（JS 必須）と WebFetch 不可で読めなかった。**「代役候補ではない」の原文は確かめられていない → 台本では使わない（題にも入れない）。
+#   ・ElDesmarque は 403 で読めず → 4.5点は使わない。
+# ESPN の試合データ（site.api.espn.com summary event=401882800、esp.1、2026-11-22 15:15 UTC）:
+#   ラシン 3-2 ソシエダ。6分 ザビリ／8分 ザビリ（エリア外から右足）／45+1分 オヤルサバル／60分 ゲデス（CKから、エリア外）／66分 レミロ警告／68分 カナレスのPK。
+#   68分 久保がソレールと交代で出場（同時にアランブルがフォルトと交代）。久保の得点・アシストなし。
+# 食い違い（気をつけた点）:
+#   ・PK: サッカーキングは「66分にPK獲得、得点者一覧は68分」、フットボールチャンネルは「68分にPK」。ESPN は 66分レミロ警告・68分PK成功。→ 台本は「68分、PKで勝ち越され」。
+#   ・久保の出場時間: 「68分から」（ESPN・各報道）と「約25分」（AS の訳）。→ 台本は「68分から」だけ言う。
+#   ・次の試合: ESPN scoreboard で 11/26 20:00 UTC クリスタル・パレス対ソシエダ（EL）、11/29 20:00 UTC ソシエダ対セビージャ（リーグ）を確認。
+#   ・Mundo Deportivo 2026-11-22「3-2: La Real Sociedad paga cara su falta de puntería y sucumbe a los golpes del Racing」（Jorge Serrano、全文） https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254123/cronica-racing-real-sociedad.html
+#       "En los minutos finales, Óskarsson y Oyarzabal fallaron varias ocasiones claras para un equipo que mereció puntuar."／右は負傷のバレネチェアの代わりにスチッチ（"poniendo a Sucic en la derecha para suplir la baja del lesionado Barrenetxea"）。
+# 自分で数えたもの（ESPN の esp.1 teams/89/schedule と各試合の出場記録、13試合）:
+#   久保の今季リーグ戦: 先発5（8/21・8/26・9/3・10/18・11/8）／途中出場4（8/29・9/13・11/1・11/22）／出場なし4（9/7・9/20・10/11・10/25）。
+#   ソシエダは13試合 7勝1分5敗 勝ち点22、5位のまま（ESPN 順位表）。
+# 前の本との重なり: 20261120_kubo_unexpected_plays（闘莉王の評・12試合の出場の表）／20261121_kubo_interest_fee（ベシクタシュの関心）。
+#   → 今回の初出: ラシン戦そのもの・スペイン紙の評価・13試合目までの数字。前の表と同じ形にならないよう、今回は「途中出場が4試合目」を主にする。
+# 【言わないこと】「代役候補ではない」（原文を読めていない）／4.5点（同）／選手を小さく見せる言い方（「何もできなかった」と言い切らない。評価は紙の言葉として引く）／ブラジル戦の話（流れの点検で「抜いても変わらない」と出たので外した）。
+# 本人の言葉: 試合後の久保本人の言葉は見つからず（各日本語記事・MD とも無し）。X。
+# 写真の取得元: ゲキサカの日本代表の写真ギャラリー（©Koki NAGAHAMA/GEKISAKA）463418（11/17 パラグアイ戦）の19・20枚目、463287（11/14 ブラジル戦）の1・6枚目 https://web.gekisaka.jp/photonews/japan/detail/?463418-463418-pn https://web.gekisaka.jp/photonews/japan/detail/?463287-463287-pn
+# 写真: 4枚（01・03・05＝試合中の久保、02＝ブラジル戦後の笑顔の親指）。_pool.png を目で見た: 本人、透かしは撮影者表記（©Koki NAGAHAMA/GEKISAKA）のみで代理店名なし。
+#   ラシン戦の写真は、フットボールチャンネル・サッカーキング（Getty）／ゲキサカの海外記事（画像に©Getty Images）しか無く使えない。→ 代表の写真で組む（クラブのユニフォームではない）。02（笑顔）は負けた試合の話なので山場には置かない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [久保建英, レアル・ソシエダ, ラシン・サンタンデール, オヤルサバル, ゲデス, ザビリ]
+
+short_style: X
+short_hook_word: 勝ち越された直後
+short_photos:
+  - assets/images/20261123_kubo_racing_loss/01_v.jpg
+  - assets/images/20261123_kubo_racing_loss/02_v.jpg
+  - assets/images/20261123_kubo_racing_loss/03_v.jpg
+  - assets/images/20261123_kubo_racing_loss/05_v.jpg
+short_question: 久保建英は、次のクリスタル・パレス戦で先発に戻ると思いますか。
+short_telops: []
+
+theme:
+  id: kubo_racing_loss
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 久保建英、勝ち越された直後に送り出された68分。スペイン紙が付けた評価
+  hook: ""
+  question: 久保建英は、ラシン戦でどんな場面に送り出され、どう評価されたのか
+  takeaway: 久保が入ったのは、2点差を追いついたあとPKで勝ち越された直後。今季のリーグ戦13試合で、途中出場はこれが4試合目。先発は5試合のまま
+
+thumbnail:
+  layout: face
+  line1: 久保建英 68分から出場
+  line2: スペイン紙の評価は
+  tags: [久保建英, レアル・ソシエダ]
+  photo: assets/images/20261123_kubo_racing_loss/01_w.jpg
+  short_photo: assets/images/20261123_kubo_racing_loss/01_v.jpg
+
+answer: 2対2から勝ち越された直後に投入。チームは追いつけず、スペイン紙は「ほとんど何もなかった」と書いた
+watch: 26日（現地）のEL クリスタル・パレス戦（鎌田大地のチーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 久保建英は、ラシン戦でどんな場面に送り出されたのか
+    tier: 報道
+    telop: 久保建英、勝ち越された直後の68分から出場
+    say:
+      - text: レアル・ソシエダの久保建英は、日本代表から戻った最初の試合でベンチスタート。
+        image: assets/images/20261123_kubo_racing_loss/01_w.jpg
+      - text: 相手は、今季1部に上がってきたラシン。開始8分で、2点を失いました。
+        card: {type: table, title: ラシン 3-2 ソシエダ, columns: [分, できごと], rows: [[6分, ザビリが先制], [8分, ザビリが2点目], [45+1分, オヤルサバルが1点返す], [60分, ゲデスが同点], [68分, PKで勝ち越される]], highlight_row: 1}
+      - text: それでも前半の終わりにオヤルサバル、60分にはゲデスのミドルで、同点に追いつきます。
+        card: {type: table, title: ラシン 3-2 ソシエダ, columns: [分, できごと], rows: [[6分, ザビリが先制], [8分, ザビリが2点目], [45+1分, オヤルサバルが1点返す], [60分, ゲデスが同点], [68分, PKで勝ち越される]], highlight_row: 3}
+        image: assets/images/20261123_kubo_racing_loss/02_w.jpg
+      - text: ところが68分、PKで勝ち越されます。久保が送り出されたのは、その直後でした。
+        card: {type: table, title: ラシン 3-2 ソシエダ, columns: [分, できごと], rows: [[6分, ザビリが先制], [8分, ザビリが2点目], [45+1分, オヤルサバルが1点返す], [60分, ゲデスが同点], [68分, PKで勝ち越される]], highlight_row: 4}
+        emph: true
+      - text: 試合は2対3の負け。スペイン紙ムンド・デポルティーボの選手ごとの評価で、久保への言葉は短いものでした。
+        card: none
+        image: assets/images/20261123_kubo_racing_loss/05_w.jpg
+      - voice: ムンド・デポルティーボ
+        text: 2対3になったあとに入った。ほとんど何もなかった。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20261123/2230345.html
+      - https://www.footballchannel.jp/2026/11/23/post1058704/
+      - https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254158/1x1-real-sociedad-racing.html
+      - https://www.espn.com/soccer/match/_/gameId/401882800
+  - id: chances
+    heading: ソシエダは、終盤に何を逃したのか
+    tier: 報道
+    telop: 終盤の決定機を、何度も逃した
+    say:
+      - text: 久保が入ってからも、ソシエダは同点に追いつく好機を作っていました。
+        image: assets/images/20261123_kubo_racing_loss/03_w.jpg
+      - text: ムンド・デポルティーボの試合の記事は、こう書いています。
+      - voice: ムンド・デポルティーボ
+        text: 終盤、オスカルソンとオヤルサバルが、
+      - voice: ムンド・デポルティーボ
+        text: はっきりした好機を何度も外した。
+        cont: true
+      - voice: ムンド・デポルティーボ
+        text: 勝ち点に値するチームだった。
+        cont: true
+    official: false
+    sources:
+      - https://www.mundodeportivo.com/futbol/real-sociedad/20261122/1004254123/cronica-racing-real-sociedad.html
+      - https://www.soccer-king.jp/news/world/esp/20261123/2230345.html
+  - id: view
+    viewpoint: true
+    heading: 今季の久保は、どれだけ試合に出ているのか
+    tier: 背景
+    telop: リーグ戦13試合で先発5、途中出場4
+    say:
+      - text: 見立てです。ソシエダのリーグ戦13試合で、久保の先発は5試合。
+        card: {type: table, title: 久保建英 今季のリーグ戦13試合, columns: [出場, 試合数], rows: [[先発, 5], [途中出場, 4], [出場なし, 4]], highlight_row: 0}
+        image: assets/images/20261123_kubo_racing_loss/01_w.jpg
+      - text: 途中出場は、このラシン戦で4試合目になりました。
+        card: {type: table, title: 久保建英 今季のリーグ戦13試合, columns: [出場, 試合数], rows: [[先発, 5], [途中出場, 4], [出場なし, 4]], highlight_row: 1}
+      - text: 最後の先発は、代表の試合が始まる前の11月8日、ラージョ戦でした。
+        card: none
+        image: assets/images/20261123_kubo_racing_loss/02_w.jpg
+      - text: 次は26日、ヨーロッパリーグで、イングランドのクリスタル・パレスと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/89
+      - https://www.espn.com/soccer/match/_/gameId/401882800
+      - https://www.espn.com/soccer/match/_/gameId/401916337

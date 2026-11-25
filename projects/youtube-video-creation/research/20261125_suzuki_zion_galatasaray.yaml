@@ -1,0 +1,143 @@
+# 取材メモ（2026年11月25日）鈴木彩艶のアストン・ヴィラ、CL第5節でガラタサライに0-1。顔面流血のヘディングで決勝点を許し、CL2連敗（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-25。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 463835（11/25 04:39）「鈴木彩艶アストン・ビラ、“顔面流血”セットプレー弾に屈して欧州CL2連敗」（全文） https://web.gekisaka.jp/news/ucl/detail/?463835-463835-fl
+#   前半4分 鈴木のロングフィードから攻撃。前半20分 スルーパスに飛び出して相手FWより先に処理。後半はハイボールを果敢な飛び出しでことごとくキャッチ。
+#   後半32分（=77分）右CK、ニアで頭→混戦→ジャクソンに顔面を蹴られながら頭を出したギュルのヘディングが入る。ギュルは顔面から流血、治療のあと包帯姿で戻った。
+#   前節バルセロナ戦 0-3 に続く2試合連続の完封負け。3勝2敗。「3連勝からの2連敗」、ガラタサライは「2連敗からの3連勝」。
+# フットボールチャンネル 1058964・1058976（11/25 05:54・05:56、全文）:
+#   77分、サラの右CK→ニアでシンゴが頭→ジャクソンに当たって浮く→途中出場のギュルがヘディング。クリアしようとしたジャクソンの足が顔面に直撃。鼻から出血、包帯を巻いて戻った。22歳、CL初ゴール。
+#   前半は両チーム枠内シュート0。ヴィラは公式戦6試合連続未勝利。次は 28日イプスウィッチ戦（敵地）、CL第6節は 12/8 PSG をホームに。
+#   https://www.footballchannel.jp/2026/11/25/post1058964/ https://www.footballchannel.jp/2026/11/25/post1058976/
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915300、2026-11-24 17:45 UTC）: ガラタサライ 1-0 アストン・ヴィラ。
+#   62分 ギュルが途中出場、77分 ギュル（コーナーキックのあと至近距離からのヘディング）。鈴木は先発・交代なし（フル出場）。
+#   シュート: ガラタサライ 9本（枠内2）、ヴィラ 4本（枠内0）。ボール保持 ヴィラ 54.6%。
+# Sky Sports（11/24 19:47 UK）: ヴィラは6試合勝ちなし。エメリ体制で初めての CL（リーグフェーズ・グループ）2連敗。ジャクソンの足がギュルの顔に入り、VAR が退場の可能性を確かめたが何も無し。ヴィラは枠内シュート0。
+#   https://www.skysports.com/football/news/13615959/galatasaray-1-0-aston-villa-deniz-guls-late-winner-in-champions-league-league-phase-extends-villas-winless-run
+# エメリ監督の試合後の言葉（クラブ公式 avfc.co.uk「Emery on Galatasaray loss」、英語、全文を読んだ）:
+#   "How we played the first half, I was very proud of the players …"
+#   "I think we deserved, minimum, to draw this match because we competed well."
+#   "There are things to learn, to have experiences and get better for the next challenges we will face."
+#   → 台本の言葉は、この英語を私が日本語にしたもの。Sky が載せた別の言葉（審判・時間稼ぎへの不満）は、公式と言い回しが違う場面の言葉なので使わない。
+#   https://www.avfc.co.uk/news/2026/november/24/postmatch-unai-emery-galatasaray-champions-league/
+# Birmingham Mail の採点（地の文）: 鈴木は前半シュートを1本も受けず、配球で攻撃の起点に。https://www.birminghammail.co.uk/sport/football/football-news/aston-villa-player-ratings-4s-34956206
+# 食い違い:
+#   ・失点の分: ESPN・フットボールチャンネル 77分、ゲキサカ 後半32分(=77分)、Birmingham Mail 75分、Sky「79分」。→ ESPN の 77分。
+#   ・ボールの経路: フットボールチャンネルは「シンゴの頭→ジャクソンに当たる」、Birmingham Mail は「ギュルのヘディングがミングスに当たってコースが変わった」。→ 経路は言わない（「コーナーキックの混戦から」）。
+#   ・ギュルの位置: ゲキサカ MF、フットボールチャンネル・Sky FW。→ 位置は言わない。
+# 自分で数えたもの: ヴィラのCLは 3勝 → 2敗（第4節バルサ 0-3、第5節 0-1）＝2試合続けて無得点。枠内シュート 0本 対 2本（ESPN）。
+# 前の本との重なり: 11/23 ヴィラを選んだ理由（本人）／11/24 レアルの関心。→ 今回は試合そのもの（初出）。
+# 【言わないこと】ボールの経路（食い違い）／ギュルの位置／Sky の審判への不満の言葉／順位（8位から落ちる可能性は確定していない）。
+# 本人の言葉: 見つからず（ゲキサカ・フットボールチャンネル・サッカーキングの一覧・クラブ公式・Birmingham Mail を当たった。鈴木のコメントの記事は無し）。→ X。
+# 写真: 4枚。01・02＝ゲキサカの日本代表の練習写真ギャラリー（©Koki NAGAHAMA/GEKISAKA、463303 の4枚目・463133 の7枚目。11/14〜16 の代表活動。過去の回で未使用）、03＝クラブ公式の試合記事の先発集合写真（鈴木は後列左の緑）、04＝クラブ公式のエメリ監督。
+#   ゲキサカ海外記事の主写真（今日の鈴木）は右下に ©Getty Images の透かし、フットボールチャンネルは Getty、Birmingham Mail の主写真はジョアン・ゴメス（別人）→ どれも外した。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, ガラタサライ, エメリ監督, デニズ・ギュル]
+
+short_style: X
+short_hook_word: 顔面流血の決勝弾
+short_photos:
+  - assets/images/20261125_suzuki_zion_galatasaray/03_v.jpg
+  - assets/images/20261125_suzuki_zion_galatasaray/01_v.jpg
+  - assets/images/20261125_suzuki_zion_galatasaray/04_v.jpg
+short_question: 鈴木彩艶のヴィラは、12月のパリ・サンジェルマン戦で連敗を止められると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_zion_galatasaray
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 鈴木彩艶のヴィラ、CLで2連敗。顔に足を受けながら相手が決めた一撃
+  hook: ""
+  question: 鈴木彩艶が守るヴィラは、ガラタサライ戦でどう1点を奪われたのか
+  takeaway: 前半は鈴木がシュートを1本も受けず、試合は0対0。77分、コーナーキックの混戦から、顔に足を受けたギュルのヘディングが決勝点になった。ヴィラの枠内シュートは0本で、CLは2試合続けて無得点の2連敗
+thumbnail:
+  layout: scene
+  line1: 鈴木彩艶のヴィラ
+  line2: 流血の決勝弾でCL2連敗
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  photo: assets/images/20261125_suzuki_zion_galatasaray/03_w.jpg
+  short_photo: assets/images/20261125_suzuki_zion_galatasaray/03_v.jpg
+
+answer: 77分のコーナーキック。相手の足を顔に受けながら、途中出場のギュルが頭で押し込んだ
+watch: 12月8日のパリ・サンジェルマン戦（ホーム）
+sections:
+  - id: what
+    main: true
+    heading: 鈴木彩艶のヴィラは、どうやって1点を奪われたのか
+    tier: 報道
+    telop: ガラタサライ 1-0 アストン・ヴィラ。決勝点は77分
+    say:
+      - text: 鈴木彩艶が守るアストン・ヴィラが、ガラタサライに0対1で敗戦。
+        image: assets/images/20261125_suzuki_zion_galatasaray/03_w.jpg
+      - text: 試合後、エメリ監督はこう話しました。
+        image: assets/images/20261125_suzuki_zion_galatasaray/04_w.jpg
+      - voice: エメリ監督
+        text: 最低でも、引き分けに値する試合でした。
+      - text: その試合を、前半から振り返ります。
+        image: assets/images/20261125_suzuki_zion_galatasaray/05_w.jpg
+      - text: 先発の鈴木は前半、クロスに飛び出してキャッチするなど、落ち着いた守り。
+      - text: 前半は両チームとも決定機が少なく、0対0で折り返します。
+      - text: 試合が動いたのは77分。ガラタサライの、右からのコーナーキックでした。
+        image: assets/images/20261125_suzuki_zion_galatasaray/02_w.jpg
+      - text: ゴール前の混戦に、途中から入ったデニズ・ギュルが頭から飛び込みます。
+      - text: クリアしようとしたヴィラの選手の足が、ギュルの顔に当たります。
+      - text: それでもボールは、ゴールへ。
+        emph: true
+      - text: ギュルは顔から血を流し、手当てを受けて、包帯を巻いてピッチに戻りました。
+      - text: 22歳のギュルにとって、チャンピオンズリーグ初ゴールでした。
+        image: assets/images/20261125_suzuki_zion_galatasaray/05_w.jpg
+      - text: ヴィラは最後まで追いつけず、チャンピオンズリーグは2連敗となりました。
+    official: false
+    quotes_from: [Aston Villa FC]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915300
+      - https://web.gekisaka.jp/news/ucl/detail/?463835-463835-fl
+      - https://www.footballchannel.jp/2026/11/25/post1058964/
+      - https://www.footballchannel.jp/2026/11/25/post1058976/
+      - https://www.avfc.co.uk/news/2026/november/24/postmatch-unai-emery-galatasaray-champions-league/
+  - id: emery
+    heading: エメリ監督は、この敗戦をどう受け止めたのか
+    tier: 確定
+    telop: エメリ監督「学ぶことがある」
+    say:
+      - text: 鈴木彩艶が先発したこの試合。エメリ監督は、前半の戦いぶりには胸を張りました。
+        image: assets/images/20261125_suzuki_zion_galatasaray/04_w.jpg
+      - voice: エメリ監督
+        text: 前半の戦い方は、選手たちを本当に誇りに思います。
+      - voice: エメリ監督
+        text: 学ぶことがあります。
+      - voice: エメリ監督
+        text: 次の挑戦に向けて、もっと良くなっていきます。
+        cont: true
+    official: true
+    quotes_from: [Aston Villa FC]
+    sources:
+      - https://www.avfc.co.uk/news/2026/november/24/postmatch-unai-emery-galatasaray-champions-league/
+  - id: view
+    viewpoint: true
+    heading: 枠内シュート0本。ヴィラのCLはどこで止まったのか
+    tier: 報道
+    telop: ヴィラの枠内シュートは0本。CLは2試合続けて無得点
+    say:
+      - text: 見立てです。この試合、ヴィラの枠に飛んだシュートは0本でした。
+        card: {type: stats, title: ガラタサライ戦の数字, items: [[0, 本, ヴィラの枠内シュート], [2, 本, ガラタサライの枠内シュート], [54.6, "%", ヴィラのボール保持]], focus: 0}
+        emph: true
+      - text: 一方、鈴木彩艶が受けた枠内シュートは2本。1本を止め、1本が決勝点に。
+      - text: ボールを持つ時間はヴィラのほうが長かったのに、ゴールに迫れませんでした。
+        image: assets/images/20261125_suzuki_zion_galatasaray/04_w.jpg
+      - text: ヴィラはチャンピオンズリーグの開幕から3連勝。
+      - text: そのあとバルセロナに0対3で敗れ、今回は0対1でした。
+        card: {type: timeline, title: ヴィラのチャンピオンズリーグ, rows: [[第1〜3節, 3連勝], [第4節, バルセロナに0-3], [第5節, ガラタサライに0-1]], highlight_row: 2}
+      - text: 次のチャンピオンズリーグは12月8日。ホームで、パリ・サンジェルマンを迎えます。
+        card: none
+        image: assets/images/20261125_suzuki_zion_galatasaray/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915300
+      - https://www.skysports.com/football/news/13615959/galatasaray-1-0-aston-villa-deniz-guls-late-winner-in-champions-league-league-phase-extends-villas-winless-run
+      - https://www.footballchannel.jp/2026/11/25/post1058964/

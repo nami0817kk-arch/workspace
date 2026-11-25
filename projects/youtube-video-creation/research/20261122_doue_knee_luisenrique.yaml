@@ -1,0 +1,143 @@
+# 取材メモ（2026年11月22日）ドゥエ、右膝を負傷。ルイス・エンリケ監督「2倍強くなって戻ってくる」（ニュースのショート。見せ方 Y＝監督本人の言葉から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: 依頼文（ルイス・エンリケ「2倍強くなって戻る」）。一次の言葉は下の2か所で全文を読んだ。
+# 本文を読んだもの:
+#   ・ESPN（AP 配信）2026-11-21 21:53 UTC 「PSG star Désiré Doué suffers 'serious' knee injury in win over Nice」 content.core.api.espn.com/v1/sports/news/50554155（全文）
+#       ・ドゥエは前半、ストレッチャーで運び出された（ニースでの3対2の勝利）。リーグ今季2点目は、その前に前半で決めていた（"had scored his second league goal of the season earlier in the first half"）。
+#       ・ボールを守ろうと体を向けたとき、ニースのディオップとの接触なしに、伸ばした足が崩れた（"fully-extended leg buckled under him without any contact from Diop"）。右膝を押さえて39分に倒れた（AP）。
+#       ・ルイス・エンリケ（試合後）: "We will have to wait until tomorrow to know the exact nature of the injury. But it is a serious injury, we have seen the images" ／ "That's the life of a professional footballer, you have to realize that this is part of a career and you have to accept it." ／
+#         "He is sad and worried. He will come back twice as strong, I have no doubt."（AP の英訳。原文はスペイン語だが、原文は確かめていない。台本は「訳」と明記）
+#       ・PSG はクヴァラツヘリアが 10/20 のバルセロナ戦で右膝の前十字靭帯を断裂、デンベレとマルキーニョスが太ももの筋肉を断裂（AP）。PSG は水曜（11/25）にチャンピオンズリーグでローマ戦。公式戦12連勝（AP）。
+#   ・PSG 公式サイト（クラブ公式）ルイス・エンリケ試合後コメント https://www.psg.fr/en/content/luis-enrique-we-did-our-job-well-reactions-ogc-nice-v-paris-saint-germain-ligue-1-20262027
+#       ・"The bad news is the injury to Désiré Doué. We'll wait until tomorrow to find out exactly what kind of injury it is."
+#       ・"We need to give him as much strength as possible so that he feels that we're with him as long as he needs it, and I'm sure that he'll come back stronger."（公式は「強くなって戻る」。「2倍」は AP の訳）
+#   ・PSG 公式 試合記録 https://www.psg.fr/en/content/paris-earn-dominant-win-over-nice-match-report-ogc-nice-v-paris-saint-germain-ligue-1-20262027 ：先発メンバー「Doué (Ferran, 44')」。
+# ESPN の試合データ（site.api.espn.com summary fra.1 event=401876398、11/21 16:15 UTC）:
+#   ニース 2-3 PSG。8分 アムーラ（ニース）／31分 マユル（PK）／32分 ドゥエ／85分 フェラン・トレス（ドゥエと交代で入った）／90+5分 アブディ（ニース）。ドゥエの交代（トレス）は 44分。
+# 食い違い: 負傷の時刻は AP が「39分」、ESPN の試合データと PSG 公式の交代は「44分」（倒れてから交代まで5分）→ 台本は分を言わず「前半の終わり近く」。
+#   「2倍強く」は AP の訳（PSG 公式の同じ場面の発言は "come back stronger"）。依頼文の「2倍」は AP の文。台本の発言は AP の訳として使い、公式の「強くなって戻る」も別の行で出す。
+# 診断・離脱期間: 公式発表は未確認（2026-11-22 07:30 JST 時点で PSG 公式サイトのニュースに医療情報なし。ルイス・エンリケは「明日分かる」＝22日）。「重傷（serious）」は監督の言葉。ACL などの病名は推測になるので言わない。離脱期間も言わない。
+#   （他の媒体が「前十字靭帯の恐れ」と見出しにしているが、公式でも本人でもない推測なので使わない）
+# 自分で数えたもの: 10月20日（バルセロナ戦）から 11月21日まで32日（10月が11日＋11月21日）。この間に PSG は、クヴァラツヘリア（右膝の前十字靭帯断裂・クラブ確認）、デンベレとマルキーニョス（太ももの筋肉）、ドゥエ（右膝）と、4人が主力の負傷で名前が上がった。
+#   ESPN scoreboard（uefa.champions 2026-11-25）: PSG 対 ローマ 11/25 20:00 UTC＝日本時間 11/26 5:00。
+# 前の本との重なり: 20261104_psg_17min_4goals／20261107_psg_guinness_12（連勝）。ドゥエの負傷は初出。
+# 【言わないこと】病名・復帰時期の推測／ドゥエの移籍の噂（10/28 の ESPN 見出しにあるが負傷と関係なし）／過去のドゥエのけがの一覧（本題から離れる）／ニースの選手への評価／診断の「ACL」。
+# 本人の言葉: ドゥエ本人の言葉は見つからず（負傷後のSNS等は取っていない）。→ Y はルイス・エンリケ監督の言葉。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 5枚。01〜04＝Commons のドゥエ（Bryan Berlin、CC BY-SA 4.0、2026年W杯のフランス代表の試合。今回の負傷の写真ではない・クラブのユニフォームではない）／05＝PSG 公式ギャラリー 11/21（ニース戦のルイス・エンリケ）。_pool.png を目で見た: 本人、透かしなし。報道写真（代理店）は使っていない。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [ドゥエ, ルイス・エンリケ, パリ・サンジェルマン, ニース]
+
+short_style: Y
+short_hook_quote: 彼は、2倍強くなって戻ってくる。
+short_photos:
+  - assets/images/20261122_doue_knee_luisenrique/05_v.jpg
+  - assets/images/20261122_doue_knee_luisenrique/02_v.jpg
+  - assets/images/20261122_doue_knee_luisenrique/03_v.jpg
+  - assets/images/20261122_doue_knee_luisenrique/01_v.jpg
+short_question: ドゥエは、いつ復帰すると思いますか。
+short_telops: []
+
+theme:
+  id: doue_knee_luisenrique
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: ドゥエが右膝を負傷。ルイス・エンリケ監督が語った「戻ってくる」姿
+  hook: ""
+  question: 右膝を痛めたドゥエについて、ルイス・エンリケ監督は何を語ったのか
+  takeaway: 10月20日のバルセロナ戦から32日で、PSGは主力の負傷者にドゥエを加えた。診断は「明日」にならないと分からないと、監督は話している
+
+thumbnail:
+  layout: face
+  line1: ドゥエ 右膝を負傷
+  line2: 監督「2倍強く戻る」
+  tags: [ドゥエ, PSG]
+  photo: assets/images/20261122_doue_knee_luisenrique/02_w.jpg
+  short_photo: assets/images/20261122_doue_knee_luisenrique/02_v.jpg
+
+answer: 診断は22日に分かる予定。監督は重傷と話し、「2倍強くなって戻る」と語った
+watch: 25日のローマ戦（日本時間26日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: 右膝を痛めたドゥエについて、ルイス・エンリケ監督は何と語ったのか
+    tier: 報道
+    telop: ルイス・エンリケ「2倍強くなって戻る」
+    say:
+      - voice: ルイス・エンリケ監督
+        text: 彼は、2倍強くなって戻ってくる。
+        emph: true
+        image: assets/images/20261122_doue_knee_luisenrique/05_w.jpg
+      - voice: ルイス・エンリケ監督
+        text: 疑いは、ありません。
+        cont: true
+      - text: パリ・サンジェルマンの攻撃の選手、ドゥエが右膝を痛めました。
+      - text: ルイス・エンリケ監督が語った言葉です。
+        short_only: true
+      - text: 21日のニース戦で、ドゥエは前半にゴールを決めました。
+        image: assets/images/20261122_doue_knee_luisenrique/02_w.jpg
+      - text: そのあと前半の終わり近くに、右膝を痛め、担架でピッチを出ました。
+      - text: 相手との接触は、なかったといいます。
+      - text: 試合のあと、監督は重傷だと認めました。
+        image: assets/images/20261122_doue_knee_luisenrique/05_w.jpg
+      - voice: ルイス・エンリケ監督
+        text: 正確な状態は、明日にならないと分からない。
+      - voice: ルイス・エンリケ監督
+        text: ただ、重傷です。映像を見ました。
+        cont: true
+      - text: 本人の様子も、こう語っています。
+        image: assets/images/20261122_doue_knee_luisenrique/03_w.jpg
+      - voice: ルイス・エンリケ監督
+        text: 彼は、悲しんでいて、心配している。
+      - text: そして、チームとしての思いを、こう話しました。
+      - voice: ルイス・エンリケ監督
+        text: 彼が必要とする間、ずっと、
+        cont: true
+      - voice: ルイス・エンリケ監督
+        text: 私たちが一緒にいると感じられるように、力を送りたい。
+        cont: true
+      - voice: ルイス・エンリケ監督
+        text: 彼はきっと、強くなって戻ってくる。
+        cont: true
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50554155
+      - https://www.psg.fr/en/content/luis-enrique-we-did-our-job-well-reactions-ogc-nice-v-paris-saint-germain-ligue-1-20262027
+  - id: game
+    heading: ドゥエが決めたニース戦は、どんな試合だったのか
+    tier: 確定
+    telop: ニース 2-3 PSG。ドゥエは前半にゴール
+    say:
+      - text: ドゥエがゴールを決めたのは、32分です。
+      - text: 試合は、パリ・サンジェルマンの3対2の勝ちでした。
+        image: assets/images/20261122_doue_knee_luisenrique/01_w.jpg
+      - text: ドゥエと交代で入ったフェラン・トレスが、後半40分に3点目を決めました。
+        card: none
+      - text: これでパリ・サンジェルマンは、公式戦12連勝になりました。
+    official: true
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401876398
+      - https://www.psg.fr/en/content/paris-earn-dominant-win-over-nice-match-report-ogc-nice-v-paris-saint-germain-ligue-1-20262027
+  - id: view
+    viewpoint: true
+    heading: ドゥエの診断はいつ分かり、次の試合はいつなのか
+    tier: 背景
+    telop: 10月20日から32日。主力の負傷が続く
+    say:
+      - text: 見立てです。10月20日のバルセロナ戦から、きのうのニース戦まで32日。
+        card: {type: table, title: 主力の負傷（10月20日〜）, columns: [選手, 負傷], rows: [[クヴァラツヘリア, 右膝の前十字靭帯断裂], [デンベレ, 太ももの筋肉], [マルキーニョス, 太ももの筋肉], [ドゥエ, 右膝（診断は22日）]], highlight_row: 3}
+        image: assets/images/20261122_doue_knee_luisenrique/04_w.jpg
+      - text: この間に、主力が4人、負傷で名前が挙がりました。
+      - text: ドゥエの診断は、監督が「明日」と話していた22日に分かる予定です。
+        card: none
+      - text: 次の試合は25日。ヨーロッパ王者を決める、チャンピオンズリーグのローマ戦です。
+      - text: 日本時間では、26日の午前5時です。
+    official: false
+    sources:
+      - https://content.core.api.espn.com/v1/sports/news/50554155
+      - https://www.espn.com/soccer/match/_/gameId/401915374

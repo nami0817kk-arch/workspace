@@ -1,0 +1,74 @@
+title: 11月17日のショート題材
+lead: ゲキサカ・サッカーキング・フットボールチャンネルと海外フィード（今朝の gather、候補478件）から10件。ユーザー確認なしの自動運用のため、Claude が○を付けて選びました（日本人6・海外4）。
+note: 今日は火曜（17日）、日本時間の朝に集めました。日本人の題は9〜17時、海外は18時以降に予約します（シリーズが 11〜17時に5本入っています）。外した題：パラグアイ戦そのもの（夜の試合・結果は出ていない）・上田綺世の妻（私生活）・ブラジル戦の主役の続報（11/15〜16 に扱済み）・スペインの無敗記録・イタリア敗退（11/16 に扱済み）・テネリフェ追悼（人の死）・OB の辛口評（他人の言葉だけ）・伊藤洋輝の移籍（報道の出どころが弱い）・Jリーグ/女子/MLS/高校は対象外。検索AI要約は使っていません。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 森保監督、パラグアイ戦は大幅メンバー変更を明言「私自身は、終わりかもしれないですけど」
+  why: フットボールチャンネル・ゲキサカ・サッカーキング（16日）。代表・本人の言葉・8年間のラスト。条件：代表・本人の言葉→Y。
+  src: フットボールチャンネル
+  url: https://www.footballchannel.jp/2026/11/16/post1057825/
+  fmt: quote
+- num: 2
+  slot: 日本人（代表）
+  head: 南野拓実「森保さんがいなかったら、今の自分のキャリアはなかった」8年間の感謝を胸にパラグアイ戦へ
+  why: サッカーキング（16日）。代表・本人の言葉。条件：代表・本人の言葉→Y。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261116/2228275.html
+  fmt: quote
+- num: 3
+  slot: 日本人（代表）
+  head: 森保Jの最後の練習が雷雨で中止。森保監督「自然現象には勝てない」「私らしいなと」
+  why: サッカーキング・ゲキサカ（16日）。代表・本人の言葉。条件：代表・本人の言葉→Y。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 田中碧に届いた「ミス気にしないで」の金言。ブラジル戦でリベンジを果たした裏側
+  why: football-tribe（16日）。代表・W杯のリベンジ。本人の言葉が取れれば Y、取れなければ別題に差し替え。
+  src: football-tribe
+  url: https://football-tribe.com/japan/2026/11/16/361344/
+  fmt: quote
+- num: 5
+  slot: 日本人（代表）
+  head: AFCアワード（19日）、男子若手部門は日本人3選手がノミネートを独占。佐藤龍之介も
+  why: サッカーキング・Marca（16日）。代表世代・記録。本人の言葉は無し→X。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261115/2228115.html
+  fmt: news
+- num: 6
+  slot: 日本人（所属）
+  head: 鎌田大地・冨安健洋のC・パレス、新監督はトーマス・フランクに決定
+  why: Sky Sports・ESPN・サッカーキング（16日）。日本人2人の所属クラブ・確定。条件：日本人絡み→X。
+  src: Sky Sports
+  url: https://www.skysports.com/football/news/11661/13610988/thomas-frank-crystal-palace-appoint-former-spurs-and-brentford-boss-as-pierre-sages-successor-at-selhurst-park
+  fmt: news
+- num: 7
+  slot: 海外（18時以降）
+  head: ルカク、ベルギー代表からの引退を表明「16年間、代表のために全力を尽くした」歴代最多94得点
+  why: ゲキサカ・サッカーキング（16日）。大物・記録・本人の言葉。条件：大物・記録・本人の言葉→Y。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/world/world_other/20261116/2228409.html
+  fmt: quote
+- num: 8
+  slot: 海外（18時以降）
+  head: ドイツ、オランダに5-0。ヴィルツ2得点でUNLグループ首位通過
+  why: kicker・フットボールチャンネル（17日未明）。大物・記録。条件：大物→X。
+  src: kicker
+  url: https://www.kicker.de/deutschland-nach-5-0-gala-gegen-niederlande-gruppensieger-1271026/artikel
+  fmt: news
+- num: 9
+  slot: 海外（18時以降）
+  head: ベリンガム「笑顔を失った。スケープゴートにされた気分だった」復活の舞台裏
+  why: Marca（16日）。大物・本人の言葉。条件：大物・本人の言葉→Y。
+  src: Marca
+  url: https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html
+  fmt: quote
+- num: 10
+  slot: 海外（18時以降）
+  head: ライス、アーセナルと新契約で口頭合意。週給32万ポンドの報道
+  why: Sky Sports・footmercato（17日）。大物・報道段階。条件：大物→X。確度は「報道」。
+  src: Sky Sports
+  url: https://www.skysports.com/football/news/12691/13612986/declan-rice-contract-arsenal-midfielder-verbally-agrees-new-320000-a-week-deal-with-the-premier-league-champions
+  fmt: news

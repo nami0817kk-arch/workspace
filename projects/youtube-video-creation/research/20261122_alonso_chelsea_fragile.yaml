@@ -1,0 +1,131 @@
+# 取材メモ（2026年11月22日）チェルシーがホームでリーズに1-4。アロンソ監督「いまは精神的に脆い時期。もっとタフに」（ニュースのショート。見せ方 Y＝アロンソ監督本人の言葉から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 発言の記事と日付: Sky Sports「Chelsea are fragile and need to toughen up says manager Xabi Alonso after humiliating defeat to Leeds United」、Guardian 2026-11-21 17:14 GMT 初出（19:20 更新）、BBC Sport 2026-11-21（requests で全文）。
+#   いずれも試合後（キックオフ15:00 UTC、現地11/21夜＝日本時間11/22未明）の会見・インタビューの発言。11/22 朝の時点で古くない。BBC は「Alonso post-match interview」の動画あり。会見の映像・原文の書き起こし（クラブ公式）は取れず、Sky・Guardian・BBC の引用で突き合わせた。
+#   原文（英語、Sky Sports の引用）:
+#     "We are in a fragile moment mentally. When we receive a punch, we didn't recover that strong, that tough enough and today that was my feeling."
+#     "After the equaliser, after the change (Caicedo), we lost the momentum completely. ... from that moment they started believing and we started not believing and it changed totally."
+#     "We need to find solutions for sure because there will be setbacks during any game and to be tougher and to be able to go through that and to know that it's still so long to play, it's something mandatory in this competition."
+#     "There were moments that we were not competing at the level required and we need to know that that's mandatory in this competition because you will face teams with that demand again. ... the physical part and the mentality part we can do better."
+#     Guardian は "We are in a fragile moment mentally. When we receive a punch we didn't recover." BBC は "...we are in a fragile moment mentally. When we received a punch we didn't recover that strongly."（言い回しが少し違う＝同じ発言の書き起こしの差）
+#   「脆い」の原文は fragile（Alonso 本人が使った語）。「もっとタフになる」は "to be tougher"。依頼文の言い方は要約で、本人の語は「いまは精神的に脆い瞬間にいる」「（それを）乗り越えられるタフさが、この大会では必須」。台本は本人の語どおり訳す（「チェルシーは脆い」と断定する言い方はしない）。
+# 試合: ESPN の試合データ（site.api.espn.com summary event=401879236、eng.1、11/21 15:00 UTC）: チェルシー 1-4 リーズ。22分 カイセドが負傷交代（ヘンダーソン）／25分 エメガ 1-0（アシスト ロジャース）／28分 オカフォー 1-1／53分 カルバート＝ルーウィン PK 1-2／58分 オカフォー 1-3／90+1分 アーロンソン 1-4。
+#   順位（試合後 standings）: チェルシー 11試合5敗・勝ち点16・8位。アーセナル 11試合28点で首位。
+#   Guardian・BBC: リーズのスタンフォード・ブリッジでの勝利は1999年12月以来／ホームでリーズとトッテナムの両方に負けるのは1967年以来／Guardian「ここまで失点20」、BBC「これより失点が多いのは3クラブだけ（パレス・コヴェントリー・イプスウィッチ）」。
+# 食い違い（気をつけた点）:
+#   ・カイセドの交代の分: ESPN は22分（15分・20分に中断）。Guardian・BBC は「20分すぎ」。→ 台本は分を言わず「前半の早い時間に」。
+#   ・PKの判定（ロジャースのハンド）: 判定の是非は割れている（BBC「議論あり」、Guardian「厳しいが決め手ではない」）。審判の話は入れない。
+#   ・失点20と「3クラブだけ」は Guardian・BBC の記事（ESPN の順位表に失点列が無い）。tier は報道。
+#   ・依頼文の「リーグの順位」: 8位は ESPN の順位表で確認。
+# 前の本との重なり: 20261112_manager_alonso（監督紹介）・20261024_alonso_chelsea_no_reds（10/24 の発言）・covered.yaml「チェルシーのオーナーが代わった日、アロンソが口にしたこと」。今回の初出: リーズ戦後の「脆い」の発言・1-4・1967年以来の記録。同じ監督の続報として可。
+# 【言わないこと】アロンソの解任の見通し（talkSPORT のカンディ発言など）・ファンの抗議の評価・パーマーとフルバックの揉め事の話・審判の判定の是非・選手個人への批判・トム・ブレイディのクラブ株の話。
+# 写真: Commons（Bayern 時代のトレーニング、2016-17年。CC BY-SA 4.0 など）。2026年のチェルシー監督としての写真は Commons に無く、選手時代の写真。_pool.png を目で見た: 本人、透かし無し。03は2016-17年のバイエルンのユニフォーム姿（チェルシーの話に別クラブの姿＝選手時代の写真しか無いため。ルール上は他に無ければ可）。笑って舌を出している1枚（旧04）は敗戦の話に合わないので使わない。代理店の写真（Guardian は AFP/Getty、BBC は Getty）は外した。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [シャビ・アロンソ, チェルシー, リーズ]
+
+short_style: Y
+short_hook_quote: いまは、精神的に脆い時期にいます。
+short_photos:
+  - assets/images/20261122_alonso_chelsea_fragile/01_v.jpg
+  - assets/images/20261122_alonso_chelsea_fragile/03_v.jpg
+  - assets/images/20261122_alonso_chelsea_fragile/01_v.jpg
+  - assets/images/20261122_alonso_chelsea_fragile/03_v.jpg
+short_question: 脆さを抱えたチェルシーは、立て直せると思いますか。
+short_telops: []
+
+theme:
+  id: alonso_chelsea_fragile
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: アロンソ監督「いまは脆い時期」。チェルシーがリーズに1対4で負けた後の言葉
+  hook: ""
+  question: アロンソ監督は、リーズ戦の何を「脆い」と語ったのか
+  takeaway: チェルシーはここまで11試合で5敗、勝ち点16の8位。首位アーセナルの28より12少なく、失点20は、これより多いクラブが3つしかない
+
+thumbnail:
+  layout: face
+  line1: アロンソ監督
+  line2: 「いまは脆い」
+  tags: [シャビ・アロンソ, チェルシー]
+  photo: assets/images/20261122_alonso_chelsea_fragile/01_w.jpg
+  short_photo: assets/images/20261122_alonso_chelsea_fragile/01_v.jpg
+
+answer: 「精神的に脆い時期」。パンチを受けたとき、立て直せなかったと語った
+watch: チェルシーの次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: アロンソ監督は、リーズ戦のあとに何を語ったのか
+    tier: 報道
+    telop: チェルシー1-4リーズ。アロンソ監督「精神的に脆い時期」
+    say:
+      - text: チェルシーが、ホームでリーズに1対4で負けました。
+        image: assets/images/20261122_alonso_chelsea_fragile/03_w.jpg
+      - text: 試合後の、アロンソ監督の言葉です。
+      - voice: アロンソ監督
+        text: いまは、精神的に脆い時期にいます。
+        emph: true
+        image: assets/images/20261122_alonso_chelsea_fragile/01_w.jpg
+      - voice: アロンソ監督
+        text: パンチを受けたとき、強く立て直せませんでした。
+        cont: true
+      - voice: アロンソ監督
+        text: これを乗り越えるタフさは、この大会では必須です。
+      - text: 同点にされた場面を、アロンソ監督はこう振り返りました。
+        image: assets/images/20261122_alonso_chelsea_fragile/03_w.jpg
+      - voice: アロンソ監督
+        text: そこから相手は信じ始め、私たちは信じられなくなりました。
+        emph: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12040/13614992/chelsea-are-fragile-and-need-to-toughen-up-says-manager-xabi-alonso-after-humiliating-defeat-to-leeds-united
+      - https://www.theguardian.com/football/2026/nov/21/chelsea-leeds-premier-league-match-report
+      - https://www.bbc.co.uk/sport/football/articles/cwe8944d004yo
+  - id: game
+    heading: チェルシーは、どこから崩れたのか
+    tier: 報道
+    telop: 25分に先制、3分後に同点。後半に2点を失い、1-4
+    say:
+      - text: チェルシーは25分に先制しました。ところが、3分後に追いつかれます。
+        card: {type: table, title: チェルシー 1-4 リーズ, columns: [分, 得点], rows: [[25分, エメガ（チェルシー）], [28分, オカフォー], [53分, カルバート＝ルーウィン（PK）], [58分, オカフォー], [90+1分, アーロンソン]], highlight_row: 1}
+        image: assets/images/20261122_alonso_chelsea_fragile/03_w.jpg
+      - text: 前半の早い時間には、中盤のカイセドが負傷で交代していました。
+        card: none
+      - text: 後半は、53分と58分に続けて失点しました。
+        image: assets/images/20261122_alonso_chelsea_fragile/01_w.jpg
+      - text: アロンソ監督は、物理的な強さだけが理由ではないと話しています。
+      - voice: アロンソ監督
+        text: 求められる水準で戦えていない時間帯がありました。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879236
+      - https://www.skysports.com/football/news/12040/13614992/chelsea-are-fragile-and-need-to-toughen-up-says-manager-xabi-alonso-after-humiliating-defeat-to-leeds-united
+      - https://www.bbc.co.uk/sport/football/articles/cwe8944d004yo
+  - id: view
+    viewpoint: true
+    heading: 「脆い」という言葉は、数字では何を指すのか
+    tier: 背景
+    telop: 11試合5敗・勝ち点16の8位。首位アーセナルは28
+    say:
+      - text: 見立てです。アロンソ監督の言う脆さは、数字にも出ています。
+        card: {type: table, title: チェルシー 今季のプレミアリーグ, columns: [項目, 数字], rows: [[順位, 8位], [勝ち点, 16（首位アーセナルは28）], [敗戦, 5（11試合）], [失点, 20]], highlight_row: 0}
+        image: assets/images/20261122_alonso_chelsea_fragile/03_w.jpg
+      - text: チェルシーは、ここまで11試合で5敗です。
+      - text: 勝ち点16は8位で、首位アーセナルの28より、12少ない数字です。
+        card: none
+      - text: 失点は20。これより失点が多いのは、3つのクラブだけ。
+      - text: ホームでリーズとトッテナムの両方に負けたのは、1967年以来。
+        emph: true
+        image: assets/images/20261122_alonso_chelsea_fragile/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879236
+      - https://www.theguardian.com/football/2026/nov/21/chelsea-leeds-premier-league-match-report
+      - https://www.bbc.co.uk/sport/football/articles/cwe8944d004yo

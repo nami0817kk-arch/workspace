@@ -1,0 +1,148 @@
+# 取材メモ（2026年11月25日）佐野航大がベルナベウで先発。PSVは前半リードもレアルに1-5で逆転負け（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-25。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915298、2026-11-24 20:00 UTC）: レアル・マドリード 5-1 PSV。
+#   32分 ペリシッチ（PK）／50分 ヴァルベルデ（ギュレルのアシスト）／60分 ベリンガム（エリアの外から右足。種別 Goal - Volley、エムバペのアシスト）／64分 エムバペ（ギュレルのアシスト）／84分 エムバペ（ブラヒム・ディアスのスルーパス）／87分 ヴィニシウス（ベリンガムのアシスト）。
+#   45分 レアルはリュディガー→コナテ、チュアメニ→ベリンガム、ミリトン→ハイセンの3人替え。佐野は先発、78分にフラミンゴと交代。
+#   シュート: レアル 24本（枠内9）、PSV 10本（枠内1）。保持 レアル 61.5%。成績: レアル 5勝0分0敗 勝ち点15、PSV 1勝1分3敗 勝ち点4。
+#   PSV の次の CL は 2026-12-09 20:00 UTC（日本時間10日朝5時）ホームのアトレティコ・マドリード戦。リーグは 11/28 ゴー・アヘッド・イーグルス戦（ホーム）。
+# 日刊スポーツ（Yahoo 11/25、高橋智行通信員、全文） https://news.yahoo.co.jp/articles/c44d7bc7a9c77b6ac54a5b1664656a4316c53629
+#   ボランチの佐野はボールを散らし攻撃の起点に。前半28分 右足ミドルはゴール左へ。前半追加タイムにクロスを頭で合わせたがゴール左へ。守備でも自陣ゴール前まで戻って体を張った。後半33分（=78分）まで。PSVは1勝1分3敗。
+# GOAL（Yahoo 11/25、全文） https://news.yahoo.co.jp/articles/3dc13735310aa27bc527257d8f1d1e1a5bdde562
+#   PSV はマンマークに近い守りでレアルの組み立てを止めた。佐野はベルナルド・シウバのマークに付いた。佐野は17試合連続出場。
+#   後半、ベルナルド・シウバが最終ラインまで下がり、ギュレルとベリンガムも組み立てに加わった。
+#   64分「佐野は自陣ゴール前に走りながらGKのパスを受けたが、ダイレクトではたいたボールはギュレルの足元に」→ ギュレルのパスからエムバペ。
+# NOS（11/24 22:52）・Omroep Brabant も 3点目は佐野のミスからと書く（"Een fout van Sano in de opbouw" / "Kodai Sano de bal in kort voor de goal"）。
+#   https://nos.nl/artikel/2640894-psv-na-geweldige-eerste-helft-toch-hard-onderuit-tegen-real-madrid-5-1
+# フットボールチャンネル 1058984（全文）: 28分 佐野のミドル→直後にチュアメニがマイナンスを倒し VAR の介入で PK。レアルは CL 開幕5連勝・公式戦10連勝。 https://www.footballchannel.jp/2026/11/25/post1058984/
+# マルカ（11/24、全文）: モウリーニョ監督はハーフタイムに 0-1 から大きく替えた（ベリンガム・コナテ・ハイセン）。"Mou no tuvo reparos en reconocer su error"。
+#   → 言葉で認めたのか、替えたことを指しているのか本文からは分からない（直接の発言の引用が無い）。台本では「誤りを認めた」とは言わず、「後半の頭に3人を代えた」事実だけ使う。
+#   https://www.marca.com/futbol/champions-league/2026/11/24/real-madrid-psv.html
+# 食い違い:
+#   ・ベリンガムの得点: ESPN「エリアの外から右足」、GOAL「右足アウトサイドでボレー」、日刊「右足アウトサイドでループシュート」。→「浮かせて、エリアの外からボレー」まで（アウトサイドは言わない）。
+#   ・後半から入った DF の名前: 日本語表記はハイセン（GOAL は「ハウセン」）。台本はハイセン。
+# 前の本との重なり: 11/19 最長出場、11/21 古巣の監督。今回は CL レアル戦（初出）。
+# 【言わないこと】「致命的」などミスを強める言い方（選手を小さく見せない。起きたことだけ言う）／マルカの「誤りを認めた」／PSV の順位（24位は試合前の数字）。
+# 本人の言葉: 見つからず（日刊スポーツ・GOAL・フットボールチャンネル・ゲキサカ・サッカーキング・フットボールゾーンの一覧、NOS・Omroep Brabant・Voetbalzone・VI、PSV 公式の media 一覧を当たった。11/25 朝の時点で佐野の試合後の言葉の記事は無い）。→ X。
+# 写真: 4枚。02＝GOAL（Yahoo 配信）の主写真（佐野がベルナルド・シウバに付く場面。説明・URLに代理店の表記なし）、01＝Omroep Brabant の主写真（オビスポとエムバペ、foto: ANP。禁止の一覧には無い。1920幅で取り直した）、03＝マルカの主写真（レアルの先発集合）、04＝ゲキサカ 462539 の主写真（11/4 の CL 初ゴールで喜ぶ佐野）は、負けた試合の行に喜ぶ顔が出るので台本では使わない（取り込みだけ）。
+#   NOS の主写真は copyright Reuters なので外した。フットボールチャンネルは Getty、日刊は AP。_pool.png と切り抜きを目で見た: 02・04 は佐野本人、透かしなし。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [佐野航大, PSV, レアル・マドリード, モウリーニョ監督, ベリンガム, エムバペ]
+
+short_style: X
+short_hook_word: 前半はリードしていた
+short_photos:
+  - assets/images/20261125_sano_bernabeu/02_v.jpg
+  - assets/images/20261125_sano_bernabeu/01_v.jpg
+  - assets/images/20261125_sano_bernabeu/03_v.jpg
+short_question: 佐野航大のPSVは、12月のアトレティコ戦で巻き返せると思いますか。
+short_telops: []
+
+theme:
+  id: sano_bernabeu
+  league: netherlands
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 佐野航大、ベルナベウで先発。前半リードのPSVに後半起きたこと
+  hook: ""
+  question: ベルナベウで先発した佐野航大のPSVに、後半何が起きたのか
+  takeaway: 前半は佐野がベルナルド・シウバに付き、PSVが1点リード。後半の頭にレアルが3人を代えると、45分で5点を奪われた。シュートは24本対10本、枠内は9本対1本
+thumbnail:
+  layout: face
+  line1: 佐野航大、ベルナベウで先発
+  line2: 前半はリード
+  tags: [佐野航大, PSV]
+  photo: assets/images/20261125_sano_bernabeu/02_w.jpg
+  short_photo: assets/images/20261125_sano_bernabeu/02_v.jpg
+
+answer: レアルが後半の頭に3人を代え、50分から37分で5点。佐野のパスが奪われた場面からも1点
+watch: 12月9日のアトレティコ・マドリード戦（ホーム）
+sources:
+  - https://news.yahoo.co.jp/articles/c44d7bc7a9c77b6ac54a5b1664656a4316c53629
+  - https://news.yahoo.co.jp/articles/3dc13735310aa27bc527257d8f1d1e1a5bdde562
+  - https://www.footballchannel.jp/2026/11/25/post1058984/
+  - https://nos.nl/artikel/2640894-psv-na-geweldige-eerste-helft-toch-hard-onderuit-tegen-real-madrid-5-1
+  - https://www.omroepbrabant.nl/nieuws/6036022/psv-geeft-voorsprong-bij-real-madrid-compleet-uit-handen-en-gaat-hard-af
+  - https://www.voetbalzone.nl/nieuws/van-droomavond-naar-nachtmerrie-psv-wordt-na-rust-compleet-vernederd-door-real-madrid/blt163709be59ac50ed
+sections:
+  - id: what
+    main: true
+    heading: ベルナベウで先発した佐野航大のPSVに、後半何が起きたのか
+    tier: 報道
+    telop: レアル・マドリード 5-1 PSV。佐野航大は先発
+    say:
+      - text: チャンピオンズリーグで、佐野航大が先発したPSVがレアルに1対5の逆転負け。
+        image: assets/images/20261125_sano_bernabeu/02_w.jpg
+      - text: レアルの本拠地ベルナベウ。前半は、PSVのペースでした。
+      - text: 佐野はレアルの組み立て役、ベルナルド・シウバに付きます。
+      - text: 28分、佐野がペナルティエリアの手前から右足でシュート。わずかに左へ。
+        image: assets/images/20261125_sano_bernabeu/07_w.jpg
+      - text: 直後の32分、PKをペリシッチが決めて、PSVが先制します。
+      - text: 前半の終わりにも、佐野がヘディング。これも左へ外れます。
+      - text: PSVの1点リードで、前半を折り返しました。
+      - text: 後半の頭、レアルは一度に3人を代え、攻め方を変えます。
+        image: assets/images/20261125_sano_bernabeu/03_w.jpg
+      - text: 50分に、ヴァルベルデが決めて同点。
+        card: {type: table, title: レアル・マドリード 5-1 PSV, columns: [分, 得点], rows: [[32分, ペリシッチ（PK）], [50分, ヴァルベルデ], [60分, ベリンガム], [64分, エムバペ], [84分, エムバペ], [87分, ヴィニシウス]], highlight_row: 1}
+      - text: 60分、ベリンガムが自分で浮かせたボールを、落とさずに蹴り込んで逆転。
+        card: {type: table, title: レアル・マドリード 5-1 PSV, columns: [分, 得点], rows: [[32分, ペリシッチ（PK）], [50分, ヴァルベルデ], [60分, ベリンガム], [64分, エムバペ], [84分, エムバペ], [87分, ヴィニシウス]], highlight_row: 2}
+      - text: 64分、キーパーからのパスを受けた佐野の、ダイレクトのパスが相手に渡ります。
+        image: assets/images/20261125_sano_bernabeu/02_w.jpg
+        card: none
+      - text: そこからエムバペが決めて、レアルが3対1とリードを広げます。
+        image: assets/images/20261125_sano_bernabeu/06_w.jpg
+        emph: true
+      - text: 佐野は78分に交代。そのあとエムバペとヴィニシウスも決めます。
+        card: {type: table, title: レアル・マドリード 5-1 PSV, columns: [分, 得点], rows: [[32分, ペリシッチ（PK）], [50分, ヴァルベルデ], [60分, ベリンガム], [64分, エムバペ], [84分, エムバペ], [87分, ヴィニシウス]], highlight_row: 5}
+        image: assets/images/20261125_sano_bernabeu/02_w.jpg
+      - text: 前半を1点リードで終えたPSVは、後半だけで5点を失いました。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915298
+      - https://news.yahoo.co.jp/articles/c44d7bc7a9c77b6ac54a5b1664656a4316c53629
+      - https://news.yahoo.co.jp/articles/3dc13735310aa27bc527257d8f1d1e1a5bdde562
+      - https://www.footballchannel.jp/2026/11/25/post1058984/
+      - https://nos.nl/artikel/2640894-psv-na-geweldige-eerste-helft-toch-hard-onderuit-tegen-real-madrid-5-1
+  - id: change
+    heading: レアルは後半、何を変えて佐野航大のPSVを崩したのか
+    tier: 報道
+    telop: モウリーニョ監督はハーフタイムに3人を交代
+    say:
+      - text: 前半、PSVは相手に一人ずつ付く守りで、レアルにボールを前へ運ばせませんでした。
+        image: assets/images/20261125_sano_bernabeu/03_w.jpg
+      - text: モウリーニョ監督はハーフタイムに、リュディガー、ミリトン、チュアメニを下げます。
+      - text: 入ったのは、コナテ、ハイセン、そしてベリンガム。
+      - text: 後半は、佐野が付いていたベルナルド・シウバが、最終ラインまで下がります。
+        image: assets/images/20261125_sano_bernabeu/02_w.jpg
+      - text: 先発のギュレル、入ったベリンガムも組み立てに加わり、レアルは攻めに出ます。
+        image: assets/images/20261125_sano_bernabeu/01_w.jpg
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/3dc13735310aa27bc527257d8f1d1e1a5bdde562
+      - https://www.marca.com/futbol/champions-league/2026/11/24/real-madrid-psv.html
+      - https://www.espn.com/soccer/match/_/gameId/401915298
+  - id: view
+    viewpoint: true
+    heading: 佐野航大のPSVは、チャンピオンズリーグでどこまで追い込まれたのか
+    tier: 報道
+    telop: PSVは1勝1分け3敗。次は12月9日のアトレティコ戦
+    say:
+      - text: 見立てです。シュートはレアルが24本、PSVが10本。
+        card: {type: table, title: 試合の数字, columns: [項目, レアル, PSV], rows: [[シュート, 24本, 10本], [枠内シュート, 9本, 1本]], highlight_row: 0}
+      - text: そのうちゴールの枠をとらえたのは、9本と1本でした。
+        card: {type: table, title: 試合の数字, columns: [項目, レアル, PSV], rows: [[シュート, 24本, 10本], [枠内シュート, 9本, 1本]], highlight_row: 1}
+      - text: PSVはこれで1勝1分け3敗の勝ち点4。
+      - text: 24位までに入れば次へ進めるリーグフェーズで、残りは3試合です。
+        card: none
+        image: assets/images/20261125_sano_bernabeu/03_w.jpg
+      - text: 佐野航大のPSVの次のチャンピオンズリーグは、12月9日。
+      - text: ホームで、アトレティコ・マドリードを迎えます。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915298
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/148/schedule?fixture=true
+      - https://news.yahoo.co.jp/articles/c44d7bc7a9c77b6ac54a5b1664656a4316c53629

@@ -1,0 +1,148 @@
+# 取材メモ（2026年11月24日）レアル・マドリードのモウリーニョ監督「ヴィニシウスは、試合のMVPである必要はない」。CL・PSV戦の前日会見（ニュースのショート。見せ方 Y＝モウリーニョ監督の言葉から始める）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ESPN（Alex Kirkland、2026-11-23 14:39 UTC「Real Madrid's Mourinho: Vinícius Jr. 'doesn't have to be MVP' to deliver」、content API で全文）
+#   ・ヴィニシウスは国内の試合で4試合の出場停止（"served a four-match domestic ban"）を終え、この数週間は夏の新加入ヤン・ディオマンデに先発の座を奪われていた。
+#     土曜のセルタ戦（2-1）では途中出場で好印象、2点ともに関わった（"playing a part in both goals"）。モウリーニョはPSV戦で先発させると明言。夏に長期の新契約。26歳。
+#   ・モウリーニョ（月曜の会見）: "I think he'll return to his maximum potential," ／ "He's young. Sometimes when players get close to 30, 32 or 33, they aren't able to maintain the ideal physical level." ／
+#     "He's won everything. He's a very good boy, very empathetic, and that's fundamental." ／
+#     10月10日のビジャレアル戦: "He scored what would have been a key goal, and then it was ruled out, and he was four games out. Maybe that interrupted his moment of growth, of confidence returning." ／
+#     "Tomorrow he plays, and we all expect his best version ... But from my side there's no pressure. There's pressure to work hard -- as he's been doing -- and help the team. For me, if he gives everything, he doesn't have to be the man of the match."
+#     → 見出しは 'MVP'、本文の言葉は "man of the match"。台本は「試合のMVP」と訳す（見出しと同じ語。中身は同じ）。
+#   ・同じ日、クラブがエンドリックの負傷を発表: "diagnosed with a muscle injury in the adductor of his left leg" "His recovery will be monitored."（セルタ戦は19分の出場）
+# MARCA（11/23「Rueda de prensa de Mourinho y Courtois, en directo」／「Mourinho y el calendario: ...plin plin」、requests で全文。スペイン語）:
+#   ・モウリーニョのヴィニシウスの部分は ESPN と同じ中身（"Yo creo que volverá a su potencial máximo. Es joven ..." "Quizás se ha interrumpido un momento de crecimiento, de confianza ..."）。「MVP」の一文はMARCAの書き起こしには無い（ESPN にだけある）。
+#   ・クルトワ（同じ会見）: "Todos nos apoyamos entre nosotros. No es que tengamos que estar cerca de él, es un chico feliz y hace autocrítica. La carrera es larga y no puedes ser siempre un 9 o 10 todas las temporadas. Los únicos que conozco así son Messi y Cristiano. ... tiene que estar libre. Necesitamos al mejor Vinicius"
+#     （Foot Mercato「Real Madrid : Thibaut Courtois prévient Vinicius Jr」も同じ言葉をフランス語で）→ 台本の言葉は、このスペイン語を私が日本語にしたもの。
+#   ・MARCA の生中継の頭に「miércoles, 21:00 h」とあるが、ESPN の日程は火曜 20:00 UTC（＝スペイン時間21時）。→ 食い違い。ESPN の日程を使う。
+#   ・Foot Mercato の負傷記事は「déplacement du Real Madrid sur la pelouse du PSV」（敵地）と書くが、同じ Foot Mercato の招集の記事と ESPN は本拠地サンティアゴ・ベルナベウ。→ 本拠地。
+# Foot Mercato「Ligue des Champions : le groupe du Real Madrid face au PSV dévoilé」: 招集外はエンドリック・メンディ・ロドリゴ・アセンシオ。ヴィニシウス・エムバペ・ベリンガム・クルトワは招集。
+# ESPN の試合データ（esp.1 event=401882798、11/21 セルタ戦）: レアル 2-1 セルタ。6分 パブロ・ドゥラン（セルタ）／66分 ベリンガム（アシスト エムバペ）／85分 カルロス・エスピ。ヴィニシウスは57分に途中出場（記録上のアシストは無い）。エンドリックは71分に途中出場。
+#   → 「2点ともに関わった」は ESPN の地の文。記録上のアシストではないので「関わったと報じられています」と言う。
+# ESPN 順位表（uefa.champions、11/24 取得）: 1位パリ・サンジェルマン 4勝 勝ち点12、レアル 4試合4勝 勝ち点12（2位）／PSV 4試合1勝1分2敗 勝ち点4（24位）。
+# ESPN scoreboard（uefa.champions 2026-11-24）: PSV Eindhoven at Real Madrid 20:00 UTC、Santiago Bernabéu（event 401915298）＝日本時間 11/25 5:00。
+# 自分で数えたもの: 4試合4勝（12＝4×3）。
+# 前の本との重なり: 20261011_vini_red・20261015_vinicius_ban（退場と出場停止の頃）、20261122_real_celta_mbappe_pk（セルタ戦。エムバペのPK失敗が主）、20261118_vinicius_hattrick_brazil。モウリーニョの「MVPでなくていい」は初出。セルタ戦の流れは繰り返さない。
+# 流れの点検（Gemini）で「エンドリックの行が飛ぶ」と出たので、エンドリックの負傷は台本から外した（控えとして上に残す）。
+# 【言わないこと】「彼を殺そうとしていた頃」の一節（意味が取りにくい）／30歳前後の選手の衰えの一般論の細部／カレンダー・給料の話／PSV の選手名／エンドリックの冬の移籍のうわさ。
+# 本人の言葉: 題の人物はモウリーニョ監督。会見の言葉あり → Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 3枚＋並べた2枚。すべて Commons。02＝モウリーニョ監督（2025年2月の観戦、Zafer CC BY 4.0）、03＝ヴィニシウス（2026年6月のブラジル代表、Bryan Berlin CC BY-SA 4.0）、04＝クルトワ（2026年7月のベルギー代表、Bryan Berlin CC BY-SA 4.0）。
+#   pair_mourinho＝モウリーニョ（左）＋ヴィニシウス（右）、pair_courtois＝クルトワ（左）＋ヴィニシウス（右）。ヴィニシウスの別の1枚（2026-93）は顔が検出できず外した。
+#   記事の写真（ESPN・MARCA・Foot Mercato）は Getty か出どころ不明なので使っていない。一覧を目で見た: 本人、透かしなし。レアルのユニフォームの写真ではない。
+#   ショートの冒頭用に 02_wc（ヴィニシウス・モウリーニョ・クルトワの縦写真を横に3枚並べた1枚。真ん中のモウリーニョがショートの冒頭に出る）を作った。Y の1行目の写真は shorts の縦版差し替え（_drop_boards）の後に入るので、横の写真を縦に切ると寄りすぎるため。
+#   pair_mourinho・pair_courtois の縦版（01_v）は、下のヴィニシウスの顔がテロップにかからないよう手で組み直した。各 NN_w の隣に縦版 NN_w_v（= NN_v の写し）を置いた。
+slot: foreign
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [モウリーニョ監督, ヴィニシウス, クルトワ, レアル・マドリード, PSV]
+
+short_style: Y
+short_hook_quote: 全力を出してくれるなら、試合のMVPである必要はない。
+short_photos:
+  - assets/images/20261124_mourinho_vinicius_mvp/02_v.jpg
+  - assets/images/20261124_mourinho_vinicius_mvp/03_v.jpg
+  - assets/images/20261124_mourinho_vinicius_mvp/04_v.jpg
+short_question: ヴィニシウスは、PSV戦で本来の力を見せられると思いますか。
+short_telops: []
+
+theme:
+  id: mourinho_vinicius_mvp
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: モウリーニョ監督「ヴィニシウスはMVPでなくていい」。その真意は
+  hook: ""
+  question: 先発を外れていたヴィニシウスに、モウリーニョ監督は何を求めたのか
+  takeaway: 出場停止のあと先発を外れていたヴィニシウスを、モウリーニョ監督はPSV戦で先発させると明言。求めたのは試合の主役ではなく、全力を出すことだった
+
+thumbnail:
+  layout: face
+  line1: モウリーニョ監督
+  line2: ヴィニシウスに求めたこと
+  tags: [モウリーニョ, ヴィニシウス]
+  photo: assets/images/20261124_mourinho_vinicius_mvp/03_w.jpg
+  short_photo: assets/images/20261124_mourinho_vinicius_mvp/02_v.jpg
+
+answer: 全力を出してチームを助けること。試合の主役である必要はなく、私からの重圧は無いと話した
+watch: 24日のPSV戦（日本時間25日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: モウリーニョ監督は、ヴィニシウスに何を求めたのか
+    tier: 報道
+    telop: モウリーニョ監督「MVPである必要はない」
+    say:
+      - voice: モウリーニョ監督
+        text: 全力を出してくれるなら、試合のMVPである必要はない。
+        emph: true
+        image: assets/images/20261124_mourinho_vinicius_mvp/02_wc.jpg
+      - text: レアル・マドリードのモウリーニョ監督が、ヴィニシウスについて話した言葉です。
+        short_only: true
+        image: assets/images/20261124_mourinho_vinicius_mvp/pair_mourinho/01.jpg
+      - text: ヴィニシウスは10月に退場し、国内の試合で4試合の出場停止になりました。
+        image: assets/images/20261124_mourinho_vinicius_mvp/03_w.jpg
+      - text: その間に、夏に加わったディオマンデに、先発の座を奪われていました。
+      - text: 21日のセルタ戦は57分から出場。2点のどちらにも関わったと報じられています。
+        emph: true
+      - text: 監督は、24日のPSV戦で彼を先発させると明かし、こう続けました。
+        image: assets/images/20261124_mourinho_vinicius_mvp/pair_mourinho/01.jpg
+      - voice: モウリーニョ監督
+        text: 彼は、また最高の力を取り戻すと思います。
+      - voice: モウリーニョ監督
+        text: まだ若いのですから。
+        cont: true
+      - voice: モウリーニョ監督
+        text: あの退場で、自信が戻りかけていた流れが、
+        cont: true
+      - voice: モウリーニョ監督
+        text: 止まったのかもしれない。
+        cont: true
+      - voice: モウリーニョ監督
+        text: 私からの重圧は、ありません。
+        cont: true
+      - voice: モウリーニョ監督
+        text: 求めるのは、懸命に取り組んで、チームを助けることです。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50573054/real-madrid-mourinho-vinicius-jr-does-not-mvp
+      - https://www.marca.com/futbol/real-madrid/2026/11/23/mourinho-calendario-conflicto-final-plin-plin.html
+      - https://www.espn.com/soccer/match/_/gameId/401882798
+  - id: courtois
+    heading: チームメートは、ヴィニシウスをどう見ているのか
+    tier: 報道
+    telop: クルトワ「必要なのは、最高のヴィニシウス」
+    say:
+      - text: モウリーニョ監督と同じ会見で、キーパーのクルトワも彼に触れました。
+        image: assets/images/20261124_mourinho_vinicius_mvp/pair_courtois/01.jpg
+      - voice: クルトワ
+        text: 僕たちは、みんなで支え合っています。
+      - voice: クルトワ
+        text: 毎シーズン、10点満点の出来でいられる選手はいません。
+        cont: true
+      - voice: クルトワ
+        text: 必要なのは、最高のヴィニシウスです。
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/11/23/6b041b38020dbf8b2115d434-directo.html
+      - https://www.footmercato.net/a223172969551546767-real-madrid-thibaut-courtois-previent-vinicius-jr
+  - id: view
+    viewpoint: true
+    heading: PSV戦は、レアルにとってどんな一戦なのか
+    tier: 背景
+    telop: レアルはCLで4戦4勝、勝ち点12
+    say:
+      - text: 見立てです。モウリーニョ監督のレアルは、チャンピオンズリーグで4戦4勝。
+        image: assets/images/20261124_mourinho_vinicius_mvp/03_w.jpg
+        card: {type: stats, title: チャンピオンズリーグの4試合, items: [[12, 点, レアルの勝ち点], [4, 点, PSVの勝ち点], [4, 連勝, レアル]], focus: 0}
+      - text: 同じ勝ち点12のパリ・サンジェルマンに次ぐ2位。相手のPSVは勝ち点4です。
+      - text: 試合は24日、本拠地ベルナベウで。日本時間では、25日の午前5時です。
+        card: none
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings
+      - https://www.footmercato.net/a1678923663048309452-ligue-des-champions-le-groupe-du-real-madrid-face-au-psv-devoile
+      - https://www.espn.com/soccer/match/_/gameId/401915298

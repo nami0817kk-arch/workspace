@@ -1,0 +1,151 @@
+# 取材メモ（2026年11月24日）板倉滉に、ボルシアMGのシュレーダーSDがテレビ番組で「エルヴェディの穴を埋められていない」「期待に応えていない」。数日前にはビルトに「絶対に見捨てない」（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 題材の元: フットボール・トライブ 2026-11-23 08:46 UTC「板倉滉に「見捨てない」発言から一転！ボルシアMG関係者が猛批判「彼のミスが…」スタメン剥奪も」 https://football-tribe.com/japan/2026/11/23/361662/
+# ドイツ語の元まで辿った（Sky Deutschland の sport.sky.de は requests が 403。番組の発言はドイツの3紙の本文で読んだ）:
+#   ・RP Online 2026-11-22 20:27 CET（Karsten Kellermann）「„Erwartungen nicht erfüllt“: Schröders Kritik an den Führungsspielern」
+#     https://rp-online.de/sport/fussball/borussia/gladbach-schroeder-kritisiert-fuehrungsspieler-erwartungen-nicht-erfuellt_aid-158802831
+#     日曜（22日）の「Sky 90 - die Fußballdebatte」にマテウスと出演。原文:
+#       „Die geplanten Besten sind bei uns aktuell nicht die Besten“ … Ko Itakura, den er von Ajax Amsterdam zurückholte.
+#       „Er konnte Nico Elvedi nicht ersetzen. Er hat die Erwartungen bis jetzt nicht erfüllt. Ko weiß das auch. Wir müssen mit ihm arbeiten.“
+#       ほか „Wir steigen nicht ab.“ ／ 冬の補強 „Wenn es passt, ja – in der Achse.“ ／ „Wir müssen aber fehlerfreier sein, wir bringen uns immer selbst in Probleme.“（チーム全体について）
+#   ・GladbachLIVE 1422610（RP Online を元に同じ発言を全文で）https://www.gladbachlive.de/news/borussia-moenchengladbach-rouven-schroeder-nimmt-stars-in-die-pflicht-1422610
+#     「Platz 18」「6 Zähler trennen … vom sicheren 15. Tabellenplatz」
+#   ・DerWesten 2026-11-23 07:27 UTC https://www.derwesten.de/sport/fussball/gladbach-itakura-schroeder-kritik-id302204244.html
+#     ビルトへの発言（数日前）: „Klar sind wir nicht zufrieden, und er ist auch nicht zufrieden. Das Jahr bei Ajax hat schon etwas mit ihm gemacht, das sieht man. Sein Platzverweis in Hamburg hat uns natürlich geschadet. Aber so etwas passiert leider.“
+#       „Er ist und bleibt ein guter Spieler, den wir auf keinen Fall fallen lassen werden.“ ／ ドルトムント戦（0-1）は退場による出場停止で欠場。
+#   → 台本の言葉は、このドイツ語を私が日本語にしたもの。
+# 食い違い（気をつけた点）:
+#   ・Tribe は Sky90 の発言として「彼のミスがチームを苦しめている」と書くが、Sky90 を伝えた RP Online・GladbachLIVE の本文にこの言葉は無い。
+#     いちばん近いのはビルト（数日前）の „Sein Platzverweis in Hamburg hat uns natürlich geschadet“（ハンブルク戦の退場はもちろん痛かった）。→ 「ミスがチームを苦しめている」は使わない。退場の話はビルトの発言として言う。
+#   ・Tribe は「4日前の18日、ビルトに」と書くが、ビルトの発言を引いた 90min.de の見出し（「Gladbach-Boss mit Klartext zum mauen Saisonstart von Itakura」）は 11/16 付（Google ニュースの RSS の見出しと日付だけ）。ビルトの元記事は bild.de のサイトマップで探したが見つからなかった。
+#     → 日付と「4日前」は言わず、「その数日前」とする。
+#   ・Tribe の見出しの「一転」「猛批判」「スタメン剥奪も」は使わない。Sky90 でも „Wir müssen mit ihm arbeiten“ と続けていて、見捨てる話にはなっていない。
+# ESPN の試合データ（site.api.espn.com ger.1）:
+#   ・summary event=401884739（2026-11-06 19:30 UTC＝日本時間7日4:30、ハンブルク 3-1 ボルシアMG）: 11分 ムハイム（HSV）／38分 板倉 警告（bad foul）／44分 ハック（BMG）1-1／49分 板倉 2枚目の警告で退場／59分 ナンジャ（HSV）2-1／70分 グロンベク（HSV）3-1。
+#   ・summary event=401884731（11/21 14:30 UTC、ボルシアMG 0-1 ドルトムント）: 80分 ニュメチャ。板倉はメンバー外。
+#   ・順位表（ger.1 standings、11/24 取得）: 18位 ボルシアMG 勝ち点4（10試合 1勝1分8敗）。15位 パーダーボルン 勝ち点10 → 差6（GladbachLIVE と一致）。
+#   ・次の試合（schedule fixture=true）: 11/27 19:30 UTC 敵地ブレーメン戦（日本時間28日 4時30分）。
+# 自分で数えたもの: ハンブルク戦は板倉の退場（49分）の時点で1対1、10人になってから2失点。
+# 前の本との重なり: 板倉の本は 11/27 予約のシリーズ（mystery_cb_pair_itakura_machida、写真の置き場のみ確認）。SD の批判は初出。
+# 【言わないこと】結婚・私生活（指示）／移籍金（Tribe の350万ユーロと DerWesten の数字が別の話で、題に要らない）／「スタメン剥奪」の予想（報道の推測）／「4日前」「18日」。
+# 本人の言葉: 板倉本人の言葉は無い（Tribe・RP・GladbachLIVE・DerWesten に無し）→ X。SD の言葉は代弁で入れる。
+# 写真: 01・02＝板倉（ゲキサカ 日本代表の写真ギャラリー 463416 の2・6枚目、11/17 パラグアイ戦、©Koki NAGAHAMA/GEKISAKA）、03＝板倉（Commons「Ko Itakura (cropped)」CC BY-SA 4.0、アヤックス時代）、
+#   schroeder/01＝シュレーダーSD（Commons、2018年、CC BY-SA 3.0 de / Olaf Kosinsky。portrait が Wikidata で照合）、pair/01＝シュレーダー（左）＋板倉（右）を pairphoto で並べた1枚（縦版 01_v は上下）。
+#   記事の主写真は Tribe＝AFLO、RP＝dpa、GladbachLIVE・DerWesten＝IMAGO でどれも代理店なので外した。_pool.png を目で見た: 板倉3枚・シュレーダー1枚とも本人、透かしは撮影者表記のみ。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [板倉滉, ボルシアMG, シュレーダーSD, エルヴェディ, ハンブルク]
+
+short_style: X
+short_hook_word: 板倉に厳しい評価
+short_photos:
+  - assets/images/20261124_itakura_sd_criticism/pair/01_v.jpg
+  - assets/images/20261124_itakura_sd_criticism/01_v.jpg
+  - assets/images/20261124_itakura_sd_criticism/03_v.jpg
+  - assets/images/20261124_itakura_sd_criticism/02_v.jpg
+short_question: 板倉滉は、ボルシアMGで信頼を取り戻せると思いますか。
+short_telops: []
+
+theme:
+  id: itakura_sd_criticism
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 板倉滉を「見捨てない」と言ったSDが、テレビで口にしたこと
+  hook: ""
+  question: ボルシアMGのシュレーダーSDは、板倉滉について何を話したのか
+  takeaway: SDはテレビで「エルヴェディの穴を埋められていない」と認めつつ「一緒に取り組む」と続けた。板倉の退場が響いたハンブルク戦は1対1から10人で2失点し、チームは勝ち点4の最下位
+
+thumbnail:
+  layout: face
+  line1: 板倉滉にSDが厳しい評価
+  line2: 数日前は「見捨てない」
+  tags: [板倉滉, ボルシアMG]
+  photo: assets/images/20261124_itakura_sd_criticism/02_w.jpg
+  short_photo: assets/images/20261124_itakura_sd_criticism/02_v.jpg
+
+answer: 「エルヴェディの穴を埋められていない。期待には、まだ応えていない」。ただし「一緒に取り組んでいく」とも話した
+watch: 27日のブレーメン戦（日本時間28日4時30分）
+
+sections:
+  - id: what
+    main: true
+    heading: ボルシアMGのSDは、板倉滉について何を話したのか
+    tier: 報道
+    telop: シュレーダーSD「エルヴェディの穴を、埋められなかった」
+    say:
+      - text: ボルシアMGのシュレーダーSDは、数日前、ドイツ紙ビルトに板倉滉をかばう言葉を残していました。
+        image: assets/images/20261124_itakura_sd_criticism/pair/01.jpg
+      - voice: シュレーダーSD
+        text: 彼はいい選手だし、これからもそうだ。
+      - voice: シュレーダーSD
+        text: 絶対に、見捨てたりはしない。
+        cont: true
+      - text: 板倉は今季、アヤックスからボルシアMGに戻ってきた選手。
+        image: assets/images/20261124_itakura_sd_criticism/03_w.jpg
+      - text: チームを離れたスイス代表、エルヴェディ。その守備の柱の代わりとして、期待されていました。
+      - text: ところが22日、ドイツのテレビ番組でSDが口にしたのは、こんな言葉でした。
+        image: assets/images/20261124_itakura_sd_criticism/pair/01.jpg
+      - voice: シュレーダーSD
+        text: 板倉は、エルヴェディの穴を埋められなかった。
+        emph: true
+      - voice: シュレーダーSD
+        text: ここまでは、期待に応えていない。
+        cont: true
+      - voice: シュレーダーSD
+        text: 本人も、それは分かっています。
+        cont: true
+      - voice: シュレーダーSD
+        text: 彼とは、一緒に取り組んでいくしかありません。
+        cont: true
+      - text: 今月のハンブルク戦では板倉が退場して敗れ、チームはいま、リーグの一番下にいます。
+        short_only: true
+        image: assets/images/20261124_itakura_sd_criticism/01_w.jpg
+    official: false
+    sources:
+      - https://rp-online.de/sport/fussball/borussia/gladbach-schroeder-kritisiert-fuehrungsspieler-erwartungen-nicht-erfuellt_aid-158802831
+      - https://www.gladbachlive.de/news/borussia-moenchengladbach-rouven-schroeder-nimmt-stars-in-die-pflicht-1422610
+      - https://www.derwesten.de/sport/fussball/gladbach-itakura-schroeder-kritik-id302204244.html
+      - https://football-tribe.com/japan/2026/11/23/361662/
+  - id: game
+    heading: 板倉滉が退場したハンブルク戦は、どう動いたのか
+    tier: 報道
+    telop: ハンブルク 3-1 ボルシアMG。1対1から、10人で2失点
+    say:
+      - text: 板倉滉が退場したのは、今月6日のハンブルク戦。38分に警告を受けます。
+        card: {type: table, title: ハンブルク 3-1 ボルシアMG, columns: [時間, できごと], rows: [[38分, 板倉に警告], [44分, ハックが同点（1-1）], [49分, 板倉が2枚目の警告で退場], [59分, ハンブルクが勝ち越し], [70分, ハンブルクが3点目]], highlight_row: 0}
+      - text: 44分にハックのゴールで、ボルシアMGが追いつきます。ところが49分、板倉に2枚目の警告が出て、退場です。
+        card: {type: table, title: ハンブルク 3-1 ボルシアMG, columns: [時間, できごと], rows: [[38分, 板倉に警告], [44分, ハックが同点（1-1）], [49分, 板倉が2枚目の警告で退場], [59分, ハンブルクが勝ち越し], [70分, ハンブルクが3点目]], highlight_row: 2}
+        emph: true
+      - text: 10人になったボルシアMGは、そこから2点を失い、1対3で敗れました。
+        card: {type: table, title: ハンブルク 3-1 ボルシアMG, columns: [時間, できごと], rows: [[38分, 板倉に警告], [44分, ハックが同点（1-1）], [49分, 板倉が2枚目の警告で退場], [59分, ハンブルクが勝ち越し], [70分, ハンブルクが3点目]], highlight_row: 4}
+      - text: 板倉は出場停止で、21日のドルトムント戦には出られず、チームは0対1で敗れています。
+        card: none
+        image: assets/images/20261124_itakura_sd_criticism/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884739
+      - https://www.espn.com/soccer/match/_/gameId/401884731
+      - https://www.derwesten.de/sport/fussball/gladbach-itakura-schroeder-kritik-id302204244.html
+  - id: view
+    viewpoint: true
+    heading: 板倉滉のいるボルシアMGは、いまどこにいるのか
+    tier: 背景
+    telop: ボルシアMGは勝ち点4で最下位。15位とは6差
+    say:
+      - text: 見立てです。ボルシアMGは10試合で1勝1分け8敗、勝ち点4で、18チーム中の最下位です。
+        card: {type: stats, title: ボルシアMG（第10節のあと）, items: [[18, 位, 18チーム中], [4, 点, 勝ち点], [6, 点, 15位との差]], focus: 2}
+      - text: 18チームのうち、16位から下は降格か入れ替え戦。そのまま残れる15位までは、勝ち点6の差です。
+      - text: SDは同じ番組で、冬の移籍市場では、合う選手がいればチームの軸を補強する考えも示しました。
+        card: none
+      - text: そのうえで「うちは降格しない」と言い切っています。
+      - text: 板倉滉が戻れる次の試合は、27日のブレーメン戦。日本時間28日の午前4時半です。
+        image: assets/images/20261124_itakura_sd_criticism/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.1/standings
+      - https://rp-online.de/sport/fussball/borussia/gladbach-schroeder-kritisiert-fuehrungsspieler-erwartungen-nicht-erfuellt_aid-158802831
+      - https://www.gladbachlive.de/news/borussia-moenchengladbach-rouven-schroeder-nimmt-stars-in-die-pflicht-1422610

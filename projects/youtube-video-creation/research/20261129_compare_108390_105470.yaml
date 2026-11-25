@@ -1,0 +1,1333 @@
+# 取材メモ（11/29 日、シリーズ「比べる」、key: compare_108390_105470）。ティボー・クルトワ（レアル・マドリード・34歳）×アリソン（リバプール・34歳）。
+# **情報の時点は 2026-11-21**。FotMob・DataMB は使っていない。数字は Transfermarkt の API（2026-11-21 取得。控え: research/raw/20261129_courtois_*.json・20261129_alisson_*.json）。
+#   番号：クルトワ 108390・アリソン 105470。profile・market-value-history・performance-season（2023〜2026季）・performance-game（全試合。2.5秒あけて取得）。
+# **選んだ理由**：比べるで初めてのGKの回。2人とも1992年生まれの34歳（クルトワ 5月11日・アリソン 10月2日）、2018年夏に今のクラブへ（TM の clubAssignments：クルトワ start 2018-08-09、アリソン 2018-07-19）、市場価値も同じ1500万€（2026-06）。
+#   2022年のCL決勝（2022-05-28、レアル 1-0 リバプール、クルトワが9セーブで試合の最優秀選手、アリソンはリバプールの先発GK）は Wikipedia「2022 UEFA Champions League final」で確認。
+#   軸：セーブ率＝セーブ÷（セーブ＋失点）を自分で計算（試合ごとの scoringGoalkeeperSaves と opponentGoalsOnThePitch を、クラブの公式戦で出場した試合だけ季ごとに合計。代表戦は isNationalGame で除外）。失点には PK・オウンゴールも入る（板の注に式だけ出す）。
+#     23/24 はクルトワが左ひざ前十字じん帯（2023-08）と右ひざ半月板（2024-03）のけがで5試合だけ（Wikipedia「Thibaut Courtois」、復帰 2024-05-04）なので折れ線から外した。
+#   無失点＝90分以上出場して失点0の試合（自分で数えた）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・picks を grep。GK の比べるは初めて。2人とも比べる・選手紹介に未登場（アリソンは 11/8 の鈴木彩艶のニュースに名前のみ。台本では触れない）。
+#   同じ日（11/29）の picks（選手紹介ロドリ＝バルセロナ・スタジアム PSG・ユニフォーム アヤックス）と人もクラブも重ならない。公開前にもう一度。
+#   日本との接点：入れない（鈴木彩艶の報道は使わない）。
+# **2人とも今季も欧州7リーグの1部**：レアル・マドリード（ラ・リーガ。clubId 418）・リバプール（プレミアリーグ。clubId 31）。
+# **使った数**（クラブのトップチームの公式戦だけ。試合・出場時間・失点・セーブ・無失点）
+#   クルトワ：21/22 52試合 失点46 セーブ154 率77.0%／22/23 49 49 154 75.9%／23/24 5試合 0 19／24/25 53試合 4830分 失点63 無失点17 セーブ165 72.4%／25/26 45試合 4005分 43 17 132 75.4%／26/27 15試合 1350分 16 4 51 76.1%
+#   アリソン：21/22 54試合 失点41 セーブ99 70.7%／22/23 47 59 130 68.8%／23/24 32 32 95 74.8%／24/25 35試合 3169分 33 12 104 75.9%／25/26 35試合 3116分 37 13 77 67.5%／26/27 14試合 1260分 20 4 34 63.0%
+#   90分あたり失点（25/26）：クルトワ 0.97・アリソン 1.07
+# 市場価値（TM）：クルトワ 最高 7500万€（2020-10）→ 2024-12 2500万 → 2026-06-05 1500万／アリソン 最高 9000万€（2019-12）→ 2020-10 8000万 → 2024-12 2500万 → 2026-06-03 1500万。
+#   **確かめていない**：セーブ数は TM の試合データ（Opta 等の公式値と突き合わせていない）。セーブ率の定義はこちらで決めたもの（被枠内シュートを使う一般のセーブ率とは少し違う）。「年齢が値段をそろえている」は見立て。
+# 写真：c1・c2 Commons（Belgium v USA 6 July 2026、Bryan Berlin、CC BY-SA 4.0。c1 は左端の灰色の帯を200px切った）・a1・a2 Commons（Brazil v Morocco 13 June 2026、Bryan Berlin、CC BY-SA 4.0）。**2人とも代表の姿のみ**（クラブ姿は探していない。アリソンはリバプールのCC0写真（Timmy96）もあるが私服寄りなので使わなかった）。pair_a=c1+a1、pair_b=c2_v+a2_v。
+slot: other_1
+date: 2026年11月21日
+format: news
+series: 比べる
+people:
+- ティボー・クルトワ
+- アリソン・ベッカー
+- レアル・マドリード
+- リバプール
+theme:
+  end_bg: assets/images/20261129_compare_108390_105470/pair_b/01.jpg
+  id: compare_108390_105470
+  league: spain
+  kind: other
+  topic: クルトワとアリソン
+  prefix: ''
+  title: クルトワとアリソン、同じ1992年生まれのGK。止めた割合は、どちらが上か
+  hook: ''
+  question: レアル・マドリードのクルトワとリバプールのアリソン。同じ34歳で市場価値も同じ2人のGK、シュートを止めた割合はどちらが上なのか
+  takeaway: セーブ率（セーブ÷（セーブ＋失点）、クラブの公式戦）は5季中4季でクルトワが上（25/26は75.4%と67.5%、今季は76.1%と63.0%）。アリソンが上なのは24/25だけ（75.9%と72.4%）。24/25・25/26は出場もクルトワが多い（53と35、45と35）。それでも市場価値は2人とも1500万€
+  league_name: ラ・リーガ・プレミアリーグ
+  opening_image: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+short_title: クルトワとアリソン、同じ34歳のGK
+thumbnail:
+  photo: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+  photos:
+  - assets/images/20261129_compare_108390_105470/c2/01_t.jpg
+  - assets/images/20261129_compare_108390_105470/a1/01_t.jpg
+  short_photo: assets/images/20261129_compare_108390_105470/pair_a/01_v.jpg
+  face_link: VS
+  line1: クルトワとアリソン
+  line2: 5季中4季で、クルトワが上
+  tags:
+  - クルトワ
+  - アリソン
+  - レアル・マドリード
+  - リバプール
+answer: セーブ率は5季中4季でクルトワが上。アリソンが上なのは24/25だけ。市場価値は同じ1500万€
+watch: 毎日、数字でサッカーを読み解きます
+sections:
+- id: hook
+  heading: 同じ34歳のゴールキーパー、止める力はどちらが上なのか
+  tier: 報道
+  telop: 2022年の決勝
+  narrator: 解説
+  card:
+    type: stats
+    title: 2人の数字（クラブの公式戦）
+    items:
+    - - 1500万
+      - €
+      - 2人のいまの市場価値
+    - - '75.4'
+      - '%'
+      - 25/26 クルトワのセーブ率
+    - - '67.5'
+      - '%'
+      - 25/26 アリソンのセーブ率
+    focus: 0
+  say:
+  - text: 2022年5月、チャンピオンズリーグの決勝。
+    image: assets/images/20261129_compare_108390_105470/pair_b/01.jpg
+    card: none
+  - text: レアル・マドリードのクルトワは9本を止め、1対0で勝ちました。
+    image: assets/images/20261129_compare_108390_105470/c2/01_w.jpg
+    card: none
+    emph: true
+  - text: 相手のリバプールで、ゴールを守っていたのがアリソンです。
+    image: assets/images/20261129_compare_108390_105470/a2/01_w.jpg
+    card: none
+  - text: 2人はいま、同じ34歳。市場価値も、どちらも1500万ユーロ。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - 1500万
+        - €
+        - 2人のいまの市場価値
+      - - '75.4'
+        - '%'
+        - 25/26 クルトワのセーブ率
+      - - '67.5'
+        - '%'
+        - 25/26 アリソンのセーブ率
+      focus: 0
+    emph: true
+  - text: 直近の25/26、シュートを止めた割合はクルトワが上でした。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - 1500万
+        - €
+        - 2人のいまの市場価値
+      - - '75.4'
+        - '%'
+        - 25/26 クルトワのセーブ率
+      - - '67.5'
+        - '%'
+        - 25/26 アリソンのセーブ率
+      focus: 1
+  - text: では、ほかの季はどうだったのか。
+    image: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/leistungsdaten/spieler/108390
+  - https://www.transfermarkt.com/alisson/leistungsdaten/spieler/105470
+  - https://tmapi-alpha.transfermarkt.technology/player/108390/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/105470/performance-game
+  - https://en.wikipedia.org/wiki/2022_UEFA_Champions_League_final
+- id: data
+  heading: クルトワとアリソンは、どんな2人か
+  tier: 報道
+  telop: 同じ1992年生まれ
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クルトワ
+      club: レアル・マドリード
+      photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+      color: '#d4a017'
+    right:
+      name: アリソン
+      club: リバプール
+      photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+      color: '#c8102e'
+    rows:
+    - - 年齢
+      - 34歳
+      - 34歳
+    - - 生まれ
+      - 1992年5月11日
+      - 1992年10月2日
+    - - 代表
+      - ベルギー
+      - ブラジル
+    - - 身長
+      - 2.00m
+      - 1.93m
+    - - 利き足
+      - 左
+      - 右
+    - - 加入
+      - 2018年8月
+      - 2018年7月
+    - - 市場価値
+      - 1500万€
+      - 1500万€
+    bars: false
+    note: 市場価値は最新の値
+  say:
+  - text: クルトワはベルギー代表。2018年の夏から、レアル・マドリードでプレー。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 年齢
+        - 34歳
+        - 34歳
+      - - 生まれ
+        - 1992年5月11日
+        - 1992年10月2日
+      - - 代表
+        - ベルギー
+        - ブラジル
+      - - 身長
+        - 2.00m
+        - 1.93m
+      - - 利き足
+        - 左
+        - 右
+      - - 加入
+        - 2018年8月
+        - 2018年7月
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 加入
+  - text: アリソンはブラジル代表。同じ2018年の夏に、リバプールへ来ました。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 年齢
+        - 34歳
+        - 34歳
+      - - 生まれ
+        - 1992年5月11日
+        - 1992年10月2日
+      - - 代表
+        - ベルギー
+        - ブラジル
+      - - 身長
+        - 2.00m
+        - 1.93m
+      - - 利き足
+        - 左
+        - 右
+      - - 加入
+        - 2018年8月
+        - 2018年7月
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 加入
+  - text: 生まれも同じ1992年。クルトワが5月、アリソンが10月です。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 年齢
+        - 34歳
+        - 34歳
+      - - 生まれ
+        - 1992年5月11日
+        - 1992年10月2日
+      - - 代表
+        - ベルギー
+        - ブラジル
+      - - 身長
+        - 2.00m
+        - 1.93m
+      - - 利き足
+        - 左
+        - 右
+      - - 加入
+        - 2018年8月
+        - 2018年7月
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 生まれ
+    emph: true
+  - text: 身長は2メートルと1.93メートル。クルトワは左利きです。
+    image: assets/images/20261129_compare_108390_105470/c1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 年齢
+        - 34歳
+        - 34歳
+      - - 生まれ
+        - 1992年5月11日
+        - 1992年10月2日
+      - - 代表
+        - ベルギー
+        - ブラジル
+      - - 身長
+        - 2.00m
+        - 1.93m
+      - - 利き足
+        - 左
+        - 右
+      - - 加入
+        - 2018年8月
+        - 2018年7月
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 身長
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/profil/spieler/108390
+  - https://www.transfermarkt.com/alisson/profil/spieler/105470
+  - https://en.wikipedia.org/wiki/Thibaut_Courtois
+- id: seasons
+  heading: 出場の数と失点は、どれだけ違うのか
+  tier: 報道
+  telop: 24/25と25/26
+  narrator: 解説
+  card:
+    type: table
+    title: 季ごとの数（クラブの公式戦）
+    columns:
+    - 選手
+    - 季
+    - 試合
+    - 出場時間
+    - 失点
+    - 無失点
+    rows:
+    - - クルトワ
+      - 24/25
+      - '53'
+      - 4830分
+      - '63'
+      - '17'
+    - - アリソン
+      - 24/25
+      - '35'
+      - 3169分
+      - '33'
+      - '12'
+    - - クルトワ
+      - 25/26
+      - '45'
+      - 4005分
+      - '43'
+      - '17'
+    - - アリソン
+      - 25/26
+      - '35'
+      - 3116分
+      - '37'
+      - '13'
+    note: 無失点は90分以上出て失点0の試合
+  say:
+  - text: まず、出場の数から見ます。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 失点
+      - 無失点
+      rows:
+      - - クルトワ
+        - 24/25
+        - '53'
+        - 4830分
+        - '63'
+        - '17'
+      - - アリソン
+        - 24/25
+        - '35'
+        - 3169分
+        - '33'
+        - '12'
+      - - クルトワ
+        - 25/26
+        - '45'
+        - 4005分
+        - '43'
+        - '17'
+      - - アリソン
+        - 25/26
+        - '35'
+        - 3116分
+        - '37'
+        - '13'
+      note: 無失点は90分以上出て失点0の試合
+  - text: 24/25は、クルトワが53試合。アリソンは35試合でした。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 失点
+      - 無失点
+      rows:
+      - - クルトワ
+        - 24/25
+        - '53'
+        - 4830分
+        - '63'
+        - '17'
+      - - アリソン
+        - 24/25
+        - '35'
+        - 3169分
+        - '33'
+        - '12'
+      - - クルトワ
+        - 25/26
+        - '45'
+        - 4005分
+        - '43'
+        - '17'
+      - - アリソン
+        - 25/26
+        - '35'
+        - 3116分
+        - '37'
+        - '13'
+      note: 無失点は90分以上出て失点0の試合
+      highlight_row: 1
+  - text: 25/26も45試合と35試合。クルトワが10試合多く出ています。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 失点
+      - 無失点
+      rows:
+      - - クルトワ
+        - 24/25
+        - '53'
+        - 4830分
+        - '63'
+        - '17'
+      - - アリソン
+        - 24/25
+        - '35'
+        - 3169分
+        - '33'
+        - '12'
+      - - クルトワ
+        - 25/26
+        - '45'
+        - 4005分
+        - '43'
+        - '17'
+      - - アリソン
+        - 25/26
+        - '35'
+        - 3116分
+        - '37'
+        - '13'
+      note: 無失点は90分以上出て失点0の試合
+      highlight_row: 2
+    emph: true
+  - text: 90分あたりの失点は、25/26でクルトワが0.97、アリソンが1.07。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 失点
+      - 無失点
+      rows:
+      - - クルトワ
+        - 24/25
+        - '53'
+        - 4830分
+        - '63'
+        - '17'
+      - - アリソン
+        - 24/25
+        - '35'
+        - 3169分
+        - '33'
+        - '12'
+      - - クルトワ
+        - 25/26
+        - '45'
+        - 4005分
+        - '43'
+        - '17'
+      - - アリソン
+        - 25/26
+        - '35'
+        - 3116分
+        - '37'
+        - '13'
+      note: 無失点は90分以上出て失点0の試合
+      highlight_row: 3
+  - text: ただ失点は、チーム全体の守備で決まる数字でもあります。
+    image: assets/images/20261129_compare_108390_105470/pair_b/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/leistungsdaten/spieler/108390
+  - https://www.transfermarkt.com/alisson/leistungsdaten/spieler/105470
+  - https://tmapi-alpha.transfermarkt.technology/player/108390/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/105470/performance-game
+- id: rate
+  heading: 5つのシーズンで、止めた割合はどう動いたのか
+  tier: 報道
+  telop: セーブ率
+  narrator: 解説
+  main: true
+  card:
+    type: line
+    title: セーブ率（％）
+    x:
+    - 21/22
+    - 22/23
+    - 24/25
+    - 25/26
+    - 26/27
+    series:
+    - - クルトワ
+      - - 77.0
+        - 75.9
+        - 72.4
+        - 75.4
+        - 76.1
+    - - アリソン
+      - - 70.7
+        - 68.8
+        - 75.9
+        - 67.5
+        - 63.0
+    focus: クルトワ
+    note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+  say:
+  - text: レアルのクルトワと、リバプールのアリソン。止めた割合を比べます。
+    image: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+    card: none
+    short_only: true
+  - text: セーブの数を、セーブと失点の合計で割ります。セーブ率です。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 21/22
+  - text: 21/22は77.0%と70.7%。クルトワが上です。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 21/22
+  - text: クルトワは23/24、ひざの大けがで5試合だけ。この季は外して並べます。
+    image: assets/images/20261129_compare_108390_105470/c1/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 24/25
+  - text: 24/25だけは、アリソンの75.9%がクルトワの72.4%を上回りました。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 24/25
+    emph: true
+  - text: 25/26は75.4%と67.5%。差は7.9ポイントです。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 25/26
+  - text: 今季は76.1%と63.0%。差はさらに開いています。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 26/27
+  - text: 5季のうち4季で、クルトワが上回りました。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: セーブ率（％）
+      x:
+      - 21/22
+      - 22/23
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - クルトワ
+        - - 77.0
+          - 75.9
+          - 72.4
+          - 75.4
+          - 76.1
+      - - アリソン
+        - - 70.7
+          - 68.8
+          - 75.9
+          - 67.5
+          - 63.0
+      focus: クルトワ
+      note: セーブ÷（セーブ＋失点）。クラブの公式戦。26/27は11月21日時点
+      highlight: 26/27
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/leistungsdaten/spieler/108390
+  - https://www.transfermarkt.com/alisson/leistungsdaten/spieler/105470
+  - https://tmapi-alpha.transfermarkt.technology/player/108390/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/105470/performance-game
+  - https://en.wikipedia.org/wiki/Thibaut_Courtois
+- id: value
+  heading: 市場価値は、どう下がってきたのか
+  tier: 報道
+  telop: 市場価値の歩み
+  narrator: 解説
+  card:
+    type: line
+    title: 市場価値の歩み（百万ユーロ）
+    x:
+    - 20年12月
+    - 22年6月
+    - 23年12月
+    - 24年12月
+    - 25年12月
+    - 最新
+    series:
+    - - クルトワ
+      - - 75
+        - 60
+        - 35
+        - 25
+        - 18
+        - 15
+    - - アリソン
+      - - 80
+        - 50
+        - 32
+        - 25
+        - 17
+        - 15
+    focus: クルトワ
+    note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+  say:
+  - text: 市場価値の動きも見ます。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 20年12月
+  - text: 2020年12月は、クルトワが7500万、アリソンが8000万ユーロ。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 20年12月
+  - text: そこから2人とも、ほぼ同じ線で下がり続けます。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 23年12月
+  - text: 2024年12月には、どちらも2500万ユーロで並びました。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 24年12月
+    emph: true
+  - text: アリソンの最高額は、2019年の9000万ユーロ。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 20年12月
+  - text: 最高額と比べると、クルトワは5分の1、アリソンは6分の1です。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 20年12月
+      - 22年6月
+      - 23年12月
+      - 24年12月
+      - 25年12月
+      - 最新
+      series:
+      - - クルトワ
+        - - 75
+          - 60
+          - 35
+          - 25
+          - 18
+          - 15
+      - - アリソン
+        - - 80
+          - 50
+          - 32
+          - 25
+          - 17
+          - 15
+      focus: クルトワ
+      note: 各時点の直前に出た値。最新はクルトワ26年6月5日、アリソン26年6月3日
+      highlight: 最新
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/marktwertverlauf/spieler/108390
+  - https://www.transfermarkt.com/alisson/marktwertverlauf/spieler/105470
+- id: now
+  heading: 今季のここまで、2人の数字はどう動いているのか
+  tier: 報道
+  telop: 11月21日時点
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: クルトワ
+      club: レアル・マドリード
+      photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+      color: '#d4a017'
+    right:
+      name: アリソン
+      club: リバプール
+      photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+      color: '#c8102e'
+    rows:
+    - - 試合
+      - '15'
+      - '14'
+    - - 出場時間
+      - 1350分
+      - 1260分
+    - - 失点
+      - '16'
+      - '20'
+    - - 無失点
+      - '4'
+      - '4'
+    - - セーブ
+      - '51'
+      - '34'
+    - - セーブ率
+      - 76.1%
+      - 63.0%
+    bars: false
+    note: クラブの公式戦。11月21日時点
+  say:
+  - text: 今季の数字も見ます。
+    image: assets/images/20261129_compare_108390_105470/pair_b/01.jpg
+    card: none
+  - text: クルトワは15試合で失点16。無失点は4試合です。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 試合
+        - '15'
+        - '14'
+      - - 出場時間
+        - 1350分
+        - 1260分
+      - - 失点
+        - '16'
+        - '20'
+      - - 無失点
+        - '4'
+        - '4'
+      - - セーブ
+        - '51'
+        - '34'
+      - - セーブ率
+        - 76.1%
+        - 63.0%
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: 失点
+  - text: アリソンは14試合で失点20。無失点は同じ4試合。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 試合
+        - '15'
+        - '14'
+      - - 出場時間
+        - 1350分
+        - 1260分
+      - - 失点
+        - '16'
+        - '20'
+      - - 無失点
+        - '4'
+        - '4'
+      - - セーブ
+        - '51'
+        - '34'
+      - - セーブ率
+        - 76.1%
+        - 63.0%
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: 無失点
+  - text: 止めたシュートは、51本と34本です。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 試合
+        - '15'
+        - '14'
+      - - 出場時間
+        - 1350分
+        - 1260分
+      - - 失点
+        - '16'
+        - '20'
+      - - 無失点
+        - '4'
+        - '4'
+      - - セーブ
+        - '51'
+        - '34'
+      - - セーブ率
+        - 76.1%
+        - 63.0%
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: セーブ
+    emph: true
+  - text: どちらもまだ15試合前後。この先で変わる余地は大きいです。
+    image: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/leistungsdaten/spieler/108390
+  - https://www.transfermarkt.com/alisson/leistungsdaten/spieler/105470
+  - https://tmapi-alpha.transfermarkt.technology/player/108390/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/105470/performance-game
+- id: view
+  heading: 見立て・同じ値段の2人、止める力に差はあるのか
+  tier: 背景
+  telop: 数字の違いが示すもの
+  narrator: 解説
+  viewpoint: true
+  card:
+    type: duel
+    left:
+      name: クルトワ
+      club: レアル・マドリード
+      photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+      color: '#d4a017'
+    right:
+      name: アリソン
+      club: リバプール
+      photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+      color: '#c8102e'
+    rows:
+    - - 25/26のセーブ率
+      - 75.4%
+      - 67.5%
+    - - 今季のセーブ率
+      - 76.1%
+      - 63.0%
+    - - 24/25のセーブ率
+      - 72.4%
+      - 75.9%
+    - - 25/26の試合
+      - '45'
+      - '35'
+    - - 市場価値
+      - 1500万€
+      - 1500万€
+    bars: false
+    note: クラブの公式戦。セーブ率はセーブ÷（セーブ＋失点）
+  say:
+  - text: 見立てです。セーブ率では、クルトワが優位に立っています。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 25/26のセーブ率
+        - 75.4%
+        - 67.5%
+      - - 今季のセーブ率
+        - 76.1%
+        - 63.0%
+      - - 24/25のセーブ率
+        - 72.4%
+        - 75.9%
+      - - 25/26の試合
+        - '45'
+        - '35'
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: クラブの公式戦。セーブ率はセーブ÷（セーブ＋失点）
+    mark:
+      kind: circle
+      row: 0
+  - text: 差は25/26で約8ポイント、今季は約13ポイントです。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 25/26のセーブ率
+        - 75.4%
+        - 67.5%
+      - - 今季のセーブ率
+        - 76.1%
+        - 63.0%
+      - - 24/25のセーブ率
+        - 72.4%
+        - 75.9%
+      - - 25/26の試合
+        - '45'
+        - '35'
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: クラブの公式戦。セーブ率はセーブ÷（セーブ＋失点）
+      highlight_row: 1
+  - text: 直近の2季は、出場の数でもクルトワが上回っています。
+    image: assets/images/20261129_compare_108390_105470/c2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 25/26のセーブ率
+        - 75.4%
+        - 67.5%
+      - - 今季のセーブ率
+        - 76.1%
+        - 63.0%
+      - - 24/25のセーブ率
+        - 72.4%
+        - 75.9%
+      - - 25/26の試合
+        - '45'
+        - '35'
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: クラブの公式戦。セーブ率はセーブ÷（セーブ＋失点）
+      highlight_row: 3
+  - text: それでも市場価値は同じ。34歳という年齢が、値段をそろえているとも読めます。
+    image: assets/images/20261129_compare_108390_105470/a2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: クルトワ
+        club: レアル・マドリード
+        photo: assets/images/20261129_compare_108390_105470/c2/01_sq.jpg
+        color: '#d4a017'
+      right:
+        name: アリソン
+        club: リバプール
+        photo: assets/images/20261129_compare_108390_105470/a1/01_sq.jpg
+        color: '#c8102e'
+      rows:
+      - - 25/26のセーブ率
+        - 75.4%
+        - 67.5%
+      - - 今季のセーブ率
+        - 76.1%
+        - 63.0%
+      - - 24/25のセーブ率
+        - 72.4%
+        - 75.9%
+      - - 25/26の試合
+        - '45'
+        - '35'
+      - - 市場価値
+        - 1500万€
+        - 1500万€
+      bars: false
+      note: クラブの公式戦。セーブ率はセーブ÷（セーブ＋失点）
+      highlight_row: 4
+    emph: true
+  - text: アリソンが24/25のように上回る季を、また作れるか。
+    image: assets/images/20261129_compare_108390_105470/a2/01_w.jpg
+    card: none
+  - text: 今季の後半の数字が、その答えになります。
+    image: assets/images/20261129_compare_108390_105470/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/thibaut-courtois/leistungsdaten/spieler/108390
+  - https://www.transfermarkt.com/alisson/leistungsdaten/spieler/105470
+  - https://tmapi-alpha.transfermarkt.technology/player/108390/performance-game
+  - https://tmapi-alpha.transfermarkt.technology/player/105470/performance-game
+  - https://www.transfermarkt.com/thibaut-courtois/marktwertverlauf/spieler/108390
+  - https://www.transfermarkt.com/alisson/marktwertverlauf/spieler/105470

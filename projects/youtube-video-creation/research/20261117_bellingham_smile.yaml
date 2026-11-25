@@ -1,0 +1,127 @@
+# 取材メモ（2026年11月17日）ベリンガム「笑顔を失った」。2年前の言葉と、いまの代表での姿（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-17。requests（ブラウザUA）と WebFetch。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: Marca 2026-11-16 12:29 UTC「La reconquista de Bellingham: "Perdí la sonrisa, me sentí un poco como el chivo expiatorio"」（全文を読んだ。記事の JSON-LD の articleBody） https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html
+# 【前提の食い違い】題の「笑顔を失った」「スケープゴートにされた気分」は、今回の新しい発言ではない。
+#   Marca は本文で過去形（afirmaba）で引いている。日付は書かれていない。ESPN の動画クリップ「Bellingham: I felt like a 'scapegoat' after England's Euros defeat」は 2024-11-26 付（ESPN 検索API の date）、
+#   同じ発言を 2024-11-26〜27 に BBC・Guardian・The Athletic・Sun・Fox Sports・TNT Sports・Goal が報じている（Google ニュースの見出し一覧。本文は読めていない）。
+#   → 「ユーロ2024のあと、2024年11月に語った言葉」と台本で言う。今回の新しい発言と言わない。Marca は同じ記事の中の「いまの気持ち」（Por encima de todo, estoy disfrutando del fútbol…）と並べて「復活」として書いている。
+#   発言の英語の原文は取れていない（WebFetch は ESPN クリップに本文なし、Guardian・BBC・Vogue は読めなかった）。台本の日本語は、Marca のスペイン語を私が訳したもの。
+# 出典で確かめたこと:
+#   ・Marca の引用（スペイン語。訳は私）:
+#       "Perdí la sonrisa jugando como Inglaterra después de la Eurocopa. Me sentí un poco como el chivo expiatorio. Creo que me trataban un poco mal en comparación con lo que aportaba"
+#         → 「ユーロのあと、代表でプレーする中で笑顔を失いました。少しスケープゴートにされたような気分でした。自分が貢献していたことに比べて、扱いが少し悪かったと思います」
+#       "Por encima de todo, estoy disfrutando del fútbol. Estoy intentando dar lo mejor de mí para seguir mejorando cada día. Cuando te sientes bien y tienes confianza, quieres intentar cosas", insiste Bellingham.
+#         → いまの言葉として載せている（日付は記事に無い。「insiste」＝現在形）。台本は「マルカが伝えた、いまの言葉」とだけ言う。
+#       「"Me ponía muy tenso y estresado…" confiesa a British Vogue」は日付が分からないので使わない。
+#   ・Marca の数字（Marca の記述。こちらでは確かめていない）: 今季 レアル 16試合 5得点4アシスト／イングランド 6試合 1得点6アシスト。夏のW杯で7得点、イングランドは3位。イングランド選手で暦年7アシストは1980年以来。
+#       自分で足した: 5+4+1+6 = 16。Marca の「16 goles fabricados」と一致。
+#   ・ESPN の試合データ（site.api.espn.com uefa.nations summary event=401861175、2026-11-15、スペイン 2-3 イングランド）: 57分 ベン・ホワイトのゴール（アシスト ベリンガム）。ベリンガムは先発で83分にスペンスと交代、アシスト1・シュート2・枠内2。
+#   ・ESPN 順位表: グループA3 イングランド 勝ち点15 1位。
+# 前の本との重なり: 20261113_jobe_bellingham_england・20261107（弟ジョーブの初招集。別の題）、20261116_england_spain_streak（スペインの無敗記録。ベリンガムは出てこない）。「笑顔」「スケープゴート」を含む台本は無い。
+# 【言わないこと】Vogue の発言・夜遊びの話・弟の話・スペイン戦の試合の流れ（別の題）。
+# 本人の言葉: あり（2024年11月の発言＋いまの発言。Marca 経由）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: Marca 主写真・ESPN 2026-11-15 の主写真（photopool）＋ Commons CC BY-SA 4.0 の2026年6月の写真（England v Panama 2026-06-27）。
+slot: overseas
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [ジュード・ベリンガム, イングランド代表, レアル・マドリード, トゥヘル監督]
+
+short_style: Y
+short_hook_quote: ユーロのあと、代表でプレーする中で笑顔を失いました。
+short_photos:
+  - assets/images/20261117_bellingham_smile/11_v.jpg
+  - assets/images/20261117_bellingham_smile/01_v.jpg
+  - assets/images/20261117_bellingham_smile/12_v.jpg
+  - assets/images/20261117_bellingham_smile/13_v.jpg
+short_question: ベリンガムは、このまま代表でも活躍し続けると思いますか。
+short_telops: []
+
+theme:
+  id: bellingham_smile
+  league: england
+  league_name: イングランド代表
+  prefix: ""
+  title: ジュード・ベリンガム、2年前に語った「笑顔を失った」。いま代表での姿は
+  hook: ""
+  question: 「笑顔を失った」と語ったベリンガムは、いまどんな状態なのか
+  takeaway: 「笑顔を失った」は2024年11月の言葉。今季のベリンガムは、レアルとイングランド代表で合わせて16得点に絡み、15日のスペイン戦でもアシストを記録した
+
+thumbnail:
+  layout: face
+  line1: ベリンガム 笑顔を失った
+  line2: 2年前の言葉といま
+  tags: [ベリンガム, イングランド代表]
+  photo: assets/images/20261117_bellingham_smile/11_w.jpg
+  short_photo: assets/images/20261117_bellingham_smile/11_v.jpg
+
+answer: 2年前は笑顔を失い、スケープゴートの気分だった。いまは「サッカーを楽しんでいる」と話す
+watch: 代表での次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: 「笑顔を失った」と語ったベリンガムは、2年後いま何を語るか
+    tier: 報道
+    telop: ベリンガム「ユーロのあと、笑顔を失いました」（2024年11月）
+    say:
+      - text: レアル・マドリードのジュード・ベリンガムが、2年前にこう話していました。
+        image: assets/images/20261117_bellingham_smile/11_w.jpg
+      - voice: ジュード・ベリンガム
+        text: ユーロのあと、代表でプレーする中で笑顔を失いました。
+        emph: true
+      - voice: ジュード・ベリンガム
+        text: 少しスケープゴートにされたような気分でした。
+        cont: true
+      - voice: ジュード・ベリンガム
+        text: 自分が貢献していたことに比べて、
+        cont: true
+      - voice: ジュード・ベリンガム
+        text: 扱いが少し悪かったと思います。
+        cont: true
+      - text: ヨーロッパ選手権、ユーロ2024のあとの2024年11月に、語った言葉です。
+      - text: スペインの新聞マルカが、16日の記事で改めて取り上げました。
+        image: assets/images/20261117_bellingham_smile/01_w.jpg
+      - text: そこから巻き返し、今夏のワールドカップでは7得点。イングランドは3位でした。
+      - text: 15日のスペイン戦でも、57分にベン・ホワイトのゴールをアシストしています。
+        image: assets/images/20261117_bellingham_smile/12_w.jpg
+      - text: マルカは、いまの本人の言葉をこう伝えています。
+      - voice: ジュード・ベリンガム
+        text: 何よりも、サッカーを楽しんでいます。
+      - voice: ジュード・ベリンガム
+        text: 気分が良くて自信があるときは、いろいろ試したくなるんです。
+        cont: true
+        image: assets/images/20261117_bellingham_smile/13_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html
+      - https://www.espn.com/video/clip/_/id/42626811
+      - https://www.espn.com/soccer/match/_/gameId/401861175
+  - id: game
+    heading: 15日のスペイン戦で、ベリンガムは何をしたか
+    tier: 報道
+    telop: スペイン 2-3 イングランド。ベリンガムが57分にアシスト
+    say:
+      - text: イングランドは敵地でスペインに3対2で勝ちました。
+        card: {type: table, title: スペイン 2-3 イングランド（15日）, columns: [分, 得点者], rows: [[45分, ケイン（PK）], [53分, コンサ], [57分, ホワイト（アシスト ベリンガム）], [65分, オヤルサバル（PK）], [75分, ニコ・ウィリアムス]], highlight_row: 2}
+      - text: ベリンガムは先発して、83分まで出場しました。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861175
+  - id: view
+    viewpoint: true
+    heading: 今季のベリンガムは、どれだけ得点に絡んでいるか
+    tier: 背景
+    telop: 今季の得点とアシスト 合わせて16
+    say:
+      - text: 見立てです。今季のベリンガムは、レアルと代表を合わせて16の得点に絡んでいます。
+        card: {type: table, title: ベリンガム 今季の得点とアシスト, columns: [チーム, 試合, 得点, アシスト], rows: [[レアル・マドリード, 16, 5, 4], [イングランド代表, 6, 1, 6]], highlight_row: 1}
+      - text: 代表では6試合で1得点6アシスト。得点より、アシストが目立ちます。
+        card: none
+      - text: 1年間で7アシストは、イングランドの選手では1980年以来とも伝えられています。
+        emph: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/16/reconquista-bellingham-perdi-sonrisa-me-senti-poco-chivo-expiatorio.html

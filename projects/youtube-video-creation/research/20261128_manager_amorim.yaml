@@ -1,0 +1,451 @@
+# 監督紹介：ルベン・アモリム（11/28 土、シリーズ「監督紹介」、key: manager_amorim、型は news）。9節（日本との接点＝守田英正）。骨組みは 20261126_manager_allegri を写した。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→日本との接点→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-21）**：既出22人（グアルディオラ〜アッレグリ）以外の大物から。スポルティングを19年ぶりのリーグ優勝、マンUではEL決勝、いまはミラン監督。
+#   日本との接点が太い（守田英正がスポルティングでアモリムの中盤を担った）。
+#   **重なりの確認（2026-11-21）**：scripts/・posted.json・picks（1109〜1127）に、アモリムを主題にした監督紹介は無い。ニュースでは 20261106_amorim_milan_no_excuses（EL フェレンツヴァーロシュ戦の会見）がある→その会見の言葉は使わず、別の言葉（手本の監督）を使った。
+#   同じ日（11/28）の他担当の picks：セリエAのクラブ紹介はユヴェントス（ミランではない）。
+#   次点（外した）：ジダン（10/03 coach_zidane・10/18 レジェンドで出している）、森保一（10/06 coach_moriyasu とニュースが多い）。
+#
+# **いまの立場**：ACミラン監督。2026-06-16 就任、契約は2028年まで（英語版 Wikipedia「Ruben Amorim」、2026-11-21 に action=raw で読んだ。最終更新 2026-11-17）。アッレグリの後任。
+#   ○ ミランのセリエAの足元：11試合 7勝3分1敗 勝ち点24、4位（ESPN の順位 API、2026-11-21 に取得。2026-27 シーズン）。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（2026-11-08 時点、全大会）。
+#   表の行：カーザ・ピア 4試合3勝0分1敗／ブラガB 11試合8勝2分1敗／ブラガ 13試合10勝1分2敗／スポルティング 231試合164勝34分33敗／マンU 63試合24勝18分21敗／ミラン 15試合8勝3分4敗。通算 337試合217勝58分62敗（行の合計と一致）。
+#   **下部組織（ブラガB）を除いたトップチーム**：326試合209勝56分61敗。勝率 209÷326＝64.1%。
+#   スポルティング 164÷231＝71.0%／マンU 24÷63＝38.1%（英語版本文「38%、ファーガソン引退後の正式な監督で最も低い」）／ミラン 8÷15＝53.3%。カーザ・ピアとブラガの合計 17試合13勝。割合はすべて自分で割った。
+#   ミランの15試合＝セリエA 11試合（7勝3分1敗）＋EL 4試合（1勝3敗）で、表の8勝3分4敗と一致。
+#   監督のタイトル（トップチーム）6個＝ブラガ タッサ・ダ・リーガ 2019-20／スポルティング リーグ 2020-21・2023-24、タッサ・ダ・リーガ 2020-21・2021-22、スーペルタッサ 2021。マンUは2024-25 EL準優勝。
+#
+# **歩み**（英語版）：2018-19 カーザ・ピア（3部）。2019-09 ブラガB、2019-12-23 ブラガのトップ（2020-01 リーグ杯優勝）。2020-03-04 スポルティング（移籍金1000万ユーロ＝監督では史上3番目）。
+#   2021-05-11 ボアビスタに1-0で19年ぶりのリーグ優勝（国内記録の32試合無敗の途中）。2024-05-05 2度目のリーグ優勝。
+#   2024-11-01 マンU就任発表（11日から）。2025-05-21 EL決勝 0-1 トッテナム。2026-01-05 退任（前日のリーズ戦1-1のあと）。2026-06-16 ミラン。
+# **戦術の色**＝2024-11-05 CL スポルティング 4-1 マンチェスター・シティ（本拠地での最後の試合。ギェケレシュのハットトリック＝TNT Sports の見出し。グアルディオラのチームがCLで4点取られたのは3度目）。
+#   形：3-4-3。中盤の2人が守りの前に立ち、両サイドのウイングバックが攻める。前から奪いに行く（英語版 Tactics）。
+#
+# **本人の言葉**（英語版 Tactics の引用。出典は GiveMeSport 2024-10-29「Ruben Amorim's Managerial Career So Far」。いつの発言かは書かれていない＝台本は「こう話しています」とだけ書く）：
+#   “There are coaches who have a way of watching the game that I like, like Guardiola, but for me, the role model is Mourinho, because I watch the ball in a way that's more similar to [Mourinho], that is, he analyses the opponents very well and sets his team up, not just with a certain style of play but thinking a lot about how to adapt to win.”
+#   ※原語はポルトガル語のはずで、英語訳からの重訳。
+# **日本との接点**：守田英正。2022-07-01 スポルティングに加入（英語版「Hidemasa Morita」）。アモリムの3-4-3で、中盤の2人（ヒュルマンドと守田）が守りの前に立つ（アモリムの英語版 Tactics）。
+#   守田のタイトル：リーグ 2023-24（アモリムのもと）・2024-25、タッサ・デ・ポルトガル 2024-25。2026-05-15 に契約を延長しないと発表。
+# **マル秘話**（英語版）：カーザ・ピアで最初の2試合に負け、3試合目も負けたら辞めると言った→次の試合で初めて3バックにし、無敗が続いた（BBC 2024-10-29）。現役の終わりに、マンUのモウリーニョのもとで1週間の研修。
+#   スポルティング最後の試合（2024-11-10 ブラガ戦）は前半0-2から4-2、リーグ開幕11連勝はクラブ記録に並んだ。
+#
+# **入れなかったもの**：私生活（結婚・家族）、カーザ・ピアの資格の処分（法的な話に近い）、マンU退任前の会見の中身（ネヴィル・スコールズ・強化部への言葉＝人を責める話）、「史上最悪のチーム」発言（選手を小さく見せる）、
+#   EL のいまの順位（動く数字）、FotMob、女子、他の監督との優劣。
+date: 2026年11月21日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- アモリム
+- 守田英正
+theme:
+  end_bg: assets/images/20261128_manager_amorim/03_w.jpg
+  id: manager_amorim
+  league: italy
+  league_name: ミラン
+  kind: other
+  topic: アモリム
+  title: アモリム、ミラン監督はどんな人？勝率71%と38%、何が分けたのか
+  question: ミランのルベン・アモリム監督は、どんな人なのか。スポルティングで勝率71%だった監督が、マンチェスター・ユナイテッドでは38%に落ちたのはなぜか
+  lead: ミラン監督、ルベン・アモリム。
+  opening_image: assets/images/20261128_manager_amorim/01_w.jpg
+  takeaway: トップチームで通算326試合209勝、勝率64.1%。スポルティングでは231試合で勝率71.0%、19年ぶりのリーグ優勝を2度。マンチェスター・ユナイテッドでは63試合で38.1%と、32.9ポイント下がった。形は同じ3-4-3。ミランでは15試合で53.3%、セリエAは11月21日時点で4位
+  short_title: アモリム、71%と38%のあいだ
+  nameplate: ルベン・アモリム｜ミラン監督
+thumbnail:
+  line1: アモリム、通算209勝
+  line2: スポルティング71%、マンU38%
+  tags: []
+  photo: assets/images/20261128_manager_amorim_b/panel_01.jpg
+  board: assets/images/20261128_manager_amorim_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261128_manager_amorim/01_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 19年ぶりの優勝を呼んだ監督は、マンUで何につまずいたのか
+  tier: 報道
+  telop: スポルティングを19年ぶりの優勝へ。いまはミランの監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: アモリムの歩み
+    items:
+    - ['19', 年ぶり, スポルティングのリーグ優勝]
+    - ['32', 試合, 負けなし。ポルトガルの記録]
+    - ['38', '%', マンUでの勝率]
+    focus: 0
+  say:
+  - text: スポルティングを、王者に返り咲かせた監督。それが、ルベン・アモリムです。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    emph: true
+    card: none
+  - text: 2021年、スポルティングは19年ぶりに、ポルトガルの王者になりました。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: その途中、32試合負けなし。ポルトガルの記録です。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ところが、マンチェスター・ユナイテッドでは、勝率が38%まで落ちました。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年6月から、ミランを率いています。
+    card: none
+  - text: 同じ監督の数字が、なぜここまで違うのか。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: data
+  heading: アモリムは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: ルベン・アモリムの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: ルベン・アモリム（41歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1985年1月27日（ポルトガル・リスボン）]
+    - [選手のころ, MF。ベンフィカでリーグ3回優勝]
+    - [監督, ミラン（2026年6月から）]
+    - [タイトル, リーグ2、リーグ杯3、スーパーカップ1]
+    - [いま, 契約は2028年まで]
+    highlight_row: 0
+  say:
+  - text: アモリムは、1985年1月27日の生まれ。41歳です。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 選手のころはMF。ベンフィカで、リーグ優勝を3回経験しました。
+    image: assets/images/20261128_manager_amorim/04_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 監督としては、2026年6月から、ミランです。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督のタイトルは、リーグ2回、リーグ杯3回、スーパーカップ1回。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: ミランとの契約は、2028年まで。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: career
+  heading: 3部のクラブからミランへ。アモリムは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。カーザ・ピアから、ミランの監督まで
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: アモリムの歩み
+    rows:
+    - [2018年, 3部のカーザ・ピアで監督に]
+    - [2020年3月, スポルティングへ。移籍金1000万ユーロ]
+    - [2021年5月, 19年ぶりのリーグ優勝]
+    - [2024年5月, 2度目のリーグ優勝]
+    - [2024年11月, マンチェスター・ユナイテッドへ]
+    - [2026年6月, ミランの監督に]
+    focus: 0
+  say:
+  - text: アモリムの監督の始まりは2018年。ポルトガル3部の、カーザ・ピアでした。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2019年12月に、ブラガのトップチームへ。翌月、リーグ杯で優勝します。
+    card: none
+  - text: 2020年3月、スポルティングが、ブラガに1000万ユーロを払って引き抜きました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 監督に払われた額としては、当時、史上3番目でした。
+    card: none
+  - text: 2021年5月、ボアビスタに1対0。この勝ちで、優勝を決めました。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2024年5月には、2度目のリーグ優勝。
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2024年11月、マンチェスター・ユナイテッドの監督になりました。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: 2025年5月のヨーロッパリーグ決勝は、トッテナムに0対1。
+    card: none
+  - text: 2026年1月にユナイテッドを離れ、6月にミランの監督になりました。
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: style
+  heading: シティに4対1。アモリムのチームは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2024年11月、チャンピオンズリーグ、シティに4対1
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2024 チャンピオンズリーグ スポルティング対マンチェスター・シティ
+    paragraphs:
+    - 2024年11月5日、リスボン。
+    - スポルティングが、マンチェスター・シティに4対1。
+    - ギェケレシュが、ハットトリック。
+    - アモリムにとって、スポルティングの本拠地で最後の試合。
+    highlight:
+    - 4対1
+    - ハットトリック
+  say:
+  - text: 形がよく見えるのは、2024年11月の、チャンピオンズリーグです。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card: *style_doc
+  - text: 相手はマンチェスター・シティ。スポルティングが、4対1で勝ちました。
+    emph: true
+    callword: 4対1
+    card: *style_doc
+  - text: ギェケレシュが、ハットトリック。アモリムにとって、本拠地で最後の試合でした。
+    card: *style_doc
+  - text: グアルディオラのチームが、この大会で4点取られたのは、3度目でした。
+    card: none
+  - text: 形は3-4-3。後ろに3人、真ん中に4人、前に3人です。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card: none
+  - text: 中盤の2人が守りの前に立ち、両サイドの選手が、高い位置まで攻め上がります。
+    card: none
+  - text: 奪われたら、前からすぐに取り返しに行きます。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+  - https://www.tntsports.co.uk/football/champions-league/2024-2025/sporting-cp-4-1-manchester-city-viktor-gyokeres-hat-trick-stuns-english-champions-in-ruben-amorim-s_sto10387297/story.shtml
+- id: numbers
+  heading: 326試合で209勝。数字で見ると、どこがいちばん強かったのか
+  tier: 報道
+  telop: トップチームで通算326試合209勝。スポルティングは勝率71.0%
+  narrator: 解説
+  card: &rate_table
+    type: table
+    title: アモリムの成績（11月8日まで）
+    columns: [時期, 試合, 勝率]
+    rows:
+    - [通算（トップチーム）, '326', 64.1%]
+    - [スポルティング, '231', 71.0%]
+    - [マンU, '63', 38.1%]
+    - [ミラン, '15', 53.3%]
+    highlight_row: 0
+  say:
+  - text: ここからは、アモリムの成績を数字で。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: トップチームの通算は326試合。勝ったのは209試合で、勝率は64.1%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: いちばん長かったスポルティングは、231試合で164勝。71.0%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 1
+  - text: マンチェスター・ユナイテッドでは、63試合で24勝。38.1%でした。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  - text: ファーガソンの引退後、正式に就いた監督の中では、最も低い数字です。
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: words
+  heading: アモリムは、どの監督を手本にしているのか
+  tier: 報道
+  telop: アモリムの言葉。手本にしている監督について
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: アモリムの言葉（訳）。手本にしている監督について
+    paragraphs:
+    - 試合の見方が好きな監督はいます。グアルディオラのように。
+    - でも、私の手本はモウリーニョです。
+    - 相手をよく分析して、勝つためにどう合わせるかを、たくさん考える。
+    highlight:
+    - 私の手本はモウリーニョです
+    - 勝つためにどう合わせるか
+  say:
+  - text: アモリムは、手本にしている監督について、こう話しています。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card: *words_doc
+  - voice: アモリム
+    text: 試合の見方が好きな監督はいます。グアルディオラのように。
+  - voice: アモリム
+    text: でも、私の手本はモウリーニョです。
+    cont: true
+  - voice: アモリム
+    text: 相手を、よく分析する。
+  - voice: アモリム
+    text: そして、勝つためにどう合わせるかを、たくさん考える。
+    cont: true
+    pause: 0.5
+  - text: ただ、ユナイテッドでは、形を変えないことが、批判の的になりました。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card: none
+  quotes_from:
+  - https://www.givemesport.com/ruben-amorim-coaching-career/
+  sources:
+  - https://www.givemesport.com/ruben-amorim-coaching-career/
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: japan
+  heading: 守田英正とスポルティング。アモリムと日本は、どこでつながるのか
+  tier: 報道
+  telop: 2022年7月、守田英正がスポルティングへ
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: 守田英正とアモリム
+    columns: [項目, 中身]
+    rows:
+    - [加入, 2022年7月、スポルティングへ]
+    - [役目, 3-4-3の中盤の2人の1人]
+    - [優勝, 2023-24シーズンのリーグ（アモリムのもと）]
+    - [2026年5月, 契約を延ばさないと発表]
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、守田英正です。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 守田は2022年7月、アモリムが率いるスポルティングに加わりました。
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: 3-4-3の真ん中で、守りの前に立つ2人。その1人が、守田でした。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 2023-24シーズンのリーグ優勝。守田には、ポルトガルで初めての優勝でした。
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 守田は2026年5月、スポルティングとの契約を延ばさないと発表しています。
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Hidemasa_Morita
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+- id: secret
+  heading: 数字に出ない話。3バックは、どこから始まったのか
+  tier: 背景
+  telop: 3試合目に負けたら辞める。そこで初めて3バックに
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [2018年, カーザ・ピアで2連敗。3試合目に3バック]
+    - [研修, モウリーニョのもとで1週間]
+    - [2024年11月, スポルティング最後の試合は0対2から4対2]
+    highlight_row: 0
+  say:
+  - text: では、アモリムの、数字の外の話を。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card: none
+  - text: カーザ・ピアの監督になって、最初の2試合は連敗でした。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 3試合目も負けたら辞める。アモリムは、そう口にしたと言われています。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: その試合で、初めて3バックを使いました。そこから、負けない試合が続きます。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 監督になる前には、モウリーニョのもとで、1週間の研修も受けています。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: スポルティング最後の試合は、前半0対2から、4対2の逆転勝ちでした。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: リーグは開幕から11連勝。クラブの記録に並んで、イングランドへ向かいました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+  - https://www.bbc.co.uk/sport/football/articles/cq6l2mq23nyo
+- id: view
+  viewpoint: true
+  heading: 見立て・71%と38%。同じ3-4-3で、何が分かれたのか
+  tier: 背景
+  telop: 勝率71.0%から38.1%へ。そしてミランで53.3%
+  narrator: 解説
+  card: &view_table
+    type: table
+    title: 自分で割ってみた（アモリムの勝率）
+    columns: [時期, 試合, 勝率]
+    rows:
+    - [スポルティング, '231', 71.0%]
+    - [マンU, '63', 38.1%]
+    - [ミラン（11月8日まで）, '15', 53.3%]
+    highlight_row: 0
+  say:
+  - text: 見立てです。アモリムの勝率を、クラブごとに並べます。
+    image: assets/images/20261128_manager_amorim/01_w.jpg
+    card: *view_table
+  - text: スポルティングとユナイテッドの勝率の差は、32.9ポイントあります。
+    emph: true
+    mark: {"kind": "circle", "row": 1, "col": 2}
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: どちらのクラブでも、形は3-4-3。
+  - text: ユナイテッドでは、その形に合う顔ぶれではなかったと言われました。
+    card:
+      <<: *view_table
+      highlight_row: 1
+  - text: ミランでは、15試合で8勝。53.3%です。
+    image: assets/images/20261128_manager_amorim/03_w.jpg
+    card:
+      <<: *view_table
+      highlight_row: 2
+  - text: セリエAは、11月21日時点で、11試合を終えて7勝3分1敗。4位です。
+    emph: true
+    card: none
+  - text: 契約は2028年まで。71%と38%、どちらに近づくのか。
+  - text: 答えは、このシーズンの残りに出ます。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ruben_Amorim
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings

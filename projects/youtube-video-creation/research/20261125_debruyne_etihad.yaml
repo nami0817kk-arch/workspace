@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月25日）デ・ブライネがナポリの選手としてエティハドへ。横断幕と歓声の中で75分プレー、シティ2-2ナポリ（ニュースのショート。見せ方 Y＝本人の言葉から始める。言葉は試合前の TNT Sports のインタビュー）
+# 取材: 2026-11-25。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915379、2026-11-24 20:00 UTC）: マンチェスター・シティ 2-2 ナポリ。
+#   55分 ホイルンド（ギルモアのスルーパス）／67分 ブアディ（シティ。CKの流れ、ドクのアシスト）／76分 ラング（スピナッツォーラのクロス）／86分 シェルキ（シティ）。
+#   デ・ブライネは先発、75分にアンギサと交代。シュート シティ18（枠内7）・ナポリ9（枠内3）、保持 シティ62.7%。成績 シティ3勝1分1敗 勝ち点10、ナポリ1勝1分3敗 勝ち点4。
+#   ナポリの次の CL は 2026-12-08 20:00 UTC（日本時間9日朝5時）ホームのクラブ・ブルッヘ戦。
+# 昨季の帰還（ESPN event=757667、2025-09-18）: シティ 2-0 ナポリ。21分 ディ・ロレンツォ退場、26分 デ・ブライネがオリヴェラと交代。→ 昨季は26分、今季は75分。
+# ガゼッタ（11/24 21:23、現地記者、全文）: 「Kevin the best」。スタジアム中が彼の話。ボールに触るたびに拍手、アップから祝福、メンバー発表で大歓声。スタンドにベルギー国旗、ゴール裏に彼の顔の大旗、最後に「King Kev」の横断幕。
+#   https://www.gazzetta.it/Calcio/Serie-A/Napoli/24-11-2026/city-napoli-striscioni-cori-e-applausi-per-de-bruyne.shtml
+# コリエレ・デッロ・スポルト（11/24 21:00、全文）: 「Oh Kevin De Bruyne」の歌。シティ時代の写真と「我らの王。あなたが毎日幸せでいてくれるなら、それで十分」の紙が配られた。「Once a Blue, always a Blue」の紙も。
+#   https://www.corrieredellosport.it/news/calcio/champions-league/2026/11/24-152810761/cori_e_un_cartello_speciale_per_de_bruyne_l_accoglienza_dei_tifosi_del_city_commovente
+# TuttoMercatoWeb（11/24 23:30、全文）: 75分にアンギサと代わるとき、観客が立ち上がってスタンディングオベーション。交代のときアッレグリ監督と抱き合った。
+#   アッレグリ監督の試合後（Sky Sport）: "Su Kevin, purtroppo l'età passa e la vita va avanti. Giocatore straordinario, toglierlo mi è dispiaciuto." "Kevin è un ragazzo serio e credo che rimarrà fino a giugno".
+#   https://www.tuttomercatoweb.com/serie-a/notte-de-bruyne-ovazione-abbraccio-allegri-toglie-marcato-2297268
+#   同じ言葉は TuttoNapoli（Sky のインタビューの全文） https://www.tuttonapoli.net/in-primo-piano/allegri-i-sky-i-punto-importante-bastano-vittorie-de-bruyne-credo-resti-giugno-662866
+# デ・ブライネ本人（TNT Sports のインタビュー。TuttoNapoli 11/24 19:30 のイタリア語訳。試合前に収録＝「favoriti じゃない、良い試合をしたい」と話しているので試合前）:
+#   "All'inizio della stagione ho detto che non volevo venire qui e giocare di nuovo. L'anno scorso sono venuto qui, ho giocato solo 26 minuti, quindi forse sarebbe bello mostrare alla gente che posso ancora giocare a calcio".
+#   https://www.tuttonapoli.net/le-interviste/de-bruyne-napoli-cambi-modulo-giocatori-difficolta-futuro-ritiro-662845
+#   → 英語の原文は読めなかった（TNT の記事・動画の文字は見つからず）。台本の言葉は、このイタリア語訳を私が日本語にしたもの。意味は足していない。
+#   → 「試合後の言葉」は見つからなかった（ガゼッタ・コリエレ・Sky Sport Italia・TuttoNapoli・AreaNapoli・NapoliMagazine・ナポリ公式・シティ公式・Manchester Evening News・BBC を当たった。11/25 朝の時点で、試合後のデ・ブライネの言葉の記事は無い）。
+#   → 試合前の言葉を使うのは、題（帰還）に直接答える言葉だから（昨季の26分と、見せたいもの）。シティの処分・ナポリの不調・妻の発言の話（11/24 の本・別の話題）は使わない。
+# 食い違い:
+#   ・シティでのタイトル数: ガゼッタ・Sky Sport Italia は19、BBC は16。→ 数は言わない。
+#   ・交代の分: ESPN 75分、TMW 75分。一致。
+# 前の本との重なり: 11/24「デ・ブライネ、古巣シティの『有罪』に初めて語ったこと」（処分への言葉）。今回は帰還の試合と歓迎（初出）。処分の話は入れない。
+# 【言わないこと】処分（11/24 の本）／妻の発言・ナポリでの私生活／1月の移籍のうわさ（アッレグリの「6月まで残ると思う」だけは監督の言葉として使う）／タイトル数。
+# 本人の言葉: あり（試合前、TNT Sports、イタリア語訳経由）。Y。
+# 写真（使うもの）: Commons の2026年3月の写真2枚（cm30・cm133、ベルギー代表、CC BY-SA 4.0 / Bryan Berlin。11/24 の本とは別のファイル）＋組み写真1枚。TuttoNapoli・TMW の写真は横1200pxで、本編1.6倍・ショート2.85倍に伸びるので本文には使わず、組み写真の材料だけにした。
+# 写真（取り込んだもの）: 01＝TuttoNapoli の主写真、02＝TuttoMercatoWeb の主写真（どちらもナポリの水色のユニフォームのデ・ブライネ。© imagephotoagency.it。この試合の写真ではない）、03＝TuttoNapoli のアッレグリ監督（同）。組み写真＝03（左）と01（右）を pairphoto で並べた（監督がデ・ブライネについて語る行用）。
+#   ガゼッタの主写真（King Kev の横断幕）は説明に Getty Images、Sky Sport Italia の主写真はラング（別人）、コリエレの主写真（ファンの紙）は出どころが書かれておらず SNS の画像の可能性があるので外した。どれも元が横1200px前後と小さい。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [デ・ブライネ, ナポリ, マンチェスター・シティ, アッレグリ監督]
+
+short_style: Y
+short_hook_quote: まだサッカーができると、見せられたらいい。
+short_photos:
+  - assets/images/20261125_debruyne_etihad_cm133/01_v.jpg
+  - assets/images/20261125_debruyne_etihad_pair/01_v.jpg
+short_question: デ・ブライネは、ナポリで6月までプレーを続けると思いますか。
+short_telops: []
+
+theme:
+  id: debruyne_etihad
+  league: italy
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: デ・ブライネ、エティハドに戻った夜。昨季は26分で交代、今回は？
+  hook: ""
+  question: ナポリの選手としてエティハドに戻ったデ・ブライネに、何が起きたのか
+  takeaway: 昨季の帰還は退場者が出て26分で交代。今回は75分までプレーし、交代のときスタンドが立ち上がった。試合は2対2
+thumbnail:
+  layout: face
+  line1: デ・ブライネ、エティハドへ
+  line2: 昨季は26分
+  tags: [デ・ブライネ, ナポリ]
+  photo: assets/images/20261125_debruyne_etihad_cm30/01_w.jpg
+  short_photo: assets/images/20261125_debruyne_etihad_cm133/01_v.jpg
+
+answer: 75分までプレーし、交代のときに古巣のファンが総立ちで送り出した
+watch: 12月8日のクラブ・ブルッヘ戦（ホーム）
+sources:
+  - https://www.gazzetta.it/Calcio/Serie-A/Napoli/24-11-2026/city-napoli-striscioni-cori-e-applausi-per-de-bruyne.shtml
+  - https://www.corrieredellosport.it/news/calcio/champions-league/2026/11/24-152810761/cori_e_un_cartello_speciale_per_de_bruyne_l_accoglienza_dei_tifosi_del_city_commovente
+  - https://www.tuttomercatoweb.com/serie-a/notte-de-bruyne-ovazione-abbraccio-allegri-toglie-marcato-2297268
+  - https://www.tuttonapoli.net/le-interviste/de-bruyne-napoli-cambi-modulo-giocatori-difficolta-futuro-ritiro-662845
+  - https://sport.sky.it/calcio/champions-league/partite/2026/giornata-5/manchester-city-napoli/risultato-gol
+  - https://www.mancity.com/matchday/fixtures/mens/2026/champions-league/man-city-v-napoli-24-nov-2026
+sections:
+  - id: what
+    main: true
+    heading: エティハドに戻ったデ・ブライネに、何が起きたのか
+    tier: 報道
+    telop: デ・ブライネ、ナポリの選手としてエティハドで75分
+    say:
+      - text: ナポリのデ・ブライネが、古巣シティの本拠地エティハドに戻りました。
+        image: assets/images/20261125_debruyne_etihad_cm133/01_w.jpg
+      - text: 試合の前、デ・ブライネはこう話していました。
+      - voice: デ・ブライネ
+        text: 去年ここに来たときは、26分しかプレーしませんでした。
+      - voice: デ・ブライネ
+        text: まだサッカーができると、見せられたらいい。
+        emph: true
+      - text: 昨季の帰還は、味方が21分に退場。デ・ブライネは26分で代えられていました。
+      - text: 今回は、スタジアムが試合の前から彼を迎えます。
+      - text: 「King Kev」、王様ケヴィンという横断幕。
+      - text: シティ時代の写真に「我らの王」と書いた紙も、スタンドで配られました。
+      - text: ボールに触るたびに、スタンドから拍手が起きます。
+      - text: そして75分。デ・ブライネが代わると、シティのファンが立ち上がって送り出しました。
+        image: assets/images/20261125_debruyne_etihad_pair/01.jpg
+        emph: true
+      - text: 昨季の26分から、今回は75分。試合は2対2の引き分けでした。
+        card: {type: table, title: デ・ブライネのエティハド, columns: [試合, 出場, 結果], rows: [[昨季 2025年9月, 26分, 0-2で負け], [今季 2026年11月, 75分, 2-2で引き分け]], highlight_row: 1}
+        image: assets/images/20261125_debruyne_etihad_cm133/01_w.jpg
+    official: false
+    quotes_from: [TuttoNapoli]
+    sources:
+      - https://www.tuttonapoli.net/le-interviste/de-bruyne-napoli-cambi-modulo-giocatori-difficolta-futuro-ritiro-662845
+      - https://www.gazzetta.it/Calcio/Serie-A/Napoli/24-11-2026/city-napoli-striscioni-cori-e-applausi-per-de-bruyne.shtml
+      - https://www.corrieredellosport.it/news/calcio/champions-league/2026/11/24-152810761/cori_e_un_cartello_speciale_per_de_bruyne_l_accoglienza_dei_tifosi_del_city_commovente
+      - https://www.tuttomercatoweb.com/serie-a/notte-de-bruyne-ovazione-abbraccio-allegri-toglie-marcato-2297268
+      - https://www.espn.com/soccer/match/_/gameId/401915379
+      - https://www.espn.com/soccer/match/_/gameId/757667
+  - id: allegri
+    heading: デ・ブライネを代えたアッレグリ監督は、何を語ったのか
+    tier: 報道
+    telop: アッレグリ監督「代えるのは残念だった」
+    say:
+      - text: 交代のとき、デ・ブライネはアッレグリ監督と抱き合いました。
+        image: assets/images/20261125_debruyne_etihad_pair/01.jpg
+      - text: 試合後、監督はこう話しています。
+      - voice: アッレグリ監督
+        text: 素晴らしい選手です。代えるのは残念でした。
+      - text: デ・ブライネの今後を聞かれると、監督はこう答えています。
+      - voice: アッレグリ監督
+        text: ケヴィンは真面目な男です。6月まで残ってくれると思います。
+    official: false
+    quotes_from: [TuttoNapoli]
+    sources:
+      - https://www.tuttonapoli.net/in-primo-piano/allegri-i-sky-i-punto-importante-bastano-vittorie-de-bruyne-credo-resti-giugno-662866
+      - https://www.tuttomercatoweb.com/serie-a/notte-de-bruyne-ovazione-abbraccio-allegri-toglie-marcato-2297268
+  - id: view
+    viewpoint: true
+    heading: 引き分けで、デ・ブライネのナポリはどこにいるのか
+    tier: 報道
+    telop: ナポリは1勝1分け3敗。次は12月8日のブルッヘ戦
+    say:
+      - text: 見立てです。試合はナポリが2度リードし、シティが2度追いつきました。
+        image: assets/images/20261125_debruyne_etihad_cm133/01_w.jpg
+        card: {type: table, title: シティ 2-2 ナポリ, columns: [分, 得点], rows: [[55分, ホイルンド（ナポリ）], [67分, ブアディ（シティ）], [76分, ラング（ナポリ）], [86分, シェルキ（シティ）]], highlight_row: 3}
+      - text: ナポリは、チャンピオンズリーグで1勝1分け3敗。勝ち点4で、あと3試合を戦います。
+      - text: 上位24チームに入れなければ、ここで大会を去ることになります。
+        card: none
+      - text: デ・ブライネのナポリは12月8日、ホームでクラブ・ブルッヘを迎えます。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915379
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/114/schedule?fixture=true

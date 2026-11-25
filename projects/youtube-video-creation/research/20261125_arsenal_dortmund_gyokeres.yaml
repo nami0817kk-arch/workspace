@@ -1,0 +1,150 @@
+# 取材メモ（2026年11月25日）CL第5節 アーセナル1-1ドルトムント。ギェケレシュが本拠地で206日ぶりのゴールも勝ちきれず。本人とアルテタ監督の試合後の言葉（ニュースのショート。見せ方 Y＝ギェケレシュ本人の言葉から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 表記: 名前はチャンネルの直近の表記に合わせて「ギェケレシュ」（11/5 のスラヴィア戦の回・11/28 の監督紹介と同じ）。
+# 試合データ（ESPN uefa.champions summary?event=401915295。11/25 取得）:
+#   2026-11-24 20:00Z エミレーツ・スタジアム。アーセナル 1-1 ボルシア・ドルトムント。
+#   10分 ギェケレシュ（右足、エリアの外から。アシスト マドゥエケ）／55分 バイアー（左足、エリアの中から。アシスト ガドゥ）／87分 ギェケレシュ→メリーノに交代。
+#   シュート アーセナル30・ドルトムント13。枠内 4・4。支配率 63%・37%。
+# ESPN の試合レポート（PA。全文）: http://www.espn.com/soccer/report/_/gameId/401915295
+#   ギェケレシュの本拠地でのゴールは206日ぶり（"his first goal on home soil in 206 days"）。25ヤードの先制点。
+#   後半、6ヤードからフリーのヘディングを外した（"headed wide unmarked from six yards"）。ベリンガム（ジョーブ）のゴールはオフサイドで取り消し。
+#   アーセナルは土曜のニューカッスル戦（2-2）に続き、2試合続けて先にリードしながら勝ちきれなかった。
+# 本人の言葉（football.london 34961661。全文）: https://www.football.london/arsenal-fc/news/victor-gyokeres-arsenal-borussia-dortmund-34961661
+#   "A little bit," he said. "We had enough chances and created enough. We should have won the game.
+#   "We played well, we created a lot of good chances. I think we deserved three points, but sometimes it's like that, and we have to do better."
+#   地の文: 今季、アーセナルがホームで勝てなかったのは初めて（"fail to win at home for the first time this season"）。
+#   → "A little bit" は何の問いへの答えか記事に無いので使わない。
+#   照合: ミラー（John Cross）https://www.mirror.co.uk/sport/football/news/arsenal-viktor-gyokeres-borussia-dortmund-37911979
+#     "We could have won the game in many different ways. We played well and created a lot of chances, we deserved to win the game but sometimes it is like that."
+#     → 同じ取材の別の書き起こし（言い回しが少し違う）。台本は football.london の文から訳した。中身は同じ。
+# アルテタ監督（football.london「Every word Mikel Arteta said…」34959492。全文）: https://www.football.london/arsenal-fc/news/mikel-arteta-dortmund-press-conference-34959492
+#   ギェケレシュについて: "I think he had a brilliant performance today. I think he scored an unbelievable goal. He has the technique and the quality to do that. What I love the most is how connected he was to the team. ..."
+#   試合について: "there is an element of luck here because how in hell some of the goals they haven't gone inside, I don't know"
+#   → 同じ答えの最後の "that's the Viktor that we needed" は、11/5 の回の題（「彼に必要だった試合」）と言い回しが近いので使わない。
+# 順位（ESPN uefa.champions standings、11/25 取得。水曜の試合の前）: アーセナル 5試合 3勝2分け0敗 勝ち点11 5位。ドルトムント 5試合 勝ち点10 7位。
+# 次の試合（ESPN の日程）: 11/29 16:30Z プレミアリーグ マンチェスター・シティ戦（ホーム、event=401878753）。CLの次は 12/9 レアル・マドリード戦（ホーム）。
+# 自分で数えたもの: 枠内に飛んだ割合 アーセナル 4/30＝13%、ドルトムント 4/13＝31%。
+# 前の本との重なり: 20260926（代表で今季初ゴール。スウェーデンの話）・20261105（スラヴィア戦の1ゴール1アシスト、アルテタ「彼に必要だった」）。
+#   今回の初出: ドルトムント戦の先制点（206日ぶりの本拠地ゴール）・外したヘディング・本人の「勝つべき試合だった」・シュート30本で枠内4本。代表の話・スラヴィア戦の中身は繰り返さない。
+# 【入れないこと】ハンドの場面と元審判クラッテンバーグらの意見（題から外れる）・ラヤの負傷とケパ・オーデゴールの反応・ハヴァーツとの序列。
+# 本人の言葉: あり（ギェケレシュ本人＝football.london、照合はミラー）→ Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真（目で見た。assets/images/20261125_arsenal_dortmund_gyokeres/_pool.png）:
+#   01＝ギェケレシュ（Commons「1 Viktor Gyökeres 2026」CC BY-SA 4.0 Chensiyuan。アーセナルの練習着・背番号14、2026-05）
+#   03＝2023-04 ウェストハム対アーセナルの試合後（Commons「West Ham United v Arsenal F.C., 16 April 2023 (l)」CC BY-SA 4.0 Thomas Dahlstrøm Nielsen）、05＝そこからアルテタ監督を切り出したもの
+#   04＝バイアー（Commons「Maximilian Beier training with Borussia Dortmund (2026)」CC0 FriederRöcklerII）
+#   _pair/01＝アルテタ（左）＋ギェケレシュ（右）、_vs/01＝ギェケレシュ（左）＋バイアー（右）（tools/pairphoto.py）
+#   外したもの: 試合の記事の写真（football.london・ミラーとも Getty Images の表記）。Commons のスウェーデン代表の写真は取得が 429 で止まった（代表の話は前の回と重なるので使わない）。
+#   Commons のページ: https://commons.wikimedia.org/wiki/File:1_Viktor_Gy%C3%B6keres_2026.jpg
+slot: match
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [ギェケレシュ, アーセナル, アルテタ監督, ドルトムント, バイアー]
+
+short_style: Y
+short_hook_quote: 勝つべき試合でした。
+short_photos:
+  - assets/images/20261125_arsenal_dortmund_gyokeres/01_v.jpg
+  - assets/images/20261125_arsenal_dortmund_gyokeres_vs/01_v.jpg
+  - assets/images/20261125_arsenal_dortmund_gyokeres/05_v.jpg
+  - assets/images/20261125_arsenal_dortmund_gyokeres_pair/01_v.jpg
+short_question: ギェケレシュは、日曜のマンチェスター・シティ戦でも先発すると思いますか。
+short_telops: []
+
+theme:
+  id: arsenal_dortmund_gyokeres
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ギェケレシュ、ドルトムント戦で206日ぶりの本拠地弾。勝てなかった夜の本音
+  opening_image: assets/images/20261125_arsenal_dortmund_gyokeres/01_w.jpg
+  hook: ""
+  question: 先制点を決めたのに勝てなかったドルトムント戦を、ギェケレシュはどう振り返ったのか
+  takeaway: アーセナルはシュート30本のうち枠に飛んだのが4本（13%）。13本で4本（31%）のドルトムントに追いつかれ、2試合続けて先制しながら勝ちきれなかった
+
+thumbnail:
+  layout: versus
+  photos:
+    - assets/images/20261125_arsenal_dortmund_gyokeres/01.jpg
+    - assets/images/20261125_arsenal_dortmund_gyokeres/04.jpg
+  names: [ギェケレシュ, バイアー]
+  line1: ギェケレシュとアーセナル
+  line2: シュート30本で1点
+  tags: [ギェケレシュ, アーセナル]
+  short_photo: assets/images/20261125_arsenal_dortmund_gyokeres/01_v.jpg
+
+answer: 勝つべき試合だった。勝ち点3に値したが、こういうこともある。もっとやらないといけない
+watch: 29日のマンチェスター・シティ戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 先制点のギェケレシュが、試合後に口にしたこと
+    tier: 報道
+    telop: ギェケレシュ「勝つべき試合でした」
+    say:
+      - text: ドルトムントと引き分けたアーセナル。先制点のギェケレシュはこう話しました。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres/01_w.jpg
+      - voice: ギェケレシュ
+        text: チャンスは十分に作りました。
+      - voice: ギェケレシュ
+        text: 勝つべき試合でした。
+        emph: true
+      - voice: ギェケレシュ
+        text: 勝ち点3に値したと思います。でも、こういうこともある。
+        cont: true
+      - voice: ギェケレシュ
+        text: もっとやらないといけません。
+        cont: true
+      - text: 1対1の試合。ギェケレシュは10分に先制していました。
+      - text: エリアの外から右足で決めた、本拠地では久しぶりのゴールでした。
+      - text: ところが55分、ドルトムントのバイアーに決められて同点。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres_vs/01.jpg
+      - text: 後半には、ギェケレシュ自身もゴール前でフリーのヘディングを外しています。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres/01_w.jpg
+    official: false
+    quotes_from: [フットボール・ロンドン]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915295
+      - http://www.espn.com/soccer/report/_/gameId/401915295
+      - https://www.football.london/arsenal-fc/news/victor-gyokeres-arsenal-borussia-dortmund-34961661
+      - https://www.mirror.co.uk/sport/football/news/arsenal-viktor-gyokeres-borussia-dortmund-37911979
+  - id: arteta
+    heading: アルテタ監督は、ギェケレシュをどう見たか
+    tier: 報道
+    telop: アルテタ監督「チームとのつながりがよかった」
+    say:
+      - text: アルテタ監督は、外したヘディングよりも、ギェケレシュのプレー全体を評価しました。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres_pair/01.jpg
+      - voice: アルテタ監督
+        text: 素晴らしい出来でした。信じられないゴールを決めてくれた。
+      - voice: アルテタ監督
+        text: いちばんよかったのは、チームとどれだけつながっていたかです。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres/05_w.jpg
+        cont: true
+    official: false
+    quotes_from: [フットボール・ロンドン]
+    sources:
+      - https://www.football.london/arsenal-fc/news/mikel-arteta-dortmund-press-conference-34959492
+  - id: view
+    viewpoint: true
+    heading: シュート30本で1点。どこで勝ち点を落としたか
+    tier: 背景
+    telop: 枠内 アーセナル30本中4本・ドルトムント13本中4本
+    say:
+      - text: 見立てです。アーセナルのシュート30本のうち、枠に飛んだのは4本、13%。
+        image: assets/images/20261125_arsenal_dortmund_gyokeres/01_w.jpg
+        card: {type: table, title: アーセナル 1-1 ドルトムント, columns: [項目, アーセナル, ドルトムント], rows: [[シュート, 30本, 13本], [枠内, 4本, 4本], [枠内の割合, 13%, 31%], [支配率, 63%, 37%]], highlight_row: 2}
+      - text: ドルトムントは13本で4本、31%。枠に飛ばした数は同じでした。
+        card: {type: table, title: アーセナル 1-1 ドルトムント, columns: [項目, アーセナル, ドルトムント], rows: [[シュート, 30本, 13本], [枠内, 4本, 4本], [枠内の割合, 13%, 31%], [支配率, 63%, 37%]], highlight_row: 1}
+      - text: ゴールになったのは、ギェケレシュのミドルシュートの1本でした。
+      - text: 土曜のニューカッスル戦に続き、2試合続けて先にリードしながら勝てませんでした。
+        card: none
+      - text: それでもチャンピオンズリーグでは5試合負けなし、勝ち点11の5位です。
+      - text: 次は29日、ホームでのマンチェスター・シティ戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915295
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings
+      - https://www.espn.com/soccer/match/_/gameId/401878753

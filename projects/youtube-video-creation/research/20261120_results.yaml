@@ -1,0 +1,43 @@
+# 候補テーマ（2026年11月20日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年11月20日"
+candidates:
+  - id: athletic_club_espanyol
+    title: "Athletic Club 0 - 1 Espanyol（LaLiga）"
+    topic: "アスレティック・ビルバオ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868132
+    hours_ago: 14   # フィードの時刻から
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5868132
+
+  - id: bayern_m_nchen
+    title: "Bayern München 1 - 1 1. FC Köln（Bundesliga）"
+    topic: "バイエルン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881226
+    hours_ago: 14   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881226
+
+  - id: troyes_le_havre
+    title: "Troyes 3 - 1 Le Havre（Ligue 1）"
+    topic: "トロワ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802999
+    hours_ago: 14   # フィードの時刻から
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5802999
+

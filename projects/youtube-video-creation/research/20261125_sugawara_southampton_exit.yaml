@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月25日）菅原由勢、サウサンプトン退団は「避けられない」と英メディア。根拠はカリアリでの出番（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: Football Tribe Japan 2026-11-24「菅原由勢がサウサンプトンを退団へ「もはや避けられない状況」「以前から予想され…」」（全文）。
+#   元記事は英『Football League World』の「トンダ・エッカート監督の新契約がサウサンプトンの3選手に影響を及ぼす可能性」。
+#   ※元記事は直接読んでいない。footballleagueworld.co.uk の robots.txt（Valnet）が自動での取得・抽出を明示的に禁じているため、取りに行くのをやめた。
+#     元記事の言葉は Football Tribe の日本語訳をそのまま使う（英語の原文は確かめていない）。確度は報道。
+# 出典で確かめたこと:
+#   ・Football Tribe（FLW の訳として本文に引用）:
+#       「セント・メリーズ・スタジアムを完全移籍で離れることが濃厚となっているもう1人の期限付き移籍中の選手が、日本代表のユーティリティーDF菅原由勢だ」
+#       「カリアリではトップチームでの立場を確立できず、出場機会も限られている。菅原は、サウサンプトンに在籍していた時期も、トップチームで主力の座を確保できなかった」
+#       「昨2025/26シーズンにブンデスリーガのベルダー・ブレーメンに期限付き移籍していた菅原だが、サウサンプトンからの完全移籍による退団は以前から予想されていた」
+#       「エッカート監督が今2026年夏も放出を容認したことを踏まえれば、退団はもはや避けられない状況だ。なお、同選手とクラブの契約は2028年夏まで残っている」
+#       地の文: サウサンプトン（イングランド2部）は11月20日にエッカート監督と2029年夏までの新契約。
+#   ・契約2028年夏: FlashscoreUSA 2024-07（AZ から4年契約でサウサンプトンへ。"joined Southampton on a four-year deal"）と一致。
+#   ・ゲキサカ 2026-09-02（全文）: サウサンプトンからカリアリへのレンタルが正式発表。昨季ブレーメンでブンデスリーガ31試合6アシスト。
+#       買い取りオプション550万ユーロ（地元紙 Southern Daily Echo の報道として）→ 金額は今回使わない（題の外）。
+#   ・ESPN（ita.1 の各試合の summary の rosters と keyEvents、11/25 取得）＝加入後のセリエA:
+#       9/7 レッチェ戦は登録なし（9/2 発表の直後）。9/12 アタランタ戦 68分から途中出場（デビュー）／9/19 ウディネーゼ戦 59分から／10/11 ユヴェントス戦 69分から／
+#       10/19 モンツァ戦 67分から／10/24 ボローニャ戦 45分から（後半頭）／10/27 ローマ戦 先発（90+1分に交代。2-4で負け）／
+#       11/1 ラツィオ戦・11/7 フロジノーネ戦・11/21 コモ戦は登録ありで出番なし（appearances 0）。
+#       → 加入後のリーグ戦は10試合（アタランタ戦〜コモ戦）、出場6・先発1、直近3試合は出番なし。自分で数えた。
+#       分の合計（約233分）は終了間際の追加時間が入らないので言わない。
+#   ・ESPN 順位表（ita.1、11/25）: カリアリ 12試合 勝ち点16 で11位（今回は使わない）。
+#   ・ESPN 日程: 次は 11/30 19:45 UTC ホームのミラン戦（日本時間 12/1 4時45分）。
+# 本人の言葉: 無し（退団の話について本人が話した記事は見つからなかった。ゲキサカ・サッカーキングの11月の代表取材はブラジル戦と森保監督の話で、去就には触れていない）。→ X。
+# 前の本との重なり: 20261028_sugawara_cagliari_roma（初先発のローマ戦の最後の6分）／20261114_sugawara_brazil_zero_to_90（W杯の教訓）。今回は去就の報道と出番の数字。ローマ戦の中身は繰り返さない（「先発は1試合」とだけ）。
+# 【言わないこと】移籍先の予想・買い取りの予想（報道に無い）。「退団が決まった」とは言わない（媒体の見立て）。菅原を小さく見せる言い方をしない。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/world/detail/?458019-458019-fl
+#   https://www.soccer-king.jp/news/world/ita/20261108/2225448.html
+#   https://www.soccer-king.jp/news/world/ita/20261028/2222027.html
+#   https://web.gekisaka.jp/news/japan/detail/?463128-463128-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227407.html
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [菅原由勢, サウサンプトン, カリアリ, エッカート監督, ブレーメン]
+
+short_style: X
+short_hook_word: 退団は避けられない
+short_photos:
+  - assets/images/20261125_sugawara_southampton_exit/01_v.jpg
+  - assets/images/20261125_sugawara_southampton_exit/04_v.jpg
+  - assets/images/20261125_sugawara_southampton_exit/03_v.jpg
+short_question: 菅原由勢は、ミラン戦で出番をつかめると思いますか。
+short_telops: []
+
+theme:
+  id: sugawara_southampton_exit
+  league: japan
+  league_name: セリエA
+  prefix: ""
+  title: 菅原由勢のサウサンプトン退団が「避けられない」と書かれた、2つの根拠
+  hook: ""
+  question: 英メディアは、なぜ菅原由勢のサウサンプトン退団を「避けられない」と見たのか
+  takeaway: 根拠は、監督が夏に放出を認めたことと、カリアリでの出番。加入後のリーグ戦10試合で出場6・先発1、直近3試合は出番なし。契約は2028年夏まで残っており、次のミラン戦で出番をつかめるかが、来季の行き先にもつながる
+
+thumbnail:
+  layout: face
+  line1: 菅原由勢
+  line2: 退団は避けられない？
+  tags: [菅原由勢, カリアリ]
+  photo: assets/images/20261125_sugawara_southampton_exit/04_w.jpg
+  short_photo: assets/images/20261125_sugawara_southampton_exit/01_v.jpg
+
+answer: 監督が夏も放出を認めたこと、そしてカリアリでも出番が限られていること
+watch: 12月1日のミラン戦（日本時間4時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: 英メディアは、菅原由勢の去就をどう書いたのか
+    tier: 報道
+    telop: 菅原由勢、サウサンプトン退団は「避けられない」と英メディア
+    say:
+      - text: イタリア1部のカリアリに期限付き移籍中の日本代表DF、菅原由勢。
+        image: assets/images/20261125_sugawara_southampton_exit/01_w.jpg
+        emph: true
+      - text: 所属元のイングランド2部、サウサンプトンを離れることについて、
+        image: assets/images/20261125_sugawara_southampton_exit/04_w.jpg
+      - text: 英メディアがこう書きました。
+      - voice: フットボール・リーグ・ワールド
+        text: 完全移籍での退団は、以前から予想されていた。
+      - voice: フットボール・リーグ・ワールド
+        text: 監督が今夏も放出を認めたことを踏まえれば、
+        image: assets/images/20261125_sugawara_southampton_exit/01_w.jpg
+      - voice: フットボール・リーグ・ワールド
+        text: 退団はもはや避けられない。
+        cont: true
+        emph: true
+      - text: サウサンプトンは今月20日、そのエッカート監督との契約を延ばしました。
+        image: assets/images/20261125_sugawara_southampton_exit/03_w.jpg
+      - text: 放出を認めた監督が、この先もチームを率いるということです。
+      - text: 記事が挙げたもう1つの根拠が、カリアリでの出番です。
+        image: assets/images/20261125_sugawara_southampton_exit/04_w.jpg
+      - voice: フットボール・リーグ・ワールド
+        text: カリアリでは、トップチームでの立場を確立できず、
+      - voice: フットボール・リーグ・ワールド
+        text: 出場機会も限られている。
+        cont: true
+      - text: 加入後のリーグ戦10試合で、先発は1試合。直近3試合は出番がありません。
+        card: {type: stats, title: 菅原由勢 カリアリでのセリエA, items: [[10, 試合, 加入後のリーグ戦], [6, 試合, 出場], [1, 試合, 先発]], focus: 2}
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/24/361712/
+      - https://www.espn.com/soccer/match/_/gameId/401875056
+  - id: minutes
+    heading: カリアリで、菅原由勢はどんな形で出ているのか
+    tier: 報道
+    telop: 出場6試合のうち5試合は途中から
+    say:
+      - text: 菅原由勢が出た6試合のうち、5試合は途中からの出場です。
+        image: assets/images/20261125_sugawara_southampton_exit/04_w.jpg
+        card: {type: stats, title: 菅原由勢 カリアリでのセリエA, items: [[10, 試合, 加入後のリーグ戦], [6, 試合, 出場], [1, 試合, 先発]], focus: 1}
+      - text: 初めての先発は、10月のローマ戦でした。
+        card: none
+      - text: 出番の無かった直近の3試合も、メンバーには入っています。
+        image: assets/images/20261125_sugawara_southampton_exit/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/_/id/2925/cagliari
+      - https://www.espn.com/soccer/match/_/gameId/401874780
+      - https://web.gekisaka.jp/news/world/detail/?458019-458019-fl
+  - id: view
+    viewpoint: true
+    heading: 契約が2028年夏まで残る菅原由勢にとって、次の一戦は何を意味するのか
+    tier: 背景
+    telop: サウサンプトンとの契約は2028年夏まで
+    say:
+      - text: 見立てです。サウサンプトンとの契約は、2028年の夏まで残っています。
+        image: assets/images/20261125_sugawara_southampton_exit/01_w.jpg
+      - text: 菅原由勢が来季どこでプレーするかを左右するのは、ここからの出番です。
+      - text: 次は12月1日、日本時間の朝4時45分から、ホームでのミラン戦です。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/24/361712/
+      - https://www.flashscoreusa.com/news/soccer-premier-league-japanese-full-back-yukinari-sugawara-joins-southampton-from-az-alkmaar/tETuIKpn/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/2925/schedule?fixture=true
