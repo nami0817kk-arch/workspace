@@ -16,6 +16,9 @@ import '../monetization/monetization.dart';
 import '../monetization/purchase_service.dart';
 import 'save.dart';
 
+/// ビルドのときに試しの道具を入れるか（既定は入れない。入れ忘れても App Store の版に出ない側に倒す）。
+const kTestTools = bool.fromEnvironment('RANSE_TEST_TOOLS');
+
 enum AppScreen { title, birth, play, dex, guide, lives }
 
 /// 画面の切り替えと、保存・最高点の管理。
@@ -27,6 +30,7 @@ class AppController extends ChangeNotifier {
     Rng? rng,
     this.autoGuide = false,
     this.money,
+    this.testTools = kTestTools,
   }) : store = store ?? SaveStore(),
        rng = rng ?? Rng() {
     game = Game(
@@ -74,6 +78,10 @@ class AppController extends ChangeNotifier {
   /// これまでの人生（新しい順）と、その件数。
   List<LifeRecord> lives = [];
   int lifeCount = 0;
+
+  /// 試しに遊ぶための生まれの画面（題字の長押し）を開けるか。TestFlight に上げるビルドだけ真
+  /// （リリースの CI が `--dart-define=RANSE_TEST_TOOLS=true` を渡す。App Store に出すビルドでは偽。2026-11-26 ユーザー決定）。
+  final bool testTools;
 
   /// 広告と「広告を消す」（2026-11-25）。[init] で用意する（テストでは差し替えられる）。
   Monetization? money;

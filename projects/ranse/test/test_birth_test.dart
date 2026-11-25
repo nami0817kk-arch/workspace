@@ -93,12 +93,28 @@ void main() {
     }
   });
 
-  testWidgets('タイトルの題字を長押しすると試験用の画面が開き、その生まれで始まる', (tester) async {
+  testWidgets('試しの道具を入れないビルド（App Store の版）では、長押ししても試験用の画面は開かない', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390 * 3, 844 * 3);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     final c = AppController(rng: Rng(3));
+    expect(c.testTools, isFalse, reason: '既定は入れない（ビルドのときに RANSE_TEST_TOOLS を渡したときだけ）');
+    await tester.pumpWidget(RanseApp(controller: c));
+    await tester.pump();
+    await tester.longPress(find.text('乱世下剋上'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('試験用の生まれ'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('タイトルの題字を長押しすると試験用の画面が開き、その生まれで始まる', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(390 * 3, 844 * 3);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final c = AppController(rng: Rng(3), testTools: true);
     await tester.pumpWidget(RanseApp(controller: c));
     await tester.pump();
     await tester.longPress(find.text('乱世下剋上'));

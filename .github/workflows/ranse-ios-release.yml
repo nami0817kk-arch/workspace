@@ -10,9 +10,11 @@ name: Build 乱世下剋上 (iOS Release)
 on:
   # このブランチは master に入っていないので、手動実行だけだと GitHub にワークフローとして見つけてもらえない。
   # タグ ranse-v* を push すると、ビルドして TestFlight へ上げる。
+  # タグ ranse-v* は TestFlight 用（試しの生まれの画面が入る）。審査に出すビルドはタグ ranse-store-v*（試しの道具を入れない。2026-11-26 ユーザー決定）。
   push:
     tags:
       - "ranse-v*"
+      - "ranse-store-v*"
   workflow_dispatch:
     inputs:
       build_number:
@@ -220,6 +222,10 @@ jobs:
         run: |
           set -euo pipefail
           EXTRA="${ADMOB_DEFINES:-}"
+          case "$GITHUB_REF_NAME" in
+            ranse-store-v*) echo "審査に出すビルド: 試しの道具を入れません。";;
+            *) EXTRA="$EXTRA --dart-define=RANSE_TEST_TOOLS=true"; echo "TestFlight 用のビルド: 試しの生まれの画面を入れます。";;
+          esac
           if [ -n "$BUILD_NUMBER" ]; then
             [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
             EXTRA="$EXTRA --build-number=$BUILD_NUMBER"

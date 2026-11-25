@@ -40,11 +40,13 @@ class TitleScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
-              // 題字を長押しすると、試験用の生まれの画面（`TestBirthScreen`）が開く。ふつうに遊ぶ人には見せない。
+              // 題字を長押しすると、試験用の生まれの画面（`TestBirthScreen`）が開く。TestFlight のビルドだけ（`AppController.testTools`）。
               GestureDetector(
-                onLongPress: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => TestBirthScreen(c)),
-                ),
+                onLongPress: !c.testTools
+                    ? null
+                    : () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(builder: (_) => TestBirthScreen(c)),
+                      ),
                 child: const Text(
                   '乱世下剋上',
                   style: TextStyle(
