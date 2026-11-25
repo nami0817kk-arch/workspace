@@ -38,12 +38,14 @@ require('../prototype/words.js').short.concat(require('../prototype/words.js').m
 
 // 4. 画面の文字: 日本語の文字列は T('日本語', 'English') の形で英語と対になっている。
 //    （英語の画面に日本語が残らないように。決まった例外だけ許す: ローマ字の表・英語を先に書いた三項・試作だけのボタン・クレジットの日本語の段）
-var body = html.slice(html.indexOf('<script>\n(function'));
+// 改行が CRLF でも見つける（手元の Windows では CRLF で見つからず、この点検が素通りしていた。2026-11-25）
+var body = html.replace(/\r\n/g, '\n'); body = body.slice(body.indexOf('<script>\n(function'));
+assert.ok(body.length > 10000, 'ゲームの script が見つからない');
 var lines = body.split('\n'), bad = [];
 lines.forEach(function (line, i) {
   var code = line.replace(/\/\/.*$/, '');
   if (!/'[^']*[ぁ-んァ-ヶ一-龠][^']*'/.test(code)) return;
-  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）|speak\('ねこ', true\)/.test(code)) return;
+  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）|speak\('ねこ', true\)|YOON|SMALL_ROMA|=== 'っ'|measureText\('あ'\)/.test(code)) return;
   bad.push((i + 1) + ': ' + line.trim().slice(0, 100));
 });
 assert.deepStrictEqual(bad, [], '英語と対になっていない日本語の文字列');
