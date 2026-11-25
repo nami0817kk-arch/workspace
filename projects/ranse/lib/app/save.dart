@@ -154,6 +154,32 @@ class SaveStore {
     return isNew;
   }
 
+  /// やり直した人生の最期を、図鑑から取り消す（記したときに初めてなら消し、そうでなければ回数を一つ減らす）。
+  Future<void> unrecordEnding(String key, {required bool wasNew}) async {
+    final d = await dex();
+    final e = d[key];
+    if (e == null) return;
+    if (wasNew || e.count <= 1) {
+      d.remove(key);
+    } else {
+      e.count--;
+    }
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _kDex,
+      jsonEncode({for (final x in d.values) x.key: x.toJson()}),
+    );
+  }
+
+  /// やり直した人生を、これまでの人生から取り消す（先頭がその人生のときだけ）。取り消したあとの件数を返す。
+  Future<int> unrecordLife(String id) async {
+    final list = await lives();
+    if (list.isNotEmpty && list.first.id == id) list.removeAt(0);
+    final p = await SharedPreferences.getInstance();
+    await p.setString(_kLives, jsonEncode([for (final x in list) x.toJson()]));
+    return list.length;
+  }
+
   // ---------- これまでの人生（2026-11-25） ----------
   static const _kLives = 'ranse.lives.v1';
 

@@ -6,6 +6,7 @@ import '../engine/ending.dart';
 import '../engine/game.dart';
 import '../engine/remembrance.dart';
 import '../engine/rng.dart';
+import '../monetization/monetization.dart';
 import 'share.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -44,6 +45,26 @@ class _EndScreenState extends State<EndScreen> {
     final png = await captureCard(_cardKey);
     await shareResult(text: text, image: png, origin: origin);
     if (mounted) setState(() => _sharing = false);
+  }
+
+  bool _waiting = false;
+
+  /// 亡くなる前の年からやり直す（動画と引き換え。広告を消した人はそのまま）。
+  Future<void> _redo() async {
+    final c = widget.c;
+    final r = await c.redo(
+      onWaiting: () {
+        if (mounted) setState(() => _waiting = true);
+      },
+    );
+    if (mounted) setState(() => _waiting = false);
+    // やり直せたときは、遊ぶ画面に戻る（この画面は消える）ので何も出さない
+    if (r == RedoGate.granted || !mounted) return;
+    final msg = switch (r) {
+      RedoGate.declined => '動画を最後まで見ると、やり直せる。',
+      _ => '動画を読み込めなかった。少し置いて、もう一度押してほしい。',
+    };
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -177,7 +198,15 @@ class _EndScreenState extends State<EndScreen> {
             const SizedBox(height: 14),
             Panel(title: '最期のころ', child: LogList(l.log.take(8).toList())),
             const SizedBox(height: 20),
-            BigButton('新たな生を引く', c.draw),
+            if (c.canRedo) ...[
+              _RedoButton(
+                needsAd: c.redoNeedsAd,
+                busy: c.redoing || _waiting,
+                onTap: _redo,
+              ),
+              const SizedBox(height: 10),
+            ],
+            BigButton('新たな生を引く', () => c.nextLife()),
             const SizedBox(height: 10),
             BigButton('タイトルへ', c.toTitle, secondary: true),
           ],
@@ -302,6 +331,46 @@ class _ResultCard extends StatelessWidget {
           Text(e.text, style: const TextStyle(fontSize: 14, height: 1.8)),
         ],
       ),
+    );
+  }
+}
+
+/// やり直しの釦（一つの人生に一度。動画を見る人には印を付ける）。
+class _RedoButton extends StatelessWidget {
+  const _RedoButton({
+    required this.needsAd,
+    required this.busy,
+    required this.onTap,
+  });
+  final bool needsAd, busy;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        OutlinedButton.icon(
+          onPressed: busy ? null : onTap,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Pal.gold,
+            side: const BorderSide(color: Pal.gold),
+            minimumSize: const Size.fromHeight(48),
+          ),
+          icon: Icon(
+            needsAd ? Icons.smart_display_outlined : Icons.replay,
+            size: 20,
+          ),
+          label: Text(busy ? '動画を読み込んでいる…' : '亡くなった年の始めからやり直す'),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          needsAd
+              ? '動画を一本見ると、一度だけやり直せる。その先の運は変わる。'
+              : '一度だけやり直せる。その先の運は変わる。',
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Pal.muted, fontSize: 12),
+        ),
+      ],
     );
   }
 }

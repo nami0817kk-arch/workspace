@@ -36,6 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.6
   share_plus: ^13.3.1
+  # 広告と「広告を消す」（2026-11-25 ユーザー決定。版は goso-boat と同じ）
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.1
+  in_app_purchase_storekit: ^0.4.13
 
 dev_dependencies:
   flutter_test:

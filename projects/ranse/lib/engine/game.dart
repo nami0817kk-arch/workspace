@@ -416,6 +416,7 @@ class Game extends ChangeNotifier {
     newWorld();
     prompt = null;
     historyShift = null;
+    chapterBegan = null;
     final s = b.stats;
     life = Life(
       name: b.name,
@@ -487,6 +488,7 @@ class Game extends ChangeNotifier {
     fa = world;
     prompt = null;
     historyShift = null;
+    chapterBegan = null;
     if (saved.dead == null && saved.end == null) {
       _recap();
       final recap = [..._pending];
@@ -540,11 +542,19 @@ class Game extends ChangeNotifier {
     60: '【晩年の章】還暦を迎えた。',
   };
 
+  /// いま遊んでいる中で章の区切りに入った歳（入った年の初めの区切りで立つ。続きから再開したときは立たない）。
+  /// アプリが章の区切りの全画面広告を出すために見て、見たら null に戻す。
+  int? chapterBegan;
+
+  /// やり直しに使った人生の印（`Life.flags`）。一つの人生に一度だけ。
+  static const kRedoFlag = 'redo_used';
+
   /// 章の区切り（30・45・60歳）。ここまでを短く振り返る。
   void _chapter() {
     final head = _chapters[age];
     if (head == null || hasFlag('chapter:$age')) return;
     setFlag('chapter:$age');
+    chapterBegan = age;
     final sp = l.married ? l.people['伴侶'] : null;
     log(
       '$headいまは${rankName()}${l.lord != null ? '（${houseName(this, l.lord)}家）' : ''}。'

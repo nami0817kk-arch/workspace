@@ -7,6 +7,7 @@ import '../engine/data.dart';
 import '../engine/ending.dart';
 import '../engine/play_views.dart';
 import '../engine/rng.dart';
+import '../monetization/purchase_service.dart';
 import 'pixel_castle.dart';
 import 'test_birth_screen.dart';
 import 'theme.dart';
@@ -101,10 +102,70 @@ class TitleScreen extends StatelessWidget {
               ],
               const SizedBox(height: 12),
               BigButton('遊び方', c.openGuide, secondary: true),
+              const SizedBox(height: 18),
+              AdFreeRow(c),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 「広告を消す」と「購入を復元」（審査で、復元の導線が要る）。
+class AdFreeRow extends StatefulWidget {
+  const AdFreeRow(this.c, {super.key});
+  final AppController c;
+
+  @override
+  State<AdFreeRow> createState() => _AdFreeRowState();
+}
+
+class _AdFreeRowState extends State<AdFreeRow> {
+  bool _busy = false;
+
+  Future<void> _run(Future<PurchaseOutcome> Function() f, bool restore) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final r = await f();
+    if (!mounted) return;
+    setState(() => _busy = false);
+    final msg = switch (r) {
+      PurchaseOutcome.purchased => '広告を消した。ありがとう。',
+      PurchaseOutcome.pending => '承認を待っている。承認されると、広告が消える。',
+      PurchaseOutcome.canceled => null,
+      PurchaseOutcome.unavailable =>
+        restore ? '戻せる購入が見つからなかった。' : 'いまは購入できない。',
+      PurchaseOutcome.failed => 'うまくいかなかった。少し置いて、もう一度試してほしい。',
+    };
+    if (msg != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = widget.c;
+    if (c.adFree) {
+      return const Text(
+        '広告は消してある。',
+        style: TextStyle(color: Pal.muted, fontSize: 12),
+      );
+    }
+    const style = TextStyle(fontSize: 13);
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8,
+      children: [
+        TextButton(
+          onPressed: _busy ? null : () => _run(c.buyRemoveAds, false),
+          child: const Text('広告を消す', style: style),
+        ),
+        TextButton(
+          onPressed: _busy ? null : () => _run(c.restorePurchases, true),
+          child: const Text('購入を復元', style: style),
+        ),
+      ],
     );
   }
 }

@@ -18,18 +18,26 @@ class RanseApp extends StatefulWidget {
   State<RanseApp> createState() => _RanseAppState();
 }
 
-class _RanseAppState extends State<RanseApp> {
+class _RanseAppState extends State<RanseApp> with WidgetsBindingObserver {
   late final AppController c =
       widget.controller ?? AppController(autoGuide: true);
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     c.init();
+  }
+
+  /// アプリが前面に戻ったら、期限切れの広告を読み直す（AdMob の広告は1時間で出せなくなる）。
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) c.money?.refreshAds();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     c.dispose();
     super.dispose();
   }

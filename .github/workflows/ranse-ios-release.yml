@@ -183,15 +183,46 @@ jobs:
           EOF
           plutil -lint ios/ExportOptions.plist
 
+      # 広告の本番のID（2026-11-25 に広告と課金を入れた）。Secrets がまだ無いうちは Google のテスト用IDのままビルドする
+      # （TestFlight ではテスト広告が出る）。App Store に出す前に RANSE_ADMOB_* の3つを登録すること。
+      - name: Use production AdMob IDs if present
+        env:
+          ADMOB_APP_ID: ${{ secrets.RANSE_ADMOB_APP_ID_IOS }}
+          ADMOB_REWARDED: ${{ secrets.RANSE_ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.RANSE_ADMOB_INTERSTITIAL_IOS }}
+        run: |
+          set -euo pipefail
+          if [ -z "$ADMOB_APP_ID$ADMOB_REWARDED$ADMOB_INTERSTITIAL" ]; then
+            echo "::warning::RANSE_ADMOB_* の Secrets が無いので、テスト用の広告IDのままビルドします（App Store には出さないこと）。"
+            exit 0
+          fi
+          [ -n "$ADMOB_APP_ID" ] && [ -n "$ADMOB_REWARDED" ] && [ -n "$ADMOB_INTERSTITIAL" ]             || { echo "::error::RANSE_ADMOB_APP_ID_IOS / _REWARDED_IOS / _INTERSTITIAL_IOS の3つをそろえて登録してください。"; exit 1; }
+          case "$ADMOB_APP_ID$ADMOB_REWARDED$ADMOB_INTERSTITIAL" in
+            *3940256099942544*) echo "::error::Secrets に Google のテスト用IDが入っています。"; exit 1;;
+          esac
+          echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$' || { echo "::error::RANSE_ADMOB_APP_ID_IOS がアプリIDの形（ca-app-pub-…~…）ではありません。"; exit 1; }
+          for v in "$ADMOB_REWARDED" "$ADMOB_INTERSTITIAL"; do
+            echo "$v" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$' || { echo "::error::広告ユニットIDの形（ca-app-pub-…/…）ではありません。"; exit 1; }
+          done
+          pub() { echo "$1" | sed -E 's/^ca-app-pub-([0-9]{16}).*/\1/'; }
+          [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_REWARDED")" ] && [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_INTERSTITIAL")" ]             || { echo "::error::アプリIDと広告ユニットIDの発行元が一致しません。"; exit 1; }
+          [ "$ADMOB_REWARDED" != "$ADMOB_INTERSTITIAL" ] || { echo "::error::動画と全画面に同じ広告ユニットIDが入っています。"; exit 1; }
+          plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
+          {
+            echo "ADMOB_DEFINES=--dart-define=ADMOB_REWARDED_IOS=$ADMOB_REWARDED --dart-define=ADMOB_INTERSTITIAL_IOS=$ADMOB_INTERSTITIAL"
+          } >> "$GITHUB_ENV"
+          echo "本番の広告IDに置き換えました。"
+
       - name: Build IPA
         env:
           BUILD_NUMBER: ${{ github.event.inputs.build_number }}
         run: |
           set -euo pipefail
-          EXTRA=""
+          EXTRA="${ADMOB_DEFINES:-}"
           if [ -n "$BUILD_NUMBER" ]; then
             [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
-            EXTRA="--build-number=$BUILD_NUMBER"
+            EXTRA="$EXTRA --build-number=$BUILD_NUMBER"
           fi
           flutter build ipa --release --export-options-plist=ios/ExportOptions.plist $EXTRA
           ls -la build/ios/ipa/
