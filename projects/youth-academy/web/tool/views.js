@@ -835,6 +835,14 @@ async function clearEvents() {
             ew.club.dirAsk = a.id; seen.push(a.id);
           }
           ok(new Set(seen).size >= 3, `目標に届いた年の注文は入れ替わる（${seen.join(',')}）`);
+          // 2026-11-26：知らせるだけのものは「必ず止める」から「お知らせ」へ下げる
+          const nn = (t) => { Y.noteTier(ew, 1, t); return ew.inbox[ew.inbox.length - 1].tier; };
+          ok(nn('9番 山田 太郎の「スルーパス」が、金の特性「針の穴を通すパス」に変わった（効きが1.6倍）') === 2 && nn('3年目が終わりました。12人が卒業し、新しい高1の12人が入団しました') === 2 && nn('リーグ戦が終わりました。最終順位は5位') === 2, '金の特性・年度の終わり・リーグの最終順位は「お知らせ」');
+          ok(nn('9番 山田 太郎 が試合で怪我。全治4週') === 1 && nn('リーグ戦が終わりました。最終順位は12位（最下位。来年は一つ下のリーグへ降格）') === 1, '怪我と降格は「必ず止める」のまま');
+          // 1週の手応えの物差しは、その週に選べることを数える
+          ok(Y.weekActs(ew) >= 1, `その週に選べることを数える（${Y.weekActs(ew)}）`);
+          const sr = Y.simulate(ew, { until: 'week', stopOnImportant: false });
+          ok(sr.metrics.picksPerWeek >= 1 && sr.metrics.picksPerWeek !== 3, `1週に選べる数は決め打ちの3ではない（${sr.metrics.picksPerWeek}）`);
         }
         // 2026-11-25「やり残しが何も出ない」→ 期限ものの下に今週やれること（灰色の札）
         tw.phase = 'plan'; tw.week = 35;

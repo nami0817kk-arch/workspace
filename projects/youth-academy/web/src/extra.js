@@ -148,6 +148,23 @@
     return { ended: true, grad: wasEnd ? grad : null };
   }
 
+  // その週に自分で押せる・選べることの数（1週の手応えの物差し）
+  YA.weekActs = function (w) {
+    if (!w || w.retired || !w.players) return 0;
+    let n = 1; // 練習の組み方を確かめる
+    if (YA.matchOf && YA.matchOf(w)) n += 1; // 試合前の先発と戦い方
+    const due = YA.todoList ? YA.todoList(w) : [];
+    const soft = YA.todoSoft ? YA.todoSoft(w) : [];
+    n += due.length;
+    for (const x of soft) {
+      if (x.id === 'staract') n += Math.max(1, YA.starActLeft ? YA.starActLeft(w) : 1);
+      else if (x.id === 'talkw') n += Math.min(2, (x.t.match(/まだ(\d+)人/) || [0, 1])[1] * 1);
+      else n += 1;
+    }
+    // 月末の週に期限ものとして出るスカウトは due に入っている。スカウトの窓が開いていて残りがあれば、やり残しに出ていなくても1つ
+    if (!due.concat(soft).some((x) => x.id === 'scoutact' || x.id === 'scoutw') && YA.scoutWindow && YA.scoutWindow(w).explore && YA.scoutActsLeft && YA.scoutActsLeft(w) > 0) n += 1;
+    return n;
+  };
   // おまかせで進める。until: 'week' | 'match' | 'year'
   YA.simulate = function (w, opts) {
     const o = Object.assign({ until: 'week', stopOnImportant: true }, opts || {});
@@ -157,7 +174,12 @@
     const startYear = w.year;
     let guard = 0;
     let lastN = w.inboxN || 0;
+    let lastWk = null;
+    log.acts = 0;
     while (guard++ < 800) {
+      // 週のはじめに「その週に自分で押せる・選べること」を数える（1週の手応えの物差し。2026-11-26 直し）
+      const wk = w.year * 100 + w.week;
+      if (wk !== lastWk) { lastWk = wk; log.acts += YA.weekActs(w); }
       const r = step(w, o, log);
       // 設定で「必ず止める」にしたお知らせ（決定76）が出たら止まる
       if (o.stopOnImportant && w.noticeTier && YA.noticeKind) {
@@ -230,8 +252,9 @@
     const newAl = w.alumni.slice(before.alumni).filter((a) => a.status !== 'left');
     for (const a of newAl) gradPaths[a.status] = (gradPaths[a.status] || 0) + 1;
     const weeksN = Math.max(1, log.weeks);
-    // 1週に自分で選ぶ回数の見積もり：練習の確認1・試合前の確認1・出来事・面談の目安1（出来事の選択肢は1回ずつ）
-    const picksPerWeek = Math.round((2 + log.events.length / weeksN + 1) * 10) / 10;
+    // 1週に自分で選べることの数：週のはじめに数えた YA.weekActs（練習・試合前・期限もの・今週やれること・★の子と過ごす・スカウト）＋出来事
+    // （2026-11-26 直し：前は「2＋出来事＋1」の決め打ちで、スカウト・★の子と過ごす・面談などが入っていなかった）
+    const picksPerWeek = Math.round(((log.acts || 0) / weeksN + log.events.length / weeksN) * 10) / 10;
     // 1回の選択を約25秒、試合を約2分半とすると、1週の想定の時間（分）
     const minutesPerWeek = Math.round(((picksPerWeek * 25) / 60 + 2.5 * (mm.length / weeksN) + 0.7) * 10) / 10;
     const lastEval = log.grad && log.grad.eval ? log.grad.eval : null;
