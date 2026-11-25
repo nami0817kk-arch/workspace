@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../data/club_crests.dart';
 import '../models/club_look.dart';
 
 /// チームIDから決定論的に決まるクラブカラー。
@@ -29,9 +30,25 @@ class ClubPalette {
     if (look != null) {
       return ClubPalette.fromHue(look.hue, accentHue: look.accentHue);
     }
+    // エンブレム画像のあるクラブは、その絵の2色に合わせる。名前の色の語
+    // (下の hueForName)より先に見る。画像は名前の色で描いてあるので
+    // 食い違わないが、もし違っても画面に出ている絵の色が正しい。
+    final crest =
+        clubName == null ? null : ClubCrests.indexFor(teamId, clubName);
+    if (crest != null) return ClubPalette.fromCrest(crest);
     final named = clubName == null ? null : hueForName(clubName);
     return ClubPalette.fromHue(
         named ?? Random(teamId.hashCode).nextDouble() * 360);
+  }
+
+  /// エンブレム画像 [index] の2色から。片方が白・黒・灰(-1)なら、
+  /// 色のある方を地にも差し色にも使う(色相を持たない色を、無関係な
+  /// 色相で塗らないため)。
+  factory ClubPalette.fromCrest(int index) {
+    final (a, b) = ClubCrests.hues(index);
+    final base = a >= 0 ? a : b;
+    final accent = b >= 0 ? b : base;
+    return ClubPalette.fromHue(base.toDouble(), accentHue: accent.toDouble());
   }
 
   /// 名前に含まれる色の語から色相を引く。見つからなければ null。
