@@ -1421,7 +1421,9 @@ String? rivalGapText(Game s) {
 }
 
 // --- 株 ---
-List<Widget> stockTab(GameController ctl) {
+/// 1.1.0+29 から、株の画面（stock_screen.dart）の「自社の株」の面は [cos] を切って呼ぶ（他社の会社の札は「他社の株と買収」の面に出す）。
+/// 上場の準備（未上場の札）は「上場」の面に移した
+List<Widget> stockTab(GameController ctl, {bool cos = true}) {
   final s = ctl.game!;
   final sh = s.sh;
   final out = <Widget>[H2Info(tr('あなたの会社の株主'), ctl, const ['own', 'cap'])];
@@ -1482,10 +1484,15 @@ List<Widget> stockTab(GameController ctl) {
             CardTitle(tr('未上場')),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Muted(tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。条件：年の利益 {0} 以上・創業2年以上', [yen(3e8 * s.nom())]))),
+                child: Muted(s.unitsOn
+                    ? tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。準備（監査と社内の決まり）に2〜3年かかります')
+                    : tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。条件：年の利益 {0} 以上・創業2年以上', [yen(3e8 * s.nom())]))),
             _wrap([
               _apBtn(ctl, tr('投資家から集める（{0}・持ち株−10%）', [yen(s.cap * .1)]), () => ctl.act(s.vcRaise), k: 'vc'),
-              _apBtn(ctl, tr('上場する'), () => ctl.act(s.ipo), enabled: s.canIPO(), k: 'ipo'),
+              if (s.unitsOn)
+                Btn(tr('上場の準備を見る'), () => ctl.setStockSeg('ipo'), small: true, more: true, key: const ValueKey('to-ipo'))
+              else
+                _apBtn(ctl, tr('上場する'), () => ctl.act(s.ipo), enabled: s.canIPO(), k: 'ipo'),
             ]),
           ]),
   ));
@@ -1541,6 +1548,7 @@ List<Widget> stockTab(GameController ctl) {
         Tooltip(message: tr('2年後に裁判で賠償を求められる'), child: Btn(tr('同じ業種に入らない約束を破る'), () => ctl.act(s.breakNoncomp), small: true, shrink: true)),
     ]),
   ])));
+  if (!cos) return out;
   // 子会社・現地法人と、株を持っているだけの会社を分けて並べる（混ざっていると、子会社を探すのに全部のカードを見ることになる。1.0.0+18）
   final held = s.cos.where((c) => c.alive && s.pctOf(c) > 0).toList();
   final subs = held.where((c) => c.parent == 'player').toList();
@@ -1577,7 +1585,7 @@ Widget _coCard(GameController ctl, Company c) {
   final own = s.pctOf(c);
   final restC = c.cap * (100 - own) / 100;
   final mine = c.parent == 'player';
-  final swap = s.listed && c.cap <= s.cap && !(mine && own >= 66.7);
+  final swap = !s.unitsOn && s.listed && c.cap <= s.cap && !(mine && own >= 66.7);
   return Panel(
       key: ValueKey('co-${c.id}'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1593,8 +1601,9 @@ Widget _coCard(GameController ctl, Company c) {
     Muted(c.biz.map((b) => indm[b.ind]!.name).join(tr('・'))),
     const SizedBox(height: 6),
     Grid2([
-      Kv(tr('時価総額'), yen(c.cap)),
-      Kv(tr('月の利益'), yen(c.profit)),
+      // 1.1.0+29 から、他社の数字は調べないと幅でしか見えない（上場していれば株価の時価総額は見える）
+      Kv(tr('時価総額'), s.unitsOn && !c.listed ? seenText(s, c, c.cap, 0) : yen(c.cap)),
+      Kv(tr('月の利益'), s.unitsOn ? seenText(s, c, c.profit, 1) : yen(c.profit)),
       Kv(tr('創業家'), pct(c.fam)),
       Kv(tr('社風'), CULT[s.cultureOf(c)]!.n),
       Kv(tr('市場の株'), pct(s.floatOf(c))),
@@ -1606,9 +1615,9 @@ Widget _coCard(GameController ctl, Company c) {
       // 自分の子会社で、市場に株が出ていないときは「市場で買う」を出さない（押せないボタンが並ぶだけになる）
       if (!(mine && s.floatOf(c) <= 0))
         _apBtn(ctl, tr('市場で5%買う（{0}）', [yen(c.cap * .0525)]), () => ctl.act(() => s.buyStake(c, 5)), k: 'own', enabled: s.floatOf(c) > 0),
-      if (own < 50.1)
+      if (own < 50.1 && !s.unitsOn)
         _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['50.1', yen(s.tobCost(c, 50.1)), _pct0(s.tobChance(c, 50.1))]), () => ctl.act(() => s.tob(c, 50.1)), k: 'tob'),
-      if (own > 50 && own < 66.7)
+      if (own > 50 && own < 66.7 && !s.unitsOn)
         _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['66.7', yen(s.tobCost(c, 66.7)), _pct0(s.tobChance(c, 66.7))]), () => ctl.act(() => s.tob(c, 66.7)), k: 'tob'),
       if (s.canMerge(c)) _apBtn(ctl, tr('合併する（株を渡して払う）'), () => ctl.act(() => s.merge(c)), primary: true, k: 'merge'),
       if (c.parent != 'player') _apBtn(ctl, tr('組む'), () => openDeal(ctl, c), more: true),
@@ -2402,4 +2411,22 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
       Muted(tr('開くまで{0}〜{1}か月。開いてから1〜2年は売上が育つ途中で、固定費は丸ごとかかります', [s.prof(b).open.$1, s.prof(b).open.$2]), size: 11.5),
     ]),
   );
+}
+
+// --- 株の画面（stock_screen.dart。1.1.0+29）から使う部品 ---
+/// 社長の時間を使うボタン（[_apBtn] と同じ）
+Widget apBtnOf(GameController ctl, String label, VoidCallback onTap, {String k = 'act', bool enabled = true, bool primary = false, bool more = false}) =>
+    _apBtn(ctl, label, onTap, k: k, enabled: enabled, primary: primary, more: more);
+
+/// 他社の会社の札（[_coCard] と同じ）
+Widget coCardOf(GameController ctl, Company c) => _coCard(ctl, c);
+
+/// 割合を整数の％で
+String pct0Of(double v) => _pct0(v);
+
+/// 他社の数字を、見えている幅で書く（調べていれば1つの数。1.1.0+29）
+String seenText(Game s, Company c, double v, int k) {
+  if (c.parent == 'player' || s.infoWidth(c) <= .03) return yen(v);
+  final r = s.seenRange(c, v, k);
+  return tr('{0}〜{1}', [yen(r.$1), yen(r.$2)]);
 }

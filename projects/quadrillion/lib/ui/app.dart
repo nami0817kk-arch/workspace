@@ -4,6 +4,7 @@ import '../game/game.dart';
 import 'controller.dart';
 import 'real_screens.dart';
 import 'sheets.dart';
+import 'stock_screen.dart';
 import 'tabs.dart';
 import 'widgets.dart';
 
@@ -380,7 +381,7 @@ class MainScreen extends StatelessWidget {
         final body = switch (ctl.tab) {
           'biz' => bizTab(ctl, width: w),
           'people' => peopleTab(ctl, width: w),
-          'stock' => stockTab(ctl),
+          'stock' => stockScreen(ctl, width: w),
           'money' => moneyTab(ctl),
           'world' => worldTab(ctl, w),
           'zukan' => zukanTab(ctl),

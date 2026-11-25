@@ -100,12 +100,14 @@ extension GameTurn on Game {
         if (c.rival != null && c.rival!.k == 'li' && yr() > 1995 && yr() < 2035) gg += .004 * dG;
         if (c.rival != null && c.rival!.type == 'genius' && indm[b.ind]!.b > 1985) gg += .0067 * dG;
         b.power *= math.max(.8, 1 + gg);
+        // 1.1.0+29 から、稼ぎで客を増やすのは店などを開くこと（自社と同じ決まり。game_corp.dart の cpuMonth）
+        if (unitsOn) continue;
         final T = lastT?[b.ind];
         final s = T != null && T[c.tier] > 0 ? b.power / T[c.tier] : 0.0;
         final pr = b.rev * indm[b.ind]!.mg * c.eff;
         if (pr > 0) b.power += pr * cpuReinv * dR * invEff * math.pow(1 - math.min(s, .95), 2);
       }
-      c.cash = c.cash * .985 + c.profit * .25;
+      if (!unitsOn) c.cash = c.cash * .985 + c.profit * .25;
       c.presAge += 1 / 12;
       c.revHist.add(c.rev);
       if (c.revHist.length > 24) c.revHist.removeAt(0);
@@ -163,6 +165,8 @@ extension GameTurn on Game {
     }
     // 宿敵の手
     rivalAI(N);
+    // CPU の会社の店・借金・上場・買収（1.1.0+29。自社と同じ決まり）
+    if (unitsOn) cpuMonth(N);
     // 自分の事業
     for (final b in biz) {
       if (b.attack > 0) {
@@ -390,6 +394,8 @@ extension GameTurn on Game {
     localMonthly(N);
     countryMonthly(N);
     crisisMonthly();
+    // 上場の準備・買う話・大口の客・決算と株主総会（1.1.0+29）
+    if (unitsOn) corpMonthly(N);
     // 任せた事業の責任者が、新しい月の手を打つ（任せた事業が無ければ乱数も使わない）
     if (over == null) delegMonthly();
     if (noncomp != null && turn >= noncomp!.until) {
@@ -403,6 +409,7 @@ extension GameTurn on Game {
     }
     hist.add(HistEntry(t: '$year-$q', cap: cap, rev: rev, cash: cash, pre: pre));
     if (hist.length > 1200) hist.removeAt(0);
+    if (unitsOn) recordPrice();
     // 社長の時間と体力（使った時間で体力が動き、新しい月の時間に戻る）
     monthHours(N);
     rest = 0;

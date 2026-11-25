@@ -1206,6 +1206,8 @@ extension GameActions on Game {
 
   // ===== 上場・増資 =====
   void _dilute(double k) {
+    // 新しい株を出した分だけ、株の数が増える（株価＝時価総額÷株の数。1.1.0+29）
+    if (k > 0) corp.nSh /= k;
     sh.own *= k;
     sh.vc *= k;
     sh.ally *= k;
@@ -1230,8 +1232,10 @@ extension GameActions on Game {
     return M('新しい株を市場に出し、{0}を集めました。持ち株は{1}に下がりました', [Y(money), pct(sh.own)]);
   }
 
-  bool canIPO() => !listed && pre * 12 >= 3e8 * nom() && turn >= 24;
+  /// 1.1.0+29 から、上場は2〜3年の準備（監査・社内の決まり）のあと（game_corp.dart）
+  bool canIPO() => unitsOn ? ipoReady() : !listed && pre * 12 >= 3e8 * nom() && turn >= 24;
   String ipo() {
+    if (unitsOn) return ipoList();
     if (!canIPO()) return M('上場の条件を満たしていません');
     final nt = spendT('ipo');
     if (nt != null) return nt;
@@ -1394,6 +1398,8 @@ extension GameActions on Game {
   double tobCost(Company c, double target) => c.cap * math.max(0, target - pctOf(c)) / 100 * 1.3;
 
   String tob(Company c, double target) {
+    // 1.1.0+29 から、TOB は申し入れ→相手の返事→当局の審査→手続きと月をまたいで進む（game_corp.dart）
+    if (unitsOn) return maStart(c, dd: false, target: target);
     final nt = needT('tob');
     if (nt != null) return nt;
     final cost = tobCost(c, target);
@@ -1453,6 +1459,7 @@ extension GameActions on Game {
       _dilute(k);
       sh.float = sh.float * k + n * 100;
     } else {
+      if (n < 1) corp.nSh /= 1 - n;
       sh.own *= 1 - n;
       sh.pt = sh.pt * (1 - n);
       sh.vc += n * 100;
@@ -1512,6 +1519,7 @@ extension GameActions on Game {
     if (c.parent == 'player' && pctOf(c) >= 66.7) return M('そのまま合併できます');
     if (c.cap > cap) return M('自分より大きな会社は、株式交換では買えません');
     if (sh.rivMax >= 33.4) return M('宿敵に株を33.4%以上握られていて、株式交換を止められます');
+    if (unitsOn) return maStart(c, dd: false, target: 100, pay: 'swap');
     final nt = spendT('merge');
     if (nt != null) return nt;
     if (rnd() > swapChance(c)) {

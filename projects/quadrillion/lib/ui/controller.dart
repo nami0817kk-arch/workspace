@@ -198,6 +198,22 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
+  // ===== 株の画面（1.1.0+29） =====
+  /// 面（own 自社の株・ma 他社の株と買収・ipo 上場）と、右に出している会社
+  String stockSeg = 'own';
+  int? openCo;
+
+  void setStockSeg(String s) {
+    stockSeg = s;
+    notifyListeners();
+  }
+
+  void selectCo(int id) {
+    stockSeg = 'ma';
+    openCo = id;
+    notifyListeners();
+  }
+
   /// 街の画面で見ている都市圏（自分の国の都市の番号。1.1.0+26）
   int townCity = 0;
 

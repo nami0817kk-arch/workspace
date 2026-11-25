@@ -148,7 +148,10 @@ void main() {
     _fill(s);
     s.turn = 30;
     if (!s.listed) {
+      // 1.1.0+29 から、上場は2〜3年の準備（監査2期・社内の決まり）のあと。準備が済んだ形で上場する
       s.pre = 1e12;
+      s.hist.add(HistEntry(t: 'x', cap: s.cap, rev: s.rev, cash: s.cash, pre: 1e12));
+      s.corp.ipo = IpoPrep(start: 0, total: 24, done: 24, audit: 24, ctrl: 1);
       expect(tx(s.ipo()), contains('上場しました'));
     }
     s.calcAll();
@@ -156,23 +159,55 @@ void main() {
     expect(s.publicOffer(), isNotEmpty);
     expect(s.buybackAct(), isNotEmpty);
     expect(s.whiteKnightAct(), isNotEmpty);
-    // TOB と合併
-    final target = (s.cos.where((c) => c.alive && c.parent != 'player' && c.rival == null).toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
-    for (var i = 0; i < 10 && target.parent != 'player'; i++) {
-      s.tob(target, 50.1);
+    // TOB と合併（1.1.0+29 から、TOB は申し入れ→相手の返事→審査→手続きと月をまたぐ。応じてもらえる形にして月を進める）
+    void months(bool Function() done) {
+      for (var i = 0; i < 30 && !done(); i++) {
+        for (final d in s.corp.deals) {
+          d.prem = 2;
+          d.block = 0;
+          s.coById(d.co)!
+            ..fam = 0
+            ..rel = 100;
+        }
+        _fill(s);
+        s.nextQuarter();
+        resolveEvents(s);
+        s.events.clear();
+      }
     }
+
+    final target = (s.cos.where((c) => c.alive && c.parent != 'player' && c.rival == null && c.loc == null).toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
+    expect(tx(s.tob(target, 50.1)), contains('申し入れました'));
+    months(() => target.parent == 'player');
     expect(target.parent, 'player');
+    _fill(s);
     s.tob(target, 66.7);
+    months(() => s.pctOf(target) >= 66.7);
+    _fill(s);
     if (s.pctOf(target) >= 66.7 && s.canMerge(target)) expect(tx(s.merge(target)), contains('合併しました'));
     // 株式交換（小さい会社を丸ごと）
-    final small = (s.cos.where((c) => c.alive && c.parent != 'player').toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
+    // 1.1.0+29 から、潰れかけの会社は時価総額が1円近くまで下がることがあるので、自社の1%以上の大きさの会社で見る
+    final small = (s.cos.where((c) => c.alive && c.parent != 'player' && c.loc == null && c.cap > 1e9).toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
     final own0 = s.sh.own;
-    String r = '';
+    s.ap = 99;
+    expect(tx(s.shareSwap(small)), contains('申し入れました'));
+    final news = <String>[];
     for (var i = 0; i < 30 && small.alive; i++) {
-      s.ap = 99;
-      r = s.shareSwap(small);
+      for (final d in s.corp.deals) {
+        d.prem = 2;
+        d.block = 0;
+      }
+      small
+        ..fam = 0
+        ..rel = 100;
+      _fill(s);
+      s.nextQuarter();
+      news.addAll(s.lastNews.map((n) => tx(n.m)));
+      resolveEvents(s);
+      s.events.clear();
     }
-    expect(tx(r), contains('丸ごと買いました'));
+    final r = news.firstWhere((n) => n.contains('丸ごと買いました'), orElse: () => news.join('\n'));
+    expect(r, contains('丸ごと買いました'));
     expect(small.alive, isFalse);
     expect(s.sh.own, lessThan(own0));
     // 会社の形

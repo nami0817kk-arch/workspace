@@ -115,12 +115,15 @@ void main() {
     // 借りないと、ほとんど倒れない。
     // 1.1.0+27（段3：人）から、給料が世の中の賃金と腕に合わせて毎年上がり、店長や部下が辞めるので、
     // 人件費を見直さない自動プレイは、稼ぎ頭の業種が沈んだあと（20年目過ぎ）に倒れることがある。線を半分までに引き直した
-    expect(none.where((r) => r.broke).length, lessThanOrEqualTo(3), reason: lines);
+    // 1.1.0+29（段4）から、宿敵と CPU の会社も同じ決まりで店を増やし、上場すれば宿敵に株を買われ、大口の客を失うこともある。
+    // 同じ打ち方でも乱数の並びで6回中2〜5回倒れる（直前の2回の測りで2回と5回）ので、段2の線「借りないで必ず倒れることは無い」に戻した
+    expect(none.where((r) => r.broke).length, lessThan(6), reason: lines);
     // 借りると速く大きくなれることがある（どこかの種で、借りた会社の時価の最高が、借りない会社の最後の時価を超える）
     expect([...maxRuns, ...some].any((r) => r.peakCap > noneOf(r.seed).cap), isTrue, reason: lines);
     // 借金は利益の何倍かで上限が決まる（現金に連動しない）。借りまくっても、利益の十数倍を大きく超えない
     for (final r in maxRuns) {
-      expect(r.peakDebtX, lessThan(40), reason: r.toString());
+      // 1.1.0+29（段4）から、借りたあとに大口の客を失う・仕入れ先に支払いを早められると利益が急に細り、倍率が一時的に跳ねることがある。線を60に引き直した
+      expect(r.peakDebtX, lessThan(60), reason: r.toString());
     }
   }, timeout: const Timeout(Duration(minutes: 20)));
 }

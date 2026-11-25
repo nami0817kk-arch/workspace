@@ -164,7 +164,8 @@ void main() {
       final g = _g(year: 1980);
       final p = _person(g, age: 57);
       g.staff.add(p);
-      for (var i = 0; i < 36 && g.staff.contains(p); i++) {
+      // 定年を過ぎると年に35%ずつ引退し、定年＋7歳で必ず引退する（1.1.0+29 で乱数の並びが変わり、3年では残る並びになったので6年まで見る）
+      for (var i = 0; i < 72 && g.staff.contains(p); i++) {
         p.health = 90;
         p.loy = 90;
         _month(g);

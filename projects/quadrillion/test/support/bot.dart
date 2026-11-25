@@ -89,6 +89,8 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
       if (free != null && s.biz.where((x) => x.mgr == null).length > 2) b.mgr = free.id;
     }
   }
+  // 1.1.0+29 から、上場は2〜3年の準備のあと。条件（年の利益・創業2年）を満たしたら準備を始め、整ったら上場する
+  if (s.unitsOn && s.canIpoPrep() && s.pre * 12 >= 3e8 * s.nom() && s.turn >= 24 && s.ap > 0) s.ipoPrepStart();
   if (s.canIPO()) s.ipo();
   if (!s.listed && s.sh.own > 60 && s.cap > s.cash * 20 && s.ap > 0) s.vcRaise();
   if (s.listed && s.sh.own > 45 && s.cap > s.cash * 15 && s.ap > 0) s.publicOffer();
@@ -143,11 +145,12 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
       break;
     }
   }
-  if (s.ap > 0 && s.cash > s.cap * .3) {
+  // 1.1.0+29 から、買う話は調べ→申し入れ→審査と月をまたぐ。進めている話があるあいだは次を始めない
+  if (s.ap > 0 && s.cash > s.cap * .3 && s.corp.deals.isEmpty) {
     final tg = (s.cos.where((c) => c.alive && c.parent != 'player' && s.tobCost(c, 50.1) < s.cash * .7 && s.tobChance(c, 50.1) > .4).toList()
           ..ssort((a, b) => b.cap.compareTo(a.cap)))
         .firstOrNull;
-    if (tg != null) s.tob(tg, 50.1);
+    if (tg != null) s.unitsOn ? s.maStart(tg) : s.tob(tg, 50.1);
   }
   // 合併するのは買った会社だけ（自分で分社した子会社は戻さない。1.1.0+25 で月に打てる手が増え、分社した子会社をすぐ戻していた）
   for (final c in s.subs()) {

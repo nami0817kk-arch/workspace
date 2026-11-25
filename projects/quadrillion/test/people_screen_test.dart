@@ -40,6 +40,8 @@ Game _mid() {
     // 給料が相場より低い人・疲れている人・休んでいる人
     final s = g.staff;
     s[0].salary = g.mktPay(s[0]) * .7;
+    // 引き抜かれそうな印は、給料が低く、やる気が70未満の人に出る（1.1.0+29 で乱数の並びが変わり、やる気の高い人になったので決めておく）
+    s[0].loy = 50;
     s[0].known.addAll(['hon', 'fam', 'str']);
     if (s.length > 1) s[1].health = 25;
     if (s.length > 2) {
