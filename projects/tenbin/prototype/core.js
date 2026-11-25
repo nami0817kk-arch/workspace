@@ -117,13 +117,21 @@ var TenbinCore = (function () {
   // いくつかのことばの字を混ぜた袋から出す（ことばに使う字が多めに来る）
   function rng(seed) { var x = seed >>> 0 || 1; return function () { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
   function pick(s, list) { return list[(s.rng() * list.length) | 0]; }
+  // 2026-11-25 濁点・小さい字を足して字が74種になり、同じ字が出会いにくくなった（1回のことば 23.9→16.3）。
+  // 袋に入れることばは、清音だけのことばを多めにする（NEW_SHARE の割合だけ、濁点・小さい字を含むことばから）。
+  // 袋に足す1字も、たいていは ことばに出てくる字の多さに合わせて選ぶ。3回に1回は74種から等しく選ぶ
+  // （ことばの少ない ぴ・ぷ・ぺ が、6,000字で一度も来なかった）
+  var NEW_SHARE = 0.35, OLD_CH = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
+  function split(list) { var a = [], b = []; list.forEach(function (w) { (w.split('').every(function (c) { return OLD_CH.indexOf(c) >= 0; }) ? a : b).push(w); }); return { old: a, add: b }; }
+  var TIERS = { short: split(WORDS.short), middle: split(WORDS.middle), long: split(WORDS.long) };
+  function pickWord(s, t) { var x = TIERS[t], useAdd = x.add.length && (!x.old.length || s.rng() < NEW_SHARE); return pick(s, useAdd ? x.add : x.old); }
   function fillQueue(s) {
     var bag = [];
     for (var n = 0; n < 3; n++) {
-      var r = s.rng(), tier = r < 0.6 ? WORDS.short : r < 0.9 ? WORDS.middle : WORDS.long;
-      bag = bag.concat(pick(s, tier).split(''));
+      var r = s.rng(), tier = r < 0.6 ? 'short' : r < 0.9 ? 'middle' : 'long';
+      bag = bag.concat(pickWord(s, tier).split(''));
     }
-    bag.push(pick(s, KINDS));
+    if (s.rng() < 1 / 3) bag.push(pick(s, KINDS)); else { var extra = pick(s, WORDS.short.concat(WORDS.middle)); bag.push(extra[(s.rng() * extra.length) | 0]); }
     // 袋から1字ずつ取り出して並べる。直前と同じ字は（ほかに残っていれば）取らない。
     // （混ぜてから入れ替えて直す形では、入れ替えた先で別の重なりができ、同じ字が続くことがあった）
     // 残りが同じ字だけになったら、すでに並べた中の、前後どちらとも違う所へ差し込む

@@ -26,8 +26,15 @@ var src = html.slice(html.indexOf('var ROMA = {'), html.indexOf('window.__romaji
 var romaji = new Function(src + 'return romaji;')();
 [['ねこ', 'neko'], ['しかく', 'shikaku'], ['つち', 'tsuchi'], ['ふね', 'fune'], ['きんえん', "kin'en"], ['ほんや', "hon'ya"], ['さんぽ', 'sanpo'], ['ほん', 'hon'], ['てんき', 'tenki']]
   .forEach(function (c) { if (c[0] === 'さんぽ') return; assert.strictEqual(romaji(c[0]), c[1], c[0]); });
+// 濁点・小さい字（2026-11-25）
+[['さんぽ', 'sanpo'], ['かぜ', 'kaze'], ['ぶどう', 'budou'], ['きょう', 'kyou'], ['しゃしん', 'shashin'], ['ちゃわん', 'chawan'], ['じゅんばん', 'junban'],
+ ['きって', 'kitte'], ['まっちゃ', 'matcha'], ['がっこう', 'gakkou'], ['いっぱい', 'ippai'], ['きんようび', "kin'youbi"], ['りょこう', 'ryokou'], ['にゅうがく', 'nyuugaku']]
+  .forEach(function (c) { assert.strictEqual(romaji(c[0]), c[1], c[0]); });
 var KINDS = Object.keys(require('../prototype/glyphs.js').chars);
-KINDS.forEach(function (k) { assert.ok(/^[a-z]+$/.test(romaji(k)), 'ローマ字の無い字: ' + k); });
+KINDS.forEach(function (k) { assert.ok(/^\(?[a-z]+\)?$/.test(romaji(k)), 'ローマ字の無い字: ' + k); });
+// ことばの中に、読めない（ローマ字にならない）字が残らない
+require('../prototype/words.js').short.concat(require('../prototype/words.js').middle, require('../prototype/words.js').long)
+  .forEach(function (w) { assert.ok(/^[a-z']+$/.test(romaji(w)), 'ローマ字にならないことば: ' + w + ' → ' + romaji(w)); });
 
 // 4. 画面の文字: 日本語の文字列は T('日本語', 'English') の形で英語と対になっている。
 //    （英語の画面に日本語が残らないように。決まった例外だけ許す: ローマ字の表・英語を先に書いた三項・試作だけのボタン・クレジットの日本語の段）

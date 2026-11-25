@@ -2,7 +2,9 @@
 // node tool/glyphs.js   （playwright が要る。字形は prototype/fonts の M PLUS Rounded 1c Black）
 var path = require('path'), fs = require('fs');
 var { chromium } = require(process.env.PLAYWRIGHT || 'playwright');
-var KANA = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
+var KANA = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん' +
+  'がぎぐげござじずぜぞだづでどばびぶべぼぱぴぷぺぽ' +   // 2026-11-25 濁点・半濁点（ぢ は使うことばが無いので入れない）
+  'っゃゅょ';   // 小さい字（ぁぃぅぇぉゎ はひらがなのことばにほとんど出ないので入れない）
 var SIZE = 72;   // ゲーム内の字の大きさ（px）
 var R = 300;     // 輪郭を取るときの字の大きさ
 (async function () {
