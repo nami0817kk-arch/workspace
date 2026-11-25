@@ -815,6 +815,29 @@ async function clearEvents() {
         ok(w.YA.todoDue(tw).some((x) => x.id === 'int'), '11月の最後の週は、内部昇格が締め切りのやり残しになる');
         tw.week = 12;
         ok(!w.YA.todoDue(tw).length, '締め切りのない週は止めない');
+        // 2026-11-25「やり残しが何も出ない」→ 期限ものの下に今週やれること（灰色の札）
+        tw.phase = 'plan'; tw.week = 35;
+        const sp = Object.values(tw.players).filter((p) => p.grade === 1 && p.inj <= 0).slice(0, 2);
+        sp.forEach((p) => { p.star = true; p.talk = null; });
+        const tired = Object.values(tw.players).filter((p) => p.inj <= 0).slice(0, 3);
+        tired.forEach((p) => { p.fat = 85; p.rest = null; });
+        tw.plan.days[0] = { menu: tw.plan.days[0].menu === '休み' ? '技術' : tw.plan.days[0].menu, int: 'hard' };
+        if (!w.YA.MENUS[tw.plan.days[0].menu] || !(w.YA.MENUS[tw.plan.days[0].menu].fat > 0)) tw.plan.days[0].menu = Object.keys(w.YA.MENUS).find((k) => w.YA.MENUS[k].fat > 0);
+        for (let k = 35; k < 40 && w.YA.todoList(tw).length; k++) tw.week = k;
+        const SL = w.YA.todoSoft(tw).map((x) => x.id);
+        ok(!w.YA.todoList(tw).length && ['talkw', 'staract', 'plan'].every((k) => SL.includes(k)) && !SL.includes('scoutw'), '期限ものがない週も、今週やれること（面談・★の子と過ごす・練習の見直し。スカウトは下の一言と二重にしない）が出る ' + SL.join(','));
+        A.w = tw; A.tab = 'home'; w.YA._ui.render();
+        const card2 = d.querySelector('.todo');
+        ok(card2 && d.querySelector('.home-mid').textContent.split('スカウトに出る').length === 2 && card2.textContent.includes('★の子と過ごす') && card2.textContent.includes('練習を見直す') && !d.querySelector('#rail .tdot'), 'ホームに今週やれることが出る（左の帯の赤い点は期限ものだけ）');
+        btn('練習を見直す', card2).click();
+        ok(A.tab === 'train' && A.trt === 'plan', '今週やれることを押すとその画面へ');
+        for (let k = 5; k < 27 && !w.YA.matchOf(tw); k++) tw.week = k;
+        tw.phase = 'match';
+        w.YA.pickLineup(tw, 'A', tw.formation || '4-3-3');
+        const xp = tw.players[tw.lineupA[0].pid];
+        xp.fat = 90; xp.inj = 0;
+        const XI = w.YA.todoSoft(tw).find((x) => x.id === 'xi');
+        ok(!!w.YA.matchOf(tw) && XI && XI.t.includes(xp.name.split(' ')[0]), '試合の週は先発の疲れた子を知らせる');
         A.w = keepW; A.tab = keepTab; w.YA._ui.render();
         ok(errors.length === 0, 'やり残しで例外なし: ' + errors.slice(0, 2).join('|'));
       }
