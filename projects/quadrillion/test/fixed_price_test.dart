@@ -225,6 +225,9 @@ void main() {
         if (x.mgr == p.id) x.mgr = null;
       }
       b.mgr = p.id;
+      // 任せた事業の責任者は人・店・商品の手を会議に持ってこないので、自分で動かす事業にして見る
+      // （1.1.0+30 で釣り合いが変わり、この種では稼ぎ頭の事業が任せたままになっていた）
+      b.deleg = false;
       final out = <Proposal>[];
       for (var i = 0; i < 300; i++) {
         final o = s.proposalFor(p);
@@ -291,7 +294,8 @@ void main() {
     });
 
     test('人の提案は足りない人数。通すとその人数が入る', () {
-      final s = _grown();
+      // 1.1.0+30 で釣り合いが変わり、種11では現場の人を減らすと稼ぎ頭の事業が入れ替わる（提案を見る事業がずれる）ので、種12で見る
+      final s = _grown(seed: 12);
       final b = _direct(s);
       s.cash = 1e15;
       b.crew = s.crewOf(b) * .05;

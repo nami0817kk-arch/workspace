@@ -138,13 +138,18 @@ extension GameView on Game {
   String goalText() {
     if (mode == 'world') {
       final rk = rankList();
-      final top = rk[0];
-      var main = '';
-      if (top.c != null && top.c!.biz.isNotEmpty) {
-        final b = (top.c!.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev)))[0];
-        main = M('・主力は「{0}」', [I(b.ind)]);
+      final me = rk.indexWhere((x) => x.me) + 1;
+      if (me == 1) return M('世界1位です。2位との差は{0}', [Y(rk[0].cap - (rk.length > 1 ? rk[1].cap : 0))]);
+      // 1.1.0+30 から、世界1位は遠い目標なので、次の順位の節目（500・200・100・50・10・3・1位）までの差と、主な業種での順位を出す
+      final next = rankMarks.reversed.firstWhere((m) => m < me, orElse: () => 1);
+      final gap = math.max(0.0, rk[next - 1].cap - (cap + wealth));
+      final head = (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
+      if (head != null) {
+        final rivals = cos.where((c) => c.alive && c.parent != 'player' && c.biz.any((x) => x.ind == head.ind)).map((c) => c.biz.firstWhere((x) => x.ind == head.ind).rev);
+        final indRank = rivals.where((r) => r > head.rev).length + 1;
+        return M('次の目標：世界{0}位以内（あと{1}）。今は{2}位・「{3}」では{4}位', [next, Y(gap), me, I(head.ind), indRank]);
       }
-      return M('世界1位まで：1位は{0}（{1}{2}）。あなたは{3}位', [top.me ? top.name : Nm(top.name), Y(top.cap), main, rk.indexWhere((x) => x.me) + 1]);
+      return M('次の目標：世界{0}位以内（あと{1}）。今は{2}位', [next, Y(gap), me]);
     }
     if (mode == 'quad') return M('1000兆円まで：あと{0}', [Y(math.max(0, 1e15 - cap - wealth))]);
     return M('終わりなし：好きなだけ育てる');

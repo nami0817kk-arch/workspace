@@ -268,6 +268,27 @@ class SetupScreen extends StatelessWidget {
                 });
               }, on: st.traits.contains(t.id), subs: ['${tr('＋')}${t.g}', '${tr('－')}${t.b}']),
           ]),
+          // 社長の始め方（1.1.0+30）：大学を出てすぐか、会社員を何年かしてからか。勤めた業界の経験・貯金・人脈が起業後に効く
+          H2(tr('社長の始め方')),
+          _opt([
+            ChoiceBtn(tr('大学を出てすぐ'), () => set(() => st.start = 'grad'), on: st.start != 'work', subs: [tr('22歳。若く、時間がある')]),
+            ChoiceBtn(tr('会社員を何年かしてから'), () => set(() {
+                  st.start = 'work';
+                  if (st.workYears <= 0) st.workYears = 5;
+                  st.workCat ??= 'live';
+                }), on: st.start == 'work', subs: [tr('経験・貯金・人脈を積んでから')]),
+          ]),
+          if (st.start == 'work') ...[
+            Padding(padding: const EdgeInsets.only(top: 4, bottom: 4), child: Muted(tr('勤める年数'))),
+            _opt([
+              for (final n in const [3, 5, 10]) ChoiceBtn(tr('{0}年', [n]), () => set(() => st.workYears = n), on: st.workYears == n, subs: [tr('{0}歳で起業', [22 + n])]),
+            ]),
+            Padding(padding: const EdgeInsets.only(top: 4, bottom: 4), child: Muted(tr('勤める業界（同じ分類の事業に経験が効く）'))),
+            Wrap(spacing: 6, runSpacing: 6, children: [
+              for (final c in CATN.keys)
+                PickChip(CATN[c]!, on: st.workCat == c, onTap: () => set(() => st.workCat = c), key: ValueKey('work-cat-$c')),
+            ]),
+          ],
           H2(tr('難しさ')),
           _opt([
             for (final d in DIFFS) ChoiceBtn(d.n, () => set(() => st.diff = d.id), on: st.diff == d.id, subs: [d.d]),
@@ -277,7 +298,11 @@ class SetupScreen extends StatelessWidget {
             for (var i = 1; i <= slotCount; i++)
               ChoiceBtn(tr('枠{0}', [i]), () => set(() => ctl.newSlot = i), on: ctl.startSlot == i, subs: [_slotShort(ctl.slotInfo(i))]),
           ]),
-          Padding(padding: const EdgeInsets.only(top: 16), child: Muted(tr('社長は22歳、大学を出たばかり。最初は会社の名前だけがあります。'))),
+          Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Muted(st.start == 'work'
+                  ? tr('社長は{0}歳、{1}年の会社員を辞めたところ。最初は会社の名前と貯金だけがあります。', [22 + st.workYears, st.workYears])
+                  : tr('社長は22歳、大学を出たばかり。最初は会社の名前だけがあります。'))),
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,

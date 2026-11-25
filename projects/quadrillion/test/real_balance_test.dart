@@ -12,25 +12,36 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:quadrillion/game/game.dart';
 
 import 'support/bot.dart';
+import 'support/pro.dart';
 
 class Run {
   final String how;
   final int seed;
   bool broke = false, bank = false;
   int months = 0, bridges = 0, calls = 0;
+
+  /// 民事再生で立て直した年（1.1.0+30。0 は立て直していない）
+  int reborn = 0;
   double cap = 0, peakDebtX = 0, maxDebt = 0, peakCap = 0;
   int peakRank = 999;
   Run(this.how, this.seed);
+
+  /// 倒れずに30年を終えた（民事再生もしていない）
+  bool get alive => !broke && reborn == 0;
   @override
   String toString() =>
-      '$how seed$seed: ${broke ? '倒産 ${months ~/ 12}年目' : '30年生存'}${bank ? '・銀行の管理' : ''} 時価${yen(cap)} 時価の最高${yen(peakCap)} 最高$peakRank位 借金最大${yen(maxDebt)}(利益の${peakDebtX.toStringAsFixed(1)}倍) つなぎ$bridges回 貸しはがし$calls回';
+      '$how seed$seed: ${broke ? '倒産 ${months ~/ 12}年目' : reborn > 0 ? '再生 $reborn年目・30年続いた' : '30年生存'}${bank ? '・銀行の管理' : ''} 時価${yen(cap)} 時価の最高${yen(peakCap)} 最高$peakRank位 借金最大${yen(maxDebt)}(利益の${peakDebtX.toStringAsFixed(1)}倍) つなぎ$bridges回 貸しはがし$calls回';
 }
 
-Run play(String how, int seed, {int years = 30, int start = 1980, String home = 'jp'}) {
-  final r = Run(how, seed);
+Run play(String how, int seed, {int years = 30, int start = 1980, String home = 'jp', bool old = false, bool abroad = false}) {
+  final r = Run(abroad ? 'abroad' : how, seed);
   final g = Game.newGame(SetupConfig(mode: 'world', year: start, traits: const ['charm', 'careful'], home: home), rng: ParkMiller(seed));
   for (var m = 0; m < years * 12; m++) {
-    botMonth(g, units: true, borrow: how, focus: true);
+    if (old) {
+      botMonth(g, units: true, borrow: how, focus: true);
+    } else {
+      proMonth(g, borrow: how, abroad: abroad);
+    }
     if (g.won != null) {
       g.mode = 'endless';
       g.won = null;
@@ -45,6 +56,7 @@ Run play(String how, int seed, {int years = 30, int start = 1980, String home = 
     final x = g.debtMultiple();
     if (x < 99 && x > r.peakDebtX) r.peakDebtX = x;
     if (g.bankDone) r.bank = true;
+    if (g.life.restructured && r.reborn == 0) r.reborn = m ~/ 12 + 1;
     r.months = m + 1;
     if (g.over != null) {
       r.broke = true;
@@ -108,6 +120,11 @@ void main() {
     final maxRuns = out.where((r) => r.how == 'max').toList(), none = out.where((r) => r.how == 'none').toList();
     final some = out.where((r) => r.how == 'some').toList();
     Run noneOf(int seed) => none.firstWhere((r) => r.seed == seed);
+    // 1.1.0+30（段6）から、自動プレイは「ふつうの上手な人」の打ち方（support/pro.dart）。目安は
+    // 「少し借りるは6回中5回ほど30年続く」「借りまくるは速く大きくなる回もあるが、半分ほどは倒れる」「借りないはほぼ続くが小さい」。
+    // 乱数の並びで1回ずつ揺れるので、線は目安より1回ゆるめに引く
+    expect(some.where((r) => r.alive).length, greaterThanOrEqualTo(4), reason: lines);
+    expect(maxRuns.where((r) => r.broke || r.reborn > 0).length, greaterThanOrEqualTo(2), reason: lines);
     // 借りまくると、6回のうち少なくとも1回は倒れるか銀行の管理に入る
     expect(maxRuns.where((r) => r.broke || r.bank).length, greaterThanOrEqualTo(1), reason: lines);
     // 借りまくるが30年勝ち続ける（倒れずに、借りないより大きく終わる）のは、6回のうち全部ではない
@@ -117,13 +134,15 @@ void main() {
     // 人件費を見直さない自動プレイは、稼ぎ頭の業種が沈んだあと（20年目過ぎ）に倒れることがある。線を半分までに引き直した
     // 1.1.0+29（段4）から、宿敵と CPU の会社も同じ決まりで店を増やし、上場すれば宿敵に株を買われ、大口の客を失うこともある。
     // 同じ打ち方でも乱数の並びで6回中2〜5回倒れる（直前の2回の測りで2回と5回）ので、段2の線「借りないで必ず倒れることは無い」に戻した
-    expect(none.where((r) => r.broke).length, lessThan(6), reason: lines);
+    // 1.1.0+30（段6）から、上手な打ち方（赤字の店を閉める・沈む業種から移る・蓄えを持つ）では、倒れるのは6回中3回まで
+    expect(none.where((r) => r.broke).length, lessThanOrEqualTo(3), reason: lines);
     // 借りると速く大きくなれることがある（どこかの種で、借りた会社の時価の最高が、借りない会社の最後の時価を超える）
     expect([...maxRuns, ...some].any((r) => r.peakCap > noneOf(r.seed).cap), isTrue, reason: lines);
     // 借金は利益の何倍かで上限が決まる（現金に連動しない）。借りまくっても、利益の十数倍を大きく超えない
     for (final r in maxRuns) {
       // 1.1.0+29（段4）から、借りたあとに大口の客を失う・仕入れ先に支払いを早められると利益が急に細り、倍率が一時的に跳ねることがある。線を60に引き直した
-      expect(r.peakDebtX, lessThan(60), reason: r.toString());
+      // 1.1.0+30（段6）から、借りまくる人は蓄えを持たずに全部を伸ばすのに使うので、不況で利益が細った月に倍率が跳ねる。線を100に引き直した
+      expect(r.peakDebtX, lessThan(100), reason: r.toString());
     }
   }, timeout: const Timeout(Duration(minutes: 20)));
 }

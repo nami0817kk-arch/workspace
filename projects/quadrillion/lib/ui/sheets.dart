@@ -148,8 +148,11 @@ void openIntro(GameController ctl) {
         H2(tr('{0}年 春', [s.year]), top: true),
         Say(
             face: presFace(s, size: faceBig),
-            who: tr('{0}（{1}歳）', [nmL(s.pres.name), 22]),
-            text: tr('大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。', [yen(s.cash)])),
+            who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]),
+            text: s.life.start == 'work' && s.life.workCat != null
+                ? tr('{0}の会社で{1}年働いて、独立した。手元には貯金を合わせて{2}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。',
+                    [CATN[s.life.workCat!]!, s.life.workYears, yen(s.cash)])
+                : tr('大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。', [yen(s.cash)])),
         _note(tr('社長が1か月に使える時間はふつう200時間、無理をすれば300時間です。行動ごとに時間がかかり、無理が続くと体力が減って倒れます。会社が大きくなるほど会議に時間を取られます。右の帯の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探し・休みが選べます。')),
         const SizedBox(height: 4),
         ChoiceBtn(tr('相棒を探しに行く'), () => openSeek(ctl), ap: hrS(s, 'seek'), subs: [tr('行き先で出会う人の型が変わる')]),
@@ -1019,12 +1022,18 @@ void nextEvent(GameController ctl) {
     ctl.closeSheet();
     return;
   }
-  if (s.events.isEmpty) {
+  // 小さな知らせ（経営会議の提案など）は小窓で手を止めず、「今月やること」に残す（1.1.0+30。企画書「会議と出来事」）
+  final i = s.events.indexWhere((e) => !e.small);
+  if (i < 0) {
     ctl.save();
     ctl.closeSheet();
     return;
   }
-  final e = s.events.removeAt(0);
+  showEvent(ctl, s.events.removeAt(i), then: () => nextEvent(ctl));
+}
+
+/// 出来事1つを小窓で見せる（選んだら結果を見せ、[then] へ）
+void showEvent(GameController ctl, GameEvent e, {required VoidCallback then}) {
   Widget body;
   if (e.voices.isNotEmpty) {
     // 会議：状況の説明は地の文、発言は話す人ごとの吹き出し
@@ -1062,7 +1071,21 @@ void nextEvent(GameController ctl) {
             final m = c.f();
             ctl.buzzAfter(snap, [LogEntry(m)]);
             ctl.save();
-            ctl.showSheet((_) => ToastBody(msg: m, onOk: () => nextEvent(ctl)));
+            ctl.showSheet((_) => ToastBody(msg: m, onOk: then));
           }, subs: [c.s]),
+        if (e.small) ChoiceBtn(tr('あとで決める'), () {
+          ctl.game!.events.add(e);
+          ctl.closeSheet();
+        }, subs: [tr('「今月やること」に残る。決めないまま次の月へ進むと見送る')]),
       ]));
+}
+
+/// 「今月やること」から小さな知らせを開く
+void openSmallEvent(GameController ctl, GameEvent e) {
+  final s = ctl.game!;
+  if (!s.events.remove(e)) return;
+  showEvent(ctl, e, then: () {
+    ctl.save();
+    ctl.closeSheet();
+  });
 }

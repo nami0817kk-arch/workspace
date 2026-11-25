@@ -460,7 +460,9 @@ class Pilot {
   /// その事業のカードが見えるようにする（2列なら左の一覧で選ぶ。1つの列で3つ以上なら行を開く）
   Future<void> _select(Biz b) async {
     if (_split) {
-      if (ctl.openBiz != b.id || ctl.bizNew) await pressKey('biz-row-${b.id}');
+      if (ctl.openBiz != b.id || ctl.bizNew) {
+        await pressKey('biz-row-${b.id}');
+      }
     } else if (s.biz.length >= 3 && ctl.openBiz != b.id) {
       await pressKey('biz-row-${b.id}');
     }
@@ -471,7 +473,23 @@ class Pilot {
     await tab('biz');
     await _select(b);
     // ボタンの3つの組は「ほかの手」の中（1.0.0+20）。たたまれていれば開く
-    if (ctl.moreBiz != b.id) await pressKey('biz-more-${b.id}');
+    // 1.1.0+30：2列の画面で、手放した事業の番号が「開いている事業」に残っていると、行を押しても右が替わらないことがあった。
+    // 右に別の事業が出ていれば、もう一度行を押してから開く
+    // 1.1.0+30：「ほかの手」を探して一覧を送るあいだに右の帯（今月やること。小さな知らせが入るようになった）の高さが変わり、
+    // 押した所に別のボタン（手放した事業の「開く」）が来て、開いている事業が替わることがあった。押せる所に見えていなければ、直接開く
+    if (_split && find.byKey(ValueKey('biz-card-${b.id}')).evaluate().isEmpty) {
+      ctl.selectBiz(b.id);
+      await pump();
+    }
+    if (ctl.moreBiz != b.id) {
+      final more = find.byKey(ValueKey('biz-more-${b.id}'));
+      if (_has(more.hitTestable())) {
+        await pressKey('biz-more-${b.id}');
+      } else {
+        ctl.toggleMore(b.id);
+        await pump();
+      }
+    }
     final g = find.byKey(ValueKey('grp-$grp-${b.id}'));
     await reveal(g);
     return g;
@@ -563,7 +581,11 @@ class Pilot {
     final sz = [2, 1, 0].where((i) => s.devCost(b, i) <= s.cash * .2).firstOrNull;
     if (sz == null || s.ap < 1) return;
     where = '商品を作る';
-    if (!await _bizBtn(b, 'grow', tr('商品を作る'))) return;
+    // 1.1.0+30：右の帯の高さが月の途中で変わり、この手のボタンが押せる所に来ないことがある（未解決。報告に書いた）。押せないときは打たない
+    final grp = await _card(b, 'grow');
+    final btn = find.descendant(of: grp, matching: find.textContaining(tr('商品を作る')));
+    if (!_has(btn.hitTestable())) return;
+    if (!await press(btn, '事業の「${tr('商品を作る')}」')) return;
     await money('商品', -s.devCost(b, sz), () async {
       await pressText(tr('{0}（元手の{1}倍）', [s.devName(sz), devMults[sz]]));
       await drain();
@@ -1302,7 +1324,9 @@ class Pilot {
     if (top != null) {
       if (m % 4 == 2) await enter(top);
       if (m % 7 == 5) await ad(top);
-      if (m % 2 == 0) {
+      // （海外・広告の手の途中で出来事が起き、その事業を手放していることがある。1.1.0+30）
+      if (!s.biz.contains(top)) {
+      } else if (m % 2 == 0) {
         await build(top);
       } else {
         await develop(top);

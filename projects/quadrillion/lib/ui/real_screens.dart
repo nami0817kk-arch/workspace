@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../game/game.dart';
 import 'controller.dart';
 import 'glossary.dart';
+import 'life_screens.dart';
 import 'painters.dart';
 import 'sheets.dart';
 import 'tabs.dart';
@@ -683,6 +684,8 @@ List<Widget> _taxView(GameController ctl) {
         Muted(tr('税金は国と年の法人税率で、今年の利益の積み上げにかかります。赤字の月があると、今年払った分から戻ります。年が替わると積み上げは0に戻ります'), size: 11.5),
       ]),
     ),
+    // 減価償却・消費税・保険・IT・特許（1.1.0+30）
+    ...taxLifePanels(ctl),
   ];
 }
 

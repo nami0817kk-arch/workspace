@@ -176,7 +176,10 @@ void main() {
       }
     }
 
-    final target = (s.cos.where((c) => c.alive && c.parent != 'player' && c.rival == null && c.loc == null).toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
+    // 1.1.0+30 から CPU の会社の取り分が0.78倍になり、いちばん小さな会社は手続きのあいだに倒れることがある。借金の無い小さな会社を選ぶ
+    final target = (s.cos.where((c) => c.alive && c.parent != 'player' && c.rival == null && c.loc == null && s.finOf(c).debt <= 0 && c.profit > 0).toList()
+          ..ssort((a, b) => a.cap.compareTo(b.cap)))
+        .first;
     expect(tx(s.tob(target, 50.1)), contains('申し入れました'));
     months(() => target.parent == 'player');
     expect(target.parent, 'player');
