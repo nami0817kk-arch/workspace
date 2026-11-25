@@ -78,7 +78,17 @@ Hiragana letters drop one at a time. Stack them on the stage, and when touching 
 | 5 | 集めたことばで 台と字の色が ひらく | ことば帳 |
 
 検索結果に出るのは先頭3枚なので、はじめの画面・起動画面は撮らない（docs/app-pitfalls.md 4番）。
-英語版の掲載画像は、**英語の画面（ローマ字と意味つき）で撮り直す**（2026-11-25 にゲームを英語に対応させた。まだ撮っていない）。
+英語版（`en-1`〜`en-5`、`SHOT_LANG=en node tool/screenshots.js`）は英語の画面で撮った（2026-11-25）。日本語を学ぶ人に向けて、意味の札とおさらいを見せる:
+
+| 順 | 見出し | 中身 |
+|---|---|---|
+| 1 | Stack hiragana, spell Japanese words | ことばができた瞬間（ねこ・neko · cat、字にローマ字） |
+| 2 | Any direction counts | 落とす前の「ねこ neko ?」の案内 |
+| 3 | Tap a word: meaning, kanji and voice | ことば帳で がっこう を押した意味の札 |
+| 4 | Review the words you collected | おさらい（正解を押したところ） |
+| 5 | Six stages with Japanese scenery | てんびん（じんじゃ） |
+
+大きさは日英とも **1206×2622**（App Store Connect の iPhone の枠「中型ディスプレイ」が受け付ける。1320×2868 は入らない）。
 
 ## 課金アイテム
 

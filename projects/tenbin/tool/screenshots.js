@@ -1,20 +1,31 @@
 // App Store の掲載画像を撮る（iPhone 6.9インチ 1320×2868、5枚）。アプリに入れるのと同じ本体（app/assets/web/index.html）を、
 // アプリの中にいるふり（window.__TENBIN_APP）で開いて撮り、上に見出しを付ける。
 // 使い方: 先に python tool/build_app_web.py。PLAYWRIGHT=<playwright の場所> CHROMIUM=<chromium> node tool/screenshots.js
-//   → marketing/screenshots/ja-1.png …
+//   → marketing/screenshots/ja-1.png …。SHOT_LANG=en で英語の画面（日本語を学ぶ人向け）を en-1.png … に撮る
+// 大きさは 1206×2622（App Store Connect の iPhone の枠「中型ディスプレイ」が受け付ける大きさ。1320×2868 は入らなかった。2026-11-25）
 // docs/app-pitfalls.md 4番: 撮るたびに「撮れていること」を確かめる（読み込み中のまま・白紙のまま出さない）。
 // 検索結果に出るのは先頭3枚なので、はじめの画面・起動画面は撮らず、遊んでいる絵から並べる
 var path = require('path'), fs = require('fs');
 var pw = require(process.env.PLAYWRIGHT || 'playwright');
 var ROOT = path.join(__dirname, '..'), PAGE = path.join(ROOT, 'app/assets/web/index.html'), OUT = path.join(ROOT, 'marketing/screenshots');
-var W = 440, H = 956, SCALE = 3, TOP = 168;   // 見出しの帯の高さ（CSS px）
+var W = 402, H = 874, SCALE = 3, TOP = 154;   // TOP は見出しの帯の高さ（CSS px）
+var EN = process.env.SHOT_LANG === 'en';
 var SHOTS = [
   { name: 'ja-1', title: '字を くっつけて<br>ことばに しよう', sub: 'ひらがなを積む ことばパズル' },
   { name: 'ja-2', title: 'たて・よこ・逆さでも<br>読めたら ことば', sub: '落とす前に できそうなことばが出る' },
   { name: 'ja-3', title: '台は6種類', sub: 'てんびん・ゆらゆら・ふたつ…景色もそれぞれ' },
   { name: 'ja-4', title: '高く積むほど<br>空が 夕焼けから夜へ', sub: 'のり・いた・こおり のアイテムも' },
-  { name: 'ja-5', title: '集めたことばで<br>台と字の色が ひらく', sub: 'ことば帳 2000語以上' }
+  { name: 'ja-5', title: '集めたことばで<br>台と字の色が ひらく', sub: 'ことば帳 約4,000語' }
 ];
+// 英語（日本語を学ぶ人向け）。ローマ字・意味の札・おさらいを見せる
+var SHOTS_EN = [
+  { name: 'en-1', title: 'Stack hiragana,<br>spell Japanese words', sub: 'Romaji on every letter' },
+  { name: 'en-2', title: 'Any direction counts', sub: 'See the word before you drop' },
+  { name: 'en-3', title: 'Tap a word: meaning,<br>kanji and voice', sub: 'Nearly 4,000 everyday words' },
+  { name: 'en-4', title: 'Review the words<br>you collected', sub: 'See the meaning, pick the hiragana' },
+  { name: 'en-5', title: 'Six stages with<br>Japanese scenery', sub: 'Garden, shrine, river, sea, snowy mountain' }
+];
+if (EN) SHOTS = SHOTS_EN;
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 (async function () {
   if (!fs.existsSync(PAGE)) throw new Error('先に python tool/build_app_web.py');
@@ -28,7 +39,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     var p = await ctx.newPage();
     var errs = []; p.on('pageerror', function (e) { errs.push(e.message); });
     await p.route('**/*', function (r) { return r.request().url().startsWith('file:') ? r.continue() : r.abort(); });
-    var st = { 'tenbin-kana-coached': 'true', 'tenbin-kana-muted': 'true', 'tenbin-kana-dict': JSON.stringify(dict || {}) };
+    var st = { 'tenbin-kana-coached': 'true', 'tenbin-kana-muted': 'true', 'tenbin-kana-dict': JSON.stringify(dict || {}), 'tenbin-kana-lang': JSON.stringify(EN ? 'en' : 'ja') };
     Object.assign(st, extra || {});
     await p.addInitScript(function (st) { window.TenbinApp = { postMessage: function () {} }; window.__TENBIN_APP = { store: st, adFree: false }; }, st);
     await p.goto('file://' + PAGE); await sleep(900);
@@ -67,13 +78,37 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   if (process.env.DEBUG) console.log(await p.evaluate(function () { var s = window.__state(); return JSON.stringify({ made: s.made, failed: s.failed, c: s.cargo.map(function (b) { return b.kind + Math.round(b.position.x) + ',' + Math.round(b.position.y); }) }); }));
   await p.waitForFunction(function () { return window.__state().made.length >= 2; }, null, { timeout: 15000 }); await sleep(450);
   raws.push(await shot(p, 0, function () { return window.__state().made.length >= 2; }));
-  // 2: できそうなことばの案内（「う」「み」で うみ を作り、「ね」の上に「こ」を持つ）
+  // 2: できそうなことばの案内（「う」「み」を横に並べて うみ を作り、「ね」の上に「こ」を持つ）
   p = await open({});
   await p.click('#go'); await sleep(300);
-  await drops(p, ['み', 'う', 'ね'], [-90, -90, 70]); await settle(p);
+  await drops(p, ['み', 'う', 'ね'], [-60, -118, 70]); await settle(p);   // う・み を横に並べる（上に重ねると、取り直した輪郭では傾いて揺れ続けた）
   await p.evaluate(function () { var s = window.__state(); s.queue[0] = 'こ'; window.__moveTo(270); });
+  // 落とせるようになってから（待ちの輪のあいだは案内が出ない）
+  await p.waitForFunction(function () { return window.TenbinCore.canDrop(window.__state()); }, null, { timeout: 15000 });
   await sleep(900);
   raws.push(await shot(p, 1, function () { var s = window.__state(); return s.made.length >= 1 && window.TenbinCore.previewWords(s, 'こ', 0, 270).indexOf('ねこ') >= 0; }));
+  if (EN) {
+    var learn = Object.assign({}, many); ['ねこ', 'がっこう', 'さくら', 'うみ', 'きょう', 'まっちゃ', 'いぬ', 'やま'].forEach(function (w) { learn[w] = 1; });
+    // 3: ことばを押すと出る意味の札（がっこう）
+    p = await open(learn);
+    await p.click('#dictBtn'); await sleep(400);
+    await p.evaluate(function () { document.querySelector('[data-say="がっこう"]').click(); }); await sleep(500);
+    raws.push(await shot(p, 2, function () { var d = document.getElementById('wordDetail'); return !!d && /school/.test(d.textContent); }));
+    // 4: おさらい（答えたところ）
+    p = await open(learn);
+    await p.click('#dictBtn'); await sleep(300); await p.click('#quiz'); await sleep(400);
+    await p.evaluate(function () { var m = document.querySelector('.qm').textContent, M = window.TenbinMeanings;
+      // 正解を押す（出ている意味と同じ意味のことば）
+      [].slice.call(document.querySelectorAll('[data-pick]')).filter(function (el) { var x = M[el.getAttribute('data-pick')]; return x && x[1] === m; })[0].click(); });
+    await sleep(500);
+    raws.push(await shot(p, 3, function () { return !!document.querySelector('.qc .right') && !document.querySelector('.qc .wrong') && !document.getElementById('qNext').hidden; }));
+    // 5: てんびん（じんじゃ）
+    p = await open(many);
+    await pick(p, 'seesaw');
+    await drops(p, ['た', 'け', 'の', 'こ', 'は', 'な'], [-60, -60, 60, 60, 0, 0]); await settle(p);
+    await sleep(300);
+    raws.push(await shot(p, 4));
+  } else {
   // 3: てんびん（じんじゃ）
   p = await open(many);
   await pick(p, 'seesaw');
@@ -95,11 +130,12 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   p = await open(many);
   await p.click('#dictBtn'); await sleep(400);
   raws.push(await shot(p, 4, function () { return !!document.querySelector('.dict') && document.querySelectorAll('.dict .w').length > 50; }));
+  }
   // 見出しを付けて 1320×2868 に
   var c = await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: SCALE });
   var q = await c.newPage();
   for (var i = 0; i < SHOTS.length; i++) {
-    var html = '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;width:' + W + 'px;height:' + H + 'px;overflow:hidden;background:linear-gradient(#f4b893,#f8e0c2 18%,#f4ede1 30%);font-family:"Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif;color:#3b2f24}' +
+    var html = '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;width:' + W + 'px;height:' + H + 'px;overflow:hidden;background:linear-gradient(#f4b893,#f8e0c2 18%,#f4ede1 30%);font-family:"Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif;color:#3b2f24}' + (EN ? '.cap b{font-size:28px !important}' : '') +
       '.cap{height:' + TOP + 'px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}' +
       '.cap b{font-size:31px;line-height:1.25;font-weight:900;letter-spacing:.03em;text-shadow:0 2px 0 rgba(255,255,255,.6)}.cap span{margin-top:8px;font-size:15px;font-weight:700;color:#8a4a2a}' +
       'img{display:block;width:' + W + 'px}</style></head><body><div class="cap"><b>' + SHOTS[i].title + '</b><span>' + SHOTS[i].sub + '</span></div><img src="file://' + raws[i] + '"></body></html>';
@@ -109,7 +145,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     await q.screenshot({ path: out });
     var size = fs.statSync(out).size;
     // 白紙は小さい（app-pitfalls 4番: 白紙は約22KB、中身のある画像は100KBを超える）
-    if (size < 300 * 1024) throw new Error(SHOTS[i].name + ' が小さすぎる（' + size + ' バイト）。白紙か読み込み中のまま撮っていないか');
+    if (size < 150 * 1024) throw new Error(SHOTS[i].name + ' が小さすぎる（' + size + ' バイト）。白紙か読み込み中のまま撮っていないか');
     console.log(SHOTS[i].name, size, 'bytes');
   }
   raws.forEach(function (r) { fs.unlinkSync(r); }); fs.unlinkSync(path.join(OUT, '.cap.html'));
