@@ -1291,7 +1291,9 @@ Widget _presGrowPanel(Game s) {
       for (final k in abKeys) ...[
         const SizedBox(height: 8),
         Row(children: [
-          SizedBox(width: Ui.sw(64), child: Text('${ABN[k]} ${P.ab[k]}', style: ts(size: 13, bold: true))),
+          // 英語の名前（Leadership）は長いので、切れずに1行で入る幅にする
+          SizedBox(width: Ui.sw(L.en ? 112 : 64), child: Text('${ABN[k]} ${P.ab[k]}', maxLines: 1, softWrap: false, style: ts(size: 13, bold: true))),
+          const SizedBox(width: 6),
           Expanded(child: _xpBar(s.presXpFrac(k), key: ValueKey('pres-xp-$k'))),
           SizedBox(
               width: Ui.sw(44),

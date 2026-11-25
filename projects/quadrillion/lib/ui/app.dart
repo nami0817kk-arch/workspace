@@ -356,7 +356,8 @@ class SetupScreen extends StatelessWidget {
         for (final k in abKeys) ...[
           const SizedBox(height: 6),
           Row(children: [
-            SizedBox(width: Ui.sw(52), child: Text(ABN[k]!, style: ts(size: 13.5, bold: true))),
+            // 英語の名前（Leadership・Finance）は長いので、切れずに1行で入る幅にする
+            SizedBox(width: Ui.sw(L.en ? 96 : 52), child: Text(ABN[k]!, maxLines: 1, softWrap: false, style: ts(size: 13.5, bold: true))),
             Btn('-${SetupConfig.abStep}', () => set(() => ab[k] = ab[k]! - SetupConfig.abStep),
                 small: true, enabled: ab[k]! - SetupConfig.abStep >= SetupConfig.abMin, key: ValueKey('ab-minus-$k')),
             SizedBox(
