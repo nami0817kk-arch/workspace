@@ -26,6 +26,9 @@ extension GameActions on Game {
     final early = yr() - ind.b < 3;
     final nb = Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2);
     biz.add(nb);
+    // 新しい事業を始めるのは一度きりの山（1か月の上限に数えない）
+    presXp('kai', 5, big: true);
+    presXp('ei', 2, big: true);
     // 元手で買える分の店・ラインなどを置く（許認可型は許可を待つ。1.1.0+26）
     initUnits(nb, c);
     if (free) chron('first_biz', M('{0}「{1}」を始めた', [M(serial > 0 ? '新しい会社で' : '最初の事業として'), I(id)]));
@@ -116,6 +119,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     cash -= cost;
     useT('enter');
+    presXp('ei', 1.5);
     final pw = cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5;
     if (mode == 'buy') {
       addCtry(b, c, mode, pw);
@@ -189,6 +193,7 @@ extension GameActions on Game {
     useT('dev');
     final left = ri(3, 6);
     b.pipe.add(Pipe(k: 'dev', cost: cost, left: left));
+    presXp('kai', 2);
     calcAll();
     return M('新しい商品の開発を始めました（{0}）。出来上がるのは{1}か月後。当たるかどうかは出てみるまで分かりません', [Y(cost), left]);
   }
@@ -282,6 +287,7 @@ extension GameActions on Game {
     useT('dev');
     final left = ri(devMonths[sz].$1, devMonths[sz].$2);
     b.pipe.add(Pipe(k: 'dev', cost: cost, left: left, sz: sz));
+    presXp('kai', (sz + 1) * 2.0);
     calcAll();
     return M('{0}を始めました（{1}）。出来上がるのは{2}か月後。当たるかどうかは出てみるまで分かりません', [devName(sz), Y(cost), left]);
   }
@@ -325,6 +331,7 @@ extension GameActions on Game {
     cash -= cost;
     useT('crew');
     _addHeads(b, n);
+    presXp('tou', .4);
     calcAll();
     return M('現場の人を{0}人増やしました（採用の費用 {1}）。毎月の人件費が{2}増えます', [n, Y(cost), Y(payPerMonth(b, n))]);
   }
@@ -407,6 +414,7 @@ extension GameActions on Game {
     for (final x in plan) {
       x.$1.mgr = x.$2.id;
     }
+    presXp('tou', plan.length.toDouble());
     calcAll();
     return M('{0}人を責任者に置きました：{1}', [plan.length, J(plan.map((x) => M('{0}→「{1}」', [Nm(x.$2.name), I(x.$1.ind)])))]);
   }
@@ -558,6 +566,7 @@ extension GameActions on Game {
     // 人たらしは情に流されて切るのに手間取る（時間が倍）
     if (hasT('charm')) useT('sell');
     biz.remove(b);
+    presXp('zai', 2);
     calcAll();
     return M('「{0}」を{1}で売りました', [I(b.ind), Y(v)]);
   }
@@ -572,6 +581,7 @@ extension GameActions on Game {
     useT('hire');
     cands.remove(p);
     staff.add(p);
+    presXp('tou', 1.5);
     return M('{0}を雇いました', [Nm(p.name)]);
   }
 
@@ -580,6 +590,7 @@ extension GameActions on Game {
     // 責任者を外したら、任せるのもやめる（人を替えただけなら、任せたまま引き継ぐ）。
     // 任せていた責任者が辞めたあとに新しい人を置いたときも、任せ直すまでは自分で動かす
     final was = delegated(b);
+    if (id != null && id != b.mgr) presXp('tou', 1);
     b.mgr = id;
     if (id == null || !was) {
       b.deleg = false;
@@ -706,7 +717,6 @@ extension GameActions on Game {
   }
 
   double workIncome() => (3.3e5 + (pres.ab['ei']! + pres.ab['kai']!) * 3.3e3) * nom();
-  int trainGain() => pres.age < 35 ? 2 : 1;
 
   String scout() {
     final y = yr();
@@ -736,6 +746,8 @@ extension GameActions on Game {
   /// 社長の行動。seek は成功すると null（出会いの小窓へ）
   String? presAct(String kind, [String? arg]) {
     if (kind == 'rest') return restAct();
+    // 「腕を磨く」は 1.1.0+32 で無くした（腕は事業を進める中で磨かれる）。古い呼び出しは時間を使わずに知らせだけ返す
+    if (kind == 'train') return M('社長の腕は、事業を進める中で磨かれます');
     final nt = needT(kind);
     if (nt != null) return nt;
     if (kind == 'seek') {
@@ -750,12 +762,6 @@ extension GameActions on Game {
       cash += v;
       calcAll();
       return M('受託の仕事を片付け、{0}を稼ぎました', [Y(v)]);
-    }
-    if (kind == 'train') {
-      useT('train');
-      final gn = trainGain();
-      pres.ab[arg!] = math.min(99, pres.ab[arg]! + gn);
-      return M('{0}を磨きました（{1} → {2}）', [D(ABN.ja[arg]!), pres.ab[arg]! - gn, pres.ab[arg]]);
     }
     if (kind == 'net') {
       if (net >= 5) return M('人脈はもう十分に広がっています');
@@ -791,6 +797,7 @@ extension GameActions on Game {
     sh.own -= 10;
     sh.vc += 10;
     useT('vc');
+    presXp('zai', 2);
     final first = vcDeadline == 0;
     if (first) vcDeadline = turn + 36;
     calcAll();
@@ -1229,6 +1236,7 @@ extension GameActions on Game {
     _dilute(k);
     sh.float = sh.float * k + 10 * k;
     cash += money;
+    presXp('zai', 2);
     calcAll();
     return M('新しい株を市場に出し、{0}を集めました。持ち株は{1}に下がりました', [Y(money), pct(sh.own)]);
   }
@@ -1249,6 +1257,7 @@ extension GameActions on Game {
     sh.vc = 0;
     listed = true;
     vcDeadline = 0;
+    presXp('zai', 6, big: true);
     calcAll();
     chron('ipo', M('株式を上場した。{0}が入った（時価総額 {1}）', [Y(money), Y(cap)]));
     return M('上場しました！{0}が入り、ここからは誰でもあなたの株を買えます', [Y(money)]);
@@ -1365,6 +1374,7 @@ extension GameActions on Game {
     cash -= cost;
     c.stakePlayer = before + x;
     useT('own');
+    presXp('zai', 1.5);
     liarCheck();
     final msg = <Object?>[M('{0}の株を{1}買いました（{2}）。持ち株は{3}', [Nm(c.name), pct(x), Y(cost), pct(c.stakePlayer)])];
     if (before < 5 && c.stakePlayer >= 5) {
@@ -1504,6 +1514,8 @@ extension GameActions on Game {
       sh.float += sh.riv[c.id]!;
       sh.riv.remove(c.id);
     }
+    presXp('zai', 4, big: true);
+    presXp('tou', 2, big: true);
     calcAll();
     if (viaSwap) {
       chron('swap', M(c.rival != null ? '株式交換で{0}（宿敵）を丸ごと買い、合併した。持ち株は{1}に' : '株式交換で{0}を丸ごと買い、合併した。持ち株は{1}に', [Nm(c.name), pct(sh.own)]));

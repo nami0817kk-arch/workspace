@@ -339,11 +339,47 @@ class President {
 
   /// 顔を決めたときの年齢（[Person.fb] と同じ）
   int? fb;
-  President({required this.name, required this.age, required this.traits, required this.ab, this.face, this.fb});
-  Map<String, dynamic> toJson() => {'name': name, 'age': age, 'traits': traits, 'ab': ab, if (face != null) 'face': face, if (fb != null) 'fb': fb};
+
+  /// 腕ごとにたまった経験（1.1.0+32。たまると腕が1上がる。古いセーブは0から）
+  Map<String, double> xp;
+
+  /// 今月たまった経験（月の終わりに、1か月の上限までを [xp] に移す）
+  Map<String, double> pend;
+
+  /// 会社の人数のいちばん多かったとき（人数が増えると統率の経験になる）
+  double hd;
+
+  /// 資金繰りの危機の中にいるか（0 いない・1 銀行の管理やつなぎの融資・2 民事再生）。乗り切ると経験が多めにたまる
+  int crisis;
+  President({required this.name, required this.age, required this.traits, required this.ab, this.face, this.fb, Map<String, double>? xp, Map<String, double>? pend, this.hd = 0, this.crisis = 0})
+      : xp = xp ?? {},
+        pend = pend ?? {};
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'age': age,
+        'traits': traits,
+        'ab': ab,
+        if (face != null) 'face': face,
+        if (fb != null) 'fb': fb,
+        if (xp.isNotEmpty) 'xp': xp,
+        if (pend.isNotEmpty) 'pend': pend,
+        if (hd > 0) 'hd': hd,
+        if (crisis > 0) 'cr': crisis,
+      };
   factory President.fromJson(Map<String, dynamic> j) => President(
-      name: j['name'] as String, age: _i(j['age']), traits: _sl(j['traits']), ab: _abFrom(j['ab']), face: j['face'] as String?, fb: _in(j['fb']));
+      name: j['name'] as String,
+      age: _i(j['age']),
+      traits: _sl(j['traits']),
+      ab: _abFrom(j['ab']),
+      face: j['face'] as String?,
+      fb: _in(j['fb']),
+      xp: _dMap(j['xp']),
+      pend: _dMap(j['pend']),
+      hd: _d(j['hd']),
+      crisis: _i(j['cr']));
 }
+
+Map<String, double> _dMap(dynamic x) => x == null ? {} : {for (final e in (x as Map).entries) e.key as String: (e.value as num).toDouble()};
 
 /// 仕掛かり中の打ち手（開発・建設・海外進出）
 class Pipe {

@@ -76,10 +76,9 @@ const Map<String, String> realEn = {
   '立ち上げには社長の時間がかかる': "Setting it up takes CEO time",
   '{0}時間': "{0}h",
   '社長の時間を{0}時間使います。': "Uses {0}h of CEO time. ",
-  '社長が1か月に使える時間はふつう200時間、無理をすれば300時間です。行動ごとに時間がかかり、無理が続くと体力が減って倒れます。会社が大きくなるほど会議に時間を取られます。右の帯の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探し・休みが選べます。':
-      "The CEO has about 200 hours a month, 300 if pushed. Every action takes time; keep overworking and stamina runs out until the CEO collapses. The bigger the company, the more time meetings take. From \"CEO actions\" on the right you can look for a partner, take odd jobs, train, network, scout for opportunities or rest.",
+  '社長が1か月に使える時間はふつう200時間、無理をすれば300時間です。行動ごとに時間がかかり、無理が続くと体力が減って倒れます。会社が大きくなるほど会議に時間を取られます。右の帯の「社長の行動」から、相棒探し・日銭稼ぎ・人脈作り・事業の種探し・休みが選べます。社長の腕は、事業を進める中で少しずつ磨かれます。':
+      "The CEO has about 200 hours a month, 300 if pushed. Every action takes time; keep overworking and stamina runs out until the CEO collapses. The bigger the company, the more time meetings take. From \"CEO actions\" on the right you can look for a partner, take odd jobs, network, scout for opportunities or rest. The CEO's skills sharpen little by little as you run the business.",
   '相棒には給料ではなく株を渡して口説きます。今の相棒 {0}/2人': "Partners are won over with shares, not salary. Partners: {0}/2",
-  '社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。': "Raises one CEO skill by {0}. The young learn faster.",
   '切り替えると、混乱で力が1割5分落ちます。': "The switch costs 15% strength in the confusion. ",
   '元手 {0}。稼ぎ方は、あとから変えられます。': "Cost {0}. You can change the model later. ",
   '同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。':

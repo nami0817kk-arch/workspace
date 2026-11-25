@@ -109,8 +109,6 @@ const Map<String, String> uiEn = {
   '{0}年 春': 'Spring {0}',
   '大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。':
       "Fresh out of college with {0} to my name and a registered company name. Before picking a first business, maybe I should find a partner.",
-  '毎月「手」の数だけ動けます。街の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探しができます。最初の事業を始めるのは手を使いません。':
-      'Each month you get a few moves. From CEO Actions in Town you can find a partner, earn quick cash, train, network or scout for ideas. Starting your first business is free.',
   '相棒を探しに行く': 'Go find a partner',
   '行き先で出会う人の型が変わる': 'Where you look decides who you meet',
   '先に最初の事業を決める': 'Pick a first business now',
@@ -128,8 +126,6 @@ const Map<String, String> uiEn = {
   '様子：{0}　あなたの持ち株 {1} → {2}': 'Mood: {0}  Your stake {1} → {2}',
   '今回は見送る': 'Pass this time',
   'この人とはもう会えない': "You won't meet them again",
-  '腕を磨く': 'Train',
-  '手を1つ使い、社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。': 'Uses 1 move to raise one CEO skill by {0}. The young learn faster.',
   '{0}（今 {1}）': '{0} (now {1})',
   '・生まれたばかり（今入ると先行者）': ' | brand new (be first in)',
   '・生まれて10年以内': ' | under 10 years old',
@@ -192,8 +188,11 @@ const Map<String, String> uiEn = {
   '1期は1か月。毎月、使える「手」（金色の四角）の数だけ行動できます。手は事業が増えると増えます。':
       'Each turn is one month. Every month you can act as many times as you have moves (the gold squares). You get more moves as you add businesses.',
   '社長の行動': 'CEO Actions',
-  '社長は22歳の大卒から始まります。「街」の「社長の行動」で、相棒を探す・日銭を稼ぐ・腕を磨く・人脈を作る・事業の種を探す、ができます。相棒には株を渡して口説きます。相棒が責任者の事業は強くなりますが、野心が強いと独立を言い出すこともあります。':
-      'You start as a 22-year-old graduate. Under CEO Actions in Town you can find a partner, earn quick cash, train, network or scout for ideas. Partners are won with shares. Businesses they run get stronger, but ambitious ones may want to go it alone.',
+  '社長は22歳の大卒から始まります。「街」の「社長の行動」で、相棒を探す・日銭を稼ぐ・人脈を作る・事業の種を探す、ができます。相棒には株を渡して口説きます。相棒が責任者の事業は強くなりますが、野心が強いと独立を言い出すこともあります。':
+      'You start as a 22-year-old graduate. Under CEO Actions in Town you can find a partner, earn quick cash, network or scout for ideas. Partners are won with shares. Businesses they run get stronger, but ambitious ones may want to go it alone.',
+  '社長の腕': 'CEO Skills',
+  '統率・開発・営業・財務の4つの腕は、はじめに自分で振り分けるか、おまかせで決まります。そのあとは事業を進める中で磨かれます。人を雇えば統率、商品を作れば開発、自分で見ている事業の売上が伸びれば営業、借りる・返す・買収・上場で財務に経験がたまり、たまると1上がります。高いほど伸びにくく、50代から鈍り、65歳を過ぎると少しずつ落ちます。人の画面で社長を選ぶと、たまり具合が見られます。':
+      "The four skills (Leadership, R&D, Sales, Finance) are set at the start, either by spending points yourself or at random. After that they grow as you run the business. Hiring builds Leadership, making products builds R&D, growing sales in businesses you run yourself builds Sales, and borrowing, repaying, acquiring and going public build Finance. When enough experience piles up, the skill goes up by 1. Higher skills grow slower, growth slows in your 50s, and after 65 skills slowly fade. Select the CEO in People to see the progress.",
   '稼ぐ': 'Earning',
   '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。お金が足りないうちは、元手の4分の1で今ある店や工場を広げることもできます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。':
       "Start industries in Business and grow them with moves. Prices don't depend on your cash: each industry has a fixed price per unit (only inflation moves it). Adding sites costs the industry's startup cost per site, in batches of 1, 3 or 10. While cash is tight you can also extend what you have for a quarter of that. They pay off reliably in 1-2 months but add upkeep. Making products comes in three sizes: small upgrade, new product and major development (1x, 3x and 10x the startup cost). Bigger ones take longer and boost more when they hit. Sites need frontline staff to run. Hire 10, 50 or just the shortfall: you pay a hiring cost, then monthly wages. Cancel work in progress to get half back. Low prices bring customers but thin margins.",
@@ -294,7 +293,6 @@ const Map<String, String> uiEn = {
   '株を分けて口説く。今の相棒 {0}/2人': 'Win them over with shares. Partners: {0}/2',
   '日銭を稼ぐ': 'Earn quick cash',
   '受託の仕事を受ける。約{0}': 'Take on contract work. About {0}',
-  '社長の能力を1つ伸ばす。若いほど伸びる': 'Raise one CEO skill. The young learn faster',
   '人脈を作る': 'Network',
   '借りられる額と採用の質が上がる（{0}/5）': 'Raises your credit line and hiring quality ({0}/5)',
   '事業の種を探す': 'Scout for ideas',

@@ -794,10 +794,6 @@ class Pilot {
           await pressText(tr('日銭を稼ぐ'));
           await drain();
         });
-      case 'train':
-        await pressText(tr('腕を磨く'));
-        await press(inSheet(find.byType(ChoiceBtn)).at(_pick++ % 4), '磨く能力');
-        await drain();
       case 'net':
         if (s.net >= 5) {
           await drain();
@@ -1303,7 +1299,8 @@ class Pilot {
     }
     // はじめの1年は社長の行動も混ぜる
     if (m < 12) {
-      await pres(const ['work', 'train', 'net', 'scout'][m % 4]);
+      // 「腕を磨く」は 1.1.0+32 で無くした（腕は事業を進める中で磨かれる）。その月は事業の種を探す
+      await pres(const ['work', 'scout', 'net', 'scout'][m % 4]);
     }
     // 赤字で手元が細ってきたら、打ち手を止めて日銭を稼ぐ（人が遊ぶときと同じ守り方）
     if (s.pre < 0 && s.cash < -s.pre * 8) {

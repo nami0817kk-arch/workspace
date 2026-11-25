@@ -321,10 +321,11 @@ extension GameTurn on Game {
     // 社長の年齢
     if (q == 12) {
       pres.age++;
-      final lim = hasT('stamina') ? 68 : 58;
+      // 65歳を過ぎると、腕は少しずつ落ちる（1.1.0+32 から。それまでは58歳から毎年2ずつ落ちていた）
+      final lim = hasT('stamina') ? 70 : 65;
       if (pres.age > lim) {
         for (final k in abKeys) {
-          pres.ab[k] = math.max(5, pres.ab[k]! - 2);
+          pres.ab[k] = math.max(5, pres.ab[k]! - 1);
         }
       }
       for (final k in kids) {
@@ -339,6 +340,8 @@ extension GameTurn on Game {
         N(M('子どもが生まれました。名前は{0}。後継ぎの候補になるかもしれません', [Nm(Game.givenOf(k.name))]), 'good');
       }
     }
+    // 社長の腕は、事業を進める中で磨かれる（1.1.0+32。game_pres.dart）
+    presGrowMonth(N);
     final dieAge = hasT('stamina') ? 78 : 70;
     if (pres.age > dieAge && rnd() < (pres.age - dieAge) * .004) presDies(N);
     // お金

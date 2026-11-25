@@ -24,7 +24,6 @@ const Map<String, double> hoursOf = {
   'sell': 16, // 事業を売る交渉
   'seek': 8, // 相棒を探す
   'work': 60, // 日銭を稼ぐ（受託の仕事）
-  'train': 20, // 腕を磨く（学校・勉強）
   'net': 12, // 人脈を作る（会食・会合）
   'scout': 10, // 事業の種を探す
   'bank': 4, // 銀行に会う
@@ -351,6 +350,7 @@ extension GameReal on Game {
     final r = loanRate(a);
     loans.add(Loan(id: _loanId(), lender: _lenderFor(), amt: a, orig: a, rate: r, left: term, term: term, at: turn));
     cash += a;
+    presXp('zai', 2);
     calcAll();
     return M('{0}を借りました（年{1}%・{2}年で返す・毎月の返済 約{3}）', [Y(a), pctD(r * 100), (term / 12).round(), Y(a / term + a * r / 12)]);
   }
@@ -359,6 +359,8 @@ extension GameReal on Game {
   String repay(double a) {
     a = math.min(a, math.min(debt, cash));
     if (a <= 0) return M('返すお金がありません');
+    // 借金の1割以上をまとめて返したときだけ、財務の経験になる
+    if (a >= debt * .1) presXp('zai', 1.5);
     var left = a;
     final order = loans.toList()..ssort((x, y) => x.left.compareTo(y.left));
     for (final l in order) {
@@ -386,6 +388,7 @@ extension GameReal on Game {
     final r = math.max(.004, loanRate(a) - .005);
     loans.add(Loan(id: _loanId(), lender: 'bond', amt: a, orig: a, rate: r, left: 60, term: 60, bullet: true, at: turn));
     cash += a;
+    presXp('zai', 2);
     calcAll();
     return M('社債で{0}を集めました（年{1}%・5年後にまとめて返す）', [Y(a), pctD(r * 100)]);
   }

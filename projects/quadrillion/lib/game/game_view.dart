@@ -21,7 +21,8 @@ const LMap traitHints = LMap({
   'grit': '現場からの叩き上げ',
 });
 
-const LMap trainDesc = LMap({
+/// 社長の腕ごとの効き目（社長の画面に出す）
+const LMap abDesc = LMap({
   'tou': '人を率いる。統率が効く事業が強くなる',
   'kai': 'ものを作る。開発が効く事業が強くなる',
   'ei': '売る。営業が効く事業が強くなる',

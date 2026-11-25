@@ -158,7 +158,7 @@ void main() {
         for (final c in CULT.values) ...[c.nJa, c.gJa, c.bJa],
         for (final p in PLACES) ...[if (p.nJa.isNotEmpty) p.nJa, p.sJa],
         for (final d in DIFFS) ...[d.nJa, d.dJa],
-        for (final m in [RTYPE, MODELN, MODELD, ENTRYN, DEALN, DEALD, DIRTYN, DIRTYD, ABN, CATN, meetLines, traitHints, trainDesc]) ...m.ja.values,
+        for (final m in [RTYPE, MODELN, MODELD, ENTRYN, DEALN, DEALD, DIRTYN, DIRTYD, ABN, CATN, meetLines, traitHints, abDesc, presGrowHow]) ...m.ja.values,
         ...NETMSG.ja,
         ...REGN.ja,
       ];
@@ -252,10 +252,6 @@ void main() {
         '組む': () => openDeal(ctl, foe),
         '分社': () => openShape(ctl, b),
         '創業': () => openStart(ctl),
-        '腕磨き': () {
-          s.ap = 3;
-          openTrain(ctl);
-        },
         '相棒探し': () {
           s.ap = 3;
           openSeek(ctl);

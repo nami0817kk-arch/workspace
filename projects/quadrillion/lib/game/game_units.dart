@@ -422,6 +422,13 @@ extension GameUnits on Game {
     final o = prof(b).open;
     final left = ri(o.$1, o.$2);
     b.pipe.add(Pipe(k: 'open', c: s, cost: cost, pw: got.toDouble(), left: left, mul: mul, rent: rent));
+    // 店・支店などを開くのは客をつかむこと（営業の経験）、工場・設備などを足すのはものを作ること（開発の経験）。1.1.0+32
+    if (const {'factory', 'net', 'infra', 'hit'}.contains(k)) {
+      presXp('kai', .8);
+      presXp('ei', .3);
+    } else {
+      presXp('ei', .8);
+    }
     calcAll();
     final msg = M('{0}に{1}を開き始めました（{2}）。開くのは{3}か月後です', [siteNameM(s), unitCountM(b, got.toDouble()), Y(cost), left]);
     return lost > 0 ? Cat([msg, M('{0}件は他社に先に契約されました', [lost])], ja: '。', en: '. ') : msg;
@@ -498,6 +505,7 @@ extension GameUnits on Game {
     final q = peopleOn ? trainLeadQ(b) : 50.0;
     final mo = math.max(3, ((KIND_LEAD_MONTHS[kindB(b)] ?? 6) * (1 - (q - 50) / 150)).round());
     b.pipe.add(Pipe(k: 'train', cost: cost, pw: n.toDouble(), left: mo, mul: q));
+    presXp('tou', .6);
     calcAll();
     return M('{0}を{1}人育て始めました（{2}）。{3}か月後に店を任せられます', [D(lead), n, Y(cost), mo]);
   }
@@ -520,6 +528,7 @@ extension GameUnits on Game {
       cash -= svHireCost(b) * n;
     }
     b.sv += n;
+    presXp('tou', .6);
     calcAll();
     return M('{0}を{1}人置きました（毎月の給料 {2}）', [D(name), n, Y(svPayOne(b) * n)]);
   }

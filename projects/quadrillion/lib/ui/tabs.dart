@@ -395,7 +395,6 @@ Widget presPanel(GameController ctl, {bool sheet = false}) {
       if (s.biz.isEmpty) ChoiceBtn(tr('最初の事業を決める'), go('start', () => openStart(ctl)), primary: true, ap: hr(s, 'start'), subs: [tr('立ち上げには社長の時間がかかる')]),
       one('seek', tr('相棒を探す'), () => openSeek(ctl), tr('株を分けて口説く。今の相棒 {0}/2人', [n]), enabled: n < 2),
       one('work', tr('日銭を稼ぐ'), () => ctl.act(() => s.presAct('work')), tr('受託の仕事を受ける。約{0}', [yen(s.workIncome())])),
-      one('train', tr('腕を磨く'), () => openTrain(ctl), tr('社長の能力を1つ伸ばす。若いほど伸びる')),
       one('net', tr('人脈を作る'), () => ctl.act(() => s.presAct('net')), tr('借りられる額と採用の質が上がる（{0}/5）', [s.net]), enabled: s.net < 5),
       one('scout', tr('事業の種を探す'), () => ctl.act(() => s.presAct('scout')), tr('これから生まれる市場や、相性のよい組み合わせが分かる')),
       one('rest', tr('休む'), () => ctl.act(() => s.presAct('rest')), tr('体力が25戻る（今 {0}）', [jsRound(s.stamina)])),
@@ -1269,8 +1268,59 @@ List<Widget> presPanels(GameController ctl) {
         ]),
       ),
   ])));
+  // 腕の伸び方は、社長・社風・後継ぎのあとに置く（後継ぎの欄の位置は前と変えない）
+  out.add(_presGrowPanel(s));
   return out;
 }
+
+/// 社長の腕の伸び方（1.1.0+32）：腕ごとに、たまった経験の棒と、何をすると伸びるか
+Widget _presGrowPanel(Game s) {
+  final P = s.pres;
+  final af = s.presAgeF();
+  return Panel(
+    key: const ValueKey('pres-grow'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 2, Ui.pad, Ui.pad),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      CardTitle(tr('腕の伸び方')),
+      Muted(
+          af >= 1
+              ? tr('腕は事業を進める中で磨かれます。経験がたまると1上がります。')
+              : P.age < 65
+                  ? tr('腕は事業を進める中で磨かれます。50代からは経験がたまりにくくなります。')
+                  : tr('腕は事業を進める中で磨かれます。65歳を過ぎると、たまりにくく、毎年少しずつ落ちます。'),
+          size: 12),
+      for (final k in abKeys) ...[
+        const SizedBox(height: 8),
+        Row(children: [
+          // 英語の名前（Leadership）は長いので、切れずに1行で入る幅にする
+          SizedBox(width: Ui.sw(L.en ? 112 : 64), child: Text('${ABN[k]} ${P.ab[k]}', maxLines: 1, softWrap: false, style: ts(size: 13, bold: true))),
+          const SizedBox(width: 6),
+          Expanded(child: _xpBar(s.presXpFrac(k), key: ValueKey('pres-xp-$k'))),
+          SizedBox(
+              width: Ui.sw(44),
+              child: Text(P.ab[k]! >= 99 ? tr('上限') : '${(s.presXpFrac(k) * 100).floor()}%', textAlign: TextAlign.right, style: ts(size: 12, color: Pal.mute))),
+        ]),
+        Padding(padding: const EdgeInsets.only(top: 2), child: Muted(tr('伸びる：{0}', [presGrowHow[k]]), size: 12)),
+      ],
+    ]),
+  );
+}
+
+/// 経験の進み具合の棒（0〜1）
+Widget _xpBar(double f, {Key? key}) => Semantics(
+      label: '${(f * 100).floor()}%',
+      child: ClipRRect(
+        key: key,
+        borderRadius: BorderRadius.circular(3),
+        child: SizedBox(
+          height: 6,
+          child: Stack(children: [
+            const Positioned.fill(child: ColoredBox(color: Pal.panel2)),
+            FractionallySizedBox(widthFactor: f.clamp(0.0, 1.0), heightFactor: 1, child: const ColoredBox(color: Pal.gold)),
+          ]),
+        ),
+      ),
+    );
 
 /// 狭い画面の部下と採用の候補（縦に並べる）
 List<Widget> _staffAndCands(GameController ctl) {

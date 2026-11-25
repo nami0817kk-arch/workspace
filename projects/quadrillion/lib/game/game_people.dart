@@ -707,6 +707,7 @@ extension GamePeople on Game {
     cash -= cost;
     _leadHired[b] = (_leadHired[b] ?? 0) + m;
     b.pipe.add(Pipe(k: 'train', cost: cost, pw: m.toDouble(), left: 1, mul: midLeadQ()));
+    presXp('tou', .6);
     calcAll();
     return M('{0}を中途で{1}人雇いました（{2}）。来月から店を任せられます', [D(lead), m, Y(cost)]);
   }

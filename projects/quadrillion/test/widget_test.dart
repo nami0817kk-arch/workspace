@@ -142,10 +142,6 @@ void main() {
       '組む': () => openDeal(ctl, foe),
       '分社': () => openShape(ctl, b),
       '創業': () => openStart(ctl),
-      '腕磨き': () {
-        s.ap = 3;
-        openTrain(ctl);
-      },
       '相棒探し': () {
         s.ap = 3;
         openSeek(ctl);
