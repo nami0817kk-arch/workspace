@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v74</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v75</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -801,7 +801,7 @@ function cmdBrSel(){var sel=g.cmdBr||(g.cmdBr=[]);for(var i=sel.length-1;i>=0;i-
 function cmdBrToggle(id){var sel=g.cmdBr||(g.cmdBr=[]),i=sel.indexOf(id);if(i>=0)sel.splice(i,1);else{if(sel.length>=2)sel.shift();sel.push(id);}}
 function cmdBrGo(){var ms=cmdBrSel();if(ms.length<2){say('配合する2匹を選んでください。');return;}var w=breedWhy(ms[0]);if(w&&w.indexOf('魂')<0){say(spName(ms[0])+'：'+w+'。');return;}
  var n0=g.eggs.length;breedDo(ms[0],ms[1]);if(g.eggs.length>n0)g.cmdBr=[];}
-function cmdBrHTML(){var hh=document.getElementById('cmdbrh');if(hh)hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo()+chDipHTML();var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
+function cmdBrHTML(){var hh=document.getElementById('cmdbrh');if(hh)hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo()+chDipHTML()+chTradeHTML();var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
  var pv=ms.length==2?bloodPreview(ms[0],ms[1]):'';
  return '<div class="empty">2匹を選んで「配合する」。魂'+BREED_COST+'・'+BREED_T+'秒で卵がかえる。親は'+BREED_CD+'秒休む。<b style="color:var(--ink)">血の濃さ</b>で受け継ぎ方が変わる：濃い＝同じ特性の段が上がるが弱点も残る、薄い＝弱点が消えやすく新しい特性がつく。魂 <b style="color:var(--ink)">'+(g.soul||0)+'</b></div>'+
   (pv?'<div class="empty">'+pv+'</div>':'')+
@@ -880,7 +880,8 @@ var HTTL=[['百人斬り',function(m){return (m.kills||0)>=100;}],['勇者殺し
 function heroTitle(m){if(!m||!m.hero||!m.bio||g.cr.indexOf(m)<0)return;var t=null;for(var i=0;i<HTTL.length;i++)if(HTTL[i][1](m)){t=HTTL[i][0];break;}
  if(t&&t!=m.tt){m.tt=t;say('主役「'+m.name+'」に二つ名「'+t+'」がついた！');g.cline='あの子、'+t+'になった。';g.clineRT=performance.now();sfx('promote');addFx({k:'num',f:m.f,x:ccx(m.x),y:ccx(m.y)-18,s:'【'+t+'】',c:'#ffd45a',life:1600});}}
 function crLabel(m){return fullName(m)+'（'+spName(m)+'）';}
-function atkOf(m){var S=SPEC[m.sp];return (S.atk*(m.mut=='kyodai'?1.5:m.mut=='kyo'?1.4:m.mut=='pure'?1.2:1)*(m.stage=='adult'?1.5:1)*m.atkk+(m.hero&&S.t==1?1.5:0))*(m.hero?1.6:1)*(m.sp=='kage'?(phase()=='夜'?1.8:phase()=='夕'?1.2:0.6):1)*(phase()=='夜'&&m.sp!='hotaru'&&g.cr.some(function(o){return o.sp=='hotaru'&&o.f==m.f&&man(o,m)<=2;})?1.3:1)*(m.sp=='ant'&&crAt(m.f,m.x,m.y).filter(function(o){return o.sp=='ant';}).length>=3?2:1);}
+function atkOf(m){return atkOf0(m)*(m.gob&&g&&g.chron?1+0.12*(g.chron.arms||0):1);}
+function atkOf0(m){var S=SPEC[m.sp];return (S.atk*(m.mut=='kyodai'?1.5:m.mut=='kyo'?1.4:m.mut=='pure'?1.2:1)*(m.stage=='adult'?1.5:1)*m.atkk+(m.hero&&S.t==1?1.5:0))*(m.hero?1.6:1)*(m.sp=='kage'?(phase()=='夜'?1.8:phase()=='夕'?1.2:0.6):1)*(phase()=='夜'&&m.sp!='hotaru'&&g.cr.some(function(o){return o.sp=='hotaru'&&o.f==m.f&&man(o,m)<=2;})?1.3:1)*(m.sp=='ant'&&crAt(m.f,m.x,m.y).filter(function(o){return o.sp=='ant';}).length>=3?2:1);}
 // 主役に昇格する(まれ)
 function promote(m,why){
  if(m.hero||g.cr.indexOf(m)<0)return;
@@ -1361,6 +1362,7 @@ function chWave(ev){var C=g.chron,died=[],grown=0;if(C.st&&(!C.fire||!C.nest))ch
  if(C.st&&!chChief())chSucceed(null);chIt=chInherit(died);
  var dn=died.slice(0,3).map(spName);died.forEach(function(m){killCr(m,'old');});
  var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';
+ var mk=C.st?chVillage():0;if(mk)et+='品を'+mk+'つ作った。';if(C.mer)et+='行商人が入口に来た。';
  var K=g.core,mx=coreMax();if(K.mhp<mx){K.hp+=mx-K.mhp;K.mhp=mx;}
  if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':'')+et+chIt);
  else if(grown||ne||chIt)say((grown?grown+'匹が大人になった。':'')+et+chIt);
@@ -1375,7 +1377,7 @@ var ALT=[0,20,60,150,300,600],ALN=['静か','村のうわさ','領主の見張�
  ALD=['まだ誰も気にしていない。','近くの村で、ゴブリンが増えているとうわさになった。','領主が見張りを置き、兵を混ぜて送ってくる。','王国が討伐を命じた。人数も強さも上がる。','周りの国々が手を組んだ。','国をあげての大討伐が来る。'],
  ALX=[0,1,3,6,10,15];
 function chAlertSt(){var a=(g.chron&&g.chron.alert)||0,i=0;while(i+1<ALT.length&&a>=ALT[i+1])i++;return i;}
-function chAlertUp(){var C=g.chron,s0=chAlertSt();C.alert=((C.alert||0)*0.97)+chGobs().length*0.1;var s1=chAlertSt();
+function chAlertUp(){var C=g.chron,s0=chAlertSt();C.alert=((C.alert||0)*0.97)+chGobs().length*0.1*(1-0.15*chFrSt());var s1=chAlertSt();
  if(s1>=4&&s0<4)C.allies=3;if(s1>s0&&s1>(C.alMax||0)){C.alMax=s1;chLine('第'+chGen()+'代、'+ALN[s1]+'。'+ALD[s1].replace(/。$/,''));banner('周りの国の警戒：'+ALN[s1],ALD[s1]);haptic('medium');}}
 function chAlertAdd(){return ALX[chAlertSt()]+Math.floor(chGobs().length/8);}
 // ---------- 族長（v74・年代記） ----------
@@ -1410,6 +1412,43 @@ function chDipHTML(){var C=g.chron,st=chAlertSt(),h='<div class="empty" style="m
  h+='<button class="btn" data-chdip="trib"'+(tw?' disabled':'')+'>貢ぎ物を送る（魂'+tc+'・警戒を3割下げる）'+(tw?'　'+tw:'')+'</button>';
  if(st>=4&&C.allies){var ec=chEnvoyCost(),ew=C.envW==g.wave?'この波は送った':(g.soul||0)<ec?'魂が足りない':'';h+='<button class="btn" data-chdip="envoy"'+(ew?' disabled':'')+'>使者を送って1国を寝返らせる（魂'+ec+'）'+(ew?'　'+ew:'')+'</button>';}
  return h;}
+// ---------- 村と交易（v75・年代記） ----------
+var FRT=[0,10,40,100],FRN=['知らない','取引相手','顔なじみ','友好の村'],
+ FRD=['人間はまだゴブリンの品を知らない。','行商人がときどき品を買っていく。','顔なじみの冒険者は、ときどき見逃して帰っていく。','人間の村と行き来がある。ときどき攻めてこない波がある。'];
+function chFrSt(){var a=(g.chron&&g.chron.friend)||0,i=0;while(i+1<FRT.length&&a>=FRT[i+1])i++;return i;}
+function chArmsCost(){var a=(g.chron&&g.chron.arms)||0;return Math.round(30*Math.pow(a+1,2));}
+var ARMS_MAX=10;
+function chPrice(){return 2+chFrSt();}
+// 波のはじめ: 品を作る・行商人が来るか・友好が少し薄れる
+function chVillage(){var C=g.chron,ad=chAdults(),tr=ad.filter(function(m){return (m.tr||[]).length;}).length;
+ var made=Math.floor(ad.length/5)+Math.floor(tr/12);C.goods=(C.goods||0)+made;C.friend=(C.friend||0)*0.98;
+ var fs=chFrSt(),last=C.merW==null?-99:C.merW;C.mer=0;if(C.evNow)return made;
+ if(g.wave-last>=4||Math.random()<0.3+0.1*fs){C.mer=1;C.merW=g.wave;}
+ return made;}
+function chSell(){var C=g.chron;if(!C.mer){say('行商人はいない。');return;}var n=C.goods||0;if(!n){say('売る品がない。');return;}
+ var p=chPrice(),got=n*p,f0=chFrSt();C.goods=0;C.silver=(C.silver||0)+got;C.friend=(C.friend||0)+Math.min(30,n*0.5);C.trade=(C.trade||0)+1;C.sold=(C.sold||0)+n;
+ var t='行商人に品を'+n+'つ売った（銀貨+'+got+'）';say(t+'。');logEv(t);sfx('train');var f1=chFrSt();
+ if(f1>f0){chLine('第'+chGen()+'代、人間と'+FRN[f1]+'になった');banner('人間との友好：'+FRN[f1],FRD[f1]);haptic('medium');}ui();}
+function chArms(){var C=g.chron,c=chArmsCost();if((C.arms||0)>=ARMS_MAX){say('武器はもう'+ARMS_MAX+'段（いちばん上）。');return;}if((C.silver||0)<c){say('銀貨が足りない（'+c+'要る）。');return;}C.silver-=c;C.arms=(C.arms||0)+1;
+ var t='銀貨で一族の武器を良くした（'+C.arms+'段・攻撃+'+(C.arms*12)+'%）';say(t+'。');logEv(t);if(C.arms%3==0)chLine('第'+chGen()+'代、一族の武器が'+C.arms+'段になった');sfx('grow');ui();}
+function chTribSilver(){var C=g.chron,st=chAlertSt();if(st<1){say('まだ誰も気にしていない。');return;}if(C.tribW==g.wave){say('貢ぎ物はこの波ではもう送った。');return;}
+ var c=Math.ceil(chTribCost()/3);if((C.silver||0)<c){say('銀貨が足りない（'+c+'要る）。');return;}C.silver-=c;C.tribW=g.wave;C.alert*=0.7;C.friend=(C.friend||0)+2;
+ var t='周りの村に銀貨を贈った（銀貨-'+c+'）。警戒がやわらいだ：'+ALN[chAlertSt()];say(t);logEv(t);sfx('train');ui();}
+function chTradeHTML(){var C=g.chron,fs=chFrSt(),h='<div class="empty" style="margin-top:8px"><b style="color:var(--ink)">村と交易</b>　品 <b style="color:var(--ink)">'+(C.goods||0)+'</b> · 銀貨 <b style="color:var(--ink)">'+(C.silver||0)+'</b> · 友好：<b style="color:var(--ink)">'+FRN[fs]+'</b><br><small>'+FRD[fs]+(C.mer?' 行商人が入口に来ている（次の波のはじめまで）。':' 行商人はときどき来る。')+' 友好が高いほど警戒が上がりにくい。</small></div>';
+ if(C.mer)h+='<button class="btn" data-chtr="sell"'+((C.goods||0)?'':' disabled')+'>品を売る（'+(C.goods||0)+'つ×銀貨'+chPrice()+'）</button>';
+ var ac=chArmsCost(),amx=(C.arms||0)>=ARMS_MAX;h+='<button class="btn" data-chtr="arms"'+(!amx&&(C.silver||0)>=ac?'':' disabled')+'>'+(amx?'武器は'+ARMS_MAX+'段（いちばん上）':'武器を良くする（銀貨'+ac+'・一族の攻撃+12%・今'+(C.arms||0)+'段）')+'</button>';
+ if(chAlertSt()>=1){var tc=Math.ceil(chTribCost()/3),tw=C.tribW==g.wave?'この波は送った':(C.silver||0)<tc?'銀貨が足りない':'';h+='<button class="btn" data-chtr="trib"'+(tw?' disabled':'')+'>銀貨で貢ぎ物（銀貨'+tc+'・警戒を3割下げる）'+(tw?'　'+tw:'')+'</button>';}
+ return h;}
+// 市の台・品の山・行商人
+function chMarketDraw(){var C=g.chron,K=g.core;if(!C.trade&&!C.goods&&!C.mer)return;
+ if(C.trade){var sx=(K.x+3)*CS,sy=(K.y+2)*CS+CS-2;ctx.fillStyle='#5a3a1a';ctx.fillRect(sx+2,sy-9,2,9);ctx.fillRect(sx+CS-4,sy-9,2,9);ctx.fillStyle='#8a5a2a';ctx.fillRect(sx,sy-10,CS,3);
+  ctx.fillStyle='#b8402a';ctx.fillRect(sx-1,sy-14,CS+2,3);ctx.fillStyle='#e8d6a8';for(var q=0;q<CS;q+=4)ctx.fillRect(sx+q,sy-14,2,3);}
+ var n=Math.min(8,Math.ceil((C.goods||0)/6)),bx=(K.x-3)*CS+CS/2,by=(K.y+2)*CS+CS-2;
+ for(var i=0;i<n;i++){var ox=(i%4)*4-6,oy=Math.floor(i/4)*3;ctx.fillStyle='#8a6a3a';ctx.fillRect(bx+ox,by-4-oy,4,4);ctx.fillStyle='#b8925a';ctx.fillRect(bx+ox+1,by-5-oy,2,1);}
+ if(C.mer){var t=performance.now(),mx=ENTX*CS+CS/2+(Math.sin(t/700)*3|0),my=ENTY*CS+CS-2;
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(mx-5,my-1,10,2);ctx.fillStyle='#6a4a2a';ctx.fillRect(mx+2,my-14,6,8);ctx.fillStyle='#4a3a6a';ctx.fillRect(mx-3,my-12,6,9);
+  ctx.fillStyle='#e8c8a0';ctx.fillRect(mx-2,my-16,4,4);ctx.fillStyle='#3a2a1a';ctx.fillRect(mx-4,my-17,8,2);ctx.fillRect(mx-2,my-19,4,2);ctx.fillStyle='#2a2020';ctx.fillRect(mx-3,my-3,2,3);ctx.fillRect(mx+1,my-3,2,3);
+  label('行商人',mx,Math.max(8,my-24),'#ffe08a');}}
 // ---------- 子は自動で生まれる（v71・年代記） ----------
 function chCap(){return 1e9;}
 var CH_CAP=500;
@@ -1820,9 +1859,10 @@ function launch(){
  if(chOn()){var ax=Math.min(80,chAlertAdd());for(i=0;i<ax;i++)w.push(JOBS[(g.wave+i+2)%JOBS.length]);}
  if(g.wave==nW()-1)w.push('yuu');
  var evNow=chOn()&&g.chron.ev&&g.chron.evW==g.wave+1?g.chron.ev:null;if(evNow=='yu')w.push('yuu');if(evNow=='clan')for(i=0;i<3+Math.floor(g.wave/20);i++)w.push('@clan');
+ if(chOn()&&g.chron.st&&!evNow){var fs2=chFrSt(),w0=w.length;if(fs2>=3&&Math.random()<0.3){w=[];g.chron.peace=1;}else{g.chron.peace=0;if(fs2>=2)w=w.filter(function(k){return k=='yuu'||Math.random()>=0.1*fs2;});}g.chron.spared=w0-w.length;}
  var gap=w.length>12?Math.max(1,48/w.length):4;for(i=0;i<w.length;i++)g.spawnQ.push({t:g.t+i*gap,k:w[i]});
  g.wave++;g.cd=(g.wave<nW())?90:0;
- say(g.wave==nW()?'第'+g.wave+'波。最後に「'+yuName()+'」が来る！':'第'+g.wave+'波、冒険者が入ってくる。');var lastW=g.wave==nW();sfx(lastW?'yu':'wave');coreSay(lastW?'yu':'wave',lastW);if(chOn())chWave(evNow);
+ say(g.wave==nW()?'第'+g.wave+'波。最後に「'+yuName()+'」が来る！':chOn()&&g.chron.peace?'第'+g.wave+'波。人間の村から来たのは商人だけだった。':'第'+g.wave+'波、冒険者が入ってくる。'+(chOn()&&g.chron.spared?'（顔なじみの'+g.chron.spared+'人は見逃して帰った）':''));var lastW=g.wave==nW();sfx(lastW?'yu':'wave');coreSay(lastW?'yu':'wave',lastW);if(chOn())chWave(evNow);
  if(speed==0)setSpeed(1);
 }
 function nW(){return g&&g.party?1:g&&g.chron?1e9:WAVES.length;}
@@ -2075,7 +2115,7 @@ function draw(){
  }
  if(g.chron)chCave(f);
   ctx=rc;}
- ctx.drawImage(TK.c,0,0,N*CS,N*CS);if(g.chron)chDecoDraw();
+ ctx.drawImage(TK.c,0,0,N*CS,N*CS);if(g.chron){chDecoDraw();chMarketDraw();}
  // 暗さ
  lx.globalCompositeOperation='source-over';lx.clearRect(0,0,W,W);
  lx.fillStyle=g.chron?'rgba(5,3,8,0.42)':'rgba(6,4,14,0.14)';lx.fillRect(0,0,W,W);
@@ -2246,13 +2286,13 @@ function ui(){
   for(i=0;i<g.en.length;i++)if(g.en[i].f==f)ne++;
   for(i=0;i<g.cr.length;i++)if(g.cr[i].f==f)nm++;
   for(i=0;i<N*N;i++)tot+=g.grid[f][i].nut;
-  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=g.chron?'洞窟<small>'+chEvText()+'</small><small>周りの国の警戒：'+ALN[chAlertSt()]+'</small>':(f+1)+'階<small>敵'+ne+' ゴブ'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
+  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=g.chron?'洞窟<small>'+chEvText()+'</small><small>警戒：'+ALN[chAlertSt()]+' · 友好：'+FRN[chFrSt()]+(g.chron.mer?' · 行商人':'')+'</small>':(f+1)+'階<small>敵'+ne+' ゴブ'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
  }
  document.getElementById('wave').textContent=g.chron?g.wave+'波 · '+(g.chron.gen||1)+'代':Math.min(g.wave,nW())+' / '+nW();
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v74 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v75 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2303,6 +2343,7 @@ document.getElementById('spane-cmd').addEventListener('click',function(ev){var t
  else if(b=t.closest('[data-cbr]')){cmdBrToggle(+b.getAttribute('data-cbr'));}
  else if(b=t.closest('[data-cbrgo]')){cmdBrGo();}
  else if(b=t.closest('[data-chdip]')){chDip(b.getAttribute('data-chdip'));}
+ else if(b=t.closest('[data-chtr]')){var tk=b.getAttribute('data-chtr');if(tk=='sell')chSell();else if(tk=='arms')chArms();else chTribSilver();}
  else if(b=t.closest('[data-cbf]')){g.cmdBf=+b.getAttribute('data-cbf');}
  else if(b=t.closest('[data-cbone]')){cmdBoneGo(b.getAttribute('data-cbone'));}
  else if(b=t.closest('[data-cegg]')){var e=g.eggs[+b.getAttribute('data-cegg')];if(e)boneAct('hatch',e.f,e.x,e.y);}
@@ -3027,7 +3068,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={chStart:chStart,chDip:chDip,chChief:chChief,chDipHTML:chDipHTML,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={chStart:chStart,chSell:chSell,chArms:chArms,chTribSilver:chTribSilver,chFrSt:chFrSt,chDip:chDip,chChief:chChief,chDipHTML:chDipHTML,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();

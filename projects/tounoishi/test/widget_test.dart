@@ -599,13 +599,13 @@ void main() {
   test('周りの国の警戒: 一族が増えるほど攻めてくる人数と強さが増す（0.7.54・試作 v72）', () {
     final html = File(gameAsset).readAsStringSync();
     expect(html, contains("ALN=['静か','村のうわさ','領主の見張り','王国の討伐令','諸国の同盟','大討伐']"));
-    expect(html, contains('C.alert=((C.alert||0)*0.97)+chGobs().length*0.1;'));
+    expect(html, contains('C.alert=((C.alert||0)*0.97)+chGobs().length*0.1'));
     expect(html, contains('g.round=1+Math.floor(g.wave/6)+Math.floor((g.chron.alert||0)/80);'));
     expect(html, contains('if(chOn()){var ax=Math.min(80,chAlertAdd());'));
     expect(html, contains("*(1+al/300),atk:"));
     // 波が片付く前に次の波が来ても、節目はそこで判定する
     expect(html, contains('if(g.chron.evNow&&g.chron.evW<=g.wave)chMile();'));
-    expect(html, contains("<small>周りの国の警戒：'+ALN[chAlertSt()]+'</small>'"));
+    expect(html, contains("</small><small>警戒：'+ALN[chAlertSt()]+' · 友好：'"));
     expect(html, contains('var gap=w.length>12?Math.max(1,48/w.length):4;'));
   });
 
@@ -635,7 +635,25 @@ void main() {
     expect(html, contains('if(s1>=4&&s0<4)C.allies=3;'));
     expect(html, contains("C.alert-=(C.alert-floor)/C.allies;C.allies--;"));
     expect(html, contains("else if(b=t.closest('[data-chdip]')){chDip(b.getAttribute('data-chdip'));}"));
-    expect(html, contains('if(g.chron)return chBrInfo()+chDipHTML();'));
+    expect(html, contains('if(g.chron)return chBrInfo()+chDipHTML()'));
+  });
+
+  test('村と交易: 品・行商人・銀貨・友好（0.7.56・試作 v75）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 波のはじめに品を作り、ときどき行商人が来る（4波来なければ必ず）
+    expect(html, contains('var made=Math.floor(ad.length/5)+Math.floor(tr/12);'));
+    expect(html, contains('if(g.wave-last>=4||Math.random()<0.3+0.1*fs){C.mer=1;C.merW=g.wave;}'));
+    // 売ると銀貨と友好
+    expect(html, contains("FRN=['知らない','取引相手','顔なじみ','友好の村']"));
+    expect(html, contains('C.friend=(C.friend||0)+Math.min(30,n*0.5);'));
+    // 銀貨で武器（一族の攻撃+12%ずつ）と貢ぎ物
+    expect(html, contains('function atkOf(m){return atkOf0(m)*(m.gob&&g&&g.chron?1+0.12*(g.chron.arms||0):1);}'));
+    expect(html, contains('var c=Math.ceil(chTribCost()/3);'));
+    // 友好が高いほど警戒が上がりにくい・見逃す冒険者・攻めてこない波
+    expect(html, contains('chGobs().length*0.1*(1-0.15*chFrSt());'));
+    expect(html, contains('if(fs2>=3&&Math.random()<0.3){w=[];g.chron.peace=1;}'));
+    expect(html, contains("else if(b=t.closest('[data-chtr]'))"));
+    expect(html, contains('if(g.chron){chDecoDraw();chMarketDraw();}'));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
