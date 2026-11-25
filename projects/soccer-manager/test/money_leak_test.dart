@@ -1,18 +1,10 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/tr.dart';
-import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/models/player.dart';
-import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/state/game_state.dart';
-import 'package:soccer_manager/widgets/reward_funds_card.dart';
 
-import 'support/stub_purchase_service.dart';
 import 'support/legacy_market.dart';
 import 'support/sell_via_offer.dart';
 
@@ -127,84 +119,4 @@ void main() {
       expect(game.save!.league.season, season + 1, reason: 'シーズンが2つ進んでいる');
     });
   });
-
-  group('広告の特典', () {
-    testWidgets('見終えた後に画面を離れても、営業ブーストは入る', (tester) async {
-      // 広告は最後まで見ているので、こちらには収入が立つ。受け取りを
-      // mounted の後ろに置いていた頃は、回数だけ消費して資金が入らなかった。
-      SharedPreferences.setMockInitialValues({});
-      final ads = _HeldAdService();
-      late final MonetizationController money;
-      late final GameState game;
-      await tester.runAsync(() async {
-        money = MonetizationController(
-            adService: ads, purchases: StubPurchaseService());
-        await money.initialize();
-        game = GameState();
-        await game.startNewGame('離脱FC');
-      });
-      Tr.language = AppLanguage.japanese;
-      addTearDown(() => Tr.language = AppLanguage.system);
-
-      final before = game.marketingBoostWeeks;
-      await tester.pumpWidget(MultiProvider(
-        providers: [
-          ChangeNotifierProvider<GameState>.value(value: game),
-          ChangeNotifierProvider<MonetizationController>.value(value: money),
-        ],
-        child: const MaterialApp(home: Scaffold(body: RewardFundsCard())),
-      ));
-      await tester.pump();
-
-      await tester.tap(find.byType(FilledButton).first);
-      await tester.pump(); // 広告の再生中(ここで止まっている)
-
-      // 広告を見ているあいだに画面を離れる。
-      await tester.pumpWidget(MultiProvider(
-        providers: [
-          ChangeNotifierProvider<GameState>.value(value: game),
-          ChangeNotifierProvider<MonetizationController>.value(value: money),
-        ],
-        child: const MaterialApp(home: Scaffold(body: SizedBox())),
-      ));
-      await tester.pump();
-
-      ads.finish(); // ここで広告が最後まで再生される
-      await tester.pump();
-      await tester.pump();
-
-      expect(game.marketingBoostWeeks, greaterThan(before),
-          reason: '広告を見たのに営業ブーストが入っていない');
-      expect(money.claimedToday, 1);
-
-      // 受け取りが保存を予約する。残したままテストを終えると、未処理の
-      // タイマーとして検出される。
-      await tester.pump(GameState.persistDebounce);
-    });
-  });
-}
-
-/// 再生を明示的に終わらせるまで待たせる広告。
-class _HeldAdService implements AdService {
-  final _gate = Completer<bool>();
-
-  void finish() => _gate.complete(true);
-
-  @override
-  Future<void> initialize() async {}
-
-  @override
-  bool get isRewardedAdReady => true;
-
-  @override
-  Future<bool> showRewardedAd() => _gate.future;
-
-  @override
-  bool get isInterstitialAdReady => false;
-
-  @override
-  Future<void> showInterstitialAd() async {}
-
-  @override
-  void dispose() {}
 }

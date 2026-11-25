@@ -290,11 +290,12 @@ void main() {
       }
     });
 
-    test('全画面広告はシーズンの切り替わりからしか出ない', () {
+    test('全画面広告は、節を進め終えたところからしか出ない', () {
       // 試合中やメニュー操作の途中に割り込む全画面広告は、掲載文の説明とも
       // AdMob のポリシー(利用者の操作を遮らない自然な区切りで出す)とも
-      // 合わない。呼び出し口が増えていないことをここで固定する。
-      final callers = <String>[];
+      // 合わない。出すのはゲームの中で3か月ごと(2026-11-26)で、呼ぶのは
+      // 進める入口の最後だけ。呼び出し口が増えていないことをここで固定する。
+      final callers = <String>{};
       for (final entity in Directory('lib').listSync(recursive: true)) {
         if (entity is! File || !entity.path.endsWith('.dart')) continue;
         // 定義側(AdService とその仲介役)は対象外。
@@ -302,11 +303,15 @@ void main() {
         final text = entity.readAsStringSync();
         expect(text, isNot(contains('showInterstitialAd(')),
             reason: '${entity.path} が広告サービスを直接呼んでいる');
-        if (text.contains('showSeasonInterstitial()')) callers.add(entity.path);
+        expect(text, isNot(contains('showQuarterlyInterstitial(')),
+            reason: '${entity.path} が maybeShowQuarterlyAd を通さずに呼んでいる');
+        if (text.contains('maybeShowQuarterlyAd(context)')) {
+          callers.add(entity.path.replaceAll(r'\', '/'));
+        }
       }
-      expect(callers.length, 1, reason: '全画面広告の呼び出し口が1箇所でない: $callers');
-      expect(callers.single, contains('home_screen'),
-          reason: 'シーズンの切り替わり以外から全画面広告を出している');
+      expect(callers.length, 2, reason: '全画面広告の呼び出し口: $callers');
+      expect(callers.any((c) => c.endsWith('home_screen.dart')), isTrue);
+      expect(callers.any((c) => c.endsWith('advance_flow.dart')), isTrue);
     });
 
     test('バンドルIDが実装・手順書・掲載情報で一致している', () {

@@ -4,28 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'ad_service.dart';
 import 'funds_pack.dart';
 import 'purchase_service.dart';
-import 'reward_offer.dart';
 
-/// 特典を受け取ろうとした結果。
-enum ClaimResult {
-  /// 受け取れた。呼び出し側が資金を加算する。
-  granted,
-
-  /// 今日の上限に達している。
-  limitReached,
-
-  /// 広告を最後まで見なかった、または表示できなかった。
-  adNotCompleted,
-
-  /// 営業ブーストが上限まで貯まっていて、これ以上入らない。
-  /// 広告は出さず、回数も減らさない(見ても入らないものを見せない)。
-  bankFull,
-
-  /// この端末では広告も課金も使えない (Web版など)。
-  unavailable,
-}
-
-/// 広告・課金の状態を持ち、特典の受け取りを仲介する。
+/// 広告・課金の状態を持つ。
+///
+/// 2026-11-26 に整理した形:
+/// - 広告は全画面の1種類だけ。ゲームの中で3か月たつごとに1回出る
+///   ([showQuarterlyInterstitial])。
+/// - 課金は「広告を消す」(買い切り)の1つだけ。買うと全画面広告が出なく
+///   なる。**それ以外は何も変わらない**(払っても有利にならない)。
+/// - 資金パックは売るのをやめた。前に買って受け取り損ねたぶんを渡す
+///   仕組みだけ残している([undeliveredFundsPacks])。
 ///
 /// セーブデータではなく端末側 (SharedPreferences) に置いている。
 /// 購入はストアのアカウントに紐づくもので、どのセーブスロットで
@@ -62,22 +50,25 @@ class MonetizationController extends ChangeNotifier {
 
   /// 覚えておく取引の数。際限なく貯めない。
   static const int _deliveredIdsKept = 200;
-  static const _claimDayKey = 'monetization.claimDay';
-  static const _claimCountKey = 'monetization.claimCount';
+
+  /// 最後に全画面広告を出した(または数え始めた)ゲームの中の月。
+  /// 年×12+月-1 の数([GameStateSupporters.monthKeyOf] と同じ)。
+  static const _lastAdMonthKey = 'monetization.lastAdMonth';
+
+  /// 全画面広告を出す間隔(ゲームの中の月数)。
+  static const int adIntervalMonths = 3;
 
   final AdService _ads;
   final PurchaseService _purchases;
 
   bool initialized = false;
 
-  /// サポーター購入済みか。
+  /// 「広告を消す」を購入済みか。
+  ///
+  /// 名前が supporter のままなのは、ストアの商品ID
+  /// (`soccer_manager_supporter`)と端末に残した記録の鍵を変えないため。
+  /// 前に「サポーター」として買った人も、そのまま広告が消えた状態で続く。
   bool isSupporter = false;
-
-  /// 今日すでに受け取った回数。
-  int claimedToday = 0;
-
-  /// 上の回数がどの日のものか (端末のローカル日付、yyyy-mm-dd)。
-  String _claimDay = '';
 
   /// ストアが使えるか。使えない環境では購入導線を出さない。
   bool storeAvailable = false;
@@ -106,37 +97,9 @@ class MonetizationController extends ChangeNotifier {
   static String displayPrice(String price) =>
       price.replaceAll('\u00A5', '\uFFE5');
 
-  int get dailyLimit => isSupporter
-      ? RewardOffer.dailyLimitSupporter
-      : RewardOffer.dailyLimitFree;
-
-  int get remainingToday => (dailyLimit - claimedToday).clamp(0, dailyLimit);
-
-  /// いま特典を受け取れるか。
-  ///
-  /// サポーターは広告なしで受け取れる。無料の利用者は広告の在庫が
-  /// 無いと受け取れない (押せるのに何も起きない状態を避ける)。
-  bool get canClaim {
-    if (remainingToday <= 0) return false;
-    return isSupporter || _ads.isRewardedAdReady;
-  }
-
-  /// 広告の視聴が必要か。ボタンの文言を切り替えるために使う。
-  bool get requiresAd => !isSupporter;
-
-  static String _today() {
-    final now = DateTime.now();
-    final m = now.month.toString().padLeft(2, '0');
-    final d = now.day.toString().padLeft(2, '0');
-    return '${now.year}-$m-$d';
-  }
-
   Future<void> initialize() async {
     final prefs = await _prefs();
     isSupporter = prefs.getBool(_supporterKey) ?? false;
-    _claimDay = prefs.getString(_claimDayKey) ?? '';
-    claimedToday = prefs.getInt(_claimCountKey) ?? 0;
-    _rolloverIfNewDay();
 
     _queue = _readQueue(prefs);
     _deliveredIds = prefs.getStringList(_deliveredIdsKey) ?? const [];
@@ -151,91 +114,44 @@ class MonetizationController extends ChangeNotifier {
     if (storeAvailable) {
       final supporterPrice = await _purchases.priceLabel();
       priceLabel = supporterPrice == null ? null : displayPrice(supporterPrice);
-      for (final pack in FundsPack.values) {
-        final price = await _purchases.priceLabelFor(pack);
-        if (price != null) fundsPackPrices[pack] = displayPrice(price);
-      }
     }
 
     initialized = true;
     notifyListeners();
   }
 
-  /// 日付が変わっていたら回数を0に戻す。
+  /// ゲームの中で前回から3か月たっていれば、全画面広告を出す。
+  /// 閉じられるまで待つ。
   ///
-  /// 端末の時計を戻せば回数を増やせてしまうが、対戦相手のいない
-  /// 単独プレイのゲームで、しかも設定画面に資金追加機能がある以上、
-  /// ここを厳密にしても守るものがない。サーバーを持つ理由にはならない。
-  void _rolloverIfNewDay() {
-    final today = _today();
-    if (_claimDay != today) {
-      _claimDay = today;
-      claimedToday = 0;
-    }
-  }
-
-  Future<void> _persistClaims() async {
+  /// 節を進め終えたところ(結果のダイジェストやお知らせを出し終えた後)で
+  /// 呼ぶ。試合中やメニュー操作の途中には割り込まない。
+  ///
+  /// [monthKey] は今日のゲームの中の月(年×12+月-1)。
+  /// - 初めて呼ばれたときは数え始めるだけで出さない(始めてすぐ出さない)。
+  /// - 別のセーブを開いて月が戻ったときも、そこから数え直す。
+  /// - 3か月以上たっていれば出して、その月から数え直す。
+  ///   何か月まとめて進めても出すのは1回だけ。
+  ///
+  /// 「広告を消す」を買った人には出さない。在庫が無いときは [AdService]
+  /// 側が何もせずに戻るので、広告のせいで進めなくなることはない。
+  /// 戻り値は広告を出そうとしたか(在庫が無くて出なかったときも true)。
+  Future<bool> showQuarterlyInterstitial(int monthKey) async {
+    if (isSupporter) return false;
     final prefs = await _prefs();
-    await prefs.setString(_claimDayKey, _claimDay);
-    await prefs.setInt(_claimCountKey, claimedToday);
-  }
-
-  /// 特典の受け取りを試みる。
-  ///
-  /// 資金の加算はここでは行わない。ゲームの状態を触るのは GameState の
-  /// 責務で、この層はストアと広告だけを見る。
-  ///
-  /// [bankFull] は「いま受け取っても入らない」(営業ブーストが上限まで
-  /// 貯まっている)ときに true。**広告を出す前に断る。** 以前は上限でも
-  /// 広告を出し、見終えると回数だけ減って何も入らなかった
-  /// (docs/app-pitfalls.md の2と同じ「見たのに入らない」形)。
-  Future<ClaimResult> claimReward({bool bankFull = false}) async {
-    _rolloverIfNewDay();
-    if (remainingToday <= 0) return ClaimResult.limitReached;
-    if (bankFull) return ClaimResult.bankFull;
-
-    if (!isSupporter) {
-      if (!_ads.isRewardedAdReady) return ClaimResult.unavailable;
-      final watched = await _ads.showRewardedAd();
-      // 途中で閉じた場合は回数を消費させない。
-      if (!watched) return ClaimResult.adNotCompleted;
+    final last = prefs.getInt(_lastAdMonthKey);
+    if (last == null || monthKey < last) {
+      await prefs.setInt(_lastAdMonthKey, monthKey);
+      return false;
     }
-
-    claimedToday++;
-    await _persistClaims();
-    notifyListeners();
-    return ClaimResult.granted;
-  }
-
-  /// シーズンの切り替わりで出る全画面広告。閉じられるまで待つ。
-  ///
-  /// サポーターには出さない。「買えば全画面広告が消える」ことが、この
-  /// 買い切りの主な値打ちになっている。
-  /// 在庫が無いときは [AdService] 側が何もせずに戻るので、広告のせいで
-  /// シーズンが進まなくなることはない。
-  Future<void> showSeasonInterstitial() async {
-    if (isSupporter) return;
+    if (monthKey - last < adIntervalMonths) return false;
+    // 先に記録する。広告の途中でアプリが落ちても、次の起動ですぐまた
+    // 出ることはない。
+    await prefs.setInt(_lastAdMonthKey, monthKey);
     await _ads.showInterstitialAd();
+    return true;
   }
 
-  /// いま [showSeasonInterstitial] を呼んだら実際に広告が出るか。
-  bool get willShowSeasonInterstitial =>
-      !isSupporter && _ads.isInterstitialAdReady;
-
-  /// 資金パックの表示用の価格。取得できていなければ null。
-  final Map<FundsPack, String> fundsPackPrices = {};
-
-  /// 資金パックを買う。成立したら true。
-  ///
-  /// 資金の加算はここでは行わない。ゲームの状態を触るのは GameState の
-  /// 責務で、この層はストアだけを見る(特典の受け取りと同じ切り分け)。
-  ///
-  /// リワード広告と違い1日の回数制限は無い。制限を付けると、広告の
-  /// 代わりに買うだけの商品になってサポーターとの違いが消えるため。
-  Future<PurchaseOutcome> buyFundsPack(FundsPack pack) =>
-      _purchases.buyFundsPack(pack);
-
-  /// 買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。
+  /// 「広告を消す」を買う。**受け取るのは [_grant] のほう**なので、ここでは結果を返すだけ。
   Future<PurchaseOutcome> buySupporter() => _purchases.buySupporter();
 
   Future<PurchaseOutcome> restorePurchases() => _purchases.restorePurchases();

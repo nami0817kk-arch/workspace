@@ -78,9 +78,16 @@ void main() {
     test('出す直前に読む', () {
       final body = bodyOf('Future<void> showInterstitialAd()');
       expect(body.contains('_loadInterstitial('), isTrue,
-          reason: 'シーズンの切り替わりで読み直していない');
+          reason: '出す場面で読み直していない');
       expect(body.contains('timeout'), isTrue,
           reason: '読めないときに進行が止まる');
+    });
+
+    test('動画広告(リワード)は読み込まない', () {
+      // 2026-11-26 にやめた。見られる前から先に読んで捨てると、
+      // リクエストだけが数えられて表示率が下がる(18%の主な原因だった)。
+      expect(source.contains('RewardedAd'), isFalse,
+          reason: 'やめた動画広告をまだ読み込んでいる');
     });
   });
 }
