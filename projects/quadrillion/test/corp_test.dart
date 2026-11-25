@@ -146,14 +146,21 @@ void main() {
       expect(g.mergedShare(a, b), greaterThan(.5));
     });
 
-    test('物件の取り合い：同じ業種で CPU が店を多く開いた月は、物件を狙う他社が増える', () {
+    test('物件の取り合い：同じ業種で宿敵が店を開いた月は、物件を狙う他社が1社増える', () {
       final g = _g();
-      final ind = g.cos.firstWhere((c) => c.alive && c.biz.isNotEmpty && c.parent != 'player').biz.first.ind;
+      final foe = g.cos.firstWhere((c) => c.alive && c.rival != null && c.biz.isNotEmpty && c.parent != 'player');
+      final ind = foe.biz.first.ind;
+      for (final c in g.cos) {
+        c.fin?.heat = 0;
+      }
       expect(g.offerRivals(ind, 0), 0);
-      for (final c in g.cos.where((c) => c.alive && c.parent != 'player' && c.biz.any((b) => b.ind == ind))) {
+      // 宿敵でない会社の出店は数えない
+      for (final c in g.cos.where((c) => c.alive && c.rival == null && c.biz.any((b) => b.ind == ind))) {
         c.fin!.heat = 30;
       }
-      expect(g.offerRivals(ind, 0), 2);
+      expect(g.offerRivals(ind, 0), 0);
+      foe.fin!.heat = 2;
+      expect(g.offerRivals(ind, 1), 2);
     });
   });
 

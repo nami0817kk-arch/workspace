@@ -416,21 +416,20 @@ extension GameCorp on Game {
     return best;
   }
 
-  /// 同じ業種で、先月 CPU の会社が開いた店などの数（物件の取り合いの強さ）
+  /// 同じ業種で、先月宿敵が開いた店などの数（物件の取り合いの強さ。ほかの CPU の出店は今までの物件の取り合いの数に入っている）
   double heatOf(String ind) {
     var h = 0.0;
     for (final c in cos) {
-      if (!c.alive || c.parent == 'player' || c.fin == null || c.fin!.heat <= 0) continue;
+      if (!c.alive || c.rival == null || c.parent == 'player' || c.fin == null || c.fin!.heat <= 0) continue;
       if (c.biz.any((b) => b.ind == ind)) h += c.fin!.heat;
     }
     return h;
   }
 
-  /// 物件を狙っている他社の数に、同じ業種の CPU の出店の勢いを足す（宿敵も同じ物件を取り合う）
+  /// 物件を狙っている他社の数に、同じ業種で店を増やしている宿敵を1社分足す（宿敵も同じ物件を取り合う）
   int offerRivals(String ind, int base) {
     if (!unitsOn) return base;
-    final h = heatOf(ind);
-    return base + (h >= 20 ? 2 : h >= 3 ? 1 : 0);
+    return base + (heatOf(ind) >= 1 ? 1 : 0);
   }
 
   // ===== 隠れた情報 =====

@@ -277,13 +277,21 @@ Widget _coRow(GameController ctl, Company c) {
         padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
         child: Row(children: [
           if (c.rival != null) ...[rivalFace(s, c), const SizedBox(width: 4)],
+          // 名前を1行目に広く取り、時価総額と状態（調べ中・審査中・統合の進み）は2行目に並べる（札を右に置くと、狭い列で名前が切れた）
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(nmL(c.name), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 13, bold: true)),
-              Text(c.listed ? yen(c.cap) : seenText(s, c, c.cap, 0), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 11.5, color: Pal.mute)),
+              Text.rich(
+                TextSpan(children: [
+                  TextSpan(text: c.listed ? yen(c.cap) : seenText(s, c, c.cap, 0), style: ts(size: 11.5, color: Pal.mute)),
+                  if (st != null)
+                    TextSpan(text: '  $st', style: ts(size: 11.5, bold: true, color: st == tr('資金繰りが苦しい') ? Pal.down : Pal.up)),
+                ]),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ]),
           ),
-          if (st != null) Flexible(child: Tag(st, kind: st == tr('資金繰りが苦しい') ? TagKind.bad : TagKind.good)),
         ]),
       ),
     ),
