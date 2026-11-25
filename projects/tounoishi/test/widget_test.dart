@@ -671,8 +671,7 @@ void main() {
     expect(html, contains("document.getElementById('chpanel').addEventListener('click',cmdClick);"));
     // 年代記のときは前の画面の部品を出さない
     expect(html, contains('body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #cmsg,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}'));
-    expect(html, contains("function ui(){
- yuBar();if(typeof chUI=='function')chUI();"));
+    expect(html, contains("yuBar();if(typeof chUI=='function')chUI();"));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
