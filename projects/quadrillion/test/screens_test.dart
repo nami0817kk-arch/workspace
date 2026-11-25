@@ -167,6 +167,7 @@ void main() {
       g.calcAll();
       ctl.game = g;
       ctl.bizFilter = 'all';
+      ctl.bizCan = false;
       ctl.setTab('biz');
       final key = GlobalKey();
       await tester.pumpWidget(RepaintBoundary(key: key, child: QuadrillionApp(controller: ctl)));

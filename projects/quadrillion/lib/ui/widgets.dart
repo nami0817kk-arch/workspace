@@ -59,14 +59,70 @@ const _tab = [FontFeature.tabularFigures()];
 TextStyle ts({double size = 14, Color color = Pal.ink, bool bold = false, double? height}) =>
     TextStyle(fontFamily: fontFamily, fontSize: size, color: color, fontWeight: bold ? FontWeight.w700 : FontWeight.w400, height: height, fontFeatures: _tab);
 
+/// 見た目の決まり（カード・小窓・部品の角の丸み・余白・影・見出しの字）。
+/// 画面のカードと小窓は、ここの値だけを使う（直書きの数を散らさない）
+class Ui {
+  Ui._();
+
+  /// カードの角の丸み
+  static const radius = 12.0;
+
+  /// 小窓の角の丸み（カードより一回り大きく）
+  static const sheetRadius = 16.0;
+
+  /// ボタン・選択・札の中の囲みなど、小さな部品の角の丸み
+  static const partRadius = 8.0;
+
+  /// 吹き出しの角の丸み
+  static const bubbleRadius = 10.0;
+
+  /// カードの内側の余白
+  static const pad = 14.0;
+
+  /// 小窓の内側の余白
+  static const sheetPad = 16.0;
+
+  /// カードとカードのあいだ（上下それぞれ）
+  static const cardGap = 5.0;
+
+  /// 影は1段だけ（ごく薄く、真下に1pt）
+  static const shadow = [BoxShadow(color: Color(0x141F2433), blurRadius: 4, offset: Offset(0, 1))];
+
+  /// 小窓の影（浮いて見えるように、カードより少しだけ広く）
+  static const sheetShadow = [BoxShadow(color: Color(0x241F2433), blurRadius: 18, offset: Offset(0, -2))];
+
+  /// カードの囲み（白地・線・角丸12・影1段）
+  static BoxDecoration card({Color border = Pal.line, Color color = Pal.panel, bool shadow = true}) => BoxDecoration(
+      color: color, border: Border.all(color: border), borderRadius: BorderRadius.circular(radius), boxShadow: shadow ? Ui.shadow : null);
+
+  /// カードの形（Material に渡す用）
+  static RoundedRectangleBorder cardShape([Color border = Pal.line]) =>
+      RoundedRectangleBorder(side: BorderSide(color: border), borderRadius: BorderRadius.circular(radius));
+
+  /// 小さな部品の形
+  static RoundedRectangleBorder partShape([Color border = Pal.line]) =>
+      RoundedRectangleBorder(side: BorderSide(color: border), borderRadius: BorderRadius.circular(partRadius));
+
+  /// 画面の見出し（h2）17・太字・金の字
+  static TextStyle get h2 => ts(size: 17, color: Pal.goldtx, bold: true);
+
+  /// カードの見出し 15・太字
+  static TextStyle get title => ts(size: 15, bold: true, height: 1.3);
+
+  /// 金の字のカードの見出し
+  static TextStyle get titleGold => ts(size: 15, bold: true, color: Pal.goldtx, height: 1.3);
+
+  /// 小見出し（h3）14・太字
+  static TextStyle get h3 => ts(bold: true);
+}
+
 /// 見出し（試作の h2）
 class H2 extends StatelessWidget {
   final String text;
   final bool top;
   const H2(this.text, {super.key, this.top = false});
   @override
-  Widget build(BuildContext context) =>
-      Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(tx(text), style: ts(size: 17, color: Pal.goldtx, bold: true)));
+  Widget build(BuildContext context) => Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(tx(text), style: Ui.h2));
 }
 
 /// 小見出し（h3）
@@ -74,7 +130,7 @@ class H3 extends StatelessWidget {
   final String text;
   const H3(this.text, {super.key});
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(tx(text), style: ts(bold: true)));
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(tx(text), style: Ui.h3));
 }
 
 class Panel extends StatelessWidget {
@@ -82,14 +138,27 @@ class Panel extends StatelessWidget {
   final Color border;
   final EdgeInsets padding;
   final Color color;
-  const Panel({super.key, required this.child, this.border = Pal.line, this.padding = const EdgeInsets.all(12), this.color = Pal.panel});
+  const Panel({super.key, required this.child, this.border = Pal.line, this.padding = const EdgeInsets.all(Ui.pad), this.color = Pal.panel});
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: Ui.cardGap),
         padding: padding,
-        decoration: BoxDecoration(color: color, border: Border.all(color: border), borderRadius: BorderRadius.circular(10)),
+        decoration: Ui.card(border: border, color: color),
         child: child,
+      );
+}
+
+/// 手を使う部品に添える小さな札（「1手」）
+class ApBadge extends StatelessWidget {
+  final int n;
+  const ApBadge(this.n, {super.key});
+  @override
+  Widget build(BuildContext context) => Container(
+        key: const ValueKey('ap-badge'),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+        decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(4)),
+        child: Text(tr(n == 1 ? '{0}手' : '{0}手@@pl', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, bold: true, color: Pal.goldtx, height: 1.25)),
       );
 }
 
@@ -221,7 +290,7 @@ class VoiceSay extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(Ui.bubbleRadius)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text.rich(TextSpan(children: [
                   TextSpan(text: tx(who), style: ts(size: 12.5, bold: true)),
@@ -257,6 +326,9 @@ class TapArea extends StatelessWidget {
       );
 }
 
+/// 手が足りない部品の薄さ（押せないときの .4 より少し濃くして、押せることは残す）
+const apShortOpacity = .45;
+
 /// ふつうのボタン
 class Btn extends StatelessWidget {
   final String label;
@@ -266,24 +338,34 @@ class Btn extends StatelessWidget {
 
   /// 幅が足りないときは字だけを縮める（押せる範囲は縮めない）
   final bool shrink;
-  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false});
+
+  /// 使う手の数（0 なら札を出さない）
+  final int ap;
+
+  /// 手が足りない（薄く見せる。押すと今までどおり「今月の手が残っていません」が出る）
+  final bool apShort;
+  const Btn(this.label, this.onTap,
+      {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false, this.ap = 0, this.apShort = false});
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
+    final text = Text(tx(label), maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink));
+    final content = ap <= 0
+        ? text
+        : Row(mainAxisSize: MainAxisSize.min, children: [Flexible(child: text), const SizedBox(width: 6), ApBadge(ap)]);
     return TapArea(
       onTap: on ? onTap : null,
       child: Opacity(
-      opacity: on ? 1 : .4,
+      opacity: !on ? .4 : apShort ? apShortOpacity : 1,
       child: Material(
         color: primary ? Pal.gold : Pal.panel2,
-        shape: RoundedRectangleBorder(side: BorderSide(color: primary ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(8)),
+        shape: Ui.partShape(primary ? Pal.gold : Pal.line),
         child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Ui.partRadius),
           onTap: on ? onTap : null,
           child: Padding(
             padding: small ? const EdgeInsets.symmetric(horizontal: 8, vertical: 5) : const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: _fit(Text(tx(label),
-                maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
+            child: _fit(content),
           ),
         ),
       ),
@@ -303,9 +385,9 @@ class DangerBtn extends StatelessWidget {
       onTap: onTap,
       child: Material(
         color: Pal.down,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: Ui.partShape(Pal.down),
         child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Ui.partRadius),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
@@ -321,12 +403,18 @@ class ChoiceBtn extends StatelessWidget {
   final List<String> subs;
   final VoidCallback? onTap;
   final bool enabled, primary, on;
-  const ChoiceBtn(this.label, this.onTap, {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false});
+
+  /// 使う手の数（0 なら札を出さない）と、手が足りないか（薄く見せるが押せる）
+  final int ap;
+  final bool apShort;
+  const ChoiceBtn(this.label, this.onTap,
+      {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false, this.ap = 0, this.apShort = false});
   @override
   Widget build(BuildContext context) {
     final ok = enabled && onTap != null;
+    final title = Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45));
     return Opacity(
-      opacity: ok ? 1 : .4,
+      opacity: !ok ? .4 : apShort ? apShortOpacity : 1,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Material(
@@ -335,10 +423,9 @@ class ChoiceBtn extends StatelessWidget {
               : on
                   ? Pal.onBg
                   : Pal.panel2,
-          shape: RoundedRectangleBorder(
-              side: BorderSide(color: primary || on ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(8)),
+          shape: Ui.partShape(primary || on ? Pal.gold : Pal.line),
           child: InkWell(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Ui.partRadius),
             onTap: ok ? onTap : null,
             child: Container(
               width: double.infinity,
@@ -346,7 +433,13 @@ class ChoiceBtn extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45)),
+                ap <= 0
+                    ? title
+                    : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Expanded(child: title),
+                        const SizedBox(width: 8),
+                        Padding(padding: const EdgeInsets.only(top: 3), child: ApBadge(ap)),
+                      ]),
                 for (final s in subs)
                   if (s.isNotEmpty) Text(tx(s), style: ts(size: 12, color: primary ? const Color(0xFF3A2E00) : Pal.mute, height: 1.4)),
               ]),
@@ -373,7 +466,7 @@ class Say extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(Ui.bubbleRadius)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(tx(who), style: ts(size: 12, color: Pal.mute)),
                 Text(tx(text), style: ts(size: 13)),
@@ -434,7 +527,7 @@ class Pick<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6),
-        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(6)),
+        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(Ui.partRadius)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<T>(
             value: items.any((e) => e.$1 == value) ? value : items.first.$1,
@@ -448,6 +541,94 @@ class Pick<T> extends StatelessWidget {
             },
           ),
         ),
+      );
+}
+
+/// 丸い札の形の選択（分類の絞り込みなど）。見た目は高さ32の札、押せる範囲は 44pt 四方以上
+class SelChip extends StatelessWidget {
+  final String label;
+  final bool on;
+  final VoidCallback onTap;
+
+  /// 選んでいるときに頭に付ける印（「始められるものだけ」のような入り切りの札）
+  final IconData? icon;
+  const SelChip(this.label, {super.key, required this.on, required this.onTap, this.icon});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        selected: on,
+        button: true,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: const StadiumBorder(),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: minTap, minWidth: minTap),
+            child: Center(
+              widthFactor: 1,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                height: 32,
+                padding: EdgeInsets.only(left: icon != null ? 8 : 12, right: 12),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: on ? Pal.gold : Pal.panel,
+                  border: Border.all(color: on ? Pal.gold : Pal.line),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  if (icon != null) ...[Icon(on ? icon : Icons.circle_outlined, size: 16, color: on ? const Color(0xFF1A1300) : Pal.mute), const SizedBox(width: 4)],
+                  Text(tx(label), maxLines: 1, softWrap: false, style: ts(size: 13, bold: on, color: on ? const Color(0xFF1A1300) : Pal.ink)),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+/// 分段の選択（並べ替えなど）。つながった帯の中から1つを選ぶ。1つの段の押せる高さは 44pt
+class Segmented<T> extends StatelessWidget {
+  final T value;
+  final List<(T, String)> items;
+  final ValueChanged<T> onChanged;
+
+  /// 段ごとの部品の鍵の頭（テストで押す用）
+  final String keyPrefix;
+  const Segmented({super.key, required this.value, required this.items, required this.onChanged, this.keyPrefix = 'seg'});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(Ui.partRadius + 2)),
+        child: Row(children: [
+          for (final e in items)
+            Expanded(
+              child: Semantics(
+                selected: e.$1 == value,
+                button: true,
+                child: InkWell(
+                  key: ValueKey('$keyPrefix-${e.$1}'),
+                  borderRadius: BorderRadius.circular(Ui.partRadius),
+                  onTap: () => onChanged(e.$1),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    constraints: const BoxConstraints(minHeight: minTap),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: e.$1 == value ? Pal.panel : null,
+                      borderRadius: BorderRadius.circular(Ui.partRadius),
+                      border: e.$1 == value ? Border.all(color: Pal.gold) : null,
+                      boxShadow: e.$1 == value ? Ui.shadow : null,
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(tx(e.$2),
+                          maxLines: 1, softWrap: false, style: ts(size: 12.5, bold: e.$1 == value, color: e.$1 == value ? Pal.goldtx : Pal.mute)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ]),
       );
 }
 
