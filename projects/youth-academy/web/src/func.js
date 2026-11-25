@@ -587,6 +587,46 @@
     }
     return out.sort((a, b) => a.left - b.left || (b.hard ? 1 : 0) - (a.hard ? 1 : 0));
   };
+  // 今週やれること（2026-11-25「やり残しが何も出ない」→ 期限ものの下に足す。ユーザー決定）。
+  // 期限はないが、この週のうちにやると得になること。左の帯の赤い点・「次の週へ」の確かめには使わない
+  YA.todoSoft = function (w) {
+    if (!w || w.retired || !w.players) return [];
+    const out = [];
+    const ps = all(w);
+    const toPlayer = (id, pTab) => (app) => { app.tab = 'players'; if (id) app.pSel = id; app.pTab = pTab; app.pOpen = true; };
+    const due = new Set(YA.todoList(w).map((x) => x.id));
+    // スカウトの残り回数（月末の週は期限ものの「スカウトに出る」が出る）
+    const S = w.scouting;
+    // 週のはじめはホームにスカウトの一言（担当の見立てつき）が出るので、二重に出さない
+    if (S && !due.has('scoutact') && YA.scoutWindow(w).explore && !(w.phase === 'plan' && YA.scoutHint && YA.scoutHint(w))) {
+      const acts = YA.scoutActsLeft(w);
+      if (acts > 0) out.push({ id: 'scoutw', tab: 'club', go: (app) => { app.tab = 'club'; app.ct = 'scout'; }, t: `スカウトに出る（今月あと${acts}回）`, soft: true, tag: '今月' });
+    }
+    // 今月まだ面談していない★の子（月末の週は期限ものの「今月の面談」が出る）
+    if (!due.has('talk') && YA.canTalk) {
+      const nt = ps.filter((p) => p.star && YA.canTalk(w, p));
+      if (nt.length) out.push({ id: 'talkw', tab: 'players', go: toPlayer(nt[0].id, 'grow'), t: `★の子と面談する（今月まだ${nt.length}人）`, soft: true, tag: '今月' });
+    }
+    // ★の子と過ごす働きかけの残り
+    if (YA.starActLeft) {
+      const st = ps.filter((p) => p.star && p.inj <= 0);
+      const left = YA.starActLeft(w);
+      const can = YA.starActWhy && YA.STAR_ACTS ? st.find((p) => YA.STAR_ACTS.some((a) => !YA.starActWhy(w, p, a.k))) : st[0];
+      if (st.length && left > 0 && can) out.push({ id: 'staract', tab: 'players', go: toPlayer(can.id, 'grow'), t: `★の子と過ごす（今週あと${left}回）`, soft: true, tag: '今週' });
+    }
+    // 今週の試合の先発に、けが・疲れの大きい子（練習のあと、試合の前）
+    if (w.phase === 'match' && YA.matchOf && YA.matchOf(w)) {
+      const bad = (w.lineupA || []).map((s) => w.players[s.pid]).filter((p) => p && (p.inj > 0 || p.fat >= 70));
+      if (bad.length) out.push({ id: 'xi', tab: 'match', go: (app) => { app.tab = 'match'; }, t: `先発に${bad[0].inj > 0 ? 'けが' : '疲れの大きい'}子（${bad.map((p) => p.name.split(' ')[0]).slice(0, 3).join('・')}${bad.length > 3 ? 'ほか' : ''}）`, soft: true, tag: '試合前' });
+    }
+    // 練習の強さが疲れに合っていない（疲れ70以上が2人以上で休ませていないのに、きつい日がある）
+    if (w.phase === 'plan' && w.plan && w.plan.days) {
+      const hard = w.plan.days.filter((d) => d.int === 'hard' && YA.MENUS[d.menu] && YA.MENUS[d.menu].fat > 0).length;
+      const tired = ps.filter((p) => p.inj <= 0 && p.fat >= 70 && p.rest !== 'rest');
+      if (hard && tired.length >= 2) out.push({ id: 'plan', tab: 'train', go: (app) => { app.tab = 'train'; app.trt = 'plan'; }, t: `練習を見直す（疲れ70以上が${tired.length}人・きつい日が${hard}日）`, soft: true, tag: '今週' });
+    }
+    return out;
+  };
   // この週を過ぎると決められなくなるもの
   YA.todoDue = (w) => YA.todoList(w).filter((x) => x.hard && x.left <= 0);
   YA.todoTabs = (w) => new Set(YA.todoList(w).map((x) => x.tab));
@@ -602,7 +642,8 @@
   // ホームの「やり残し」の欄
   YA.todoCard = function (w, max, bare) {
     max = max || 3;
-    const list = YA.todoList(w);
+    // 期限ものが上、今週やれること（灰色の札）が下
+    const list = YA.todoList(w).concat(YA.todoSoft ? YA.todoSoft(w) : []);
     if (!list.length) return null;
     const h = H();
     const app = YA._ui.app;
@@ -611,7 +652,7 @@
       bare ? null : h('div', { class: 'row', style: 'gap:5px' }, h('b', { style: 'font-size:12px;color:#7a5a00' }, 'やり残し'), h('span', { class: 'sub', style: 'font-size:11px' }, '押すとその画面へ')),
       h('div', { style: 'display:flex;flex-direction:column;gap:3px;margin-top:3px' }, list.slice(0, max).map((x) => h('button', { class: 'pitem', 'data-todo': x.id, style: 'min-height:34px;padding:3px 6px;gap:5px;background:#fff', onclick: () => { x.go(app); rer(); } },
         h('span', { class: 'grow', style: 'font-size:12px;text-align:left;line-height:1.35' }, x.t),
-        h('span', { class: 'chip', style: 'flex:none;font-size:11px;' + (x.hard && x.left <= 0 ? 'background:#d63a3a;color:#fff' : 'background:#eef2f8;color:#5b6a85') }, when(x))))),
+        h('span', { class: 'chip', style: 'flex:none;font-size:11px;' + (x.soft ? 'background:#eceef1;color:#6b7280' : x.hard && x.left <= 0 ? 'background:#d63a3a;color:#fff' : 'background:#fde7c4;color:#8a5a00') }, when(x))))),
       list.length > max ? h('div', { class: 'sub', style: 'font-size:11px;margin-top:2px' }, `ほか${list.length - max}件`) : null);
   };
   // 「次の週へ」の前の確かめ：この週で締め切られるものが残っていたら、一度だけ止める
