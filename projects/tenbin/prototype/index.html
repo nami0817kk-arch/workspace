@@ -95,6 +95,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .w.new{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2) inset}
 .w.new::after{content:attr(data-new);display:block;font:700 9px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--accent)}
 .w .pt{display:block;font:700 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--ok)}
+.w[data-say]{cursor:pointer}
+.w[data-say]:active{transform:scale(.96)}
 .w.lock{color:var(--sub);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:400;letter-spacing:2px}
 .badge{display:inline-block;background:var(--accent2);color:#3b2f24;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;margin-top:6px}
 .dict .words{max-height:none}
@@ -186,6 +188,28 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   function romaji(w) { var o = ''; for (var i = 0; i < w.length; i++) { var r = ROMA[w[i]] || w[i];
     if (w[i] === 'ん' && /^[aiueoy]/.test(ROMA[w[i + 1]] || '')) r = "n'"; o += r; } return o; }
   window.__romaji = romaji;
+  // --- 読み上げ（ことばの発音を、端末の日本語の声で）。通信なしで鳴る。英語では はじめから つける ---
+  var synth = null; try { synth = window.speechSynthesis && window.SpeechSynthesisUtterance ? window.speechSynthesis : null; } catch (e) {}
+  var voiceOn = store.get('voice', null); if (typeof voiceOn !== 'boolean') voiceOn = lang === 'en';
+  var jaVoice = null;
+  function pickVoice() { try { var vs = synth.getVoices() || [];
+    // 日本語の声のうち、端末に入っているもの（通信が要らない）を先に
+    jaVoice = vs.filter(function (v) { return /^ja/i.test(v.lang) && v.localService; })[0] || vs.filter(function (v) { return /^ja/i.test(v.lang); })[0] || null; } catch (e) {} }
+  if (synth) { pickVoice(); try { synth.addEventListener('voiceschanged', pickVoice); } catch (e) {} }
+  // force: ことばを押したとき（読み上げを切っていても、音を消していても鳴らす。押した人は聞きたい）
+  function speak(w, force) {
+    if (!synth || !w) return;
+    if (!force && (!voiceOn || muted)) return;
+    try {
+      // 一度にたくさんできたときに読み上げが溜まって遅れないよう、2つより多くは待たせない
+      if (force || speak.q > 1) { synth.cancel(); speak.q = 0; }
+      var u = new SpeechSynthesisUtterance(w); u.lang = 'ja-JP'; if (jaVoice) u.voice = jaVoice; u.rate = 0.85;
+      speak.q = (speak.q || 0) + 1; u.onend = u.onerror = function () { speak.q = Math.max(0, speak.q - 1); };
+      synth.speak(u);
+    } catch (e) {}
+  }
+  speak.q = 0;
+  window.__speak = speak;
   var MEAN = window.TenbinMeanings || {};
   function meaningOf(w) { var m = MEAN[w]; return m ? m[1] : ''; }
   function kanjiOf(w) { var m = MEAN[w]; return m ? m[0] : ''; }
@@ -427,6 +451,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
         wordLog.push({ text: e.text, pts: e.pts }); say(T('ことば ' + e.text + '、' + e.pts + '点', 'Word ' + e.text + ', ' + romaji(e.text) + (meaningOf(e.text) ? ', ' + meaningOf(e.text) : '') + ', ' + e.pts + ' points'));
         popup('+' + e.pts + (e.mult > 1 ? T('（×' + e.mult + '）', ' (×' + e.mult + ')') : ''), px, minY + (gl ? 18 : 8), false, '#2f9a5c');
         if (isNew) popup(T('あたらしいことば！', 'New word!'), px, minY - 62, false, '#b5552a');
+        speak(e.text);
         sparkle(sx, minY, 18 * (e.text.length - 1) + (e.mult > 1 ? 20 : 0)); SND.word(e.text.length); buzz(e.text.length >= 3 ? [20, 40, 30] : 18);
       } else if (e.type === 'item') {
         popup(T('「' + ITEM_INFO[e.item][0] + '」をもらった！', 'Got ' + ITEM_INFO[e.item][0] + '!'), W / 2, camTop + 130, false, '#1f7a9a'); SND.rot(); setTimeout(drawItems, 0);
@@ -880,6 +905,8 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 
   // --- 重ねる画面 ---
   function hideSheet() { sheet.className = 'sheet'; }
+  // 結果・ことば帳のことばを押すと読み上げる（札に data-say）
+  card.addEventListener('click', function (e) { var el = e.target && e.target.closest ? e.target.closest('[data-say]') : null; if (el) speak(el.getAttribute('data-say'), true); });
   function showSheet(html) { card.innerHTML = html; card.scrollTop = 0; sheet.className = 'sheet show'; }   // 前の画面のスクロール位置を持ち越さない
   function platButtons() {
     return '<div class="plats">' + PLAT_ORDER.map(function (k) { var b = bests[bkey(k)], open = isOpenPlat(k);
@@ -896,6 +923,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     card.querySelectorAll('[data-plat]').forEach(function (el) { el.onclick = function () { plat = el.getAttribute('data-plat'); store.set('plat', plat); SND.rot(); onPick(); }; });
     card.querySelectorAll('[data-items]').forEach(function (el) { el.onclick = function () { useItems = el.getAttribute('data-items') === '1'; store.set('items', useItems); SND.rot(); onPick(); }; });
     card.querySelectorAll('[data-lang]').forEach(function (el) { el.onclick = function () { setLang(el.getAttribute('data-lang')); SND.rot(); onPick(); }; });
+    card.querySelectorAll('[data-voice]').forEach(function (el) { el.onclick = function () { voiceOn = el.getAttribute('data-voice') === '1'; store.set('voice', voiceOn); SND.rot(); if (voiceOn) speak('ねこ', true); onPick(); }; });
     card.querySelectorAll('[data-roma]').forEach(function (el) { el.onclick = function () { showRoma = el.getAttribute('data-roma') === '1'; store.set('roma', showRoma); SND.rot(); drawNext(); onPick(); }; });
     card.querySelectorAll('[data-theme]').forEach(function (el) { el.onclick = function () { theme = el.getAttribute('data-theme'); store.set('theme', theme); INK = themeOf(theme).ink; SND.rot(); drawNext(); onPick(); }; });
   }
@@ -912,7 +940,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       H(T('字の色', 'Letter colors')) + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
       '<p style="font-size:11px">' + T('ことば帳 ', 'Word book ') + dictCount() + ' / ' + ALL_WORDS.length + T('・遊んだ回数 ', ' · Games ') + (moneyPrefs.get('games', 0) || 0) + '</p>' +
-      '<div class="seg" style="margin-top:8px"><button data-lang="ja" class="' + (lang === 'ja' ? 'cur' : '') + '" lang="ja">日本語</button><button data-lang="en" class="' + (lang === 'en' ? 'cur' : '') + '" lang="en">English</button></div>' +
+      '<div class="seg" style="margin-top:8px' + (synth ? ';grid-template-columns:1fr 1fr 1fr 1fr' : '') + '">' +
+        (synth ? '<button data-voice="1" class="' + (voiceOn ? 'cur' : '') + '">' + T('読み上げ', 'Voice') + '</button><button data-voice="0" class="' + (voiceOn ? '' : 'cur') + '">' + T('なし', 'Off') + '</button>' : '') +
+        '<button data-lang="ja" class="' + (lang === 'ja' ? 'cur' : '') + '" lang="ja">日本語</button><button data-lang="en" class="' + (lang === 'en' ? 'cur' : '') + '" lang="en">English</button></div>' +
       (money.adFree() ? '<p style="margin-top:8px">' + T('広告なし（購入ずみ）', 'No ads (purchased)') + '</p>' :
         // アプリでは値段はストアから（読めるまでボタンを出さない。審査の端末で値段が取れないと「課金が見つからない」になる）
         '<div class="row" style="margin-top:8px">' + (!APP ? '<button class="btn sec" id="noads">' + T('広告を消す（370円）', 'Remove ads (¥370)') + '</button>' :
@@ -967,7 +997,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
     wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
-    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new" data-new="' + T('あたらしい', 'new') : '') + '">' + a.text + (a.n > 1 ? '×' + a.n : '') + glossHtml(a.text) + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>' + T('ことばは できなかった。字と字を くっつけてみよう', 'No words this time. Try touching letters together') + '</p>';
+    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new" data-new="' + T('あたらしい', 'new') : '') + '"' + (synth ? ' data-say="' + a.text + '"' : '') + '>' + a.text + (a.n > 1 ? '×' + a.n : '') + glossHtml(a.text) + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>' + T('ことばは できなかった。字と字を くっつけてみよう', 'No words this time. Try touching letters together') + '</p>';
     var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
     var longest = agg.reduce(function (m, a) { return !m || a.text.length > m.length ? a.text : m; }, '');
     var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">' + T('落ちた字をどけて つづきから（1回だけ）', 'Clear the fallen letters and keep going (once)') + '</p>' +
@@ -1083,9 +1113,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       // 英語では意味つきの札にするので、1段に並ぶ数が減る
       return '<h3>' + title + T('（', ' (') + got + '/' + arr.length + T('）', ')') + '</h3><div class="bar2"><i style="width:' + (100 * got / arr.length).toFixed(1) + '%"></i></div><div class="words">' +
       // まだのことばは数だけ（2000語ぶんの「・・」の箱が並ぶと、集めたことばが埋もれた）
-      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w">' + w + glossHtml(w) + '</span>'; }).join('') +
+      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w"' + (synth ? ' data-say="' + w + '"' : '') + '>' + w + glossHtml(w) + '</span>'; }).join('') +
       (got < arr.length ? '<span class="w lock">' + T('まだ ' + (arr.length - got) + '語', (arr.length - got) + ' to find') + '</span>' : '') + '</div>'; }
-    showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
+    showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + (synth ? T('押すと読み上げる。', 'Tap a word to hear it. ') : '') + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
       list(T('2字', '2 letters'), C.WORDS.short) + list(T('3字', '3 letters'), C.WORDS.middle) + list(T('4字より長い', '4+ letters'), C.WORDS.long) +
       '<div class="row"><button class="btn" id="close">' + T('とじる', 'Close') + '</button></div></div>');
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };
@@ -1128,6 +1158,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     lang = l; store.set('lang', lang);
     // ローマ字は、自分で決めていなければ言語に合わせる
     if (typeof store.get('roma', null) !== 'boolean') showRoma = lang === 'en';
+    if (typeof store.get('voice', null) !== 'boolean') voiceOn = lang === 'en';
     // 言語で中身が変わる表は作り直す
     ITEM_INFO = lang === 'en'
       ? { glue: ['Glue', 'Next letter sticks'], board: ['Board', 'Drop a flat board'], undo: ['Undo', 'Remove the last letter'], freeze: ['Freeze', 'Lock the letters in place'] }

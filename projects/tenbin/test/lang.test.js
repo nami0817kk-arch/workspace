@@ -5,7 +5,10 @@ var all = W.short.concat(W.middle, W.long);
 
 // 1. ことばのほとんどに意味がある（無いのは辞書に載らない切れ端だけ）
 var missing = all.filter(function (w) { return !M[w]; });
-assert.ok(missing.length <= 10, '意味の無いことばが多い: ' + missing.length + ' ' + missing.join(' '));
+assert.deepStrictEqual(missing, [], '意味の無いことば（辞書に無い切れ端は words.js から外す）');
+// 学ぶ人に見せない言葉（2026-11-25 に英語の意味を見て外した。死体・犯罪・股間など）
+['したい', 'まいそう', 'けつ', 'こかん', 'ほうか', 'はんにん', 'はんこう', 'かんきん', 'ふはい', 'とらわれ', 'くちふえ'].forEach(function (w) { assert.ok(all.indexOf(w) < 0, '外したはずの言葉がある: ' + w); });
+assert.ok(M['うまい'] && /delicious/.test(M['うまい'][1]), 'うまい は delicious（skillful ではなく）');
 Object.keys(M).forEach(function (w) {
   var m = M[w];
   assert.ok(Array.isArray(m) && m.length === 2 && typeof m[0] === 'string' && m[1], '形がおかしい: ' + w);
@@ -33,10 +36,13 @@ var lines = body.split('\n'), bad = [];
 lines.forEach(function (line, i) {
   var code = line.replace(/\/\/.*$/, '');
   if (!/'[^']*[ぁ-んァ-ヶ一-龠][^']*'/.test(code)) return;
-  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）/.test(code)) return;
+  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）|speak\('ねこ', true\)/.test(code)) return;
   bad.push((i + 1) + ': ' + line.trim().slice(0, 100));
 });
 assert.deepStrictEqual(bad, [], '英語と対になっていない日本語の文字列');
-// 5. 意味の出どころをクレジットに出している
+// 5. 読み上げ: 日本語の声で、ひらがなのまま読む（漢字を読ませると読みを取り違える）。押したことばを読む
+assert.ok(/u\.lang = 'ja-JP'/.test(html) && /new SpeechSynthesisUtterance\(w\)/.test(html), '読み上げが日本語・ひらがなでない');
+assert.ok(/data-say="' \+ w \+ '"/.test(html) && /data-say="' \+ a\.text \+ '"/.test(html), 'ことば帳・結果のことばを押して読み上げられない');
+// 6. 意味の出どころをクレジットに出している
 assert.ok(html.indexOf('JMdict') >= 0, 'クレジットに JMdict が無い');
 console.log('lang ok', all.length - missing.length + '/' + all.length);
