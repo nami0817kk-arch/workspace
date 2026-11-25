@@ -656,6 +656,25 @@ void main() {
     expect(html, contains('if(g.chron){chDecoDraw();chMarketDraw();}'));
   });
 
+  test('年代記の画面構成: 上にゲージ・真ん中に巣穴・下にタブ5つ（0.7.57・試作 v76）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 上: 代と波・資源・警戒と友好のゲージ・≡
+    expect(html, contains('<div id="chtop">'));
+    expect(html, contains('id="chalb"'));
+    expect(html, contains('id="chfrb"'));
+    expect(html, contains('<div id="chmenu" hidden>'));
+    // 巣穴の上: 族長・節目まで・行商人・今すぐ迎える
+    expect(html, contains('<button class="chchip" id="chchief" hidden></button>'));
+    expect(html, contains('<button id="chgo" hidden>今すぐ迎える</button>'));
+    // 下: できごとの1行と速さ・タブ5つ（巣以外は引き出し）
+    expect(html, contains('<button data-cht="nest" class="on">巣</button><button data-cht="clan">一族</button><button data-cht="nat">周りの国</button><button data-cht="trade">交易</button><button data-cht="chron">年代記</button>'));
+    expect(html, contains("document.getElementById('chpanel').addEventListener('click',cmdClick);"));
+    // 年代記のときは前の画面の部品を出さない
+    expect(html, contains('body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #cmsg,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}'));
+    expect(html, contains("function ui(){
+ yuBar();if(typeof chUI=='function')chUI();"));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
