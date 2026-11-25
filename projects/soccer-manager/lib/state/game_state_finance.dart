@@ -940,9 +940,11 @@ extension GameStateFinance on GameState {
     save.shareholderExpectation = 60;
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
-    // 新しいクラブは、そのクラブの元の見た目から。
+    // 新しいクラブは、そのクラブの元の見た目から(表の画像が無いクラブは
+    // 自クラブ用の画像を1つ付ける)。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
+    GameStateClubLook.ensureOwnCrest(save);
     save.budget = (GameState.initialBudgetFor(
                 save.currentDivisionTier, currentLeagueTheme) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
@@ -1187,9 +1189,11 @@ extension GameStateFinance on GameState {
     save.shareholderExpectation = 60;
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
-    // 新しいクラブは、そのクラブの元の見た目から。
+    // 新しいクラブは、そのクラブの元の見た目から(表の画像が無いクラブは
+    // 自クラブ用の画像を1つ付ける)。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
+    GameStateClubLook.ensureOwnCrest(save);
     save.budget = (GameState.initialBudgetFor(startTier, theme) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();

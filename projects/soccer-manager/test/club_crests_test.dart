@@ -66,16 +66,21 @@ void main() {
           .listSync()
           .whereType<File>()
           .where((f) => f.path.endsWith('.webp'))
+          .where((f) => !f.uri.pathSegments.last.startsWith('own_'))
           .length;
       expect(files, ClubNames.crestCount);
     });
 
-    test('自クラブ・書き換えた名前のクラブは画像を使わない', () {
+    test('書き換えた名前のクラブ・見た目を決めた自クラブは表の画像を使わない', () {
       final (ja, en) = ClubNames.crestNames(5);
       expect(ClubCrests.indexFor('cpu1', ja), 5);
       expect(ClubCrests.indexFor('cpu1', en), 5);
       expect(ClubCrests.indexFor('cpu1', 'わたしの好きな名前'), isNull);
       ClubLookRegistry.teamId = 'user';
+      // 見た目を決めていない自クラブ(表のクラブを買い直した直後)は元の画像。
+      expect(ClubCrests.indexFor('user', ja), 5);
+      ClubLookRegistry.look = const ClubLook(
+          hue: 0, accentHue: 0, shape: 0, motif: 0, initial: 'A', crest: 3);
       expect(ClubCrests.indexFor('user', ja), isNull,
           reason: '自クラブはオーナーが見た目を決める');
       expect(ClubCrests.indexFor('cpu1', ja), 5);
@@ -139,16 +144,23 @@ void main() {
       expect(checked, greaterThan(0));
     });
 
-    test('自クラブの色は今までどおり(名前・決めた見た目から)', () {
+    test('自クラブの色は、決めた見た目(画像ならその絵の色)から', () {
       final (ja, _) = ClubNames.crestNames(0);
       ClubLookRegistry.teamId = 'user';
-      // 番号0は名前に色の語が無いので、id から決まる従来の色になる。
-      expect(ClubPalette.hueForName(ja), isNull);
+      // 決めていなければ、出ている表の画像の色。
       expect(ClubPalette.of('user', clubName: ja).hue,
-          Random('user'.hashCode).nextDouble() * 360);
+          ClubPalette.fromCrest(0).hue);
+      // 表に無い名前なら、クラブで決まる自クラブ用の画像の色。
+      final own = ClubLook.defaultCrestFor('user', '自分FC');
+      expect(ClubPalette.of('user', clubName: '自分FC').hue,
+          ClubLook.crestHues(own).$1);
       ClubLookRegistry.look = const ClubLook(
           hue: 225, accentHue: 52, shape: 0, motif: 0, initial: 'A');
       expect(ClubPalette.of('user', clubName: ja).hue, 225);
+      // 番号0は名前に色の語が無いので、他のクラブの id から決まる色は従来どおり。
+      expect(ClubPalette.hueForName(ja), isNull);
+      expect(ClubPalette.of('x', clubName: 'わたしの好きな名前').hue,
+          Random('x'.hashCode).nextDouble() * 360);
     });
   });
 
@@ -170,7 +182,7 @@ void main() {
       expect(semanticsLabeled('$jaのエンブレム'), findsOneWidget);
     });
 
-    testWidgets('表に無い名前・自クラブは今までどおり描く', (tester) async {
+    testWidgets('表に無い名前(自クラブ以外)は今までどおり描く', (tester) async {
       await pump(tester,
           const ClubEmblem(teamId: 'cpu3', teamName: 'わたしの好きな名前', size: 40));
       expect(find.byType(Image), findsNothing);
@@ -180,8 +192,11 @@ void main() {
           findsWidgets);
       expect(semanticsLabeled('わたしの好きな名前のエンブレム'), findsOneWidget);
 
+      // 自クラブでも、描いたエンブレムを選んでいれば描く。
       final (ja, _) = ClubNames.crestNames(0);
       ClubLookRegistry.teamId = 'user';
+      ClubLookRegistry.look = const ClubLook(
+          hue: 225, accentHue: 52, shape: 0, motif: 0, initial: 'A');
       await pump(tester, ClubEmblem(teamId: 'user', teamName: ja, size: 40));
       expect(find.byType(Image), findsNothing);
     });
