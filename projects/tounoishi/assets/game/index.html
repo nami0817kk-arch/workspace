@@ -146,6 +146,37 @@ canvas{-webkit-user-select:none;user-select:none}
 .bnr b{display:block;font-size:20px;letter-spacing:.08em}.bnr small{display:block;color:#f3e6c8;font-size:12px;margin-top:4px}
 @keyframes bnrin{0%{opacity:0;transform:scaleX(.6)}12%{opacity:1;transform:scaleX(1)}80%{opacity:1}100%{opacity:0}}
 .chron{text-align:left;max-height:42vh;overflow:auto;margin:8px 0;padding-left:1.6em;font-size:13px;line-height:1.55}.chron small{color:var(--sub);margin-right:4px}.chrec{text-align:left;margin:6px 0}.chrec summary{cursor:pointer}.btn.fd{display:block;width:100%;text-align:left;margin:6px 0}.btn.fd small{display:block;margin-top:3px}
+
+#chtop,#chlog,#chtabs,#chpanel,#chmenu,.chchip,#chgo{display:none}
+body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #cmsg,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}
+body.chr #chtop,body.chr #chlog,body.chr #chtabs{display:block}
+body.chr .chchip:not([hidden]),body.chr #chgo:not([hidden]){display:block}
+body.chr .stage{width:clamp(260px,calc(100dvh - 236px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),100%)}
+body.chr.chopen .stage{height:clamp(30dvh,calc(100dvh - 600px),100vw);overflow:hidden;border-radius:12px 12px 0 0}
+body.chr.chopen #chpanel{display:block}
+#chtop{padding:6px 2px 4px}
+.chl1{display:flex;justify-content:space-between;align-items:center;gap:8px}.chl1 b{font-size:16px}
+.chcd{display:flex;gap:6px;align-items:center}.chcd span{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:2px 8px;font-size:13px}
+.chcd button{font:inherit;font-size:16px;line-height:1;padding:3px 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.chres{display:flex;gap:12px;font-size:12.5px;color:var(--sub);margin:3px 0 4px}.chres b{color:var(--ink);font-weight:600}
+.chg{font-size:12px;display:flex;justify-content:space-between;margin-top:2px}.chg i{font-style:normal;font-weight:600}
+.chgb{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:2px 0 3px}.chgb b{display:block;height:100%;border-radius:3px}
+.chchip{position:absolute;z-index:3;background:rgba(10,6,4,.72);color:#f3e6c8;border-radius:10px;padding:4px 9px;font-size:12px;border:1px solid transparent;font-family:inherit;text-align:left}
+#chchief{left:8px;top:8px;border-color:#ffd45a;cursor:pointer}#chchief b{color:#ffd45a;margin-right:4px}
+#chmile{right:8px;top:8px}#chmer{left:8px;bottom:10px;border-color:#b8925a}
+body.chr .zoom{flex-direction:column;bottom:56px;gap:4px}body.chr .zoom button{height:30px;padding:0 9px;font-size:13px;min-width:40px}body.chr .zoom #zdig{margin-right:0}
+body.chr .yubar{top:40px}
+#chgo{position:absolute;z-index:3;left:50%;bottom:10px;transform:translateX(-50%);background:#8b4f1d;color:#fff4dc;border:0;border-radius:16px;padding:8px 18px;font:inherit;font-weight:700;font-size:14px}
+#chlog{display:none}body.chr #chlog{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 2px;font-size:12.5px;color:var(--sub)}
+#chlog span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#chlog button{font:inherit;font-size:12.5px;padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}#chlog button.on{background:var(--ink);color:var(--bg)}
+body.chr #chtabs{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px;margin-bottom:6px}
+#chtabs button{flex:1;font:inherit;font-size:13px;padding:9px 0;border:0;border-radius:9px;background:transparent;color:var(--ink)}#chtabs button.on{background:var(--ink);color:var(--bg);font-weight:700}
+#chpanel{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:10px 12px;max-height:50dvh;min-height:150px;overflow:auto;text-align:left}
+#chpanel h3{margin:2px 0 6px;font-size:15px}#chpanel .btn{display:block;width:100%;text-align:left;margin:5px 0}
+.chchf{border:1px solid #d9b24a;border-radius:10px;padding:8px 10px;margin-bottom:8px}.chchf b{color:#b8860b}
+#chmenu{position:absolute;right:2px;top:40px;z-index:20;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+body.chr #chmenu:not([hidden]){display:flex;flex-direction:column;gap:4px}#chmenu button{font:inherit;font-size:13px;text-align:left;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 </style>
 <div class="overlay" id="title" hidden></div>
 <div class="overlay sheet" id="sheet" hidden><div class="sbox">
@@ -182,13 +213,18 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v75</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v76</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
  <div class="stat">コアの体力<b id="core">-</b></div>
  <div class="stat">掘る力<b id="dp">-</b><small id="res2" class="res2"></small></div>
 </div>
+<div id="chtop"><div class="chl1"><b id="chgw">第1代 · 第0波</b><div class="chcd"><span id="chcd">次の波 -</span><button id="chmb" aria-label="メニュー">≡</button></div></div>
+<div class="chres" id="chres"></div>
+<div class="chg"><span id="chal">警戒</span><i id="chalv" style="color:#d9534f"></i></div><div class="chgb"><b id="chalb" style="background:#d9534f;width:0"></b></div>
+<div class="chg"><span id="chfr">友好</span><i id="chfrv" style="color:#4f9a2a"></i></div><div class="chgb"><b id="chfrb" style="background:#5fa83a;width:0"></b></div>
+<div id="chmenu" hidden><button data-chm="bsnd">音</button><button data-chm="blight">コアの光</button><button data-chm="bhelp">遊び方</button><button data-chm="bdex">図鑑</button><button data-chm="bmenu">タイトルへ</button></div></div>
 <div class="tabs" id="tabs"></div>
 <div class="stage">
 <canvas id="c" aria-label="ダンジョンタワーの1フロア。28マス×28マスの土を掘る"></canvas>
@@ -196,8 +232,12 @@ canvas{-webkit-user-select:none;user-select:none}
 <div class="yubar" id="yubar" hidden></div>
 <div class="bnr" id="bnr" hidden></div>
 <div class="pop" id="pop" hidden></div>
+<button class="chchip" id="chchief" hidden></button><div class="chchip" id="chmile" hidden></div><div class="chchip" id="chmer" hidden>行商人が来ている</div><button id="chgo" hidden>今すぐ迎える</button>
 <div class="zoom"><button id="zdig" aria-pressed="false">⛏ 掘る</button><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
 </div>
+<div id="chpanel"></div>
+<div id="chlog"><span id="chmsg"></span><button data-chsp="sp0">⏸</button><button data-chsp="sp1">×1</button><button data-chsp="sp2">×2</button></div>
+<div id="chtabs"><button data-cht="nest" class="on">巣</button><button data-cht="clan">一族</button><button data-cht="nat">周りの国</button><button data-cht="trade">交易</button><button data-cht="chron">年代記</button></div>
 <div class="row">
  <button class="btn go" id="go">今すぐ迎える</button>
  <button class="btn" id="blight" disabled>コアの光</button>
@@ -1449,6 +1489,32 @@ function chMarketDraw(){var C=g.chron,K=g.core;if(!C.trade&&!C.goods&&!C.mer)ret
   ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(mx-5,my-1,10,2);ctx.fillStyle='#6a4a2a';ctx.fillRect(mx+2,my-14,6,8);ctx.fillStyle='#4a3a6a';ctx.fillRect(mx-3,my-12,6,9);
   ctx.fillStyle='#e8c8a0';ctx.fillRect(mx-2,my-16,4,4);ctx.fillStyle='#3a2a1a';ctx.fillRect(mx-4,my-17,8,2);ctx.fillRect(mx-2,my-19,4,2);ctx.fillStyle='#2a2020';ctx.fillRect(mx-3,my-3,2,3);ctx.fillRect(mx+1,my-3,2,3);
   label('行商人',mx,Math.max(8,my-24),'#ffe08a');}}
+// ---------- 年代記の画面（v76） ----------
+var CHTAB='nest',chPLast='';
+// 段ごとに同じ長さで区切ったゲージ（段の中の進み具合も足す）
+function chStageW(a,T){var s=0;while(s+1<T.length&&a>=T[s+1])s++;var lo=T[s],hi=T[s+1],fr=hi==null?1:Math.min(1,(a-lo)/(hi-lo));return Math.max(2,Math.round((s+fr)/(T.length-1)*100));}
+function chPanelHTML(){var C=g.chron,h='';
+ if(CHTAB=='clan'){var c=chChief();h+='<h3>一族</h3>';if(c)h+='<div class="chchf"><b>族長</b> '+esc(spName(c))+'<br><small>'+esc(gobLine(c))+'</small></div>';
+  h+=chBrInfo()+'<h3 style="margin-top:10px">召喚する</h3>'+cmdSumHTML();}
+ else if(CHTAB=='nat'){h+=chDipHTML()+'<div class="empty" style="margin-top:8px">'+esc(yuName())+' · 節目のくじで来ることがある</div>';}
+ else if(CHTAB=='trade'){h+=chTradeHTML();}
+ else if(CHTAB=='chron'){h+='<h3>年代記</h3>'+chLinesHTML((C.lines||[]).slice().reverse());}
+ return h;}
+function chSetTab(k){CHTAB=k;chPLast='';document.body.classList.toggle('chopen',k!='nest');[].forEach.call(document.querySelectorAll('#chtabs button'),function(b){b.classList.toggle('on',b.getAttribute('data-cht')==k);});chUI();if(typeof draw=='function')draw();}
+function chUI(){var on=!!(g&&g.chron&&g.chron.st);document.body.classList.toggle('chr',on);if(!on){document.body.classList.remove('chopen');return;}
+ var C=g.chron,$=function(i){return document.getElementById(i);};
+ $('chgw').textContent='第'+(C.gen||1)+'代 · 第'+g.wave+'波';
+ $('chcd').textContent=g.en.length&&g.cd>80?'迎撃中':'次の波 '+Math.max(0,Math.ceil(g.cd))+'秒'+(speed==0?' ⏸':'');
+ var rs='魂 <b>'+(g.soul||0)+'</b>　銀貨 <b>'+(C.silver||0)+'</b>　品 <b>'+(C.goods||0)+'</b>　掘る <b>'+Math.floor(g.dp||0)+'</b>　コア <b>'+Math.ceil(g.core.hp)+'</b>';if($('chres').innerHTML!=rs)$('chres').innerHTML=rs;
+ var a=C.alert||0,f=C.friend||0;$('chal').textContent='警戒 · '+ALN[chAlertSt()];$('chalv').textContent='段'+chAlertSt()+' / '+(ALT.length-1);$('chalb').style.width=chStageW(a,ALT)+'%';
+ $('chfr').textContent='友好 · '+FRN[chFrSt()];$('chfrv').textContent='段'+chFrSt()+' / '+(FRT.length-1);$('chfrb').style.width=chStageW(f,FRT)+'%';
+ var c=chChief(),cc=$('chchief');cc.hidden=!c;if(c){var ct='<b>族長</b>'+esc(spName(c))+' · 特性'+(c.tr||[]).length;if(cc.innerHTML!=ct)cc.innerHTML=ct;}
+ var ml=$('chmile'),ew=C.ev&&C.evW>=g.wave?C.evW:(Math.floor(g.wave/10)+1)*10;ml.hidden=false;ml.textContent=C.evNow?'節目：'+EVN[C.evNow]:'節目まで'+Math.max(0,ew-g.wave)+'波'+(C.ev&&C.evW>=g.wave?'（'+EVN[C.ev]+'）':'');
+ $('chmer').hidden=!C.mer;
+ var go=$('go'),cg=$('chgo');cg.hidden=go.hidden||go.disabled||(g.en.length>0&&go.textContent=='今すぐ迎える'&&g.cd>80);cg.textContent=go.textContent;
+ var m=$('chmsg');if(m.textContent!==(g.msg||''))m.textContent=g.msg||'';
+ [].forEach.call(document.querySelectorAll('#chlog button'),function(b){b.classList.toggle('on',b.getAttribute('data-chsp')=='sp'+speed);});
+ if(CHTAB!='nest'){var p=$('chpanel'),ph=chPanelHTML();if(ph!==chPLast){chPLast=ph;var st=p.scrollTop;p.innerHTML=ph;p.scrollTop=st;}}}
 // ---------- 子は自動で生まれる（v71・年代記） ----------
 function chCap(){return 1e9;}
 var CH_CAP=500;
@@ -2278,7 +2344,7 @@ function buildTabs(){
  })(f);
 }
 function ui(){
- yuBar();
+ yuBar();if(typeof chUI=='function')chUI();
  var n=[0,0,0,0],i,f,tot=g.pool;
  for(i=0;i<g.cr.length;i++){n[g.cr[i].t]=(n[g.cr[i].t]||0)+1;tot+=g.cr[i].e;}
  for(f=0;f<F;f++){
@@ -2292,7 +2358,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v75 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v76 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2336,7 +2402,7 @@ function side(){
  document.getElementById('conn').innerHTML=connHTML();
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
-document.getElementById('spane-cmd').addEventListener('click',function(ev){var t=ev.target,b;
+function cmdClick(ev){var t=ev.target,b;
  if(b=t.closest('[data-cal]')){g.cmdAl=+b.getAttribute('data-cal');}
  else if(b=t.closest('[data-cpick]')){summonPick((g.alt||[])[cmdAlI()],+b.getAttribute('data-cpick'));}
  else if(b=t.closest('[data-creroll]')){summonReroll();}
@@ -2347,7 +2413,15 @@ document.getElementById('spane-cmd').addEventListener('click',function(ev){var t
  else if(b=t.closest('[data-cbf]')){g.cmdBf=+b.getAttribute('data-cbf');}
  else if(b=t.closest('[data-cbone]')){cmdBoneGo(b.getAttribute('data-cbone'));}
  else if(b=t.closest('[data-cegg]')){var e=g.eggs[+b.getAttribute('data-cegg')];if(e)boneAct('hatch',e.f,e.x,e.y);}
- else return;cmdLast='';sideT=0;side();ui();draw();});
+ else return;cmdLast='';chPLast='';sideT=0;side();ui();draw();}
+document.getElementById('spane-cmd').addEventListener('click',cmdClick);
+document.getElementById('chpanel').addEventListener('click',cmdClick);
+document.getElementById('chtabs').addEventListener('click',function(ev){var b=ev.target.closest('[data-cht]');if(b)chSetTab(b.getAttribute('data-cht'));});
+document.getElementById('chlog').addEventListener('click',function(ev){var b=ev.target.closest('[data-chsp]');if(b){document.getElementById(b.getAttribute('data-chsp')).click();chUI();}});
+document.getElementById('chchief').addEventListener('click',function(){chSetTab(CHTAB=='clan'?'nest':'clan');});
+document.getElementById('chgo').addEventListener('click',function(){var go=document.getElementById('go');if(go.onclick)go.onclick();else go.click();chUI();});
+document.getElementById('chmb').addEventListener('click',function(){var m=document.getElementById('chmenu');m.hidden=!m.hidden;});
+document.getElementById('chmenu').addEventListener('click',function(ev){var b=ev.target.closest('[data-chm]');if(!b)return;document.getElementById('chmenu').hidden=true;var o=document.getElementById(b.getAttribute('data-chm'));if(o)o.click();});
 document.getElementById('spane-list').addEventListener('click',function(ev){var rb=ev.target.closest('[data-rev]');if(rb){revive(+rb.getAttribute('data-rev'));soulLast='';sideT=0;side();ui();draw();return;}var xd=ev.target.closest('[data-expd]');if(xd){g.expDest=xd.getAttribute('data-expd');expLast='';sideT=0;side();return;}var xb=ev.target.closest('[data-exp]');if(xb){expToggle(+xb.getAttribute('data-exp'));expLast='';sideT=0;side();return;}var xg=ev.target.closest('[data-expgo]');if(xg){expGo();expLast='';sideT=0;side();ui();draw();return;}var lb=ev.target.closest('[data-line]');if(lb){upLine(lb.getAttribute('data-line'));return;}var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
 function loop(ts){var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!over&&speed>0)step(dt*speed);draw();ui();requestAnimationFrame(loop);}
 // ---------- v14: 初代の残り ----------
@@ -3068,7 +3142,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={chStart:chStart,chSell:chSell,chArms:chArms,chTribSilver:chTribSilver,chFrSt:chFrSt,chDip:chDip,chChief:chChief,chDipHTML:chDipHTML,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={chStart:chStart,chSetTab:chSetTab,chUI:chUI,chSell:chSell,chArms:chArms,chTribSilver:chTribSilver,chFrSt:chFrSt,chDip:chDip,chChief:chChief,chDipHTML:chDipHTML,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
