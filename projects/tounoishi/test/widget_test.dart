@@ -580,6 +580,23 @@ void main() {
     expect(html, contains("e.clan=1;e.spr='gob_clan';"));
   });
 
+  test('年代記では子が自動で生まれる・配合のボタンは無い（0.7.53・試作 v71）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 波のはじめ（寿命・成長のあと）に大人どうしが組になって卵を産む。魂は使わない
+    expect(html, contains("var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';"));
+    expect(html, contains('function chBreed(){var room=chRoom(),'));
+    // 一族の上限: 10匹＋節目ごとに2匹。卵も数える。上限でも1つは産む（寿命で絶えないように）
+    expect(html, contains('function chCap(){return 10+2*((g.chron&&g.chron.miles)||0);}'));
+    expect(html, contains('function chRoom(){return Math.max(1,chCap()-chGobs().length-chEggN());}'));
+    // 年代記の召喚も一族の上限まで
+    expect(html, contains("if(g.chron&&chGobs().length+chEggN()>=chCap())return '一族がいっぱい"));
+    // 配合は年代記では使わない（ボタンを出さず、コマンドは自動の説明に）
+    expect(html, contains("function breedWhy(m){if(g&&g.chron)return '年代記では子は自動で生まれる';"));
+    expect(html, contains("if(!g.chron)h+='<button data-m=\"breed\""));
+    expect(html, contains("hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo();"));
+    expect(html, isNot(contains('2匹を配合して子を残そう')));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること

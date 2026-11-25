@@ -163,7 +163,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <div id="spane-cmd" hidden>
  <div class="cmsg2" id="cmdmsg"></div>
  <div class="panel"><h2>召喚する</h2><div id="cmdsum"></div></div>
- <div class="panel"><h2>配合する</h2><div id="cmdbr"></div></div>
+ <div class="panel"><h2 id="cmdbrh">配合する</h2><div id="cmdbr"></div></div>
 </div>
 <div class="help" id="spane-help">
 <h3>目的</h3>
@@ -171,7 +171,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>操作</h3>
 ・<b>見る</b>：1本指でなぞると盤が動く。2本指で拡大・縮小。上の階のボタンで階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。<br>・<b>掘る</b>：右下の「⛏ 掘る」を押して光らせてから、掘ってあるマスの隣の土をなぞる。1マスに掘る力を1使う。<b>掘っても何も生まれない</b>。冒険者の道を長く、枝分かれさせ、罠や強い子の前を通らせる形に作る。<br>・<b>コマンド</b>（下のボタン）：<b>召喚する</b>・<b>配合する</b>。<br>・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱った子を間引く）。<br>・<b>長押し</b>：通路なら<b>祭壇を置く</b>（掘る力20・4つまで）・<b>埋め戻す</b>（掘る力2）・<b>ここに集まれ</b>（掘る力5）・<b>罠</b>（掘る力3・5つまで）。ゴブリンなら<b>進化</b>・<b>配合</b>、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる。
 <h3>召喚と配合</h3>
-・<b>召喚</b>：祭壇（紫の輪）に来ている、はぐれゴブリン3匹から1匹を選んで呼ぶ（魂4）。気に入らなければ魂1で候補を呼び直せる。呼んだ子は<b>新しい血</b>（祖先は自分）。<br>・<b>ゴブリン</b>：体格（小＝速い・弱い、大＝遅い・固い・強い）と得手（殴る・2マス先へ投げる）、特性（3つまで・段1〜3）、弱点（2つまで）を持つ。<br>・<b>配合</b>：2匹を選んで魂3。20秒後に卵がかえる。体格と得手は両親のどちらかから。<b>血の濃さ</b>（両親の祖先の重なり）で受け継ぎ方が変わる。濃い（半分以上）＝両親が同じ特性を持つと段が1上がる・ほかの特性は7割・弱点は半分で残り、まれに新しい弱点。ふつう＝そのまま。薄い（重ならない）＝弱点は4分の1しか残らず、4回に1回新しい特性。<br>・<b>上の技</b>：特性が2つそろうと上の技になる（例：毒＋炎＝爆炎、固い＋再生＝不動）。見つけた技は図鑑に載る。<br>・<b>進化</b>：冒険者を倒すと経験2点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。<br>・<b>魂</b>：冒険者を倒すと2（面の勇者たち3・宿敵の勇者10）。
+・<b>召喚</b>：祭壇（紫の輪）に来ている、はぐれゴブリン3匹から1匹を選んで呼ぶ（魂4）。気に入らなければ魂1で候補を呼び直せる。呼んだ子は<b>新しい血</b>（祖先は自分）。<br>・<b>ゴブリン</b>：体格（小＝速い・弱い、大＝遅い・固い・強い）と得手（殴る・2マス先へ投げる）、特性（3つまで・段1〜3）、弱点（2つまで）を持つ。<br>・<b>配合</b>：年代記では、波のはじめに大人どうしが自動で組になって卵を産む（魂は要らない）。チャレンジでは2匹を選んで魂3。20秒後に卵がかえる。体格と得手は両親のどちらかから。<b>血の濃さ</b>（両親の祖先の重なり）で受け継ぎ方が変わる。濃い（半分以上）＝両親が同じ特性を持つと段が1上がる・ほかの特性は7割・弱点は半分で残り、まれに新しい弱点。ふつう＝そのまま。薄い（重ならない）＝弱点は4分の1しか残らず、4回に1回新しい特性。<br>・<b>上の技</b>：特性が2つそろうと上の技になる（例：毒＋炎＝爆炎、固い＋再生＝不動）。見つけた技は図鑑に載る。<br>・<b>進化</b>：冒険者を倒すと経験2点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。<br>・<b>魂</b>：冒険者を倒すと2（面の勇者たち3・宿敵の勇者10）。
 <h3>冒険者</h3>
 ・入った時に掘ってあった道を探し、まだ見ていない道が多い方へ進む。行き止まりで戻る。コアを見つけると向かって殴る。<br>
 ・MP で技（回復・炎・風・MP吸収・回転斬り・ウォークライ・HP吸収）を使う。魔法使い・僧侶などは魔法に強い。<br>
@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v70</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v71</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -656,7 +656,7 @@ function bloodPreview(a,b){if(!a.gob||!b.gob)return 'ゴブリンどうしでな
   (B.k=='koi'?(up.length?'段が上がる：'+up.map(function(k){return TR[k].n+'→'+Math.min(3,Math.max(trLv(a,k),trLv(b,k))+1);}).join('・')+'。':'両親に同じ特性が無いので、段は上がらない。')+'ほかの特性は7割で受け継ぐ。弱点は半分で受け継ぎ、まれに新しい弱点が出る。':
    B.k=='usui'?'特性はそのまま受け継ぐ（3つまで）。4回に1回、新しい特性がつく。弱点は4分の1しか受け継がない。':'特性はそのまま受け継ぐ（3つまで）。弱点は6割で受け継ぐ。')+
   (wk.length?'<br>両親の弱点：'+wk.map(function(k){return WK[k].n;}).join('・'):'');}
-function breedWhy(m){if(!SPEC[m.sp].gob||!m.gob)return 'ゴブリンでないと配合できない';if(m.kid)return '子どものうちは配合できない';if(m.stage&&m.stage!='adult')return '育ちきってから';if((m.brT||0)>g.t)return 'あと'+Math.ceil(m.brT-g.t)+'秒休む';if((g.soul||0)<BREED_COST)return '魂が足りない（'+BREED_COST+'要る）';return '';}
+function breedWhy(m){if(g&&g.chron)return '年代記では子は自動で生まれる';if(!SPEC[m.sp].gob||!m.gob)return 'ゴブリンでないと配合できない';if(m.kid)return '子どものうちは配合できない';if(m.stage&&m.stage!='adult')return '育ちきってから';if((m.brT||0)>g.t)return 'あと'+Math.ceil(m.brT-g.t)+'秒休む';if((g.soul||0)<BREED_COST)return '魂が足りない（'+BREED_COST+'要る）';return '';}
 function breedStart(m){var w=breedWhy(m);if(w){say(w+'。');return;}g.breed={id:m.id};say(spName(m)+'と配合する相手（2マス以内のモンスター）をタップ。離れた子とは「コマンド」から。ほかの所をタップすると取りやめ。');}
 function breedTap(f,x,y){var B=g.breed;g.breed=null;var a=g.cr.filter(function(o){return o.id===B.id;})[0];if(!a){say('配合を取りやめた。');return true;}
  var b=crAt(f,x,y).filter(function(o){return o!==a;})[0];if(!b||b.f!=a.f||man(a,b)>2){say('配合を取りやめた（2マス以内のモンスターをタップする）。');return true;}
@@ -790,9 +790,10 @@ function cmdSumHTML(){var A=g.alt||[],ai=cmdAlI();if(!A.length)return '<div clas
   (A.length>1?'<div class="cfl">'+A.map(function(a,i){return '<button data-cal="'+i+'"'+(i==ai?' class="on"':'')+'>'+(a.f+1)+'階の祭壇</button>';}).join('')+'</div>':'')+
   '<div class="exl">'+C.map(function(d,i){return '<button data-cpick="'+i+'"'+(why?' disabled':'')+'>'+dimg(gobKey(d.sz,d.hd))+'<span><b>'+esc(d.nm)+'</b><br><small>'+esc(gobLine(d))+'</small></span></button>';}).join('')+'</div>'+
   '<button class="btn" data-creroll="1"'+((g.soul||0)<SUM_REROLL?' disabled':'')+'>候補を呼び直す（魂'+SUM_REROLL+'）</button>'+
-  (why?'<div class="empty cwhy">'+why+'</div>':'')+'<div class="empty">ゴブリン '+g.cr.length+' / '+CAP+'匹</div>';}
+  (why?'<div class="empty cwhy">'+why+'</div>':'')+'<div class="empty">'+(g.chron?'一族 '+chGobs().length+'（卵 '+chEggN()+'） / '+chCap()+'匹':'ゴブリン '+g.cr.length+' / '+CAP+'匹')+'</div>';}
 // 召喚できない理由（できるなら空）
 function sumWhy(){if(g.noSum)return 'このチャレンジでは召喚できない。';
+ if(g.chron&&chGobs().length+chEggN()>=chCap())return '一族がいっぱい（'+(chGobs().length+chEggN())+' / '+chCap()+'匹・卵も数える）。節目を越えると2匹ずつ増える。';
  if(g.cr.length>=CAP)return '塔がいっぱい（'+g.cr.length+' / '+CAP+'匹）。弱い子を2回タップしてつつき、間引くと呼べる。塔が伸びると上限も増える。';
  if((g.soul||0)<SUM_COST)return '魂が足りない（あと'+(SUM_COST-(g.soul||0))+'）。魂は冒険者を倒すと2つ（面の勇者たち3・宿敵の勇者10）入る。「今すぐ迎える」で冒険者を呼ぼう。';
  return '';}
@@ -801,7 +802,7 @@ function cmdBrSel(){var sel=g.cmdBr||(g.cmdBr=[]);for(var i=sel.length-1;i>=0;i-
 function cmdBrToggle(id){var sel=g.cmdBr||(g.cmdBr=[]),i=sel.indexOf(id);if(i>=0)sel.splice(i,1);else{if(sel.length>=2)sel.shift();sel.push(id);}}
 function cmdBrGo(){var ms=cmdBrSel();if(ms.length<2){say('配合する2匹を選んでください。');return;}var w=breedWhy(ms[0]);if(w&&w.indexOf('魂')<0){say(spName(ms[0])+'：'+w+'。');return;}
  var n0=g.eggs.length;breedDo(ms[0],ms[1]);if(g.eggs.length>n0)g.cmdBr=[];}
-function cmdBrHTML(){var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
+function cmdBrHTML(){var hh=document.getElementById('cmdbrh');if(hh)hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo();var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
  var pv=ms.length==2?bloodPreview(ms[0],ms[1]):'';
  return '<div class="empty">2匹を選んで「配合する」。魂'+BREED_COST+'・'+BREED_T+'秒で卵がかえる。親は'+BREED_CD+'秒休む。<b style="color:var(--ink)">血の濃さ</b>で受け継ぎ方が変わる：濃い＝同じ特性の段が上がるが弱点も残る、薄い＝弱点が消えやすく新しい特性がつく。魂 <b style="color:var(--ink)">'+(g.soul||0)+'</b></div>'+
   (pv?'<div class="empty">'+pv+'</div>':'')+
@@ -1358,15 +1359,29 @@ function chWave(ev){var C=g.chron,died=[],grown=0;
   if(m.kid&&g.wave-m.bw>=2){growUp(m);grown++;}
   if(g.wave-m.bw>LIFE)died.push(m);});
  var dn=died.slice(0,3).map(spName);died.forEach(function(m){killCr(m,'old');});
+ var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';
  var K=g.core,mx=coreMax();if(K.mhp<mx){K.hp+=mx-K.mhp;K.mhp=mx;}
- if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':''));
- else if(grown)say(grown+'匹が大人になった。');
+ if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':'')+et);
+ else if(grown||ne)say((grown?grown+'匹が大人になった。':'')+et);
  if(ev){C.evNow=ev;C.cap=0;banner('節目：'+EVN[ev],EVD[ev]);haptic('medium');
   if(ev=='plague'){var sick=0;g.cr.forEach(function(m){if(m.gob&&m.gob.wk&&m.gob.wk.length){m.hp=Math.max(1,m.hp*0.5);sick++;fxNum(m.f,m.x,m.y,'病','#9be07a');}});say('はやり病が洞窟に広がった。弱点を持つ'+sick+'匹が弱っている。この波のあいだ、弱点持ちは傷を多く受ける。');}
   else if(ev=='clan')say('よその一族が攻めてきた！ 倒した戦士は捕まえて、一族に迎えられることがある。');
   else say('伝承の勇者が洞窟に来た！');}
  if(g.wave%10==5){var ks=Object.keys(EVN);C.ev=ks[rnd(ks.length)];C.evW=g.wave+5;banner('5波後に節目：'+EVN[C.ev],EVD[C.ev]);}
 }
+// ---------- 子は自動で生まれる（v71・年代記） ----------
+function chCap(){return 10+2*((g.chron&&g.chron.miles)||0);}
+function chGobs(){return g.cr.filter(function(m){return m.gob&&SPEC[m.sp]&&SPEC[m.sp].gob;});}
+function chEggN(){return g.eggs.filter(function(e){return e.chw;}).length;}
+function chAdults(){return chGobs().filter(function(m){return !m.kid&&(!m.stage||m.stage=='adult');});}
+function chRoom(){return Math.max(1,chCap()-chGobs().length-chEggN());}
+function chNextEggs(){return Math.min(Math.floor(chAdults().length/2),chRoom());}
+function chBreed(){var room=chRoom(),L=chAdults().sort(function(){return Math.random()-0.5;}),n=0;
+ while(room>0&&L.length>=2){var a=L.shift(),bi=0,bd=1e9;L.forEach(function(o,i){var d=man(a,o)+(o.f!=a.f?100:0);if(d<bd){bd=d;bi=i;}});var b=L.splice(bi,1)[0];
+  var ch=breedChild(a,b);if(!ch)continue;layEgg(gobKey(ch.sz,ch.hd),a.env,a.f,a.x,a.y,BREED_T,{gob:ch,hpk:sumK(),atkk:sumK()});
+  addFx({k:'ring',f:a.f,x:ccx(a.x),y:ccx(a.y),life:700,c:'255,170,210',r0:4,rad:24});room--;n++;}
+ if(n)logEv('卵が'+n+'つ生まれた');return n;}
+function chBrInfo(){return '<div class="empty">年代記では、波のはじめに大人どうしが組になって<b style="color:var(--ink)">自動で卵を産む</b>（魂は要らない）。卵は次の波で子どもに、その次の波で大人になる。<br>一族 <b style="color:var(--ink)">'+chGobs().length+'</b>（卵 '+chEggN()+'） / '+chCap()+'匹 · 次の波で卵 <b style="color:var(--ink)">'+chNextEggs()+'</b>つ<br><small>上限は節目を越えるたびに2匹増える。上限に届いていても、卵は1つだけ生まれる。召喚も上限まで。</small></div>';}
 // 節目の波を守り切ったとき
 function chMile(){var C=g.chron,ev=C.evNow,ew=C.evW||g.wave;C.evNow=null;var gen=chGen();
  if(C.lostW>=ew){chLine('第'+gen+'代、'+EVN[ev]+'に敗れ、巣を荒らされた',ew);banner('節目を越えられなかった','巣を荒らされた。洞窟は広がらない');return;}
@@ -1410,7 +1425,7 @@ function chFounders(){var P=[0,1,2].map(function(){return [gobCand(),gobCand()].
 function chPick(i){var P=g.chP||[],p=P[i],a0=g.alt&&g.alt[0],C=g.chron;if(!p||!a0||!C)return false;g.chP=null;
  p.forEach(function(d){d.gen=1;var m=mkCr(gobKey(d.sz,d.hd),landOf(a0.f),a0.f,a0.x,a0.y,3,{gob:d,hpk:sumK()*1.2,atkk:sumK()*1.2,force:1});if(m){m.home={f:a0.f,x:a0.x,y:a0.y};m.bw=0;m.fd=1;}});
  C.fd='始祖'+p[0].nm+'と'+p[1].nm;C.st=1;chTorch(4);chDeco('straw');chDeco('straw');chLine(C.fd+'、この洞窟に住みつく');hideTitle();
- say(C.fd+'が洞窟に住みついた。2匹を配合して子を残そう（ゴブリンをタップ→配合する、または「コマンド」）。寿命は'+LIFE+'波。10波ごとに節目が来る。');ui();saveGame();return true;}
+ say(C.fd+'が洞窟に住みついた。大人どうしは波のはじめに組になって、自動で卵を産む。寿命は'+LIFE+'波。10波ごとに節目が来る。');ui();saveGame();return true;}
 // コアの体力（v61）: 冒険者がたどり着くと殴る。0で負け。波を守るたびに4分の1戻り、塔が伸びると全快
 var CORE_HP=300,START_SOUL=50;
 function coreMax(){return CORE_HP+40*((g&&g.round||1)-1);}
@@ -1505,7 +1520,7 @@ var bnrT=0;
 function closePop(){var p=document.getElementById('pop');if(p&&!p.hidden){p.hidden=true;p.innerHTML='';}}
 function monBtns(m){var h='';
  if(evoReady(m))h+='<button data-m="evo_k">進化：甲（体力1.7倍・少し遅く）</button><button data-m="evo_g">進化：牙（攻撃1.5倍・少し速く）</button>';
- var bw=breedWhy(m);h+='<button data-m="breed"'+(bw?' disabled':'')+'>'+(bw?'配合する（'+bw+'）':'配合する（魂'+BREED_COST+'・相手をタップ）')+'</button>';
+ var bw=breedWhy(m);if(!g.chron)h+='<button data-m="breed"'+(bw?' disabled':'')+'>'+(bw?'配合する（'+bw+'）':'配合する（魂'+BREED_COST+'・相手をタップ）')+'</button>';
  return h;}
 function openPop(kind,f,x,y,cx,cy,m){
  if(LPH!='2')lpSeen();
@@ -2157,7 +2172,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v70 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v71 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2687,7 +2702,7 @@ var TUT=[['下の「コマンド」→「召喚する」で、はぐれゴブリ
  ['右下の「⛏ 掘る」を押してから、道の隣の土をなぞって通路を広げよう。掘っても何も生まれない。冒険者の道を長く、迷わせる形に',function(){return (g.dug||0)>=3;}],
  ['準備ができたら「今すぐ迎える」。早く呼ぶほど、次に戻る掘る力が増える',function(){return g.wave>=1;}],
  ['冒険者を倒すと魂が手に入る。コアの体力が0になると負け',function(){return (g.kills||0)>=1;}],
- ['「コマンド」の配合で一族を増やす。血が濃いと特性の段が上がり、2つの特性がそろうと上の技になる。説明はこれでおしまい',function(){return performance.now()-(g.tutT||0)>12000;}]];
+ ['大人のゴブリンは波のはじめに組になって、自動で卵を産む（数は「コマンド」で見られる）。血が濃いと特性の段が上がり、2つの特性がそろうと上の技になる。説明はこれでおしまい',function(){return performance.now()-(g.tutT||0)>12000;}]];
 function tutDone(){var v=kvGet('tou-tut');return v=='1'||v=='2';}
 var LPH=null;
 function lpHint(){if(!g||g.title||g.tut!=null||g.chal||g.mode=='vs'||(g.wave||0)<1)return false;if(LPH==null)LPH=kvGet('tou-tut')||'';return LPH!='2';}
@@ -2931,7 +2946,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={chStart:chStart,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={chStart:chStart,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
