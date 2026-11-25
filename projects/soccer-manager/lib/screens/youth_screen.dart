@@ -315,10 +315,7 @@ class _YouthScreenState extends State<YouthScreen> {
                       ),
                       child: Card(
                         child: ListTile(
-                          leading: PlayerFaceAvatar(
-                            playerId: p.id,
-                            position: p.position,
-                          ),
+                          leading: PlayerFaceAvatar.of(p, gameState),
                           title: Row(
                             children: [
                               Flexible(
@@ -510,10 +507,7 @@ class _YouthScreenState extends State<YouthScreen> {
                   ),
                   child: Card(
                     child: ListTile(
-                      leading: PlayerFaceAvatar(
-                        playerId: p.id,
-                        position: p.position,
-                      ),
+                      leading: PlayerFaceAvatar.of(p, gameState),
                       title: Row(
                         children: [
                           Flexible(

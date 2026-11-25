@@ -225,9 +225,9 @@ class _PlayerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        PlayerFaceAvatar(
-          playerId: player.id,
-          position: player.position,
+        PlayerFaceAvatar.of(
+          player,
+          context.read<GameState>(),
           size: 40,
           highlighted: true,
         ),

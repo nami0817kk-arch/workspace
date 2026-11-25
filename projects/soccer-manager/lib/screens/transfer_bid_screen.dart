@@ -148,7 +148,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
       children: [
         Row(
           children: [
-            PlayerFaceAvatar(playerId: p.id, position: p.position, size: 36),
+            PlayerFaceAvatar.of(p, game, size: 36),
             const SizedBox(width: 8),
             Expanded(
               child: Column(

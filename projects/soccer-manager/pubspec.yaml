@@ -112,6 +112,10 @@ flutter:
     - assets/crests/
     # 効果音。出どころは assets/sfx/CREDITS.md。
     - assets/sfx/
+    # 選手の顔(192px の層。体=髪なしの顔、髪=透明な地)。組み合わせ方は
+    # lib/widgets/player_face_avatar.dart。
+    - assets/faces/body/
+    - assets/faces/hair/
 
   # しっぽり明朝は同梱する。google_fonts 経由だと初回起動時に
   # fonts.gstatic.com へ取りに行き、利用者のIPアドレスが Google に渡るため

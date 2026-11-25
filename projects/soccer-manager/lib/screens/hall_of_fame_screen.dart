@@ -75,10 +75,7 @@ class _LegendCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: PlayerFaceAvatar(
-          playerId: player.id,
-          position: player.position,
-        ),
+        leading: PlayerFaceAvatar.of(player, context.read<GameState>()),
         title: Text(player.name),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
