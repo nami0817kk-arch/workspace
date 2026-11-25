@@ -540,7 +540,7 @@ void main() {
     expect(html, contains('var LIFE=5,'));
     expect(html, contains('function mkKid(m){m.kid=1;m.mhp*=0.5;m.hp=m.mhp;m.atkk*=0.5;}'));
     expect(html, contains('if(m.kid&&g.wave-m.bw>=2){growUp(m);grown++;}'));
-    expect(html, contains('if(g.wave-m.bw>LIFE)died.push(m);'));
+    expect(html, contains('if(g.wave-m.bw>LIFE&&!m.chief)died.push(m);'));
     expect(html, contains("if(m.kid)return '子どものうちは配合できない';"));
     expect(html, contains('eg.chw=1;eg.bw=g.wave;eg.hatch=1e12;'));
     // 終わりなし・10波ごとの節目（くじ・5波前に知らせ）
@@ -592,7 +592,7 @@ void main() {
     // 配合は年代記では使わない（ボタンを出さず、コマンドは自動の説明に）
     expect(html, contains("function breedWhy(m){if(g&&g.chron)return '年代記では子は自動で生まれる';"));
     expect(html, contains("if(!g.chron)h+='<button data-m=\"breed\""));
-    expect(html, contains("hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo();"));
+    expect(html, contains("hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo()"));
     expect(html, isNot(contains('2匹を配合して子を残そう')));
   });
 
@@ -611,12 +611,31 @@ void main() {
 
   test('ゴブリンの巣穴: 広間・丸い角・木の根・たき火・産卵場（0.7.54・試作 v73）', () {
     final html = File(gameAsset).readAsStringSync();
-    expect(html, contains('C.st=1;chDen();chHome();'));
+    expect(html, contains('chDen();chHome();'));
     expect(html, contains(' if(g.chron)chCave(f);'));
     expect(html, contains('function chFireDraw('));
     expect(html, contains('function chNestCell(){'));
     expect(html, contains("var DECOS=['straw','bone','scrap','scratch','pot','bone','rack','scratch'];"));
     expect(html, contains('eg.y*CS+CS-(eg.oy||0),20);'));
+  });
+
+  test('族長が看取って受け継ぐ・交渉で警戒を下げる（0.7.55・試作 v74）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 始祖の1匹が族長。寿命で死なない
+    expect(html, contains('C.st=1;chMakeChief(g.cr.filter(function(m){return m.fd;})[0],null);'));
+    expect(html, contains('if(g.wave-m.bw>LIFE&&!m.chief)died.push(m);'));
+    // 寿命で死んだ仲間から1つ受け継ぐ（8つまで・段3まで）
+    expect(html, contains('var CHIEF_TR=8,'));
+    expect(html, contains('chIt=chInherit(died);'));
+    // 倒れたら特性の多い大人が跡を継ぐ（同じ波の跡継ぎは年代記に1行だけ）
+    expect(html, contains('if(m.chief&&g.chron&&g.chron.st&&g.cr.indexOf(m)>=0){g.cr.splice(g.cr.indexOf(m),1);chSucceed(m);g.cr.push(m);}'));
+    expect(html, contains('q=C.sucW==g.wave;C.sucW=g.wave;'));
+    // 交渉: 貢ぎ物（警戒を3割下げる・1波に1回）と、同盟の国を寝返らせる
+    expect(html, contains('g.soul-=c;C.tribW=g.wave;C.alert*=0.7;'));
+    expect(html, contains('if(s1>=4&&s0<4)C.allies=3;'));
+    expect(html, contains("C.alert-=(C.alert-floor)/C.allies;C.allies--;"));
+    expect(html, contains("else if(b=t.closest('[data-chdip]')){chDip(b.getAttribute('data-chdip'));}"));
+    expect(html, contains('if(g.chron)return chBrInfo()+chDipHTML();'));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {

@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v73</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v74</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -772,7 +772,7 @@ function cmbDone(){try{return JSON.parse(kvGet('tou-combo')||'{}')||{};}catch(_)
 function cmbFound(c){var D=cmbDone();if(D[c])return;D[c]=1;try{kvSet('tou-combo',JSON.stringify(D));}catch(_){}
  if(g&&!g.title){banner('上の技「'+CMB[c].n+'」を見つけた！',TR[CMB[c].a].n+'＋'+(CMB[c].b=='@t'?'投げる':TR[CMB[c].b].n)+' · '+CMB[c].d);haptic('medium');logEv('上の技「'+CMB[c].n+'」を見つけた');}}
 function gobLine(d){var G=d.gob||d,trl=d.trl||{},t=(d.tr||[]).map(function(k){var l=trl[k]||1;return TR[k].n+(l>1?l:'');}).join('・'),w=(G.wk||[]).map(function(k){return WK[k].n;}).join('・');
- return SZN[G.sz]+'・'+HDN[G.hd]+(t?' · 特性：'+t:'')+(w?' · 弱点：'+w:'')+(d.gob&&G.gen?' · '+G.gen+'代目':'')+(d.gob&&g&&g.chron?(d.kid?' · 子ども':'')+(lifeLeft(d)<=0?' · 次の波を迎えると寿命':' · 寿命あと'+lifeLeft(d)+'波'):'');}
+ return SZN[G.sz]+'・'+HDN[G.hd]+(t?' · 特性：'+t:'')+(w?' · 弱点：'+w:'')+(d.gob&&G.gen?' · '+G.gen+'代目':'')+(d.gob&&g&&g.chron?(d.kid?' · 子ども':'')+(d.chief?' · 族長（寿命で死なない）':lifeLeft(d)<=0?' · 次の波を迎えると寿命':' · 寿命あと'+lifeLeft(d)+'波'):'');}
 function summonPick(a,i){if(g.noSum){say('このチャレンジでは召喚できない。');return null;}if(!a){say('祭壇がありません。');return null;}
  if((g.soul||0)<SUM_COST){say('魂が足りない（'+SUM_COST+'要る）。');return null;}var d=sumCands()[i];if(!d)return null;
  var m=mkCr(gobKey(d.sz,d.hd),landOf(a.f),a.f,a.x,a.y,3,{gob:d,hpk:sumK(),atkk:sumK()});if(!m){say('塔がいっぱいで、呼べなかった（'+CAP+'匹まで）。');return null;}m.home={f:a.f,x:a.x,y:a.y};
@@ -801,7 +801,7 @@ function cmdBrSel(){var sel=g.cmdBr||(g.cmdBr=[]);for(var i=sel.length-1;i>=0;i-
 function cmdBrToggle(id){var sel=g.cmdBr||(g.cmdBr=[]),i=sel.indexOf(id);if(i>=0)sel.splice(i,1);else{if(sel.length>=2)sel.shift();sel.push(id);}}
 function cmdBrGo(){var ms=cmdBrSel();if(ms.length<2){say('配合する2匹を選んでください。');return;}var w=breedWhy(ms[0]);if(w&&w.indexOf('魂')<0){say(spName(ms[0])+'：'+w+'。');return;}
  var n0=g.eggs.length;breedDo(ms[0],ms[1]);if(g.eggs.length>n0)g.cmdBr=[];}
-function cmdBrHTML(){var hh=document.getElementById('cmdbrh');if(hh)hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo();var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
+function cmdBrHTML(){var hh=document.getElementById('cmdbrh');if(hh)hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo()+chDipHTML();var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">配合できるゴブリン（育ちきった子）が2匹以上いない。</div>';
  var pv=ms.length==2?bloodPreview(ms[0],ms[1]):'';
  return '<div class="empty">2匹を選んで「配合する」。魂'+BREED_COST+'・'+BREED_T+'秒で卵がかえる。親は'+BREED_CD+'秒休む。<b style="color:var(--ink)">血の濃さ</b>で受け継ぎ方が変わる：濃い＝同じ特性の段が上がるが弱点も残る、薄い＝弱点が消えやすく新しい特性がつく。魂 <b style="color:var(--ink)">'+(g.soul||0)+'</b></div>'+
   (pv?'<div class="empty">'+pv+'</div>':'')+
@@ -959,6 +959,7 @@ function recordDeath(m,why){return;
  }
 }
 function killCr(m,why,killer){
+ if(m.chief&&g.chron&&g.chron.st&&g.cr.indexOf(m)>=0){g.cr.splice(g.cr.indexOf(m),1);chSucceed(m);g.cr.push(m);}
  if(m.sp=='phoenix'&&m.revive&&g.cr.indexOf(m)>=0){m.revive=0;m.hp=m.mhp;fxPuff(m.f,m.x,m.y,1.5);addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:700,c:'255,150,60',r0:4,rad:34});say('フェニックスが炎の中からよみがえった！');return;}
  var i=g.cr.indexOf(m);if(i<0)return;g.cr.splice(i,1);
  if(m.sp=='purupuru'&&why=='enemy'&&(m.gen||0)<2){for(var pi=0;pi<2;pi++){var pc=mkCr('purupuru','mag',m.f,m.x,m.y,1);if(pc){pc.gen=(m.gen||0)+1;pc.mhp=Math.max(2,m.mhp*0.6);pc.hp=pc.mhp;}}fxNum(m.f,m.x,m.y,'分裂','#d0a0ff');}
@@ -1356,12 +1357,13 @@ function chWave(ev){var C=g.chron,died=[],grown=0;if(C.st&&(!C.fire||!C.nest))ch
  g.eggs.forEach(function(eg){if(eg.chw)eg.hatch=g.t;});
  g.cr.slice().forEach(function(m){if(!m.gob)return;if(m.bw==null)m.bw=g.wave-1;
   if(m.kid&&g.wave-m.bw>=2){growUp(m);grown++;}
-  if(g.wave-m.bw>LIFE)died.push(m);});
+  if(g.wave-m.bw>LIFE&&!m.chief)died.push(m);});
+ if(C.st&&!chChief())chSucceed(null);chIt=chInherit(died);
  var dn=died.slice(0,3).map(spName);died.forEach(function(m){killCr(m,'old');});
  var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';
  var K=g.core,mx=coreMax();if(K.mhp<mx){K.hp+=mx-K.mhp;K.mhp=mx;}
- if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':'')+et);
- else if(grown||ne)say((grown?grown+'匹が大人になった。':'')+et);
+ if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':'')+et+chIt);
+ else if(grown||ne||chIt)say((grown?grown+'匹が大人になった。':'')+et+chIt);
  if(ev){C.evNow=ev;C.cap=0;banner('節目：'+EVN[ev],EVD[ev]);haptic('medium');
   if(ev=='plague'){var sick=0;g.cr.forEach(function(m){if(m.gob&&m.gob.wk&&m.gob.wk.length){m.hp=Math.max(1,m.hp*0.5);sick++;fxNum(m.f,m.x,m.y,'病','#9be07a');}});say('はやり病が洞窟に広がった。弱点を持つ'+sick+'匹が弱っている。この波のあいだ、弱点持ちは傷を多く受ける。');}
   else if(ev=='clan')say('よその一族が攻めてきた！ 倒した戦士は捕まえて、一族に迎えられることがある。');
@@ -1374,8 +1376,40 @@ var ALT=[0,20,60,150,300,600],ALN=['静か','村のうわさ','領主の見張�
  ALX=[0,1,3,6,10,15];
 function chAlertSt(){var a=(g.chron&&g.chron.alert)||0,i=0;while(i+1<ALT.length&&a>=ALT[i+1])i++;return i;}
 function chAlertUp(){var C=g.chron,s0=chAlertSt();C.alert=((C.alert||0)*0.97)+chGobs().length*0.1;var s1=chAlertSt();
- if(s1>s0&&s1>(C.alMax||0)){C.alMax=s1;chLine('第'+chGen()+'代、'+ALN[s1]+'。'+ALD[s1].replace(/。$/,''));banner('周りの国の警戒：'+ALN[s1],ALD[s1]);haptic('medium');}}
+ if(s1>=4&&s0<4)C.allies=3;if(s1>s0&&s1>(C.alMax||0)){C.alMax=s1;chLine('第'+chGen()+'代、'+ALN[s1]+'。'+ALD[s1].replace(/。$/,''));banner('周りの国の警戒：'+ALN[s1],ALD[s1]);haptic('medium');}}
 function chAlertAdd(){return ALX[chAlertSt()]+Math.floor(chGobs().length/8);}
+// ---------- 族長（v74・年代記） ----------
+var CHIEF_TR=8,chIt='';
+function chChief(){return g.cr.filter(function(m){return m.chief;})[0]||null;}
+function chMakeChief(m,from){if(!m)return;m.chief=1;m.mhp*=1.5;m.hp=Math.min(m.mhp,m.hp*1.5);m.tr=m.tr||[];m.trl=m.trl||{};
+ if(from&&from.tr){var ks=from.tr.slice().sort(function(a,b){return trLv(from,b)-trLv(from,a);}).slice(0,Math.ceil(from.tr.length/2));
+  ks.forEach(function(k){if(m.tr.indexOf(k)<0){if(m.tr.length<CHIEF_TR){m.tr.push(k);m.trl[k]=trLv(from,k);}}else m.trl[k]=Math.max(trLv(m,k),trLv(from,k));});}
+ addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:900,c:'255,215,90',r0:4,rad:34});}
+// 寿命で死んだ仲間から1つ受け継ぐ（いちばん得になるものを選ぶ）
+function chInherit(dead){var c=chChief();if(!c||!dead.length)return '';var best=null,bv=0;
+ dead.forEach(function(d){(d.tr||[]).forEach(function(k){var have=trLv(c,k),dl=trLv(d,k),v=have?(have<3&&dl>=have?1:0):(c.tr.length<CHIEF_TR?2+dl:0);if(v>bv){bv=v;best={d:d,k:k,up:!!have};}});});
+ if(!best)return '';var k=best.k;c.trl=c.trl||{};if(best.up)c.trl[k]=Math.min(3,trLv(c,k)+1);else{c.tr.push(k);c.trl[k]=trLv(best.d,k);}
+ fxNum(c.f,c.x,c.y,'継承','#ffd45a');var t='族長'+spName(c)+'が'+spName(best.d)+'を看取り、「'+TR[k].n+'」を'+(best.up?'深めた':'受け継いだ');
+ if(!best.up)chLine('第'+chGen()+'代、'+t);logEv(t);return t+'。';}
+// 族長が倒れたら跡を継ぐ
+function chSucceed(old){var gs=chGobs().filter(function(m){return !m.kid;});if(!gs.length)gs=chGobs();if(!gs.length)return;
+ gs.sort(function(a,b){return (b.tr||[]).length-(a.tr||[]).length||Math.random()-0.5;});var n=gs[0];chMakeChief(n,old);
+ var t=old?'族長'+spName(old)+'が倒れ、'+spName(n)+'が跡を継いだ':spName(n)+'が族長になった',C=g.chron,q=C.sucW==g.wave;C.sucW=g.wave;if(!q){chLine('第'+chGen()+'代、'+t);if(old){banner('族長が倒れた',t);haptic('medium');}}say(t+'。');}
+// ---------- 周りの国との交渉（v74） ----------
+function chTribCost(){return 10+Math.floor(((g.chron&&g.chron.alert)||0)*0.5);}
+function chEnvoyCost(){return 30+Math.floor(((g.chron&&g.chron.alert)||0)*0.4);}
+function chDip(k){var C=g.chron,st=chAlertSt();if(!C)return;
+ if(k=='trib'){if(st<1){say('まだ誰も気にしていない。');return;}if(C.tribW==g.wave){say('貢ぎ物はこの波ではもう送った。');return;}var c=chTribCost();if((g.soul||0)<c){say('魂が足りない（'+c+'要る）。');return;}
+  g.soul-=c;C.tribW=g.wave;C.alert*=0.7;var t='周りの村に貢ぎ物を送った（魂-'+c+'）。警戒がやわらいだ：'+ALN[chAlertSt()];say(t);logEv(t);sfx('train');}
+ else if(k=='envoy'){if(st<4||!C.allies){say('手を組んでいる国はない。');return;}if(C.envW==g.wave){say('使者はこの波ではもう送った。');return;}var c2=chEnvoyCost();if((g.soul||0)<c2){say('魂が足りない（'+c2+'要る）。');return;}
+  g.soul-=c2;C.envW=g.wave;var floor=ALT[4]-1;C.alert-=(C.alert-floor)/C.allies;C.allies--;if(!C.allies)C.alert=Math.min(C.alert,floor);
+  var t2=C.allies?'使者を送り、1つの国を同盟から離した（残り'+C.allies+'国）':'使者を送り、最後の国を同盟から離した。同盟は崩れた';chLine('第'+chGen()+'代、'+t2);say(t2+'。');banner('交渉',t2);sfx('grow');}
+ ui();}
+function chDipHTML(){var C=g.chron,st=chAlertSt(),h='<div class="empty" style="margin-top:8px"><b style="color:var(--ink)">周りの国</b>　警戒：<b style="color:var(--ink)">'+ALN[st]+'</b>（'+Math.round(C.alert||0)+'）'+(st>=4&&C.allies?' · 同盟 '+C.allies+'国':'')+'<br><small>'+ALD[st]+' 一族が増えるほど警戒が強まり、攻めてくる人数と強さが増す。</small></div>';
+ var tc=chTribCost(),tw=st<1?'まだ要らない':C.tribW==g.wave?'この波は送った':(g.soul||0)<tc?'魂が足りない':'';
+ h+='<button class="btn" data-chdip="trib"'+(tw?' disabled':'')+'>貢ぎ物を送る（魂'+tc+'・警戒を3割下げる）'+(tw?'　'+tw:'')+'</button>';
+ if(st>=4&&C.allies){var ec=chEnvoyCost(),ew=C.envW==g.wave?'この波は送った':(g.soul||0)<ec?'魂が足りない':'';h+='<button class="btn" data-chdip="envoy"'+(ew?' disabled':'')+'>使者を送って1国を寝返らせる（魂'+ec+'）'+(ew?'　'+ew:'')+'</button>';}
+ return h;}
 // ---------- 子は自動で生まれる（v71・年代記） ----------
 function chCap(){return 1e9;}
 var CH_CAP=500;
@@ -1389,7 +1423,7 @@ function chBreed(){var room=chRoom(),L=chAdults().sort(function(){return Math.ra
   var ch=breedChild(a,b);if(!ch)continue;var nc=chNestCell()||{x:a.x,y:a.y},nf=chNestCell()?0:a.f;layEgg(gobKey(ch.sz,ch.hd),a.env,nf,nc.x,nc.y,BREED_T,{gob:ch,hpk:sumK(),atkk:sumK()});var le=g.eggs[g.eggs.length-1];le.ox=rnd(11)-5;le.oy=rnd(5);
   addFx({k:'ring',f:a.f,x:ccx(a.x),y:ccx(a.y),life:700,c:'255,170,210',r0:4,rad:24});room--;n++;}
  if(n)logEv('卵が'+n+'つ生まれた');return n;}
-function chBrInfo(){return '<div class="empty">年代記では、波のはじめに大人どうしが組になって<b style="color:var(--ink)">自動で卵を産む</b>（魂は要らない）。卵は次の波で子どもに、その次の波で大人になる。<br>一族 <b style="color:var(--ink)">'+chGobs().length+'</b>匹（卵 '+chEggN()+'） · 次の波で卵 <b style="color:var(--ink)">'+chNextEggs()+'</b>つ<br>周りの国の警戒：<b style="color:var(--ink)">'+ALN[chAlertSt()]+'</b>（'+Math.round(g.chron.alert||0)+'）<br><small>'+ALD[chAlertSt()]+' 一族が増えるほど、周りの国の警戒が強まり、攻めてくる人数と強さが増す。</small></div>';}
+function chBrInfo(){return '<div class="empty">年代記では、波のはじめに大人どうしが組になって<b style="color:var(--ink)">自動で卵を産む</b>（魂は要らない）。卵は次の波で子どもに、その次の波で大人になる。<br>一族 <b style="color:var(--ink)">'+chGobs().length+'</b>匹（卵 '+chEggN()+'） · 次の波で卵 <b style="color:var(--ink)">'+chNextEggs()+'</b>つ</div>';}
 // 節目の波を守り切ったとき
 function chMile(){var C=g.chron,ev=C.evNow,ew=C.evW||g.wave;C.evNow=null;var gen=chGen();
  if(C.lostW>=ew){chLine('第'+gen+'代、'+EVN[ev]+'に敗れ、巣を荒らされた',ew);banner('節目を越えられなかった','巣を荒らされた。洞窟は広がらない');return;}
@@ -1432,7 +1466,7 @@ function chFounders(){var P=[0,1,2].map(function(){return [gobCand(),gobCand()].
  el.hidden=false;el.querySelectorAll('[data-fd]').forEach(function(b){b.onclick=function(){chPick(+b.getAttribute('data-fd'));};});}
 function chPick(i){var P=g.chP||[],p=P[i],a0=g.alt&&g.alt[0],C=g.chron;if(!p||!a0||!C)return false;g.chP=null;
  p.forEach(function(d){d.gen=1;var m=mkCr(gobKey(d.sz,d.hd),landOf(a0.f),a0.f,a0.x,a0.y,3,{gob:d,hpk:sumK()*1.2,atkk:sumK()*1.2,force:1});if(m){m.home={f:a0.f,x:a0.x,y:a0.y};m.bw=0;m.fd=1;}});
- C.fd='始祖'+p[0].nm+'と'+p[1].nm;C.st=1;chDen();chHome();chTorch(4);chDeco('straw');chDeco('straw');chDeco('bone');chLine(C.fd+'、この洞窟に住みつく');hideTitle();
+ C.fd='始祖'+p[0].nm+'と'+p[1].nm;C.st=1;chMakeChief(g.cr.filter(function(m){return m.fd;})[0],null);chDen();chHome();chTorch(4);chDeco('straw');chDeco('straw');chDeco('bone');chLine(C.fd+'、この洞窟に住みつく');hideTitle();
  say(C.fd+'が洞窟に住みついた。大人どうしは波のはじめに組になって、自動で卵を産む。寿命は'+LIFE+'波。10波ごとに節目が来る。');ui();saveGame();return true;}
 // コアの体力（v61）: 冒険者がたどり着くと殴る。0で負け。波を守るたびに4分の1戻り、塔が伸びると全快
 var CORE_HP=300,START_SOUL=50;
@@ -2128,7 +2162,7 @@ function draw(){
   var ox=((id*37)%9-4)*1.2,oy=((id*53)%5-2);
   if(o.hero||o.yu||o.boss){ox=0;oy=0;}
   var px=o.rx*CS+CS/2+ox,by=o.ry*CS+CS+1+oy;
-  var size=isE?(o.yu||o.boss?38:31):([0,28,33,38,44][o.t]+(o.mut=='kyodai'?6:0)+(o.hero?4:0)+(o.stage=='adult'?3:0)-(o.kid?9:0)+(o.gob?5:0));
+  var size=isE?(o.yu||o.boss?38:31):([0,28,33,38,44][o.t]+(o.mut=='kyodai'?6:0)+(o.hero?4:0)+(o.stage=='adult'?3:0)-(o.kid?9:0)+(o.gob?5:0)+(o.chief?7:0));
   var fl=flashOf([o],now),lp=(now-(o.lg||0))/230,hop=0,sx=1,sy=1;
   if(lp>=0&&lp<1){hop=-6*Math.sin(Math.PI*lp);sx=1+0.08*Math.sin(Math.PI*lp);sy=sx;}
   if(o.mv)hop-=Math.abs(Math.sin(now/85+id))*2.5;
@@ -2145,6 +2179,7 @@ function draw(){
   var top=by+hop-h;
   if(!isE&&g.breed&&g.breed.id===o.id){ctx.strokeStyle='rgba(255,170,210,.95)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,by-h/2,Math.max(w,h)*0.62,0,Math.PI*2);ctx.stroke();}
   if(!isE&&(evoReady(o)||(evo2Ready(o)&&(g.soul||0)>=EVO2_SOUL)))label(o.evo?'⇑':'↑',px+w/2-1,top+3+Math.sin(now/200)*1.5,'#ffe080');
+  if(!isE&&o.chief){var cy2=Math.round(top-1),cx2=Math.round(px);ctx.fillStyle='#ffd45a';ctx.fillRect(cx2-5,cy2-2,11,3);ctx.fillRect(cx2-5,cy2-5,2,3);ctx.fillRect(cx2-1,cy2-6,3,4);ctx.fillRect(cx2+4,cy2-5,2,3);ctx.fillStyle='#e04b4b';ctx.fillRect(cx2,cy2-1,1,1);label('族長',px,Math.max(8,top-13),'#ffe08a');}
   if(!isE&&o.cg){ctx.fillStyle=o.sp=='wisp'?'#d0a8ff':'#ffd45a';for(var q=0;q<o.cg;q++)ctx.fillRect(Math.round(px-4+q*3),Math.round(top-3),2,2);}
   if(isE){
    if(o.curse>g.t){ctx.fillStyle='#c080ff';ctx.fillRect(Math.round(px+w/2-4),Math.round(top+2),3,3);}
@@ -2217,7 +2252,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v73 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v74 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2267,6 +2302,7 @@ document.getElementById('spane-cmd').addEventListener('click',function(ev){var t
  else if(b=t.closest('[data-creroll]')){summonReroll();}
  else if(b=t.closest('[data-cbr]')){cmdBrToggle(+b.getAttribute('data-cbr'));}
  else if(b=t.closest('[data-cbrgo]')){cmdBrGo();}
+ else if(b=t.closest('[data-chdip]')){chDip(b.getAttribute('data-chdip'));}
  else if(b=t.closest('[data-cbf]')){g.cmdBf=+b.getAttribute('data-cbf');}
  else if(b=t.closest('[data-cbone]')){cmdBoneGo(b.getAttribute('data-cbone'));}
  else if(b=t.closest('[data-cegg]')){var e=g.eggs[+b.getAttribute('data-cegg')];if(e)boneAct('hatch',e.f,e.x,e.y);}
@@ -2991,7 +3027,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={chStart:chStart,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={chStart:chStart,chDip:chDip,chChief:chChief,chDipHTML:chDipHTML,chBreed:chBreed,chCap:chCap,chNextEggs:chNextEggs,chBrInfo:chBrInfo,chSumWhy:sumWhy,chBreedWhy:breedWhy,chPick:chPick,chron:function(){return g.chron;},pop:openPop,pick:summonPick,cands:sumCands,reroll:summonReroll,bloodOf:bloodOf,cmbList:cmbList,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
