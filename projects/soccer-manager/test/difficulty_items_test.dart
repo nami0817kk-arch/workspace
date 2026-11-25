@@ -37,8 +37,10 @@ void main() {
         .first;
     final base = gs.askingPriceFor(p);
     gs.save!.difficultyItems['transferPrices'] = 'hard';
-    expect(gs.askingPriceFor(p), (base * 1.1).round());
+    // 言い値は丸める前の値に倍率を掛けてから丸めるので、丸めた base に
+    // 掛けた値とは1ずれることがある(CI で 1540 と 1539 が出た)。
+    expect(gs.askingPriceFor(p), closeTo(base * 1.1, 1));
     gs.save!.difficultyItems['transferPrices'] = 'easy';
-    expect(gs.askingPriceFor(p), (base * 0.9).round());
+    expect(gs.askingPriceFor(p), closeTo(base * 0.9, 1));
   });
 }
