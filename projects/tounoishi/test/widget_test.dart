@@ -566,7 +566,7 @@ void main() {
     expect(html, contains("lx.fillStyle=g.chron?'rgba(5,3,8,0.42)':'rgba(6,4,14,0.14)';"));
     expect(html, contains("chTorch(4);chDeco('straw');chDeco('straw');"));
     expect(html, contains("if(g.chron)chDeco('helm');"));
-    expect(html, contains("var DECOS=['straw','pot','rack'];"));
+    // v73 で骨・食べ残し・ひっかき傷を足した（新しい並びは v73 のテスト）
     // 年代記では前の養分を土に戻さない（黄色・紫の玉が出ていた）
     expect(html, contains('if(n<=0||(g&&g.chron))return;'));
   });
@@ -585,16 +585,38 @@ void main() {
     // 波のはじめ（寿命・成長のあと）に大人どうしが組になって卵を産む。魂は使わない
     expect(html, contains("var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';"));
     expect(html, contains('function chBreed(){var room=chRoom(),'));
-    // 一族の上限: 10匹＋節目ごとに2匹。卵も数える。上限でも1つは産む（寿命で絶えないように）
-    expect(html, contains('function chCap(){return 10+2*((g.chron&&g.chron.miles)||0);}'));
-    expect(html, contains('function chRoom(){return Math.max(1,chCap()-chGobs().length-chEggN());}'));
-    // 年代記の召喚も一族の上限まで
-    expect(html, contains("if(g.chron&&chGobs().length+chEggN()>=chCap())return '一族がいっぱい"));
+    // v72 で一族の上限は外した（重さのための安全弁 500 だけ）
+    expect(html, contains('function chCap(){return 1e9;}'));
+    expect(html, contains('function chRoom(){return Math.max(0,CH_CAP-g.cr.length-chEggN());}'));
+    expect(html, isNot(contains("return '一族がいっぱい")));
     // 配合は年代記では使わない（ボタンを出さず、コマンドは自動の説明に）
     expect(html, contains("function breedWhy(m){if(g&&g.chron)return '年代記では子は自動で生まれる';"));
     expect(html, contains("if(!g.chron)h+='<button data-m=\"breed\""));
     expect(html, contains("hh.textContent=g.chron?'子づくり（自動）':'配合する';if(g.chron)return chBrInfo();"));
     expect(html, isNot(contains('2匹を配合して子を残そう')));
+  });
+
+  test('周りの国の警戒: 一族が増えるほど攻めてくる人数と強さが増す（0.7.54・試作 v72）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains("ALN=['静か','村のうわさ','領主の見張り','王国の討伐令','諸国の同盟','大討伐']"));
+    expect(html, contains('C.alert=((C.alert||0)*0.97)+chGobs().length*0.1;'));
+    expect(html, contains('g.round=1+Math.floor(g.wave/6)+Math.floor((g.chron.alert||0)/80);'));
+    expect(html, contains('if(chOn()){var ax=Math.min(80,chAlertAdd());'));
+    expect(html, contains("*(1+al/300),atk:"));
+    // 波が片付く前に次の波が来ても、節目はそこで判定する
+    expect(html, contains('if(g.chron.evNow&&g.chron.evW<=g.wave)chMile();'));
+    expect(html, contains("<small>周りの国の警戒：'+ALN[chAlertSt()]+'</small>'"));
+    expect(html, contains('var gap=w.length>12?Math.max(1,48/w.length):4;'));
+  });
+
+  test('ゴブリンの巣穴: 広間・丸い角・木の根・たき火・産卵場（0.7.54・試作 v73）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('C.st=1;chDen();chHome();'));
+    expect(html, contains(' if(g.chron)chCave(f);'));
+    expect(html, contains('function chFireDraw('));
+    expect(html, contains('function chNestCell(){'));
+    expect(html, contains("var DECOS=['straw','bone','scrap','scratch','pot','bone','rack','scratch'];"));
+    expect(html, contains('eg.y*CS+CS-(eg.oy||0),20);'));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
