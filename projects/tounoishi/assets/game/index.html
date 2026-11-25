@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v71</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v73</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -502,12 +502,12 @@ function carve(f,P){
  }
 }
 function szH(){return 1+SZH*(N-20)/8;}function szA(){return 1+SZA*(N-20)/8;}
-function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'];return {hp:(1+0.4*r)*D.hp*szH(),atk:(1+0.25*r)*(0.85+0.15*D.hp)*szA()};}
+function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'],al=(g.chron&&g.chron.alert)||0;return {hp:(1+0.4*r)*D.hp*szH()*(1+al/300),atk:(1+0.25*r)*(0.85+0.15*D.hp)*szA()*(1+al/600)};}
 function resetGo(){var go=document.getElementById('go');go.textContent='今すぐ迎える';go.onclick=launch;go.disabled=false;}
 function newGame(diff){
  NH=[];EVL=[];HL=null;if(typeof closePop=='function')closePop();
  interNext=null;clearTimeout(interT);growPass=false;
- setN(NEWN);F=CHNEW?1:3;CAP=capOf();fx=[];
+ setN(NEWN);F=CHNEW?1:3;CAP=CHNEW?CH_CAP:capOf();fx=[];
  var grid=[],f;
  for(f=0;f<F;f++)grid.push(genFloor(f));
  g={t:0,wave:0,cd:120,spawnQ:[],pool:60,grid:grid,cr:[],en:[],seedT:[0,0,0],round:1,
@@ -790,10 +790,9 @@ function cmdSumHTML(){var A=g.alt||[],ai=cmdAlI();if(!A.length)return '<div clas
   (A.length>1?'<div class="cfl">'+A.map(function(a,i){return '<button data-cal="'+i+'"'+(i==ai?' class="on"':'')+'>'+(a.f+1)+'階の祭壇</button>';}).join('')+'</div>':'')+
   '<div class="exl">'+C.map(function(d,i){return '<button data-cpick="'+i+'"'+(why?' disabled':'')+'>'+dimg(gobKey(d.sz,d.hd))+'<span><b>'+esc(d.nm)+'</b><br><small>'+esc(gobLine(d))+'</small></span></button>';}).join('')+'</div>'+
   '<button class="btn" data-creroll="1"'+((g.soul||0)<SUM_REROLL?' disabled':'')+'>候補を呼び直す（魂'+SUM_REROLL+'）</button>'+
-  (why?'<div class="empty cwhy">'+why+'</div>':'')+'<div class="empty">'+(g.chron?'一族 '+chGobs().length+'（卵 '+chEggN()+'） / '+chCap()+'匹':'ゴブリン '+g.cr.length+' / '+CAP+'匹')+'</div>';}
+  (why?'<div class="empty cwhy">'+why+'</div>':'')+'<div class="empty">'+(g.chron?'一族 '+chGobs().length+'匹（卵 '+chEggN()+'） · 周りの国の警戒：'+ALN[chAlertSt()]:'ゴブリン '+g.cr.length+' / '+CAP+'匹')+'</div>';}
 // 召喚できない理由（できるなら空）
 function sumWhy(){if(g.noSum)return 'このチャレンジでは召喚できない。';
- if(g.chron&&chGobs().length+chEggN()>=chCap())return '一族がいっぱい（'+(chGobs().length+chEggN())+' / '+chCap()+'匹・卵も数える）。節目を越えると2匹ずつ増える。';
  if(g.cr.length>=CAP)return '塔がいっぱい（'+g.cr.length+' / '+CAP+'匹）。弱い子を2回タップしてつつき、間引くと呼べる。塔が伸びると上限も増える。';
  if((g.soul||0)<SUM_COST)return '魂が足りない（あと'+(SUM_COST-(g.soul||0))+'）。魂は冒険者を倒すと2つ（面の勇者たち3・宿敵の勇者10）入る。「今すぐ迎える」で冒険者を呼ぼう。';
  return '';}
@@ -1349,11 +1348,11 @@ function lifeLeft(m){return m.bw==null?LIFE:m.bw+LIFE-g.wave;}
 function mkKid(m){m.kid=1;m.mhp*=0.5;m.hp=m.mhp;m.atkk*=0.5;}
 function growUp(m){m.kid=0;m.mhp*=2;m.hp=Math.min(m.mhp,m.hp*2);m.atkk*=2;addFx({k:'num',f:m.f,x:ccx(m.x),y:ccx(m.y)-16,s:'大人に',c:'#ffd45a',life:1200});}
 function chLine(t,w){var C=g.chron;C.lines.push({w:w==null?g.wave:w,t:t});if(C.lines.length>60)C.lines.splice(1,1);}
-function chGen(){var C=g.chron,mx=C.gen||1,old=mx;g.cr.forEach(function(m){if(m.gob&&(m.gob.gen||1)>mx)mx=m.gob.gen;});C.gen=mx;if(mx>old&&C.st&&typeof chDeco=='function')chDeco(DECOS[mx%DECOS.length]);return mx;}
+function chGen(){var C=g.chron,mx=C.gen||1,old=mx;g.cr.forEach(function(m){if(m.gob&&(m.gob.gen||1)>mx)mx=m.gob.gen;});C.gen=mx;if(mx>old&&C.st&&typeof chDeco=='function'){chDeco(DECOS[mx%DECOS.length]);chDeco(DECOS[(mx*3+1)%DECOS.length]);}return mx;}
 function chEvText(){var C=g.chron;if(!C)return '';if(C.ev&&C.evW>=g.wave)return (C.evW==g.wave?'節目の波：':'次の節目：')+EVN[C.ev]+(C.evW>g.wave?'（あと'+(C.evW-g.wave)+'波）':'');return '次の節目：'+(Math.floor(g.wave/10)+1)*10+'波目';}
 function chTopTr(){var c={},best=null,bn=1;g.cr.forEach(function(m){(m.tr||[]).forEach(function(k){c[k]=(c[k]||0)+1;});});Object.keys(c).forEach(function(k){if(c[k]>bn){bn=c[k];best=k;}});return best;}
 // 波が始まるとき: 卵がかえる・子が大人になる・寿命・節目の始まりと予告
-function chWave(ev){var C=g.chron,died=[],grown=0;
+function chWave(ev){var C=g.chron,died=[],grown=0;if(C.st&&(!C.fire||!C.nest))chHome();
  g.eggs.forEach(function(eg){if(eg.chw)eg.hatch=g.t;});
  g.cr.slice().forEach(function(m){if(!m.gob)return;if(m.bw==null)m.bw=g.wave-1;
   if(m.kid&&g.wave-m.bw>=2){growUp(m);grown++;}
@@ -1369,19 +1368,28 @@ function chWave(ev){var C=g.chron,died=[],grown=0;
   else say('伝承の勇者が洞窟に来た！');}
  if(g.wave%10==5){var ks=Object.keys(EVN);C.ev=ks[rnd(ks.length)];C.evW=g.wave+5;banner('5波後に節目：'+EVN[C.ev],EVD[C.ev]);}
 }
+// ---------- 周りの国の警戒（v72・年代記） ----------
+var ALT=[0,20,60,150,300,600],ALN=['静か','村のうわさ','領主の見張り','王国の討伐令','諸国の同盟','大討伐'],
+ ALD=['まだ誰も気にしていない。','近くの村で、ゴブリンが増えているとうわさになった。','領主が見張りを置き、兵を混ぜて送ってくる。','王国が討伐を命じた。人数も強さも上がる。','周りの国々が手を組んだ。','国をあげての大討伐が来る。'],
+ ALX=[0,1,3,6,10,15];
+function chAlertSt(){var a=(g.chron&&g.chron.alert)||0,i=0;while(i+1<ALT.length&&a>=ALT[i+1])i++;return i;}
+function chAlertUp(){var C=g.chron,s0=chAlertSt();C.alert=((C.alert||0)*0.97)+chGobs().length*0.1;var s1=chAlertSt();
+ if(s1>s0&&s1>(C.alMax||0)){C.alMax=s1;chLine('第'+chGen()+'代、'+ALN[s1]+'。'+ALD[s1].replace(/。$/,''));banner('周りの国の警戒：'+ALN[s1],ALD[s1]);haptic('medium');}}
+function chAlertAdd(){return ALX[chAlertSt()]+Math.floor(chGobs().length/8);}
 // ---------- 子は自動で生まれる（v71・年代記） ----------
-function chCap(){return 10+2*((g.chron&&g.chron.miles)||0);}
+function chCap(){return 1e9;}
+var CH_CAP=500;
 function chGobs(){return g.cr.filter(function(m){return m.gob&&SPEC[m.sp]&&SPEC[m.sp].gob;});}
 function chEggN(){return g.eggs.filter(function(e){return e.chw;}).length;}
 function chAdults(){return chGobs().filter(function(m){return !m.kid&&(!m.stage||m.stage=='adult');});}
-function chRoom(){return Math.max(1,chCap()-chGobs().length-chEggN());}
+function chRoom(){return Math.max(0,CH_CAP-g.cr.length-chEggN());}
 function chNextEggs(){return Math.min(Math.floor(chAdults().length/2),chRoom());}
 function chBreed(){var room=chRoom(),L=chAdults().sort(function(){return Math.random()-0.5;}),n=0;
  while(room>0&&L.length>=2){var a=L.shift(),bi=0,bd=1e9;L.forEach(function(o,i){var d=man(a,o)+(o.f!=a.f?100:0);if(d<bd){bd=d;bi=i;}});var b=L.splice(bi,1)[0];
-  var ch=breedChild(a,b);if(!ch)continue;layEgg(gobKey(ch.sz,ch.hd),a.env,a.f,a.x,a.y,BREED_T,{gob:ch,hpk:sumK(),atkk:sumK()});
+  var ch=breedChild(a,b);if(!ch)continue;var nc=chNestCell()||{x:a.x,y:a.y},nf=chNestCell()?0:a.f;layEgg(gobKey(ch.sz,ch.hd),a.env,nf,nc.x,nc.y,BREED_T,{gob:ch,hpk:sumK(),atkk:sumK()});var le=g.eggs[g.eggs.length-1];le.ox=rnd(11)-5;le.oy=rnd(5);
   addFx({k:'ring',f:a.f,x:ccx(a.x),y:ccx(a.y),life:700,c:'255,170,210',r0:4,rad:24});room--;n++;}
  if(n)logEv('卵が'+n+'つ生まれた');return n;}
-function chBrInfo(){return '<div class="empty">年代記では、波のはじめに大人どうしが組になって<b style="color:var(--ink)">自動で卵を産む</b>（魂は要らない）。卵は次の波で子どもに、その次の波で大人になる。<br>一族 <b style="color:var(--ink)">'+chGobs().length+'</b>（卵 '+chEggN()+'） / '+chCap()+'匹 · 次の波で卵 <b style="color:var(--ink)">'+chNextEggs()+'</b>つ<br><small>上限は節目を越えるたびに2匹増える。上限に届いていても、卵は1つだけ生まれる。召喚も上限まで。</small></div>';}
+function chBrInfo(){return '<div class="empty">年代記では、波のはじめに大人どうしが組になって<b style="color:var(--ink)">自動で卵を産む</b>（魂は要らない）。卵は次の波で子どもに、その次の波で大人になる。<br>一族 <b style="color:var(--ink)">'+chGobs().length+'</b>匹（卵 '+chEggN()+'） · 次の波で卵 <b style="color:var(--ink)">'+chNextEggs()+'</b>つ<br>周りの国の警戒：<b style="color:var(--ink)">'+ALN[chAlertSt()]+'</b>（'+Math.round(g.chron.alert||0)+'）<br><small>'+ALD[chAlertSt()]+' 一族が増えるほど、周りの国の警戒が強まり、攻めてくる人数と強さが増す。</small></div>';}
 // 節目の波を守り切ったとき
 function chMile(){var C=g.chron,ev=C.evNow,ew=C.evW||g.wave;C.evNow=null;var gen=chGen();
  if(C.lostW>=ew){chLine('第'+gen+'代、'+EVN[ev]+'に敗れ、巣を荒らされた',ew);banner('節目を越えられなかった','巣を荒らされた。洞窟は広がらない');return;}
@@ -1424,7 +1432,7 @@ function chFounders(){var P=[0,1,2].map(function(){return [gobCand(),gobCand()].
  el.hidden=false;el.querySelectorAll('[data-fd]').forEach(function(b){b.onclick=function(){chPick(+b.getAttribute('data-fd'));};});}
 function chPick(i){var P=g.chP||[],p=P[i],a0=g.alt&&g.alt[0],C=g.chron;if(!p||!a0||!C)return false;g.chP=null;
  p.forEach(function(d){d.gen=1;var m=mkCr(gobKey(d.sz,d.hd),landOf(a0.f),a0.f,a0.x,a0.y,3,{gob:d,hpk:sumK()*1.2,atkk:sumK()*1.2,force:1});if(m){m.home={f:a0.f,x:a0.x,y:a0.y};m.bw=0;m.fd=1;}});
- C.fd='始祖'+p[0].nm+'と'+p[1].nm;C.st=1;chTorch(4);chDeco('straw');chDeco('straw');chLine(C.fd+'、この洞窟に住みつく');hideTitle();
+ C.fd='始祖'+p[0].nm+'と'+p[1].nm;C.st=1;chDen();chHome();chTorch(4);chDeco('straw');chDeco('straw');chDeco('bone');chLine(C.fd+'、この洞窟に住みつく');hideTitle();
  say(C.fd+'が洞窟に住みついた。大人どうしは波のはじめに組になって、自動で卵を産む。寿命は'+LIFE+'波。10波ごとに節目が来る。');ui();saveGame();return true;}
 // コアの体力（v61）: 冒険者がたどり着くと殴る。0で負け。波を守るたびに4分の1戻り、塔が伸びると全快
 var CORE_HP=300,START_SOUL=50;
@@ -1770,14 +1778,15 @@ function tapCell(x,y,drag){
 function launch(){
  if(g&&!over&&!g.done){g.waveOn=1;g.wk0=g.kills||0;g.wl0=g.lostN||0;}
  if(over||g.done||g.wave>=nW())return;
- if(chOn())g.round=1+Math.floor(g.wave/6);var w=g.party?[]:WAVES[chOn()?g.wave%WAVES.length:g.wave].slice(),i;
+ if(chOn()){if(g.chron.evNow&&g.chron.evW<=g.wave)chMile();chAlertUp();g.round=1+Math.floor(g.wave/6)+Math.floor((g.chron.alert||0)/80);}var w=g.party?[]:WAVES[chOn()?g.wave%WAVES.length:g.wave].slice(),i;
  if(g.party){g.party.forEach(function(p,j){g.spawnQ.push({t:g.t+j*(p.gap||6),k:p.k,p:p});});g.wave++;g.cd=0;say('「'+g.party.map(function(p){return p.nm;}).join('」「')+'」が攻めてきた！');sfx(g.party.length>1?'yu':'wave');coreSay('wave',true);if(speed==0)setSpeed(1);return;}
  for(i=0;i<g.round-1;i++)w.push(JOBS[(g.wave+i)%JOBS.length]);
  var D=DIFF[g.diff||'normal'],nj=jobsUnlocked();for(i=0;i<D.cnt;i++)w.push(JOBS[(g.wave+i+1)%JOBS.length]);
  if(nj.length&&g.wave>=1)w.push(nj[(g.wave+g.round)%nj.length]);
+ if(chOn()){var ax=Math.min(80,chAlertAdd());for(i=0;i<ax;i++)w.push(JOBS[(g.wave+i+2)%JOBS.length]);}
  if(g.wave==nW()-1)w.push('yuu');
  var evNow=chOn()&&g.chron.ev&&g.chron.evW==g.wave+1?g.chron.ev:null;if(evNow=='yu')w.push('yuu');if(evNow=='clan')for(i=0;i<3+Math.floor(g.wave/20);i++)w.push('@clan');
- for(i=0;i<w.length;i++)g.spawnQ.push({t:g.t+i*4,k:w[i]});
+ var gap=w.length>12?Math.max(1,48/w.length):4;for(i=0;i<w.length;i++)g.spawnQ.push({t:g.t+i*gap,k:w[i]});
  g.wave++;g.cd=(g.wave<nW())?90:0;
  say(g.wave==nW()?'第'+g.wave+'波。最後に「'+yuName()+'」が来る！':'第'+g.wave+'波、冒険者が入ってくる。');var lastW=g.wave==nW();sfx(lastW?'yu':'wave');coreSay(lastW?'yu':'wave',lastW);if(chOn())chWave(evNow);
  if(speed==0)setSpeed(1);
@@ -1955,13 +1964,46 @@ function chSpot(near,minD,used){var C=g.chron,K=g.core,L=[];for(var y=1;y<N-1;y+
   var up=cellAt(0,x,y-1),w=up&&!up.open?0:3,d=near?man(near,{x:x,y:y}):0;L.push([w+d*0.5+Math.random()*2,x,y]);}
  L.sort(function(a,b){return a[0]-b[0];});return L.length?{x:L[0][1],y:L[0][2]}:null;}
 function chTorch(n){var C=g.chron;C.tch=C.tch||[];for(var i=0;i<n;i++){var p=chSpot(null,5,C.tch.concat(C.deco||[]));if(!p)break;C.tch.push(p);}TK.key='';}
-var DECOS=['straw','pot','rack'];
-function chDeco(k){var C=g.chron;C.deco=C.deco||[];if(C.deco.length>=40)return;var a0=g.alt&&g.alt[0],p=chSpot(a0,2,C.deco.concat(C.tch||[]));if(!p)return;p.k=k;C.deco.push(p);}
-function chDecoDraw(){(g.chron.deco||[]).forEach(function(d){var x=d.x*CS,y=d.y*CS,cx=x+CS/2,b=y+CS-2;
+var DECOS=['straw','bone','scrap','scratch','pot','bone','rack','scratch'];
+function chDeco(k){var C=g.chron;C.deco=C.deco||[];if(C.deco.length>=80)return;var a0=g.alt&&g.alt[0],p=chSpot(a0,2,C.deco.concat(C.tch||[]));if(!p)return;p.k=k;C.deco.push(p);}
+function chDecoDraw(){var C0=g.chron;if(C0.nest)chNestDraw(C0.nest.x*CS+CS/2,C0.nest.y*CS+CS-2);if(C0.fire)chFireDraw(null,C0.fire.x*CS+CS/2,C0.fire.y*CS+CS-2);
+ (C0.deco||[]).forEach(function(d){var x=d.x*CS,y=d.y*CS,cx=x+CS/2,b=y+CS-2;
+ if(d.k=='bone'){ctx.fillStyle='#ddd6c4';ctx.fillRect(cx-5,b-2,8,1);ctx.fillRect(cx-6,b-3,2,1);ctx.fillRect(cx-6,b-1,2,1);ctx.fillRect(cx+3,b-3,2,1);ctx.fillRect(cx+3,b-1,2,1);ctx.fillRect(cx-1,b-5,1,4);ctx.fillStyle='#b8ae98';ctx.fillRect(cx+1,b-4,3,1);ctx.fillRect(cx+2,b-5,2,1);return;}
+ if(d.k=='scrap'){ctx.fillStyle='#7a2e1c';ctx.fillRect(cx-3,b-4,5,3);ctx.fillStyle='#a8452a';ctx.fillRect(cx-2,b-4,3,1);ctx.fillStyle='#e8e0cc';ctx.fillRect(cx+2,b-3,3,1);ctx.fillRect(cx+4,b-4,1,1);ctx.fillRect(cx+4,b-2,1,1);ctx.fillStyle='#3a1a10';ctx.fillRect(cx-3,b-1,5,1);return;}
+ if(d.k=='scratch'){ctx.fillStyle='rgba(210,190,150,.55)';var sx=x+3+((hs(d.x,d.y,5)*(CS-10))|0);for(var q=0;q<4;q++)ctx.fillRect(sx+q*2,y-6+q%2,1,5);ctx.fillRect(sx-1,y-4,9,1);return;}
  if(d.k=='straw'){ctx.fillStyle='#7a5a24';ctx.fillRect(cx-6,b-3,12,3);ctx.fillStyle='#c9a44a';ctx.fillRect(cx-5,b-4,10,1);ctx.fillRect(cx-6,b-2,2,1);ctx.fillRect(cx+1,b-2,3,1);ctx.fillStyle='#e6c86a';ctx.fillRect(cx-3,b-4,1,1);ctx.fillRect(cx+2,b-4,1,1);}
  else if(d.k=='pot'){ctx.fillStyle='#6a3a20';ctx.fillRect(cx-3,b-6,6,6);ctx.fillRect(cx-2,b-7,4,1);ctx.fillStyle='#8f5532';ctx.fillRect(cx-2,b-5,2,3);ctx.fillStyle='#3a2010';ctx.fillRect(cx-2,b-8,4,1);}
  else if(d.k=='rack'){ctx.fillStyle='#5a3a1a';ctx.fillRect(cx-4,b-1,8,1);ctx.fillRect(cx-3,b-9,1,9);ctx.fillRect(cx+2,b-9,1,9);ctx.fillStyle='#b8c0c8';ctx.fillRect(cx-3,b-12,1,3);ctx.fillRect(cx+2,b-12,1,3);}
  else if(d.k=='helm'){ctx.fillStyle='#5a3a1a';ctx.fillRect(cx,b-6,1,6);ctx.fillStyle='#c8ccd4';ctx.fillRect(cx-3,b-11,7,4);ctx.fillRect(cx-4,b-8,9,1);ctx.fillStyle='#ffd45a';ctx.fillRect(cx,b-13,1,2);ctx.fillStyle='#2a2a30';ctx.fillRect(cx-2,b-9,5,1);}});}
+// ---------- 巣穴の見た目（v73・年代記） ----------
+// 地面の作り置きに重ねる: 角を丸める・壁の縁のでこぼこ・木の根
+function chCave(f){var x,y,RK='#2f2b27',RD='#1c1916',RT='#5a3d22';
+ function rk(x,y){var c=cellAt(f,x,y);return !c||!c.open;}
+ for(y=0;y<N;y++)for(x=0;x<N;x++){var c=cellAt(f,x,y);if(!c||!c.open||bedrock(f,x,y))continue;var px=x*CS,py=y*CS,i,h,d;
+  // 角: 隣り合う2辺が壁なら、角を丸く埋める
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(o){if(!rk(x+o[0],y)||!rk(x,y+o[1]))return;var cx=o[0]<0?px:px+CS,cy=o[1]<0?py:py+CS,r=6+((hs(x*3+o[0],y*3+o[1],f+71)*3)|0);
+   for(var j2=0;j2<r;j2++){var span=Math.max(0,Math.round(r-Math.sqrt(Math.max(0,r*r-(r-j2)*(r-j2))))) ;if(!span)continue;var ry=o[1]<0?cy+j2:cy-1-j2,rx=o[0]<0?cx:cx-span;ctx.fillStyle=RK;ctx.fillRect(rx,ry,span,1);ctx.fillStyle=RD;ctx.fillRect(o[0]<0?cx+span-1:cx-span,ry,1,1);}});
+  // 縁のでこぼこ（左右と下の壁）
+  if(rk(x-1,y))for(i=1;i<CS-1;i+=3){d=((hs(x*13+i,y,f+73)*4)|0);if(d>1){ctx.fillStyle=RK;ctx.fillRect(px,py+i,d,3);ctx.fillStyle=RD;ctx.fillRect(px+d,py+i,1,3);}}
+  if(rk(x+1,y))for(i=1;i<CS-1;i+=3){d=((hs(x,y*13+i,f+79)*4)|0);if(d>1){ctx.fillStyle=RK;ctx.fillRect(px+CS-d,py+i,d,3);ctx.fillStyle=RD;ctx.fillRect(px+CS-d-1,py+i,1,3);}}
+  if(rk(x,y+1))for(i=1;i<CS-1;i+=3){d=((hs(x*7+i,y*5,f+83)*4)|0);if(d>1){ctx.fillStyle=RK;ctx.fillRect(px+i,py+CS-d,3,d);ctx.fillStyle=RD;ctx.fillRect(px+i,py+CS-d-1,3,1);}}
+  // 木の根: 上が壁なら、ときどき垂れ下がる
+  if(rk(x,y-1)&&!bedrock(f,x,y-1)&&hs(x,y,f+89)<0.4){var rx2=px+3+((hs(x,y,f+97)*(CS-6))|0),len=4+((hs(y,x,f+101)*7)|0);ctx.fillStyle=RT;ctx.fillRect(rx2,py+3,1,len);ctx.fillRect(rx2+1,py+3+((len/2)|0),1,3);ctx.fillRect(rx2-1,py+3+len-2,1,2);ctx.fillStyle='#7a5530';ctx.fillRect(rx2,py+3,1,2);}
+ }}
+// コアのまわりの広間（巣の中心）を始めから掘っておく
+function chDen(){for(var dy=0;dy<=3;dy++)for(var dx=-4;dx<=4;dx++){if((dx*dx)/(4.4*4.4)+(dy*dy)/(3.2*3.2)<=1)openCell(0,COREX+dx,COREY+dy,false);}TK.key='';}
+function chFireXY(){var F2=g.chron&&g.chron.fire;return F2?[F2.x*CS+CS/2,F2.y*CS+CS-4]:null;}
+function chFireDraw(d,cx,b){var t=performance.now(),fl=Math.sin(t/90)+Math.sin(t/37)*0.5;
+ ctx.fillStyle='#4a4440';[[-6,0],[-4,-2],[4,-2],[6,0],[-2,1],[2,1]].forEach(function(o){ctx.fillRect(cx+o[0]-1,b+o[1]-1,3,2);});
+ ctx.fillStyle='#5a3a1a';ctx.fillRect(cx-5,b-2,10,2);ctx.fillStyle='#3a2410';ctx.fillRect(cx-3,b-3,6,1);
+ var hh=7+Math.round(fl*1.5);ctx.fillStyle='#d8401a';ctx.fillRect(cx-3,b-2-hh+2,6,hh-1);ctx.fillStyle='#ff8a2a';ctx.fillRect(cx-2,b-2-hh+3,4,hh-3);ctx.fillStyle='#ffe08a';ctx.fillRect(cx-1,b-5,2,3);
+ if(((t/140)|0)%3==0){ctx.fillStyle='#ffb050';ctx.fillRect(cx+((t/50|0)%5)-2,b-hh-3,1,1);}}
+function chNestDraw(cx,b){ctx.fillStyle='#6b4e20';ctx.fillRect(cx-8,b-3,16,3);ctx.fillStyle='#a8822e';ctx.fillRect(cx-7,b-4,14,1);ctx.fillRect(cx-8,b-2,3,1);ctx.fillRect(cx+4,b-2,3,1);ctx.fillStyle='#d6b552';ctx.fillRect(cx-5,b-4,1,1);ctx.fillRect(cx-1,b-5,2,1);ctx.fillRect(cx+4,b-4,1,1);}
+// 産卵場のまわりで、卵が少ないマスを選ぶ
+function chNestCell(){var C=g.chron,n=C&&C.nest;if(!n)return null;var best=null,bn=1e9;for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){var x=n.x+dx,y=n.y+dy,c=cellAt(0,x,y);if(!c||!c.open)continue;
+  var k=g.eggs.filter(function(e){return e.f==0&&e.x==x&&e.y==y;}).length+(dx||dy?1:0);if(k<bn){bn=k;best={x:x,y:y};}}return best;}
+function chHome(){var C=g.chron,a0=g.alt&&g.alt[0];if(!a0)return;if(!C.fire){var p=chSpot(a0,1,(C.tch||[]).concat(C.deco||[]));if(p){C.fire={x:p.x,y:p.y};}}
+ if(!C.nest){var q=chSpot(a0,2,(C.tch||[]).concat(C.deco||[]).concat(C.fire?[C.fire]:[]));if(q)C.nest={x:q.x,y:q.y};}TK.key='';}
 // 地面の絵の作り置き（階・掘った数・つなぎ目で描き直す）
 var TK={c:document.createElement('canvas'),key:'',t:0};TK.c.width=TK.c.height=N*CS*4;TK.x=TK.c.getContext('2d');
 function terrainKey(){return g.view+'|'+F+'|'+(g.dug||0)+'|'+g.t.toFixed(0)+'|'+Object.keys(TIMG).length;}
@@ -1997,6 +2039,7 @@ function draw(){
   if(rt&&!rt.open){ctx.fillStyle='rgba(0,0,0,.08)';ctx.fillRect(qx+CS-1,qy,1,CS);}
   var dw=cellAt(f,x,y+1);if(dw&&!dw.open){ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(qx,qy+CS-1,CS,1);}
  }
+ if(g.chron)chCave(f);
   ctx=rc;}
  ctx.drawImage(TK.c,0,0,N*CS,N*CS);if(g.chron)chDecoDraw();
  // 暗さ
@@ -2008,12 +2051,14 @@ function draw(){
  if(!C.carrier&&C.f==f)light(C.x*CS+CS/2,C.y*CS+CS/2,70,1);
  if(f==0)light(ENTX*CS+CS/2,ENTY*CS+CS/2,46,0.9);
  if(g.chron)(g.alt||[]).forEach(function(a){if(a.f==f)light(a.x*CS+CS/2,a.y*CS+CS/2,44,0.9);});
+ var FX=g.chron&&f==0?chFireXY():null;if(FX)light(FX[0],FX[1]-4,78+5*Math.sin(now/90),1);
  for(x=0;x<N;x++)for(y=0;y<N;y+=N-1){c=cellAt(f,x,y);if(c.open&&isHole(f,x,y))light(x*CS+CS/2,y*CS+CS/2,26,0.8);}
  for(i=0;i<g.en.length;i++)if(g.en[i].f==f)light(g.en[i].x*CS+CS/2,g.en[i].y*CS+CS/2,22,0.6);
  ctx.drawImage(LC,0,0);
  // 松明の暖かい光
  ctx.globalCompositeOperation='lighter';
  torches.forEach(function(t,k){var r=34+3*Math.sin(now/110+k*1.7),gw=ctx.createRadialGradient(t[0],t[1]+5,0,t[0],t[1]+5,r);gw.addColorStop(0,'rgba(255,140,40,.12)');gw.addColorStop(1,'rgba(255,150,50,0)');ctx.fillStyle=gw;ctx.fillRect(t[0]-r,t[1]+5-r,r*2,r*2);});
+ if(FX){var fr=62+5*Math.sin(now/90)+3*Math.sin(now/37),fg=ctx.createRadialGradient(FX[0],FX[1]-4,0,FX[0],FX[1]-4,fr);fg.addColorStop(0,'rgba(255,110,30,.22)');fg.addColorStop(1,'rgba(255,90,20,0)');ctx.fillStyle=fg;ctx.fillRect(FX[0]-fr,FX[1]-4-fr,fr*2,fr*2);}
  ctx.globalCompositeOperation='source-over';
  // 松明
  torches.forEach(function(t,k){
@@ -2069,7 +2114,7 @@ function draw(){
  var dtf=Math.min(0.1,(now-(draw.last||now))/1000);draw.last=now;
  drawObjs(f,now);
  // 卵
- g.eggs.forEach(function(eg){if(eg.f!=f)return;var near=(eg.hatch-g.t)<5,wob=near?Math.round(Math.sin(now/60)*1.5):0;ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(eg.x*CS+5,eg.y*CS+CS-2,8,2);put('egg_'+eg.env,'n',eg.x*CS+CS/2+wob,eg.y*CS+CS,20);});
+ g.eggs.forEach(function(eg){if(eg.f!=f)return;var near=(eg.hatch-g.t)<5,wob=near?Math.round(Math.sin(now/60)*1.5):0;ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(eg.x*CS+5,eg.y*CS+CS-2,8,2);put('egg_'+eg.env,'n',eg.x*CS+CS/2+wob+(eg.ox||0),eg.y*CS+CS-(eg.oy||0),20);});
  var chars=[];
  g.cr.forEach(function(m){if(m.f==f)chars.push(m);});g.en.forEach(function(e){if(e.f==f)chars.push(e);});
  chars.forEach(function(o){
@@ -2166,13 +2211,13 @@ function ui(){
   for(i=0;i<g.en.length;i++)if(g.en[i].f==f)ne++;
   for(i=0;i<g.cr.length;i++)if(g.cr[i].f==f)nm++;
   for(i=0;i<N*N;i++)tot+=g.grid[f][i].nut;
-  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=g.chron?'洞窟<small>'+chEvText()+'</small>':(f+1)+'階<small>敵'+ne+' ゴブ'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
+  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=g.chron?'洞窟<small>'+chEvText()+'</small><small>周りの国の警戒：'+ALN[chAlertSt()]+'</small>':(f+1)+'階<small>敵'+ne+' ゴブ'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
  }
  document.getElementById('wave').textContent=g.chron?g.wave+'波 · '+(g.chron.gen||1)+'代':Math.min(g.wave,nW())+' / '+nW();
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v71 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v73 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
