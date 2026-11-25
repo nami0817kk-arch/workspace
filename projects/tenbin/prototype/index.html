@@ -107,6 +107,14 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .w .rm{display:block;font:400 10px "M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:var(--sub);letter-spacing:0;max-width:150px;white-space:normal}
 .w .kj{font:700 12px "Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif;color:var(--sub);margin-left:4px}
 .dict h3{font-size:13px;color:var(--sub);margin:12px 0 0;font-weight:700}
+.wd{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(59,47,36,.35);z-index:5}
+.wd .box{background:var(--panel);color:var(--ink);border-radius:18px;padding:18px 20px 14px;min-width:220px;max-width:300px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.wd .big{font-family:TenbinKana,"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:40px;line-height:1.2}
+.wd .kj2{font:700 22px "Hiragino Maru Gothic ProN","M PLUS Rounded 1c",sans-serif;color:var(--sub)}
+.wd .ro{font:700 15px "M PLUS Rounded 1c",sans-serif;color:#1f5f8a;margin-top:4px}
+.wd .lb{font:700 10px "M PLUS Rounded 1c",sans-serif;color:var(--sub);margin-top:10px}
+.wd .mn{font:700 16px "M PLUS Rounded 1c",sans-serif;margin-top:2px}
+.wd .row{margin-top:12px}
 </style></head><body>
 <div class="app">
   <header>
@@ -904,10 +912,28 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
 
   // --- 重ねる画面 ---
-  function hideSheet() { sheet.className = 'sheet'; }
+  function hideSheet() { hideWord(); sheet.className = 'sheet'; }
   // 結果・ことば帳のことばを押すと読み上げる（札に data-say）
-  card.addEventListener('click', function (e) { var el = e.target && e.target.closest ? e.target.closest('[data-say]') : null; if (el) speak(el.getAttribute('data-say'), true); });
-  function showSheet(html) { card.innerHTML = html; card.scrollTop = 0; sheet.className = 'sheet show'; }   // 前の画面のスクロール位置を持ち越さない
+  card.addEventListener('click', function (e) { var el = e.target && e.target.closest ? e.target.closest('[data-say]') : null; if (el) showWord(el.getAttribute('data-say')); });
+  // ことばの意味の札（ひらがな・漢字・ローマ字・英語の意味。読み上げつき）
+  function hideWord() { var o = document.getElementById('wordDetail'); if (o) o.remove(); }
+  function showWord(w) {
+    hideWord();
+    var k = kanjiOf(w), m = meaningOf(w), tmp = document.createElement('div');
+    tmp.innerHTML = '<div class="wd" id="wordDetail" role="dialog" aria-label="' + esc(w) + '"><div class="box"><div class="big">' + esc(w) + '</div>' +
+      (k && k !== w ? '<div class="kj2">' + esc(k) + '</div>' : '') +
+      '<div class="ro">' + esc(romaji(w)) + '</div>' +
+      (m ? '<div class="lb">' + T('英語の意味', 'Meaning') + '</div><div class="mn">' + esc(m) + '</div>' : '') +
+      '<div class="row">' + (synth ? '<button class="btn" id="wdSay" style="background:var(--ok)">' + T('もう一度きく', 'Hear again') + '</button>' : '') +
+      '<button class="btn" id="wdClose">' + T('とじる', 'Close') + '</button></div></div></div>';
+    var o = tmp.firstChild;
+    o.addEventListener('click', function (e) { if (e.target === o) hideWord(); });
+    sheet.appendChild(o);
+    document.getElementById('wdClose').onclick = hideWord;
+    var b = document.getElementById('wdSay'); if (b) b.onclick = function () { speak(w, true); };
+    speak(w, true);
+  }
+  function showSheet(html) { hideWord(); card.innerHTML = html; card.scrollTop = 0; sheet.className = 'sheet show'; }   // 前の画面のスクロール位置を持ち越さない
   function platButtons() {
     return '<div class="plats">' + PLAT_ORDER.map(function (k) { var b = bests[bkey(k)], open = isOpenPlat(k);
       return '<button data-plat="' + k + '" class="' + (k === plat ? 'cur' : '') + (open ? '' : ' lock') + '"' + (open ? '' : ' disabled') + '>' + pname(k) +
@@ -997,7 +1023,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 同じことばは「ねこ ×2」にまとめる
     var agg = [], byText = {};
     wordLog.forEach(function (l) { var a = byText[l.text]; if (!a) { a = byText[l.text] = { text: l.text, n: 0, pts: 0 }; agg.push(a); } a.n++; a.pts += l.pts; });
-    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new" data-new="' + T('あたらしい', 'new') : '') + '"' + (synth ? ' data-say="' + a.text + '"' : '') + '>' + a.text + (a.n > 1 ? '×' + a.n : '') + glossHtml(a.text) + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>' + T('ことばは できなかった。字と字を くっつけてみよう', 'No words this time. Try touching letters together') + '</p>';
+    var made = agg.length ? '<div class="words">' + agg.map(function (a) { return '<span class="w' + (newWords.indexOf(a.text) >= 0 ? ' new" data-new="' + T('あたらしい', 'new') : '') + '"' + ' data-say="' + a.text + '"' + '>' + a.text + (a.n > 1 ? '×' + a.n : '') + glossHtml(a.text) + '<small class="pt">+' + a.pts + '</small></span>'; }).join('') + '</div>' : '<p>' + T('ことばは できなかった。字と字を くっつけてみよう', 'No words this time. Try touching letters together') + '</p>';
     var wsum = wordLog.reduce(function (t, l) { return t + l.pts; }, 0);
     var longest = agg.reduce(function (m, a) { return !m || a.text.length > m.length ? a.text : m; }, '');
     var cont = !s.revived ? '<div class="revive"><p style="margin:0 0 6px;color:var(--ink);font-weight:700">' + T('落ちた字をどけて つづきから（1回だけ）', 'Clear the fallen letters and keep going (once)') + '</p>' +
@@ -1113,9 +1139,9 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       // 英語では意味つきの札にするので、1段に並ぶ数が減る
       return '<h3>' + title + T('（', ' (') + got + '/' + arr.length + T('）', ')') + '</h3><div class="bar2"><i style="width:' + (100 * got / arr.length).toFixed(1) + '%"></i></div><div class="words">' +
       // まだのことばは数だけ（2000語ぶんの「・・」の箱が並ぶと、集めたことばが埋もれた）
-      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w"' + (synth ? ' data-say="' + w + '"' : '') + '>' + w + glossHtml(w) + '</span>'; }).join('') +
+      arr.filter(function (w) { return dict[w]; }).map(function (w) { return '<span class="w"' + ' data-say="' + w + '"' + '>' + w + glossHtml(w) + '</span>'; }).join('') +
       (got < arr.length ? '<span class="w lock">' + T('まだ ' + (arr.length - got) + '語', (arr.length - got) + ' to find') + '</span>' : '') + '</div>'; }
-    showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + (synth ? T('押すと読み上げる。', 'Tap a word to hear it. ') : '') + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
+    showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + (synth ? T('押すと意味と読みが出る。', 'Tap a word to see its meaning and hear it. ') : T('押すと意味が出る。', 'Tap a word to see its meaning. ')) + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
       list(T('2字', '2 letters'), C.WORDS.short) + list(T('3字', '3 letters'), C.WORDS.middle) + list(T('4字より長い', '4+ letters'), C.WORDS.long) +
       '<div class="row"><button class="btn" id="close">' + T('とじる', 'Close') + '</button></div></div>');
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };

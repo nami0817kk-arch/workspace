@@ -43,6 +43,10 @@ assert.deepStrictEqual(bad, [], '英語と対になっていない日本語の�
 // 5. 読み上げ: 日本語の声で、ひらがなのまま読む（漢字を読ませると読みを取り違える）。押したことばを読む
 assert.ok(/u\.lang = 'ja-JP'/.test(html) && /new SpeechSynthesisUtterance\(w\)/.test(html), '読み上げが日本語・ひらがなでない');
 assert.ok(/data-say="' \+ w \+ '"/.test(html) && /data-say="' \+ a\.text \+ '"/.test(html), 'ことば帳・結果のことばを押して読み上げられない');
+// 5b. 押したことばは、音が無い端末でも意味の札が出る（日本語の画面でも意味を見られる）
+assert.ok(/function showWord\(w\)/.test(html) && /closest\('\[data-say\]'\)[^\n]*showWord\(/.test(html), 'ことばを押しても意味の札が出ない');
+assert.ok(!/synth \? ' data-say=/.test(html), '音が無いと、ことばを押せない');
+assert.ok(/T\('英語の意味', 'Meaning'\)/.test(html), '意味の札に意味が無い');
 // 6. 意味の出どころをクレジットに出している
 assert.ok(html.indexOf('JMdict') >= 0, 'クレジットに JMdict が無い');
 console.log('lang ok', all.length - missing.length + '/' + all.length);
