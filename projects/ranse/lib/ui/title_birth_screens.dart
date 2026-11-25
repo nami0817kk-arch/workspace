@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../app/controller.dart';
+import '../app/links.dart';
 import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/ending.dart';
@@ -106,6 +107,7 @@ class TitleScreen extends StatelessWidget {
               BigButton('遊び方', c.openGuide, secondary: true),
               const SizedBox(height: 18),
               AdFreeRow(c),
+              const LegalLinks(),
             ],
           ),
         ),
@@ -166,6 +168,38 @@ class _AdFreeRowState extends State<AdFreeRow> {
         TextButton(
           onPressed: _busy ? null : () => _run(c.restorePurchases, true),
           child: const Text('購入を復元', style: style),
+        ),
+      ],
+    );
+  }
+}
+
+/// プライバシーポリシーと、お問い合わせ・不適切な広告の報告（Apple 5.1.1・2.5.18。アプリの中から開けること）。
+class LegalLinks extends StatelessWidget {
+  const LegalLinks({super.key});
+
+  Future<void> _open(BuildContext context, Uri url) async {
+    if (await Links.open(url)) return;
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('ページを開けなかった。${url.toString()}')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const style = TextStyle(fontSize: 12, color: Pal.muted);
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 4,
+      children: [
+        TextButton(
+          onPressed: () => _open(context, Links.privacy),
+          child: const Text('プライバシーポリシー', style: style),
+        ),
+        TextButton(
+          onPressed: () => _open(context, Links.support),
+          child: const Text('お問い合わせ・広告の報告', style: style),
         ),
       ],
     );
