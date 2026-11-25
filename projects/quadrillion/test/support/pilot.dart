@@ -632,6 +632,8 @@ class Pilot {
   /// 新しい事業を始める（一覧の「始める」から）
   Future<void> newBiz() async {
     if (s.ap < 1 || s.biz.length >= 7 || s.pre <= 0) return;
+    // 銀行が経営に口を出している間は、新しい事業を始められない（押しても断られる。1.1.0+29 で乱数の並びが変わり、この月に当たるようになった）
+    if (s.bankCtl > 0 && s.biz.isNotEmpty) return;
     final list = newBizList(s, filter: 'can', sort: 'cost').where((i) => s.capexOf(i) * 3 < s.cash).toList();
     if (list.isEmpty) return;
     final i = list.last;

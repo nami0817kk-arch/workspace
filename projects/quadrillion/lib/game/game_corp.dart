@@ -719,7 +719,8 @@ extension GameCorp on Game {
 
   /// 調べの費用と月（会社が大きいほど高い。会計士・弁護士がいると安く早い）
   double ddCost(Company c) {
-    var x = math.max(2e7 * nom(), c.cap * .005) * (c.listed ? 1 : 1.3);
+    // 小さな会社でも監査法人・弁護士・助言の会社に2,000万円ほど。大きな会社は時価総額の0.1%ほど
+    var x = math.max(2e7 * nom(), c.cap * .001) * (c.listed ? 1 : 1.3);
     if (staff.any((p) => p.lic.contains('cpa'))) x *= .8;
     if (staff.any((p) => p.lic.contains('lawyer'))) x *= .9;
     return x;
