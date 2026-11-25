@@ -502,7 +502,16 @@
   };
 
   // ---------- 1週を進める：練習 → 怪我・疲れ → 出来事 ----------
+  // 「必ず止める」は、その週に手を打つものだけ（2026-11-26 ユーザー決定：1年に約49件で、知らせるだけのものが半分以上だった）。
+  // 知らせるだけのものは「お知らせ」に下げる。設定の「項目ごとに段を変える」で戻せる
+  const NOTICE_DOWN = [
+    /金の特性/, /覚醒の鍵を\d+つ満たした/, /本当に向いているポジション|のほうが向いているかもしれません/,
+    /が入団を決めました/, /^内部昇格が決まりました/, /^セレクションの合否が決まりました/,
+    /^トップチーム（.*）は.*リーグで/, /^覚醒の図鑑が/, /^\d+年目が終わりました/,
+  ];
+  YA.NOTICE_DOWN = NOTICE_DOWN;
   function noteTier(w, tier, text, pid) {
+    if (tier === 1 && typeof text === 'string' && (NOTICE_DOWN.some((re) => re.test(text)) || (/^リーグ戦が終わりました/.test(text) && !/降格/.test(text)))) tier = 2;
     w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) });
     if (w.inbox.length > 300) w.inbox.splice(0, w.inbox.length - 300);
   }
