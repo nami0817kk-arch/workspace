@@ -147,6 +147,14 @@ void main() {
     var n = 0;
     Future<void> shoot(String name) async {
       await tester.pump(const Duration(milliseconds: 400));
+      // 画像(クラブのエンブレム)は読み込みが本物の非同期なので、
+      // 先に読み終えてから撮る(待たないと空白で写る)。
+      await tester.runAsync(() async {
+        for (final e in find.byType(Image).evaluate().toList()) {
+          await precacheImage((e.widget as Image).image, e);
+        }
+      });
+      await tester.pump();
       final b = tester.renderObject<RenderRepaintBoundary>(find.byKey(key));
       n++;
       final file =
