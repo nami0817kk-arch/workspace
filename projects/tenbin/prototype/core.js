@@ -121,7 +121,7 @@ var TenbinCore = (function () {
   // 袋に入れることばは、清音だけのことばを多めにする（NEW_SHARE の割合だけ、濁点・小さい字を含むことばから）。
   // 袋に足す1字も、たいていは ことばに出てくる字の多さに合わせて選ぶ。3回に1回は74種から等しく選ぶ
   // （ことばの少ない ぴ・ぷ・ぺ が、6,000字で一度も来なかった）
-  var NEW_SHARE = 0.35, OLD_CH = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
+  var NEW_SHARE = 0.10, OLD_CH = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
   function split(list) { var a = [], b = []; list.forEach(function (w) { (w.split('').every(function (c) { return OLD_CH.indexOf(c) >= 0; }) ? a : b).push(w); }); return { old: a, add: b }; }
   var TIERS = { short: split(WORDS.short), middle: split(WORDS.middle), long: split(WORDS.long) };
   function pickWord(s, t) { var x = TIERS[t], useAdd = x.add.length && (!x.old.length || s.rng() < NEW_SHARE); return pick(s, useAdd ? x.add : x.old); }
