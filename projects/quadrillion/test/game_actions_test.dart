@@ -94,7 +94,7 @@ void main() {
     }
   });
 
-  test('社長の行動と相棒（探す・誘う・日銭・腕磨き・人脈・種探し）', () {
+  test('社長の行動と相棒（探す・誘う・日銭・人脈・種探し）', () {
     final s = Game.newGame(SetupConfig(year: 1980, traits: ['charm', 'noble']), rng: ParkMiller(8));
     for (final pl in PLACES) {
       // 相棒は2人まで（誘いが断られることもあるので、何人目で埋まるかは乱数しだい）
@@ -111,7 +111,11 @@ void main() {
     expect(s.sh.own + s.sh.pt, closeTo(100, 1e-9));
     s.ap = 9;
     expect(tx(s.presAct('work')), contains('稼ぎました'));
-    expect(tx(s.presAct('train', 'zai')), contains('財務'));
+    // 「腕を磨く」は 1.1.0+32 で無くした。古い呼び出しは落ちず、時間も腕も動かさない
+    final h0 = s.hUsed, ab0 = {...s.pres.ab};
+    expect(tx(s.presAct('train', 'zai')), contains('事業を進める中で'));
+    expect(s.hUsed, h0);
+    expect(s.pres.ab, ab0);
     expect(s.presAct('net'), isNotEmpty);
     expect(s.presAct('scout'), isNotEmpty);
     if (s.partners().length >= 2) expect(tx(s.presAct('seek', 'lab')), '相棒は2人までです');

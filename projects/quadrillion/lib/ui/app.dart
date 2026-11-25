@@ -289,6 +289,17 @@ class SetupScreen extends StatelessWidget {
                 PickChip(CATN[c]!, on: st.workCat == c, onTap: () => set(() => st.workCat = c), key: ValueKey('work-cat-$c')),
             ]),
           ],
+          // はじめの社長の腕（1.1.0+32）：おまかせ（今までどおりのランダム）か、持ち点を自分で振り分ける
+          H2(tr('社長の腕')),
+          _opt([
+            ChoiceBtn(tr('おまかせ'), () => set(() => st.ab = null),
+                on: st.ab == null, subs: [tr('4つとも{0}〜{1}のどこかに決まる', [35, 55])], key: const ValueKey('ab-auto')),
+            ChoiceBtn(tr('自分で振り分ける'), () => set(() => st.ab ??= {for (final k in abKeys) k: SetupConfig.abBudget ~/ 4}),
+                on: st.ab != null,
+                subs: [tr('持ち点{0}を4つに分ける（1つ{1}〜{2}）', [SetupConfig.abBudget, SetupConfig.abMin, SetupConfig.abMax])],
+                key: const ValueKey('ab-pick')),
+          ]),
+          if (st.ab != null) _abPick(st, set),
           H2(tr('難しさ')),
           _opt([
             for (final d in DIFFS) ChoiceBtn(d.n, () => set(() => st.diff = d.id), on: st.diff == d.id, subs: [d.d]),
@@ -324,10 +335,40 @@ class SetupScreen extends StatelessWidget {
                     yes: tr('上書きして始める'),
                     onYes: go);
               }
-            }, primary: true, enabled: st.traits.length >= 2),
+            }, primary: true, enabled: st.traits.length >= 2 && st.abLeft() == 0),
           ),
+          if (st.abLeft() != 0) Padding(padding: const EdgeInsets.only(top: 6), child: Muted(tr('社長の腕の持ち点を、残さず振り分けてください'))),
         ]),
       ),
+    );
+  }
+
+  /// 社長の腕の振り分け（4行。1行に名前・減らす・数・増やす・効き目）
+  Widget _abPick(SetupConfig st, void Function(VoidCallback) set) {
+    final ab = st.ab!;
+    final left = st.abLeft();
+    return Panel(
+      key: const ValueKey('ab-panel'),
+      padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(tr('残り {0}点', [left]), key: const ValueKey('ab-left'), style: ts(size: 13.5, bold: true, color: left == 0 ? Pal.ink : Pal.goldtx)),
+        Muted(tr('会社員の年数と特性の分は、この上に足されます'), size: 12),
+        for (final k in abKeys) ...[
+          const SizedBox(height: 6),
+          Row(children: [
+            SizedBox(width: Ui.sw(52), child: Text(ABN[k]!, style: ts(size: 13.5, bold: true))),
+            Btn('-${SetupConfig.abStep}', () => set(() => ab[k] = ab[k]! - SetupConfig.abStep),
+                small: true, enabled: ab[k]! - SetupConfig.abStep >= SetupConfig.abMin, key: ValueKey('ab-minus-$k')),
+            SizedBox(
+                width: Ui.sw(40),
+                child: Text('${ab[k]}', key: ValueKey('ab-val-$k'), textAlign: TextAlign.center, style: ts(size: 15, bold: true, color: Pal.goldtx))),
+            Btn('+${SetupConfig.abStep}', () => set(() => ab[k] = ab[k]! + SetupConfig.abStep),
+                small: true, enabled: ab[k]! + SetupConfig.abStep <= SetupConfig.abMax && left >= SetupConfig.abStep, key: ValueKey('ab-plus-$k')),
+            const SizedBox(width: 10),
+            Expanded(child: Muted(abDesc[k]!, size: 12)),
+          ]),
+        ],
+      ]),
     );
   }
 

@@ -42,6 +42,7 @@ part 'game_people.dart';
 part 'game_trade.dart';
 part 'game_corp.dart';
 part 'game_life.dart';
+part 'game_pres.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -171,9 +172,28 @@ class SetupConfig {
   String start;
   int workYears;
   String? workCat;
+
+  /// はじめの社長の腕を自分で振り分けたもの（1.1.0+32。null はおまかせ＝今までどおりのランダム）。
+  /// 合計は [abBudget]、1つは [abMin]〜[abMax]。会社員の年数の分と特性の分は、この上に足す
+  Map<String, int>? ab;
   SetupConfig(
-      {this.mode = 'world', this.year = 1980, List<String>? traits, this.home = 'jp', this.name, this.diff = 'normal', this.start = 'grad', this.workYears = 0, this.workCat})
+      {this.mode = 'world',
+      this.year = 1980,
+      List<String>? traits,
+      this.home = 'jp',
+      this.name,
+      this.diff = 'normal',
+      this.start = 'grad',
+      this.workYears = 0,
+      this.workCat,
+      this.ab})
       : traits = traits ?? [];
+
+  /// 振り分ける持ち点の合計（ランダムの平均 45 × 4）・1つの下限と上限・1回に動かす幅
+  static const abBudget = 180, abMin = 20, abMax = 80, abStep = 5;
+
+  /// 振り分けで残っている持ち点
+  int abLeft() => ab == null ? 0 : abBudget - abKeys.fold(0, (s, k) => s + (ab![k] ?? 0));
 }
 
 /// 世界の企業ランキングの1行
@@ -531,6 +551,13 @@ class Game {
     pres = President(name: 'x', age: 22, traits: cfg.traits.toList(), ab: {});
     pres.name = cfg.name ?? nm();
     pres.ab = {'tou': ri(35, 55), 'kai': ri(35, 55), 'ei': ri(35, 55), 'zai': ri(35, 55)};
+    // 自分で振り分けたなら、それを使う（乱数は引いたまま捨てて、ほかの並びをずらさない。1.1.0+32）
+    final ab0 = cfg.ab;
+    if (ab0 != null) {
+      for (final k in abKeys) {
+        pres.ab[k] = clampI(ab0[k] ?? 45, SetupConfig.abMin, SetupConfig.abMax);
+      }
+    }
     net = 0;
     seen = {};
     hint = {};
@@ -545,9 +572,10 @@ class Game {
                     ? 'free'
                     : 'merit';
     if (hasT('tech')) {
-      pres.ab['kai'] = pres.ab['kai']! + 25;
-      pres.ab['ei'] = pres.ab['ei']! - 10;
-      pres.ab['zai'] = pres.ab['zai']! - 10;
+      // 振り分けた上にも同じだけ足し引きする（特性は別に選んだものなので。上限99・下限5）
+      pres.ab['kai'] = math.min(99, pres.ab['kai']! + 25);
+      pres.ab['ei'] = math.max(5, pres.ab['ei']! - 10);
+      pres.ab['zai'] = math.max(5, pres.ab['zai']! - 10);
     }
     // 2026年より先の経済の予測の種（同じ遊びなら同じ未来になる）
     fcSeed = ri(1, 1 << 30);

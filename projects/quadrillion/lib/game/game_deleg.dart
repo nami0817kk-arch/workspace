@@ -99,6 +99,19 @@ extension GameDeleg on Game {
   void delegMonthly() {
     if (!extras) return;
     final acted = <int>{};
+    // 任せた責任者の手は、社長の経験にはならない（1.1.0+32）
+    final keep = {...pres.pend};
+    try {
+      _delegAll(acted);
+    } finally {
+      pres.pend
+        ..clear()
+        ..addAll(keep);
+    }
+    if (delegLog.length > 600) delegLog.removeRange(0, delegLog.length - 600);
+  }
+
+  void _delegAll(Set<int> acted) {
     for (final b in biz.toList()) {
       if (!b.deleg) continue;
       final p = staffById(b.mgr);
@@ -115,7 +128,6 @@ extension GameDeleg on Game {
       }
       b.did = _delegMove(b, p);
     }
-    if (delegLog.length > 600) delegLog.removeRange(0, delegLog.length - 600);
   }
 
   /// 値付けの見直し（変えるなら新しい値付け）

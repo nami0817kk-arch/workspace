@@ -398,6 +398,7 @@ extension GameLife on Game {
     cash -= cost;
     capSpend(cost, profileOf(indm[b.ind]!).life);
     lf.eqAge[b.id] = 0;
+    presXp('kai', 2);
     calcAll();
     return M('「{0}」の設備を新しくしました（{1}）', [I(b.ind), Y(cost)]);
   }
@@ -462,6 +463,7 @@ extension GameLife on Game {
     cash -= cost;
     capSpend(cost, profileOf(indm[b.ind]!).techLife);
     lf.techGen[b.id] = techCur(indm[b.ind]!);
+    presXp('kai', 4);
     calcAll();
     return M('「{0}」を新しい世代の技術に乗り換えました（{1}）', [I(b.ind), Y(cost)]);
   }
@@ -485,6 +487,7 @@ extension GameLife on Game {
     cash -= cost;
     capSpend(cost, 5);
     lf.it = a;
+    presXp('kai', 3);
     calcAll();
     return M('「{0}」を入れました（{1}）', [M(itEras[a - 1].$2), Y(cost)]);
   }
@@ -651,6 +654,8 @@ extension GameLife on Game {
     final heir = (staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a))).firstOrNull;
     final old = pres.name;
     if (heir != null) takeOver(heir);
+    // 立て直しを乗り切ると、社長の腕が多めに伸びる（1.1.0+32。game_pres.dart）
+    pres.crisis = 2;
     N(M('資金が尽き、民事再生で立て直すことになりました。借金の6割が減らされ、株主の取り分は大きく減りました'), 'bad');
     if (heir != null) N(M('{0}は責任を取って退き、{1}が社長になりました', [Nm(old), Nm(heir.name)]), 'bad');
     chron('board', M('資金が尽き、民事再生で立て直した（借金の6割を減らした）'));

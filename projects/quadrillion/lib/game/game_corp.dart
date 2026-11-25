@@ -639,6 +639,7 @@ extension GameCorp on Game {
     if (nt != null) return nt;
     final m = ipoMonths();
     corp.ipo = IpoPrep(start: turn, total: m);
+    presXp('zai', 2);
     chron('ipo', M('上場の準備を始めた（監査と社内の決まり。約{0}か月）', [m]));
     return M('上場の準備を始めました。監査法人と契約し、社内の決まりを整えます。約{0}か月、毎月{1}ほどかかります', [m, Y(ipoMonthCost())]);
   }
@@ -707,6 +708,7 @@ extension GameCorp on Game {
     vcDeadline = 0;
     corp.ipo = null;
     corp.noise = 1;
+    presXp('zai', 6, big: true);
     calcAll();
     chron('ipo', M('株式を上場した。{0}が入った（時価総額 {1}）', [Y(money - fee), Y(cap)]));
     return M('上場しました！{0}が集まり、手数料と上場の費用{1}を払いました。これからは3か月ごとに決算を発表します', [Y(money), Y(fee)]);
@@ -897,6 +899,7 @@ extension GameCorp on Game {
     if (c.parent != 'player' && d.target > 50) {
       c.parent = 'player';
       rivalDefeated(c);
+      presXp('zai', 4, big: true);
       chron('buy', M(c.rival != null ? '{0}（宿敵）の株を{1}握り、子会社にした' : '{0}の株を{1}握り、子会社にした', [Nm(c.name), pct(pctOf(c))]));
     }
     calcAll();
@@ -998,6 +1001,7 @@ extension GameCorp on Game {
     cash -= cost;
     useT('deal');
     cl.share = math.max(.08, cl.share * .7);
+    presXp('ei', 2);
     return M('新しい客を回り、大口の客の割合を{0}に下げました', [pct(cl.share * 100)]);
   }
 }

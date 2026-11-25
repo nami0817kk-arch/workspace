@@ -217,4 +217,22 @@ const Map<String, String> lifeEn = {
   '社長は{0}歳、{1}年の会社員を辞めたところ。最初は会社の名前と貯金だけがあります。': 'The president is {0} and just quit after {1} years as an employee. You start with only a company name and your savings.',
   '{0}の会社で{1}年働いて、独立した。手元には貯金を合わせて{2}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。':
       'I worked {1} years at a company in {0}, then went out on my own. With my savings I have {2}. The company is registered, and that is all. Before choosing a first business, maybe I should find a partner.',
+
+  // ===== 社長の腕は事業を進める中で磨かれる（1.1.0+32） =====
+  '社長の腕は、事業を進める中で磨かれます': "The CEO's skills sharpen as you run the business",
+  '{0}の腕が上がりました（{1} → {2}）': '{0} went up ({1} → {2})',
+  '資金繰りの危機を乗り切りました。財務と統率の経験がたまりました': 'You came through the cash crisis. Finance and Leadership gained experience',
+  '社長の腕': 'CEO Skills',
+  'おまかせ': 'Random',
+  '4つとも{0}〜{1}のどこかに決まる': 'Each of the four lands between {0} and {1}',
+  '自分で振り分ける': 'Assign points',
+  '持ち点{0}を4つに分ける（1つ{1}〜{2}）': 'Split {0} points across four ({1}-{2} each)',
+  '残り {0}点': '{0} points left',
+  '会社員の年数と特性の分は、この上に足されます': 'Years as an employee and traits are added on top',
+  '社長の腕の持ち点を、残さず振り分けてください': 'Assign all of the CEO skill points first',
+  '腕の伸び方': 'How skills grow',
+  '腕は事業を進める中で磨かれます。経験がたまると1上がります。': 'Skills sharpen as you run the business. Each fills up with experience, then goes up by 1.',
+  '腕は事業を進める中で磨かれます。50代からは経験がたまりにくくなります。': 'Skills sharpen as you run the business. From your 50s, experience builds more slowly.',
+  '腕は事業を進める中で磨かれます。65歳を過ぎると、たまりにくく、毎年少しずつ落ちます。': 'Skills sharpen as you run the business. After 65, experience builds slowly and skills fade a little each year.',
+  '伸びる：{0}': 'Grows by: {0}',
 };

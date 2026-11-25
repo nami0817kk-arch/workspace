@@ -609,11 +609,15 @@ const Map<String, String> dataEn = {
   '徹夜が平気': 'Pulls all-nighters with ease',
   '現場からの叩き上げ': 'Worked up from the shop floor',
 
-  // ===== 腕を磨く =====
+  // ===== 社長の腕（効き目と、何をすると伸びるか。1.1.0+32） =====
   '人を率いる。統率が効く事業が強くなる': 'Lead people. Leadership businesses get stronger',
   'ものを作る。開発が効く事業が強くなる': 'Build things. R&D businesses get stronger',
   '売る。営業が効く事業が強くなる': 'Sell. Sales businesses get stronger',
   'お金を扱う。TOB が成功しやすくなる': 'Handle money. Takeover bids succeed more often',
+  '人を雇う・責任者を置く・会社の人数が増える': 'Hire people, appoint managers, grow headcount',
+  '商品を作る・新しい事業を始める・工場や設備を足す・技術の世代を乗り換える': 'Develop products, start businesses, add plants and equipment, move to new tech generations',
+  '自分で見ている事業の売上が伸びる・店を開く・新しい国や客をつかむ': 'Grow sales in businesses you run, open stores, win new countries and customers',
+  '借りる・返す・買収・上場・事業を売る・資金繰りの危機を乗り切る': 'Borrow, repay, acquire, go public, sell businesses, survive a cash crisis',
 
   // ===== 時代の大事件 =====
   'バブル景気': 'Bubble Economy',
