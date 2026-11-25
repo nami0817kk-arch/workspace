@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../data/club_crests.dart';
 import '../l10n/tr.dart';
 import '../models/club_look.dart';
 import '../theme/club_palette.dart';
 
-/// チームIDから決定論的に生成する、実際のロゴ画像を持たない代替のクラブエンブレム。
-/// 同じチームなら常に同じ形・色・イニシャルになる。
+/// クラブのエンブレム。表(ClubNames)にある名前のクラブは画像
+/// (assets/crests。ClubCrests)を出し、それ以外(自クラブ・書き換えた名前)は
+/// チームIDから決定論的に描く。同じチームなら常に同じ形・色・イニシャルになる。
 class ClubEmblem extends StatelessWidget {
   final String teamId;
   final String teamName;
@@ -25,6 +27,28 @@ class ClubEmblem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 表にある名前のクラブは、画像生成で作ったエンブレムを出す
+    // (自クラブ・見た目を試しに描くとき・表に無い名前は下の描画)。
+    final crest = look == null ? ClubCrests.indexFor(teamId, teamName) : null;
+    if (crest != null) {
+      return Semantics(
+        label: Tr.pick('$teamNameのエンブレム', '$teamName crest'),
+        image: true,
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Image.asset(
+            ClubCrests.assetPath(crest),
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.medium,
+            // 読み上げは外側の Semantics が持つ(二重に読ませない)。
+            excludeFromSemantics: true,
+          ),
+        ),
+      );
+    }
     final seed = teamId.hashCode;
     // 色の導出は ClubPalette に置いてある。ピッチ上のユニフォームも
     // 同じ値を引くので、ここで独自に計算すると画面ごとに色がずれる。

@@ -30,6 +30,36 @@ class ClubNames {
         for (var t = 1; t <= 3; t++) ...tier(theme, t),
       ];
 
+  /// クラブ名(日本語・英語のどちらでも)から、エンブレム画像の番号
+  /// (assets/crests/NNN.webp)を引く。表に無い名前なら null。
+  ///
+  /// 番号は _data の並び(国 → 部 → 行)の通し番号。チームの id は
+  /// 新しく始めたとき・部の入れ替えのたびに付け直され、どの名前が付くかも
+  /// 自クラブの名前を避ける分だけずれるので、名前から引くのがいちばん確か。
+  /// 名前は作った時の言語で保存されるため、両方の言語で引ける。
+  static int? crestIndexOf(String name) => _crestIndex[name.trim()];
+
+  /// 表にあるクラブの数(エンブレム画像の枚数)。
+  static int get crestCount => _crestNames.length ~/ 2;
+
+  /// 番号 [index] のクラブの (日本語, 英語) の名前。
+  static (String, String) crestNames(int index) =>
+      (_crestNames[index * 2], _crestNames[index * 2 + 1]);
+
+  static final List<String> _crestNames = [
+    for (final blocks in _data.values)
+      for (final block in blocks)
+        for (final line in block.split('\n'))
+          if (line.contains('|')) ...[
+            line.split('|')[0].trim(),
+            line.split('|')[1].trim(),
+          ],
+  ];
+
+  static final Map<String, int> _crestIndex = {
+    for (var i = 0; i < _crestNames.length; i++) _crestNames[i]: i ~/ 2,
+  };
+
   // 1行に「日本語|英語」。部ごとに1つの文字列で持つ(翻訳漏れの点検が
   // 長い表の途中を見落とさないよう、i18n-ignore を部ごとに付ける)。
   static const Map<LeagueTheme, List<String>> _data = {

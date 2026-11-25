@@ -107,6 +107,9 @@ flutter:
     # 節目の演出に出す絵。枚数が決まっている場所にだけ画像を持つ
     # (選手とクラブは自動生成で点数が無限なので、絵は同梱できない)。
     - assets/art/
+    # クラブのエンブレム(300枚。ClubNames の表の並び)。作り方は
+    # tool/art/build_crests.py。
+    - assets/crests/
     # 効果音。出どころは assets/sfx/CREDITS.md。
     - assets/sfx/
 
