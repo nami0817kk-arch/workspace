@@ -6,6 +6,7 @@ import '../game/game.dart';
 import 'controller.dart';
 import 'glossary.dart';
 import 'guide.dart';
+import 'life_screens.dart';
 import 'painters.dart';
 import 'people_screen.dart';
 import 'sheets.dart';
@@ -121,13 +122,24 @@ Widget? todoCard(GameController ctl) {
   final s = ctl.game!;
   final step = currentGuide(s);
   final tips = s.adviceTop().take(step != null ? todoMax - 1 : todoMax).toList();
-  if (step == null && tips.isEmpty) return null;
+  // 小さな知らせ（経営会議の提案・大型の受注・大物の売り込み。1.1.0+30）は小窓で手を止めず、ここに並べる
+  final small = s.events.where((e) => e.small).toList();
+  if (step == null && tips.isEmpty && small.isEmpty) return null;
   final acts = [for (var i = 0; i < tips.length; i++) tipBtn(ctl, tips[i], i)];
   return Panel(
     key: const ValueKey('todo'),
     border: Pal.gold,
     padding: const EdgeInsets.fromLTRB(Ui.pad, 2, 4, 8),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      for (final e in small)
+        Padding(
+          padding: const EdgeInsets.only(top: 4, right: 8),
+          child: Row(children: [
+            const Padding(padding: EdgeInsets.only(right: 6), child: Icon(Icons.mark_email_unread_outlined, size: 15, color: Pal.goldtx)),
+            Expanded(child: Text(tx(e.title), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, bold: true))),
+            Btn(tr('決める'), () => openSmallEvent(ctl, e), key: ValueKey('small-ev-${s.events.indexOf(e)}'), small: true),
+          ]),
+        ),
       Row(children: [
         Expanded(child: CardTitle(tr('今月やること'), gold: true)),
         if (tips.isNotEmpty)
@@ -1046,6 +1058,17 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
         if (s.pivotTargets(b).isNotEmpty) _apBtn(ctl, tr('業態を変える'), () => openPivot(ctl, b), more: true),
         _apBtn(ctl, tr('分社・独立'), () => openShape(ctl, b), more: true),
       ]),
+      // 設備の古び・技術の世代・大学と組む・赤字の店などを閉める（1.1.0+30）
+      if (s.lifeOn) ...[
+        _grpHead(tr('設備と技術'), Icons.build_outlined),
+        Wrap(key: ValueKey('grp-life-${b.id}'), spacing: 6, runSpacing: 0, children: [
+          _apBtn(ctl, tr('設備を新しくする {0}（古さ {1}年）', [yen(s.renewCost(b)), ((s.life.eqAge[b.id] ?? 0) / 12).floor()]), () => ctl.act(() => s.renewEquip(b)), k: 'build'),
+          if (s.techBehind(b) > 0) _apBtn(ctl, tr('新しい世代の技術に乗り換える {0}', [yen(s.techCost(b))]), () => ctl.act(() => s.upgradeTech(b)), k: 'dev'),
+          if (s.patentInd(ind) && (s.life.uni[b.id] ?? 0) <= s.turn) _apBtn(ctl, tr('大学と組む {0}', [yen(s.uniCost())]), () => ctl.act(() => s.uniLab(b)), k: 'deal'),
+          if (s.losingSites(b) case final ls when ls.isNotEmpty && s.unitTotal(b) > 1)
+            _apBtn(ctl, tr('赤字の{0}を閉める（{1}・{2}）', [s.uw(b), s.siteName(ls.first), yen(s.closeCost(b, ls.first, 1))]), () => ctl.act(() => s.closeUnits(b, ls.first, 1)), k: 'build'),
+        ]),
+      ],
       // 取り返しのつかない「売る」は、線で区切っていちばん下に離す。売るのは1手（「人たらし」の社長は2手）
       Container(
         key: ValueKey('biz-sell-${b.id}'),
@@ -1865,7 +1888,7 @@ const chronMarks = 8;
 
 // --- 図鑑 ---
 /// 図鑑の切り替え（id・名前）
-const zukanViews = [('syn', 'シナジー'), ('ind', '業種@@zukan'), ('ach', '実績')];
+const zukanViews = [('ind', '業種@@zukan'), ('syn', 'シナジー'), ('ach', '実績'), ('hist', '歴史')];
 
 List<Widget> zukanTab(GameController ctl) {
   final view = zukanViews.any((v) => v.$1 == ctl.zukanView) ? ctl.zukanView : 'syn';
@@ -1874,6 +1897,7 @@ List<Widget> zukanTab(GameController ctl) {
     ...switch (view) {
       'ind' => zukanInds(ctl),
       'ach' => zukanAchs(ctl),
+      'hist' => zukanHist(ctl),
       _ => zukanSyns(ctl),
     },
   ];
@@ -1893,7 +1917,7 @@ List<Widget> zukanInds(GameController ctl) {
   final out = <Widget>[
     H2(tr('業種図鑑')),
     Progress(tr('手がけた業種'), done, s.inds.length, key: const ValueKey('ind-progress')),
-    Muted(tr('手がけたことのある業種は、生まれた年・頂点の年・利益率・稼ぎ方が見えます。')),
+    Muted(tr('手がけたことのある業種は、生まれた年・頂点の年・利益率・稼ぎ方が見えます。業種を押すと、37の特性と市場の大きさの推移が見えます。')),
   ];
   for (final cat in CATN.keys) {
     final list = s.inds.where((i) => i.cat == cat).toList();
@@ -1912,7 +1936,11 @@ List<Widget> zukanInds(GameController ctl) {
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           for (final i in list)
             if (indLook(s, i) case final look when look != 'future')
-              Container(
+              // 押すと37の特性と市場の大きさの推移（1.1.0+30。まだ生まれていない業種は押せない）
+              InkWell(
+                key: ValueKey('ind-tap-${i.id}'),
+                onTap: look == 'soon' ? null : () => openIndDetail(ctl, i),
+                child: Container(
                 key: ValueKey('ind-$look-${i.id}'),
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 decoration: Ui.rowLine,
@@ -1932,8 +1960,9 @@ List<Widget> zukanInds(GameController ctl) {
                     ]),
                   ),
                   if (look == 'seen') Text(tr('？'), style: ts(size: 13, color: Pal.mute)),
+                  if (look != 'soon') const Icon(Icons.chevron_right, size: 18, color: Pal.mute),
                 ]),
-              ),
+              )),
           // まだ生まれていない業種は、名前を伏せて数だけ出す
           if (future > 0)
             Padding(
@@ -2048,7 +2077,9 @@ List<Widget> zukanSyns(GameController ctl) {
 /// 2列の事業の画面
 List<Widget> bizSplit(GameController ctl, double width) {
   final s = ctl.game!;
-  final list = myBizList(s, 'rev');
+  // 1.1.0+30 から、事業が多い会社は2列でも並べ替えられる（1列の画面にしか無く、横向きの実機では出ていなかった）
+  final many = s.biz.length >= bizManyMin;
+  final list = myBizList(s, many ? ctl.myBizSort : 'rev');
   final showNew = ctl.bizNew || list.isEmpty;
   final sel = showNew ? null : (list.where((b) => b.id == ctl.openBiz).firstOrNull ?? list.first);
   final leftW = clampD(width * .3, 158, 240);
@@ -2063,6 +2094,17 @@ List<Widget> bizSplit(GameController ctl, double width) {
         if (list.isNotEmpty) Info(ctl, const ['deleg']),
       ]),
     ),
+    if (many)
+      Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Wrap(key: const ValueKey('split-mysort'), spacing: 4, runSpacing: 4, children: [
+          for (final o in myBizSorts)
+            PickChip(tr(o.$2), key: ValueKey('mysort-${o.$1}'), on: ctl.myBizSort == o.$1, onTap: () {
+              ctl.myBizSort = o.$1;
+              ctl.render();
+            }),
+        ]),
+      ),
     for (final b in list) _bizPick(ctl, b, b == sel),
     const SizedBox(height: 6),
     Btn(tr('＋ 新しい事業'), () => ctl.showNewBiz(), key: const ValueKey('biz-new'), small: true, primary: showNew),

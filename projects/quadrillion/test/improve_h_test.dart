@@ -218,7 +218,9 @@ void main() {
       final plain = run('grit', 70);
       expect(plain['build'] ?? 0, greaterThan(0), reason: 'ふつうの人も増やす: $plain');
       final good = run('grit', 99), bad = run('grit', 10);
-      expect(good['none'] ?? 0, lessThan(bad['none'] ?? 0), reason: '腕が高いほど様子見が少ない: $good / $bad');
+      // 1.1.0+30 から、腕の高い人は手を打てる月が多く（打った手の合計が違う）、数ではなく割合で比べる
+      double noneShare(Map<String, int> m) => (m['none'] ?? 0) / m.values.fold(1, (a, x) => a + x);
+      expect(noneShare(good), lessThan(noneShare(bad)), reason: '腕が高いほど様子見が少ない: $good / $bad');
       final g = _grown();
       final b = g.biz.firstWhere((b) => b.mgr != null);
       final p = g.staffById(b.mgr)!;
@@ -557,6 +559,9 @@ void main() {
       final g = _grown();
       g.cash = 1e12;
       final b = g.biz.firstWhere((b) => b.model != 'fc' && b.power > 0 && b.mgr == null);
+      // 店などが売り切れている事業には現場の人は要らない（1.1.0+30 で釣り合いが変わり、この事業は売り切れていた）。店などを十分に置いて、客の数で決まる形にする
+      final key = b.sites.keys.firstOrNull ?? b.young.first.s;
+      b.sites[key] = Site(n: (b.sites[key]?.n ?? 0) + 5000);
       b.crew = b.power * .01 / g.crewMult(b);
       g.calcAll();
       final need = g.crewNeedPeople(b), cost = g.hireCost(b, need);

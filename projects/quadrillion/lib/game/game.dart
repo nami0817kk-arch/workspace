@@ -41,6 +41,7 @@ part 'game_units.dart';
 part 'game_people.dart';
 part 'game_trade.dart';
 part 'game_corp.dart';
+part 'game_life.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -165,7 +166,14 @@ class SetupConfig {
   String home;
   String? name;
   String diff;
-  SetupConfig({this.mode = 'world', this.year = 1980, List<String>? traits, this.home = 'jp', this.name, this.diff = 'normal'}) : traits = traits ?? [];
+
+  /// 社長の始め方（grad 大学を出てすぐ・work 会社員を何年かしてから）・勤める年数・勤める業種の分類（1.1.0+30）
+  String start;
+  int workYears;
+  String? workCat;
+  SetupConfig(
+      {this.mode = 'world', this.year = 1980, List<String>? traits, this.home = 'jp', this.name, this.diff = 'normal', this.start = 'grad', this.workYears = 0, this.workCat})
+      : traits = traits ?? [];
 }
 
 /// 世界の企業ランキングの1行
@@ -291,6 +299,9 @@ class Game {
 
   /// 株価・上場の準備・買う話・大口の客（1.1.0+29。game_corp.dart）
   CorpState corp = CorpState();
+
+  /// 税・設備・ブランド・技術・IT・特許・社長の私生活など（1.1.0+30。game_life.dart）
+  LifeState life = LifeState();
   List<Biz> biz = [];
   List<Person> staff = [], cands = [], kids = [];
 
@@ -419,7 +430,7 @@ class Game {
   double econFor(Industry ind) => 1 + (econ - 1) * ind.sens;
   double mkt(Industry ind) {
     final y = yr();
-    return ind.size / 4 * eraF(ind, y) * nomOf(y) * econFor(ind) * (ind.cat == 'net' || ind.cat == 'fut' ? techBoom : 1);
+    return ind.size / 4 * eraF(ind, y) * nomOf(y) * econFor(ind) * (ind.cat == 'net' || ind.cat == 'fut' ? techBoom : 1) * (extras ? socialF(ind, y) : 1);
   }
 
   double capexOf(Industry ind) {
@@ -542,6 +553,8 @@ class Game {
     fcSeed = ri(1, 1 << 30);
     econData.fcSeed = fcSeed;
     cash = 4e7 * nomOf(cfg.year.toDouble()) * (hasT('noble') ? 4 : 1);
+    // 社長の始め方・経歴（1.1.0+30。ゲームの乱数は使わない）
+    lifeInit(cfg);
     // 景気・金利・物価・為替は統計で動く（1.1.0+25）。大きな出来事は統計の出来事から作り、技術の波（ネット・スマホ・AI）だけをここで足す
     eventCycles(cfg.year);
     int j(int a) => a + ri(-1, 1);
@@ -793,6 +806,8 @@ class Game {
     if (tie != null && tie!.cats.contains(cat)) p *= 1.08;
     if (hasDeal('sales', cat)) p *= 1.06;
     if (b.war > 0) p *= .85;
+    // ブランド・設備の古び・技術の世代・消費税・特許・社長の経歴（1.1.0+30）
+    p *= lifePowF(b);
     return p;
   }
 
@@ -909,6 +924,8 @@ class Game {
         fixOf[b.id] = [for (var i = 0; i < 5; i++) fx * sl[i] + (i == 2 ? b.rev * pen + hr : 0)];
         // 関税・輸送・インフラ・現地の人の手間・為替の損（1.1.0+28。game_trade.dart）
         tradeCalc(b);
+        // 設備の古びの修繕・ITの遅れ・保険（1.1.0+30）
+        b.profit -= lifeCost(b);
       }
     }
     // 業種の市場の大きさは、この計算のあいだは変わらないので1回ずつだけ求める（会社が900社あると、会社ごとに求めると重い）
@@ -1035,6 +1052,7 @@ class Game {
         'lastPrincipal': lastPrincipal,
         'ar': ar,
         'trade': trade.toJson(),
+        'life': life.toJson(),
         'reg': reg,
         'wiLast': wiLast,
         'expLast': expLast,
@@ -1139,6 +1157,7 @@ class Game {
       ..lastPrincipal = d('lastPrincipal')
       ..ar = d('ar')
       ..trade = TradeState.fromJson((j['trade'] as Map?)?.cast<String, dynamic>())
+      ..life = LifeState.fromJson((j['life'] as Map?)?.cast<String, dynamic>())
       ..wiLast = md('wiLast') ?? {}
       ..expLast = md('expLast') ?? {}
       ..listed = j['listed'] == true

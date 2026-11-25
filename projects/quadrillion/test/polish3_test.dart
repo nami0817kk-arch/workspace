@@ -135,7 +135,8 @@ void main() {
       final g = ctl.game!;
       ctl.game = null;
       ctl.newSlot = 1;
-      tester.view.physicalSize = const Size(390, 3000);
+      // 1.1.0+30 で「社長の始め方」の欄が増え、はじめの画面が長くなった。高さを足して全部を一度に並べる
+      tester.view.physicalSize = const Size(390, 4000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(QuadrillionApp(controller: ctl));

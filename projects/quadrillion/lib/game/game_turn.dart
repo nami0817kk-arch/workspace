@@ -8,6 +8,10 @@ extension GameTurn on Game {
     final news = <LogEntry>[];
     void N(String m, [String t = '']) => news.add(LogEntry(m, t));
     final over0 = over, won0 = won, peak0 = peakRank;
+    // 選ばれないままの小さな知らせ（経営会議の提案・大型の受注・大物の売り込み）は、断る・見送る方で片付ける（1.1.0+30）
+    for (final m in settleSmall()) {
+      if (m.isNotEmpty) N(m);
+    }
     // 時代（景気は統計の成長率から。株価と技術の波は出来事から）
     econData.fcSeed = fcSeed;
     monthEcon(N);
@@ -234,6 +238,8 @@ extension GameTurn on Game {
     monthUnits(N);
     // 関税・輸送・海外の難しさ・供給の網（1.1.0+28）
     monthTrade(N);
+    // 税・設備の古び・技術の世代・ブランド・IT・特許・社長の私生活（1.1.0+30）
+    lifeMonthly(N);
     // 仕掛かり中の打ち手
     for (final b in biz.toList()) {
       if (b.pipe.isNotEmpty) {
@@ -520,6 +526,15 @@ extension GameTurn on Game {
   }
 
   void takeOver(Person p) {
+    // 子どもが継ぐと相続税がかかる。社長の経歴は継いだ人のものになる（1.1.0+30）
+    inheritTax(p, null);
+    if (lifeOn) {
+      life.bio = p.real ? p : null;
+      life.start = 'succ';
+      life.workYears = 0;
+      life.workCat = null;
+      life.married = false;
+    }
     if (p.partner && p.stake != 0) {
       sh.own += p.stake;
       sh.pt = math.max(0, sh.pt - p.stake);
@@ -547,7 +562,12 @@ extension GameTurn on Game {
 
   double sellValue(Biz b) {
     final held = b.age >= 24;
-    return math.max(0, math.max(math.min(b.profit * 12 * 4, b.power * (held ? 2 : .7)), b.power * .15)) * perMul;
+    final v = math.max(0.0, math.max(math.min(b.profit * 12 * 4, b.power * (held ? 2 : .7)), b.power * .15));
+    if (!unitsOn) return v * perMul;
+    // 1.1.0+30 から、店・工場などを持つ事業は、その建物と設備の値打ち（初期投資の半分）と、4年分の利益の半分も見る。
+    // 前は事業の力だけで値を付け、百を超える店を持つ事業が1か月の売上より安く売れていた（資金繰りに詰まって手放すと、そこで会社が終わっていた）
+    final assets = unitTotal(b) * unitCapexAvg(b) * .5 + math.max(0.0, b.profit) * 12 * 2;
+    return math.max(v, assets) * clampD(perMul, .7, 1.5);
   }
 
   // ===== 宿敵 =====
@@ -799,6 +819,7 @@ extension GameTurn on Game {
       p.salary *= 2.5;
       events.add(GameEvent(
           title: M('大物の売り込み'),
+          small: true,
           text: M('業界で名の知れた{0}（{1}歳）が、あなたの会社で働きたいと言ってきました。腕は確かと評判ですが、給料の要求も高い。', [Nm(p.name), p.age]),
           choices: [
             Choice(M('雇う'), M('毎月の給料は{0}。手は使わない', [Y(p.salary)]), () {
@@ -886,7 +907,7 @@ extension GameTurn on Game {
     // 大型の受注
     if (biz.isNotEmpty && rnd() < .017) {
       final b = pick(biz);
-      events.add(GameEvent(title: M('大型の受注'), text: M('「{0}」に、大口の取引の話が来ました。受ければ一気に伸びますが、現場はかなり無理をします。', [I(b.ind)]), choices: [
+      events.add(GameEvent(title: M('大型の受注'), small: true, text: M('「{0}」に、大口の取引の話が来ました。受ければ一気に伸びますが、現場はかなり無理をします。', [I(b.ind)]), choices: [
         Choice(M('受ける'), M('事業の力が1割5分上がる。部下全員の忠誠が下がる'), () {
           b.power *= 1.15;
           for (final p in staff) {
@@ -1027,7 +1048,7 @@ extension GameTurn on Game {
     }
     final p = staffById(b.mgr);
     final kai = p != null ? p.ab['kai']! : pres.ab['kai']!;
-    final hit = .08 + (culture == 'free' ? .08 : 0) + kai / 1000 + (hasT('genius') ? .08 : 0) + (hasT('tech') ? .05 : 0);
+    final hit = .08 + (culture == 'free' ? .08 : 0) + kai / 1000 + (hasT('genius') ? .08 : 0) + (hasT('tech') ? .05 : 0) + uniBonus(b);
     final miss = math.max(.08, .3 - kai / 500);
     final r = rnd();
     double m;
@@ -1044,6 +1065,8 @@ extension GameTurn on Game {
     }
     // 単位で作った商品は、大きいほど当たったときの伸びが大きい
     if (x.sz != null && m > 2) m *= devHitMul[x.sz!];
+    // 技術の業種で大当たりすると特許が取れる（1.1.0+30）
+    if (m > 2) patentOnHit(b, N);
     if (hasDeal('codev', indm[b.ind]!.cat)) m *= 1.5;
     b.power += x.cost * pipeEff(b, x.cost) * m * (b.model == 'fc' ? .6 : 1);
     N(
@@ -1387,7 +1410,7 @@ extension GameTurn on Game {
     }
     for (final o in restP) {
       final p = staffById(o.by)!;
-      events.add(GameEvent(title: M('経営会議の提案'), person: p, text: M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]), choices: [
+      events.add(GameEvent(title: M('経営会議の提案'), small: true, person: p, text: M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]), choices: [
         Choice(M('承認する'), M('手は使わない。忠誠が少し上がる'), () => doProposal(o)),
         Choice(M('却下する'), M(p.amb > 65 ? '忠誠が大きく下がる' : '忠誠が下がる'), () => rejectProposal(o)),
         Choice(M('この人に全部まかせる'), M('これからの提案は自動で通す'), () {

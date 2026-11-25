@@ -18,6 +18,7 @@ extension GameActions on Game {
     }
     final free = biz.isEmpty && !everBiz;
     cash -= c;
+    capSpend(c, profileOf(ind).life);
     useT('start');
     everBiz = true;
     var p = c * newPow;

@@ -81,6 +81,8 @@ Map<String, dynamic> _strip(Map<String, dynamic> j) {
     }
   }
   bare(t['meet'] as Map?);
+  // 1.1.0+30 から、社長の経歴（後を継いだ人の写し）も顔を持つ
+  bare((t['life'] as Map?)?['bio'] as Map?);
   for (final c in t['cos'] as List) {
     (c as Map)
       ..remove('pf')

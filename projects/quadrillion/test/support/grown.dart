@@ -200,7 +200,8 @@ MidStats measureMid({int seed = 2024, int year = 1985, int from = 10, int to = 3
       continue;
     }
     st.months++;
-    if (g.events.length >= 2) st.crowded++;
+    // 1.1.0+30 から、小さな知らせ（経営会議の提案・大型の受注・大物の売り込み）は小窓で手を止めず「今月やること」に入るので、重なりには数えない
+    if (g.events.where((e) => !e.small).length >= 2) st.crowded++;
     for (final e in g.events) {
       if (e.who?.rival != null && sceneTitles.any((t) => msgKey(e.title).startsWith(t))) st.scenes++;
       final k = msgKey(e.title);

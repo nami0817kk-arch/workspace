@@ -54,6 +54,10 @@ const Map<String, double> hoursOf = {
   'rest': 40, // 休む（体力が戻る）
   'inspect': 50, // 海外の視察（1週間。1.1.0+28）
   'supply': 6, // 仕入れ先を足す交渉（1.1.0+28）
+  'it': 16, // 新しいITを入れる（1.1.0+30）
+  'assoc': 12, // 業界団体の役職（1.1.0+30）
+  'media': 10, // 取材・講演
+  'donate': 2, // 寄付
 };
 
 /// 借金が年の利益の何倍を超えると金利が上がるか（段ごとの上乗せ。年の率）
@@ -280,7 +284,16 @@ extension GameReal on Game {
             : x < 8
                 ? 2
                 : 3;
-    if (annualProfit() <= 0) r = debt <= collateral() * .5 ? math.max(r, 2) : 3;
+    // 赤字のときは担保で見る（1.1.0+30 から、担保の4分の1までの借金なら B・半分までなら C。
+    // 前は利益の倍が 99 になって必ず D になり、赤字の月につなぎの融資を少し受けただけで仕入れ先に支払いを早められ、倒れていた）
+    if (annualProfit() <= 0) {
+      final c = collateral();
+      r = debt <= c * .25
+          ? 1
+          : debt <= c * .5
+              ? 2
+              : 3;
+    }
     if (missed > 0) r = math.min(3, r + 1);
     if (bankCtl > 0) r = 3;
     return r;
@@ -419,10 +432,11 @@ extension GameReal on Game {
     N(M('【景気後退】{0}の今年の成長率は{1}%の見込みです', [C(home), pctD(growthOf(home))]), 'bad');
     // 格付けが C・D なら借金の2割、B でも借金が上限を超えていれば1割を、すぐ返すよう迫られる（不況で担保の値打ちと利益が落ちると、上限も下がる）
     final r = ratingIdx();
+    // 1.1.0+30 から、借金が利益の4倍を超える会社（B でも）には、上限を超えていなくても1割5分を迫る（借りまくって不況を迎えると苦しくなるように）
     final k = r >= 2
-        ? .2
-        : r == 1 && debt > borrowLimit()
-            ? .1
+        ? .25
+        : r == 1 && (debt > borrowLimit() || debtMultiple() > 4)
+            ? .15
             : 0.0;
     if (k == 0) return;
     final bank = loans.where((l) => l.lender != 'bond').toList();
@@ -465,6 +479,8 @@ extension GameReal on Game {
       chron('board', M('資金繰りに行き詰まり、メインバンクの管理下に入った'));
       return;
     }
+    // 一度だけ、民事再生で立て直す（1.1.0+30。game_life.dart）
+    if (restructure(N)) return;
     if (mode == 'endless') {
       N(M('会社は倒産しました。残った人脈で、もう一度ゼロから始めます'), 'bad');
       rebirth();
@@ -480,7 +496,8 @@ extension GameReal on Game {
       ytdPre = 0;
       ytdTax = 0;
     }
-    ytdPre += p0;
+    // 1.1.0+30 から、店・工場などに使ったお金は耐用年数で減価償却し、税の計算で利益から引く
+    ytdPre += p0 - depMonth();
     final want = math.max(0.0, ytdPre) * corpTaxRate();
     final t = want - ytdTax;
     ytdTax = want;

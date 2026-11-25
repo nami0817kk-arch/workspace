@@ -633,6 +633,8 @@ extension GameTrade on Game {
       if (d.y == year && d.m == q && trade.done.add('stop:${d.c}:${d.y}:${d.m}')) {
         trade.stops.add(ActiveStop(c: d.c, ja: M(d.ja), left: d.months, unit: d.unit, sup: d.sup));
         if (exposed(d.c)) N(M('{0}で{1}。現場と仕入れが止まっています（{2}か月ほど）', [C(d.c), M(d.ja), d.months]), 'bad');
+        // 店や工場の修理と保険（1.1.0+30）
+        if (d.unit > 0) disasterHit(d.c, d.unit, N);
       }
     }
     // 自社が関わる国の、思いがけない災害（地震・台風・洪水・大きな事故）
@@ -645,6 +647,8 @@ extension GameTrade on Game {
         final st = ActiveStop(c: c, ja: M(ja), left: ri(1, 3), unit: .03 + rnd() * .07, sup: .2 + rnd() * .3);
         trade.stops.add(st);
         N(M('{0}で{1}。現場と仕入れが止まっています（{2}か月ほど）', [C(c), M(ja), st.left]), 'bad');
+        // 港の事故・ストライキは運べなくなるだけで、店や工場は傷まない（1.1.0+30）
+        if (kinds.indexOf(ja) < 3) disasterHit(c, st.unit, N);
       }
     }
     // 仕入れ先が使えなくなった国を外す（ロシアなど）。全部だめなら選び直す

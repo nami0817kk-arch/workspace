@@ -1105,8 +1105,13 @@ class GameEvent {
 
   /// 吹き出しのあとに続ける地の文（取締役会の解任動議など）
   final String? tail;
+
+  /// 小さな知らせ（1.1.0+30。企画書「会議と出来事」）。月の終わりに小窓で手を止めず、「今月やること」に入れる。
+  /// 選ばないまま次の月へ進むと、断る・見送る方で片付く
+  bool small;
   GameEvent(
       {required this.title,
+      this.small = false,
       required this.text,
       required this.choices,
       this.who,

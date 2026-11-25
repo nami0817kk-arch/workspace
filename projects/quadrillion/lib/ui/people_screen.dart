@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'life_screens.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -143,7 +144,7 @@ List<Widget> peopleSplit(GameController ctl, double width) {
   );
   final right = Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: presSel ? [_presHead(ctl), ...presPanels(ctl)] : (sel == null ? [Panel(child: Muted(tr('左の一覧から人を選んでください。')))] : [personDetail(ctl, sel, seg)]),
+    children: presSel ? [_presHead(ctl), ...presPanels(ctl), ...presLifePanels(ctl)] : (sel == null ? [Panel(child: Muted(tr('左の一覧から人を選んでください。')))] : [personDetail(ctl, sel, seg)]),
   );
   return [
     Row(

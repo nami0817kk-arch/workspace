@@ -342,7 +342,11 @@ Widget _dealPanel(GameController ctl, Company c) {
         }, [d.left, pct0Of(d.block)]),
         key: ValueKey('deal-stage-${c.id}'),
         style: ts(size: 12.5, bold: true)));
-    kids.add(Text(tr('買う値段 {0}（上乗せ {1}）・これまでの費用 {2}', [yen(s.dealPrice(c, d)), pct(d.prem * 100), yen(d.spent)]), style: ts(size: 12, color: Pal.mute)));
+    // 1.1.0+30 から、何%分の値段かを添える（過半を買う値段が時価総額より安く見え、計算違いに見えていた）
+    kids.add(Text(
+        tr('株{0}を買う値段 {1}（時価に上乗せ {2}）・これまでの費用 {3}', [pct(math.max(0, d.target - s.pctOf(c))), yen(s.dealPrice(c, d)), pct(d.prem * 100), yen(d.spent)]),
+        key: ValueKey('deal-price-${c.id}'),
+        style: ts(size: 12, color: Pal.mute)));
     kids.add(Padding(padding: const EdgeInsets.only(top: 4), child: Btn(tr('話をやめる'), () => ctl.act(() => s.maCancel(c)), small: true)));
   } else if (!mine || s.pctOf(c) < 50.1) {
     final t = MaDeal(co: c.id, stage: 'offer', left: 1);
@@ -357,7 +361,7 @@ Widget _dealPanel(GameController ctl, Company c) {
     kids.add(_wrap([
       if (f.dd == 0)
         apBtnOf(ctl, tr('調べる（{0}か月・{1}）', [s.ddMonths(c), yen(s.ddCost(c))]), () => ctl.act(() => s.maStart(c)), k: 'merge', primary: true),
-      apBtnOf(ctl, tr(f.dd == 0 ? '調べずに買い付ける（{0}・応じる見込み{1}）' : '買い付けを申し入れる（{0}・応じる見込み{1}）', [yen(s.dealPrice(c, t)), pct0Of(s.dealChance(c, t))]),
+      apBtnOf(ctl, tr(f.dd == 0 ? '調べずに株{2}を買い付ける（{0}・応じる見込み{1}）' : '株{2}の買い付けを申し入れる（{0}・応じる見込み{1}）', [yen(s.dealPrice(c, t)), pct0Of(s.dealChance(c, t)), pct(math.max(0, t.target - s.pctOf(c)))]),
           () => ctl.act(() => s.maStart(c, dd: false)),
           k: 'tob'),
       if (s.listed && c.cap <= s.cap && c.loc == null)
@@ -367,7 +371,7 @@ Widget _dealPanel(GameController ctl, Company c) {
     ]));
     kids.add(Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Muted(tr('買う値段は、今の株価に3割ほど上乗せします。調べずに買うと、隠れた問題が買ったあとに出ます'), size: 11.5)));
+        child: Muted(tr('買う値段は、過半（50.1%）を持つまでの株の分だけで、今の株価に3割ほど上乗せします（会社を丸ごと買う値段ではありません）。調べずに買うと、隠れた問題が買ったあとに出ます'), size: 11.5)));
   }
   return Panel(key: ValueKey('deal-${c.id}'), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: kids));
 }
