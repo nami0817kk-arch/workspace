@@ -574,6 +574,13 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
       ]));
 }
 
+/// 会議の1人ぶんの吹き出し（部下・相棒は名前の頭文字の丸、株主の代表・銀行・取締役は役割の印）
+Widget voiceSay(Voice v) => Say(
+    key: const ValueKey('meeting-voice'),
+    face: v.name != null ? Face(v.name!) : RoleFace(v.kind),
+    who: '${tx(v.who)}${tr('・')}${tx(v.role)}',
+    text: v.text);
+
 void nextEvent(GameController ctl) {
   final s = ctl.game!;
   if (s.over != null) {
@@ -587,7 +594,13 @@ void nextEvent(GameController ctl) {
   }
   final e = s.events.removeAt(0);
   Widget body;
-  if (e.who != null) {
+  if (e.voices.isNotEmpty) {
+    // 会議: 状況の説明は地の文、発言は話す人ごとに顔の丸と肩書きつきの吹き出しで縦に並べる
+    body = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Padding(padding: const EdgeInsets.only(bottom: 4), child: Text(tx(e.text), key: const ValueKey('meeting-lead'), style: ts())),
+      for (final v in e.voices) voiceSay(v),
+    ]);
+  } else if (e.who != null) {
     body = Say(face: Face(e.who!.presName, col: e.face), who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
   } else if (e.person != null) {
     body = Say(face: Face(e.person!.name), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);

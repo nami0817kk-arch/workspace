@@ -266,10 +266,11 @@ extension GameStory on Game {
         : bad
             ? M('「このままでは困ります」')
             : M('「来年はもう一段の成長を」');
-    final eval = M('取締役の評価：{0}　{1}', [word, say]);
+    // 取締役の評価は、取締役の発言として吹き出しに出す
+    final eval = Voice(who: M('取締役'), role: M('評価：{0}', [word]), text: say, kind: 'board');
     final f = friendlyStake();
     if (!bad || f >= 50) {
-      events.add(_note(title, [review, eval, if (bad) M('業績は悪いものの、味方の株が{0}あるので、解任の声は上がりませんでした', [pct(f)])]));
+      events.add(_note(title, [review, if (bad) M('業績は悪いものの、味方の株が{0}あるので、解任の声は上がりませんでした', [pct(f)])], voices: [eval]));
       return;
     }
     // 解任動議
@@ -281,9 +282,9 @@ extension GameStory on Game {
         title: M('取締役会：解任動議'),
         text: Cat([
           review,
-          eval,
           M('業績の悪化を受けて、社長の解任動議が出ました。味方の株は{0}、動議に回りそうな株は{1}です', [pct(f), pct(h)]),
         ], ja: '\n', en: '\n'),
+        voices: [eval],
         choices: [
           Choice(M('改革を約束する'), M('1年後の取締役会までに、年の利益を{0}まで戻せなければ解任される', [Y(target)]), () {
             vow = {'due': (turn + 12).toDouble(), 'target': target, 'y': (year + 1).toDouble()};
@@ -300,8 +301,11 @@ extension GameStory on Game {
         ]));
   }
 
-  GameEvent _note(String title, List<Object?> parts) =>
-      GameEvent(title: title, text: Cat(parts, ja: '\n', en: '\n'), choices: [Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]);
+  GameEvent _note(String title, List<Object?> parts, {List<Voice> voices = const []}) => GameEvent(
+      title: title,
+      text: Cat(parts, ja: '\n', en: '\n'),
+      voices: voices,
+      choices: [Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]);
 
   /// 取締役会で社長を解任する。後継ぎ、なければ一番の部下、子、それもいなければ外から呼ぶ。ゲームは続く
   String oust() {
