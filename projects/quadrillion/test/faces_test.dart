@@ -757,8 +757,10 @@ void main() {
         // 左の一覧は区分ごと（事業を任せている人は「責任者」）
         p.ctl.setPeopleSeg(g.biz.any((b) => b.mgr == s0.id) ? 'mgr' : 'exec');
         await tester.pump();
+        // 1.1.0+31 から、iPhone の横では人の札を上に並べ、多いときは「もっと見る」の先にある
+        await p.showRow('person-row-${s0.id}', 'more-people-picks');
         await p.reveal(find.byKey(ValueKey('person-row-${s0.id}')));
-        final sf = tester.widget<Face>(find.descendant(of: find.byKey(ValueKey('person-row-${s0.id}')), matching: find.byType(Face)));
+        final sf =tester.widget<Face>(find.descendant(of: find.byKey(ValueKey('person-row-${s0.id}')), matching: find.byType(Face)));
         expect(sf.img, s0.face);
         expect(sf.col, abFaceCols[topAbility(g, s0)]);
         // 会議: 話す部下・相棒の吹き出しに、その人の顔
