@@ -110,10 +110,7 @@ class YouthIntakeScreen extends StatelessWidget {
                           key: ValueKey('intake-${p.id}'),
                           // 押すと選手の詳しい画面(能力・得意な位置・人柄)。
                           onTap: () => openPlayerDetail(context, p.id),
-                          leading: PlayerFaceAvatar(
-                            playerId: p.id,
-                            position: p.position,
-                          ),
+                          leading: PlayerFaceAvatar.of(p, gameState),
                           title: Row(
                             children: [
                               Flexible(

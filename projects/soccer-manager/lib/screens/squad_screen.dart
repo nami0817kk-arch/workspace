@@ -625,9 +625,9 @@ class _SquadScreenState extends State<SquadScreen> {
                 value: isSelected,
                 onChanged: (_) => _toggleSelected(p.id),
               )
-            : PlayerFaceAvatar(
-                playerId: p.id,
-                position: p.position,
+            : PlayerFaceAvatar.of(
+                p,
+                gameState,
                 size: 40,
                 highlighted: isStarting,
               ),

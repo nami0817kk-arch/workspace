@@ -469,7 +469,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
       children: [
         Row(
           children: [
-            PlayerFaceAvatar(playerId: p.id, position: p.position, size: 40),
+            PlayerFaceAvatar.of(p, context.read<GameState>(), size: 40),
             const SizedBox(width: 8),
             Expanded(
               child: Column(

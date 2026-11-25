@@ -622,8 +622,8 @@ class _TransferScreenState extends State<TransferScreen>
                   constraints: const BoxConstraints(minHeight: 48),
                   child: Row(
                     children: [
-                      PlayerFaceAvatar(
-                          playerId: p.id, position: p.position, size: 32),
+                      PlayerFaceAvatar.of(p, context.read<GameState>(),
+                          size: 32),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Column(
@@ -1526,8 +1526,7 @@ class _TransferScreenState extends State<TransferScreen>
                     ListTile(
                       key: ValueKey('scouted-${p.id}'),
                       dense: true,
-                      leading: PlayerFaceAvatar(
-                          playerId: p.id, position: p.position, size: 28),
+                      leading: PlayerFaceAvatar.of(p, gameState, size: 28),
                       title: Text(p.name,
                           maxLines: 1, overflow: TextOverflow.ellipsis),
                       subtitle: Text(Tr.pick(
@@ -2011,8 +2010,8 @@ class _TransferScreenState extends State<TransferScreen>
                   : () => openPlayerDetail(context, player.id),
               leading: player == null
                   ? null
-                  : PlayerFaceAvatar(
-                      playerId: player.id, position: player.position),
+                  : PlayerFaceAvatar.of(
+                      player, context.read<GameState>()),
               title: Text(Tr.pick('${t.playerName}(${t.clubName})',
                   '${t.playerName} (${t.clubName})')),
               subtitle: Text(extras.isEmpty

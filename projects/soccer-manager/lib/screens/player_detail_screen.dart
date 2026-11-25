@@ -233,9 +233,9 @@ class _OverviewTab extends StatelessWidget {
     final left = <Widget>[
       Row(
         children: [
-          PlayerFaceAvatar(
-            playerId: p.id,
-            position: p.position,
+          PlayerFaceAvatar.of(
+            p,
+            game,
             size: 48,
             highlighted: true,
           ),
