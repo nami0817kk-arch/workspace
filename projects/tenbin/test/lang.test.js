@@ -45,7 +45,7 @@ var lines = body.split('\n'), bad = [];
 lines.forEach(function (line, i) {
   var code = line.replace(/\/\/.*$/, '');
   if (!/'[^']*[ぁ-んァ-ヶ一-龠][^']*'/.test(code)) return;
-  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）|speak\('ねこ', true\)|YOON|SMALL_ROMA|=== 'っ'|measureText\('あ'\)/.test(code)) return;
+  if (/T\(|ROMA|name: '|ja: |試作用|normal:ふつう|mini\('|fillText\('(ねこ|うみ)'|lang="ja"|: \{ glue: \[|glue: \['のり'|cancelled: ''|declined: '|'tenbin-kana-|kana \+ |\['ねこ'|^\s*'[ぁ-ん]': '[a-z]+'|lang === 'en' \?|id="unbuy"|MIT）|CC BY-SA 4\.0）|speak\('ねこ', true\)|YOON|SMALL_ROMA|=== 'っ'|measureText\('あ'\)|KANA_SAY = /.test(code)) return;
   bad.push((i + 1) + ': ' + line.trim().slice(0, 100));
 });
 assert.deepStrictEqual(bad, [], '英語と対になっていない日本語の文字列');

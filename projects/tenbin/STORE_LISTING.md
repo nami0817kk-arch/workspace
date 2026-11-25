@@ -59,6 +59,8 @@ Hiragana letters drop one at a time. Stack them on the stage, and when touching 
 - Nearly 4,000 everyday words — animals, food, nature, verbs and adjectives — with kanji and English meanings, from the JMdict dictionary.
 - All 74 hiragana you need: the basic kana plus が, ぱ and small っ ゃ ゅ ょ — so you can build がっこう (gakkou, school) and きょう (kyou, today).
 - Your word book keeps every word you find, with kanji and meaning. Collect more to unlock new stages and letter colors.
+- Review mode quizzes you on the words you collected: see the English meaning, pick the right hiragana.
+- Every letter and word can be read aloud in a Japanese voice, so you learn the sounds as you play.
 - Six stages with Japanese scenery: a garden, a shrine with a seesaw, a tea field, a river, the sea and a snowy mountain.
 - Turn romaji off when you can read the letters yourself.
 - Optional items: glue, board, undo and freeze.

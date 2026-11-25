@@ -115,6 +115,15 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
 .wd .lb{font:700 10px "M PLUS Rounded 1c",sans-serif;color:var(--sub);margin-top:10px}
 .wd .mn{font:700 16px "M PLUS Rounded 1c",sans-serif;margin-top:2px}
 .wd .row{margin-top:12px}
+/* おさらい */
+.card p.qm{font-size:20px;font-weight:800;color:var(--ink);margin:10px 0 4px;line-height:1.35}
+.qc{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.qc .w{font-size:26px;padding:10px 0;width:100%;color:var(--ink)}
+.qc .w.right{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok) inset;opacity:1}
+.qc .w.wrong{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent) inset;opacity:1}
+.qc .w:disabled:not(.right):not(.wrong){opacity:.45}
+.card p.qa{min-height:40px;margin-top:10px;font-weight:800;color:var(--ink)}
+.qa .ro2{font-weight:700;color:#1f5f8a;font-size:13px}
 </style></head><body>
 <div class="app">
   <header>
@@ -236,6 +245,18 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   }
   speak.q = 0;
   window.__speak = speak;
+  // 落ちてくる字も読む（2026-11-25。字と音を結びつける）。英語では はじめから つける（保存キー kanaVoice）。
+  // ことばの読み上げを邪魔しない: 何か読んでいる間は字は読まない（ことばの方が大事）
+  var kanaVoice = store.get('kanaVoice', null); if (typeof kanaVoice !== 'boolean') kanaVoice = lang === 'en';
+  // 小さい字を1字だけ読ませると「つ」「や」と大きい字と同じに聞こえるので、小さいと言う
+  var KANA_SAY = { 'っ': 'ちいさい つ', 'ゃ': 'ちいさい や', 'ゅ': 'ちいさい ゆ', 'ょ': 'ちいさい よ' };
+  function speakKana(ch) {
+    if (!synth || !kanaVoice || muted || !ch || ch === C.BOARD) return;
+    try { if (synth.speaking || synth.pending) return;
+      var u = new SpeechSynthesisUtterance(KANA_SAY[ch] || ch); u.lang = 'ja-JP'; if (jaVoice) u.voice = jaVoice; u.rate = 0.9;
+      synth.speak(u); } catch (e) {}
+  }
+  window.__speakKana = speakKana;
   var MEAN = window.TenbinMeanings || {};
   function meaningOf(w) { var m = MEAN[w]; return m ? m[1] : ''; }
   function kanjiOf(w) { var m = MEAN[w]; return m ? m[0] : ''; }
@@ -385,6 +406,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     s = C.create(null, plat, { items: useItems }); phase = 'play'; ang = visAng = 0; pointer.x = W / 2; camTop = BASE_TOP; endTimer = 0;
     parts = []; popups = []; links = []; shake = 0; newWords = []; recordBroken = false; best = bests[bkey()] || { p: 0, n: 0, h: 0 }; hudPts = 0; wordLog = []; unlocked = [];
     hideSheet(); drawNext(); setHint(); drawItems(); preview = { key: '', at: -99, words: [] }; tiltWarn = false;
+    speakKana(C.current(s));
   }
   // はじめて遊ぶ人への手引き（最初の3字だけ。1度見たら出さない）
   var coachEl = document.getElementById('coach'), coached = store.get('coached', false) === true;
@@ -977,7 +999,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     card.querySelectorAll('[data-plat]').forEach(function (el) { el.onclick = function () { plat = el.getAttribute('data-plat'); store.set('plat', plat); SND.rot(); onPick(); }; });
     card.querySelectorAll('[data-items]').forEach(function (el) { el.onclick = function () { useItems = el.getAttribute('data-items') === '1'; store.set('items', useItems); SND.rot(); onPick(); }; });
     card.querySelectorAll('[data-lang]').forEach(function (el) { el.onclick = function () { setLang(el.getAttribute('data-lang')); SND.rot(); onPick(); }; });
-    card.querySelectorAll('[data-voice]').forEach(function (el) { el.onclick = function () { voiceOn = el.getAttribute('data-voice') === '1'; store.set('voice', voiceOn); SND.rot(); if (voiceOn) speak('ねこ', true); onPick(); }; });
+    card.querySelectorAll('[data-voice]').forEach(function (el) { el.onclick = function () { var v = el.getAttribute('data-voice'); voiceOn = v !== 'off'; kanaVoice = v === 'kana'; store.set('voice', voiceOn); store.set('kanaVoice', kanaVoice); SND.rot(); if (voiceOn) speak('ねこ', true); onPick(); }; });
     card.querySelectorAll('[data-roma]').forEach(function (el) { el.onclick = function () { showRoma = el.getAttribute('data-roma') === '1'; store.set('roma', showRoma); SND.rot(); drawNext(); onPick(); }; });
     card.querySelectorAll('[data-theme]').forEach(function (el) { el.onclick = function () { theme = el.getAttribute('data-theme'); store.set('theme', theme); INK = themeOf(theme).ink; SND.rot(); drawNext(); onPick(); }; });
   }
@@ -994,8 +1016,12 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       H(T('字の色', 'Letter colors')) + themeButtons() +
       '<p class="unlock">' + nextUnlock() + '</p>' +
       '<p style="font-size:11px">' + T('ことば帳 ', 'Word book ') + dictCount() + ' / ' + ALL_WORDS.length + T('・遊んだ回数 ', ' · Games ') + (moneyPrefs.get('games', 0) || 0) + '</p>' +
-      '<div class="seg" style="margin-top:8px' + (synth ? ';grid-template-columns:1fr 1fr 1fr 1fr' : '') + '">' +
-        (synth ? '<button data-voice="1" class="' + (voiceOn ? 'cur' : '') + '">' + T('読み上げ', 'Voice') + '</button><button data-voice="0" class="' + (voiceOn ? '' : 'cur') + '">' + T('なし', 'Off') + '</button>' : '') +
+      // 読み上げ: ことばだけ／落ちてくる字も／なし
+      (synth ? H(T('読み上げ', 'Voice')) + '<div class="seg" style="grid-template-columns:1fr 1fr 1fr">' +
+        '<button data-voice="word" class="' + (voiceOn && !kanaVoice ? 'cur' : '') + '">' + T('ことば', 'Words') + '</button>' +
+        '<button data-voice="kana" class="' + (voiceOn && kanaVoice ? 'cur' : '') + '">' + T('字も', 'Kana too') + '</button>' +
+        '<button data-voice="off" class="' + (!voiceOn ? 'cur' : '') + '">' + T('なし', 'Off') + '</button></div>' : '') +
+      '<div class="seg" style="margin-top:8px">' +
         '<button data-lang="ja" class="' + (lang === 'ja' ? 'cur' : '') + '" lang="ja">日本語</button><button data-lang="en" class="' + (lang === 'en' ? 'cur' : '') + '" lang="en">English</button></div>' +
       (money.adFree() ? '<p style="margin-top:8px">' + T('広告なし（購入ずみ）', 'No ads (purchased)') + '</p>' :
         // アプリでは値段はストアから（読めるまでボタンを出さない。審査の端末で値段が取れないと「課金が見つからない」になる）
@@ -1162,6 +1188,62 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // 崩れていく途中（結果がまだ出ていない）は開かない。閉じたときに結果が先に出て、あとでもう一度出ていた
     if (phase === 'end' && endTimer > 0) return;
     var wasPlay = phase === 'play'; if (wasPlay) phase = 'pause';
+    renderDict(wasPlay);
+  }
+  // --- おさらい（2026-11-25）: 集めたことばの英語の意味を見て、3つのひらがなから選ぶ ---
+  // 問題を作る決まり（画面と切り離す。test/quiz.test.js が取り出して動かす）。
+  // got: 集めたことば、all: 全部のことば、mean(w): 英語の意味、rng: 0〜1。最大 n 問。
+  // まちがいの選択肢は、同じ字数で意味の違うことば（集めたことばを先に。足りなければ全部から）
+  function quizRound(got, all, mean, rng, n) {
+    function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = (rng() * (i + 1)) | 0, t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    var pool = shuffle(got.filter(function (w) { return mean(w); })).slice(0, n), qs = [];
+    pool.forEach(function (w) {
+      var m = mean(w), ok = function (x) { return x !== w && mean(x) && mean(x) !== m && x.length === w.length; };
+      var wrong = shuffle(got.filter(ok)).slice(0, 2);
+      if (wrong.length < 2) wrong = wrong.concat(shuffle(all.filter(function (x) { return ok(x) && wrong.indexOf(x) < 0; })).slice(0, 2 - wrong.length));
+      if (wrong.length < 2) return;
+      qs.push({ word: w, meaning: m, choices: shuffle([w].concat(wrong)) });
+    });
+    return qs;
+  }
+  window.__quizRound = quizRound;
+  var QUIZ_MIN = 4, QUIZ_N = 10;
+  function gotWords() { return ALL_WORDS.filter(function (w) { return dict[w]; }); }
+  function showQuiz(wasPlay) {
+    var qs = quizRound(gotWords(), ALL_WORDS, meaningOf, Math.random, QUIZ_N), i = 0, right = 0;
+    function ask() {
+      if (i >= qs.length) {
+        showSheet('<h2>' + T('おさらい', 'Review') + '</h2><p class="big sm">' + right + '<small> / ' + qs.length + '</small></p>' +
+          '<p>' + T(right === qs.length ? 'ぜんぶ正解！' : 'まちがえたことばは、ことば帳で押すと もう一度見られる。', right === qs.length ? 'Perfect!' : 'Tap a word in the word book to see it again.') + '</p>' +
+          '<div class="row"><button class="btn" id="qAgain">' + T('もう一度', 'Again') + '</button><button class="btn sec" id="qBack">' + T('ことば帳へ', 'Word book') + '</button></div>');
+        document.getElementById('qAgain').onclick = function () { showQuiz(wasPlay); };
+        document.getElementById('qBack').onclick = function () { renderDict(wasPlay); };
+        return;
+      }
+      var q = qs[i];
+      showSheet('<h2>' + T('おさらい', 'Review') + ' <small style="font-size:13px;color:var(--sub)">' + (i + 1) + ' / ' + qs.length + '</small></h2>' +
+        '<p>' + T('この英語の意味のことばは？', 'Which word means this?') + '</p><p class="qm">' + esc(q.meaning) + '</p>' +
+        '<div class="qc">' + q.choices.map(function (c) { return '<button class="w" data-pick="' + c + '">' + c + '</button>'; }).join('') + '</div>' +
+        '<p class="qa" id="qAns"></p>' +
+        '<div class="row"><button class="btn" id="qNext" hidden>' + T(i + 1 < qs.length ? 'つぎ' : 'けっか', i + 1 < qs.length ? 'Next' : 'Results') + '</button><button class="btn sec" id="qBack">' + T('やめる', 'Quit') + '</button></div>');
+      document.getElementById('qBack').onclick = function () { renderDict(wasPlay); };
+      document.getElementById('qNext').onclick = function () { i++; ask(); };
+      card.querySelectorAll('[data-pick]').forEach(function (el) { el.onclick = function () {
+        if (card.querySelector('.qc .right')) return;   // 1問に1回だけ
+        var pick = el.getAttribute('data-pick'), hit = pick === q.word;
+        if (hit) right++;
+        card.querySelectorAll('[data-pick]').forEach(function (b) { var c = b.getAttribute('data-pick'); if (c === q.word) b.className = 'w right'; else if (c === pick) b.className = 'w wrong'; b.disabled = true; });
+        var k = kanjiOf(q.word);
+        document.getElementById('qAns').innerHTML = (hit ? T('せいかい！', 'Correct!') : T('こたえ', 'Answer') + T('：', ': ') + esc(q.word)) +
+          '<br><span class="ro2">' + (k && k !== q.word ? esc(k) + ' · ' : '') + esc(romaji(q.word)) + '</span>';
+        if (hit) SND.word(2); else buzz(30);
+        if (!muted) speak(q.word, true);   // 答えの読みを聞かせる（読み上げを切っていても。音を消していたら鳴らさない）
+        var nx = document.getElementById('qNext'); nx.hidden = false; try { nx.focus(); } catch (e) {}
+      }; });
+    }
+    ask();
+  }
+  function renderDict(wasPlay) {
     // 五十音の順に並べる。集めた割合を棒で
     function list(title, arr) { arr = arr.slice().sort(function (a, b) { return a.localeCompare(b, 'ja'); }); var got = arr.filter(function (w) { return dict[w]; }).length;
       // 英語では意味つきの札にするので、1段に並ぶ数が減る
@@ -1171,7 +1253,10 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
       (got < arr.length ? '<span class="w lock">' + T('まだ ' + (arr.length - got) + '語', (arr.length - got) + ' to find') + '</span>' : '') + '</div>'; }
     showSheet('<div class="dict"><h2>' + T('ことば帳', 'Word book') + '</h2><p>' + T('くっつけてできたことばが ここに入る。', 'Words you make are collected here. ') + (synth ? T('押すと意味と読みが出る。', 'Tap a word to see its meaning and hear it. ') : T('押すと意味が出る。', 'Tap a word to see its meaning. ')) + dictCount() + ' / ' + ALL_WORDS.length + '</p><p class="unlock">' + nextUnlock() + '</p>' +
       list(T('2字', '2 letters'), C.WORDS.short) + list(T('3字', '3 letters'), C.WORDS.middle) + list(T('4字より長い', '4+ letters'), C.WORDS.long) +
-      '<div class="row"><button class="btn" id="close">' + T('とじる', 'Close') + '</button></div></div>');
+      '<div class="row">' + (dictCount() >= QUIZ_MIN ? '<button class="btn" id="quiz" style="background:var(--ok)">' + T('おさらい', 'Review') + '</button>'
+        : '<button class="btn" id="quiz" disabled>' + T(QUIZ_MIN + '語で おさらい', 'Review at ' + QUIZ_MIN + ' words') + '</button>') +
+      '<button class="btn sec" id="close">' + T('とじる', 'Close') + '</button></div></div>');
+    document.getElementById('quiz').onclick = function () { showQuiz(wasPlay); };
     document.getElementById('close').onclick = function () { if (wasPlay) { phase = 'play'; hideSheet(); } else if (phase === 'end') showResult(); else showMenu(); };
   }
   document.getElementById('dictBtn').onclick = showDict;
@@ -1213,6 +1298,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
     // ローマ字は、自分で決めていなければ言語に合わせる
     if (typeof store.get('roma', null) !== 'boolean') showRoma = lang === 'en';
     if (typeof store.get('voice', null) !== 'boolean') voiceOn = lang === 'en';
+    if (typeof store.get('kanaVoice', null) !== 'boolean') kanaVoice = lang === 'en';
     // 言語で中身が変わる表は作り直す
     ITEM_INFO = lang === 'en'
       ? { glue: ['Glue', 'Next letter sticks'], board: ['Board', 'Drop a flat board'], undo: ['Undo', 'Remove the last letter'], freeze: ['Freeze', 'Lock the letters in place'] }
@@ -1271,7 +1357,7 @@ canvas{display:block;width:100%;height:auto;touch-action:none}
   document.getElementById('rotL').onclick = function () { rotate(-1); };
 
   // キーボード（パソコンで遊ぶとき）: ←→ で動かす（Shift で細かく）、↑ か R でまわす、スペース・↓・Enter で落とす
-  function dropNow() { if (phase === 'play' && C.canDrop(s)) { audio(); var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); drawItems(); } }
+  function dropNow() { if (phase === 'play' && C.canDrop(s)) { audio(); var hp = holdPos(); C.drop(s, hp.x, ang); ang = visAng = 0; drawNext(); drawItems(); speakKana(C.current(s)); } }
   document.addEventListener('keydown', function (e) {
     // はじめの画面は Enter で はじめる、結果は Enter で もう一度（ボタンに枠が当たっているときはそのボタン）
     if (e.key === 'Enter' && (phase === 'menu' || (phase === 'end' && !endTimer)) && !(document.activeElement && document.activeElement.tagName === 'BUTTON')) {
