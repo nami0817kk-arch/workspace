@@ -245,18 +245,23 @@
       else { val = `${Math.round(g1)}分`; ok = g1 >= g.t; part = g1 >= g.t * 0.7 ? 0.5 : 0; }
       return { k: g.k, label: GOAL_DEF[g.k].label, text: YA.goalText(g), val, ok, score: ok ? 1 + (g.bonus > 0 ? 0.2 : 0) : part };
     });
-    const score = res.reduce((s, x) => s + x.score, 0);
+    // 降格した年は、育成と約束が届いていても C より上にしない（2026-11-25 直し：最下位で降格して B・「おおむね届きました」・信頼度 -1 だった）
+    const releg = w.leagueEndMove === 1;
+    const score = releg ? Math.min(1.2, res.reduce((s, x) => s + x.score, 0)) : res.reduce((s, x) => s + x.score, 0);
     const letter = score >= 3 ? 'S' : score >= 2.3 ? 'A' : score >= 1.5 ? 'B' : score >= 0.8 ? 'C' : 'D';
     const d = score - 1.9; // B評価（2つ達成）はほぼ現状維持、A以上で信頼が上がり、C以下で下がる
     // 信頼度：高いほど上がりにくく（70を超えると逓減）、真ん中へ戻る力も強く（2026-11-17 直し：2部で1年目49→8年目93と張り付いていた）
     const upK = d > 0 && c.trust > 70 ? Math.max(0.2, (100 - c.trust) / 30) : 1;
     c.trust = clamp(c.trust + d * 9 * upK, 0, 100);
     c.trust += (55 - c.trust) * 0.3;
+    if (releg) c.trust = clamp(c.trust - 6, 0, 100); // 降格は真ん中へ戻る力で薄まらないよう、別に下げる
     YA.addRep(w, d * 3 + (w.leagueEndMove === -1 ? 4 : w.leagueEndMove === 1 ? -4 : 0));
     c.rep += (50 - c.rep) * 0.15; // 評判も、何もしなければ真ん中へ戻る
     c.budgetAdj = clamp((c.budgetAdj || 0) + d * 0.05, -0.3, 0.4);
     w.rep = c.rep;
     const rec = { year: w.year, letter, score: Math.round(score * 10) / 10, rank, level: w.league ? w.league.level : 2, goals: res };
+    if (releg) rec.releg = true;
+    if (w.leagueEndMove === -1) rec.promo = true;
     c.eval.push(rec);
     let dismissed = false;
     if (letter === 'D') c.bad++;

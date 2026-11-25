@@ -92,6 +92,31 @@
     return w.director;
   };
   const dirLine = (w) => { const d = YA.directorOf(w); return `強化部長の${d.name}（${d.pers}）`; };
+  // 来年の注文：その年に起きたことから選ぶ。前の年と同じ注文は続けない
+  // （2026-11-25 直し：6年続けて「今の形を続けてください。地元の子も使ってほしい」だった）
+  YA.directorAsk = function (w, last) {
+    const goal = (k) => (last.goals || []).find((g) => g.k === k);
+    const pro = (w.alumni || []).filter((a) => a.year === w.year - 1 && a.status === 'pro').length;
+    const hasStar = Object.values(w.players || {}).some((p) => p.star);
+    const cands = [
+      { id: 'up', c: !!last.releg, t: '1年で上のリーグに戻してください' },
+      { id: 'rank', c: !last.releg && goal('result') && !goal('result').ok, t: 'まずは目標の順位を守ってください' },
+      { id: 'dev', c: goal('develop') && !goal('develop').ok, t: '選手をもう一段、伸ばしてください' },
+      { id: 'young', c: goal('promise') && !goal('promise').ok, t: '高1をもっと試合に出してください' },
+      { id: 'pro', c: pro < 2, t: '来年はプロを2人以上、送り出してほしい' },
+      { id: 'star', c: hasStar && pro >= 2, t: '★の子は、トップに上げられるところまで育ててください' },
+      { id: 'cup', c: true, t: '大会でも、もう一つ上まで勝ち進んでほしい' },
+      { id: 'local', c: true, t: '今の形を続けてください。地元の子も使ってほしい' },
+      { id: 'b', c: true, t: 'Bチームの子にも、試合の場を作ってください' },
+    ];
+    // 降格・目標を外したものは、続けて同じでも必ず言う（外した目標を言わずに「今の形を続けて」にならないように）。
+    // 2つ以上外していれば、前の年と違う方を先に言う
+    const musts = cands.filter((x) => x.c && ['up', 'rank', 'dev', 'young'].includes(x.id));
+    if (musts.length) return musts.find((x) => x.id !== (w.club && w.club.dirAsk)) || musts[0];
+    // それ以外は年ごとに入れ替える（前の年と同じものは続けない）
+    const ok = cands.filter((x) => x.c && x.id !== (w.club && w.club.dirAsk));
+    return ok[YA.hash(String(w.seed) + 'ask' + w.year) % ok.length];
+  };
   // 年度末の評価に、理由と来年の注文を添える
   const ev0 = YA.yearEndEval || null;
   const ys0 = YA.yearStart;
@@ -100,9 +125,10 @@
     const d = YA.directorOf(w);
     const last = w.club && w.club.eval && w.club.eval[w.club.eval.length - 1];
     if (last && last.year === w.year - 1 && !w.club.dirSaid) {
-      const why = last.letter === 'S' || last.letter === 'A' ? '目標以上の結果と、卒業生の進路が評価されました' : last.letter === 'B' ? '目標はおおむね届きました' : last.letter === 'C' ? '成績か育成のどちらかが物足りませんでした' : '結果も育成も、厳しい一年でした';
-      const ask = last.letter === 'D' || last.letter === 'C' ? 'まずは目標の順位を守ってください' : (w.alumni || []).filter((a) => a.year === w.year - 1 && a.status === 'pro').length < 2 ? '来年はプロを2人以上、送り出してほしい' : '今の形を続けてください。地元の子も使ってほしい';
-      YA.noteTier(w, 1, `${dirLine(w)}との面談。評価は${last.letter}。「${why}。${ask}」`);
+      const why = last.releg ? '降格は、クラブとして重く受け止めています' : last.promo ? ((last.goals || []).every((g) => g.ok) ? '昇格、見事でした。育成の数字もついてきています' : '昇格、見事でした。ただ、目標のすべてには届いていません') : last.letter === 'S' || last.letter === 'A' ? ((last.goals || []).every((g) => g.ok) ? '目標以上の結果と、卒業生の進路が評価されました' : `${(last.goals || []).filter((g) => g.ok).map((g) => g.label).join('と')}の目標に届いたことが評価されました`) : last.letter === 'B' ? '目標はおおむね届きました' : last.letter === 'C' ? '成績か育成のどちらかが物足りませんでした' : '結果も育成も、厳しい一年でした';
+      const ask = YA.directorAsk(w, last);
+      w.club.dirAsk = ask.id;
+      YA.noteTier(w, 1, `${dirLine(w)}との面談。評価は${last.letter}。「${why}。${ask.t}」`);
       d.rel = clamp(d.rel + (last.letter === 'S' || last.letter === 'A' ? 8 : last.letter === 'D' ? -10 : 0), 0, 100);
     }
     return r;
