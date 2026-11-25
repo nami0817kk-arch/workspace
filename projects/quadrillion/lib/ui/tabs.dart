@@ -1213,7 +1213,6 @@ List<Widget> presPanels(GameController ctl) {
       Text('${tr('自分で見られる事業は{0}つまで。', [s.presCap()])}${P.age >= 55 ? tr('そろそろ後継ぎを考える年です。') : ''}', style: ts(size: 12.5)),
     ])),
   ])));
-  out.add(_presGrowPanel(s));
   final cu = CULT[s.culture]!;
   out.add(Panel(
       padding: const EdgeInsets.fromLTRB(Ui.pad, 2, Ui.pad, Ui.pad),
@@ -1269,6 +1268,8 @@ List<Widget> presPanels(GameController ctl) {
         ]),
       ),
   ])));
+  // 腕の伸び方は、社長・社風・後継ぎのあとに置く（後継ぎの欄の位置は前と変えない）
+  out.add(_presGrowPanel(s));
   return out;
 }
 
