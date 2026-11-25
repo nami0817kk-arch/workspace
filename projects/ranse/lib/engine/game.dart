@@ -550,6 +550,11 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- 合戦 ----------
+  /// 武の高さで討死の危うさに掛ける倍率（[battle] で `skill` の守りに重ねて掛ける）。
+  /// 武50で1倍、武20で約2倍、武80で約0.6倍、武95で約0.45倍。腕の立たない者が戦に出続けると、早く死ぬ。
+  static double battleSkillRisk(int bu) =>
+      clampD(1 + (50 - bu) * (bu < 50 ? .035 : .013), .4, 2.4);
+
   /// 合戦に加わる。[role] は持ち場（van 先陣・main 本陣・ほかは後詰め）。
   /// 合戦の状況（`battles.dart`）は、選んだ手で [risk]（討死の危うさの倍率）・[gain]（手柄の倍率）・
   /// [edge]（味方の勝ちやすさに足す）を変える。既定の値なら従来どおり。
@@ -581,6 +586,7 @@ class Game extends ChangeNotifier {
         (l.troops * .3 > 30 ? 30 : l.troops * .3);
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
+    dp *= battleSkillRisk(l.bu); // 腕が立たないほど死にやすい（2026-11-25、ユーザー「能力値によって戦死の確率あげる」）
     dp *= risk * spendingRisk(this); // 具足・馬・郎党（`spending.dart`）
     // 死因と結果の文に出す家の名は、いまの呼び名で（一五六七年からは徳川、一五八六年からは豊臣）。
     final en = houseName(this, e.name);
