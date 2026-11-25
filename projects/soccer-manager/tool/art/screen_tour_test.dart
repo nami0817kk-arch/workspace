@@ -37,6 +37,7 @@ import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/screens/transfer_bid_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
+import 'package:soccer_manager/widgets/club_look_card.dart';
 import 'package:soccer_manager/widgets/fm_panel.dart';
 import 'package:soccer_manager/widgets/group_page.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
@@ -186,6 +187,36 @@ void main() {
     }
     // 環境変数 PAGES で撮るページを絞れる(例: オーナー室)。
     const only = String.fromEnvironment('PAGES');
+    // 見た目を選ぶ画面(クラブ → ファンと街 の「見た目を変える」の先)。
+    // シーズン中はボタンが出ないので、画面を直に開いて撮る(PAGES=look)。
+    if (only.isEmpty || only.split(',').contains('look')) {
+      final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+      nav.push(MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: Text(_t('クラブの見た目', 'Club look'))),
+          body: const SingleChildScrollView(
+            padding: EdgeInsets.all(12),
+            child: ClubLookEditor(popOnSave: true),
+          ),
+        ),
+      ));
+      await tester.pump(const Duration(milliseconds: 600));
+      await shoot('look-editor');
+      await tester.dragFrom(const Offset(430, 330), const Offset(0, -250));
+      await tester.pump(const Duration(milliseconds: 400));
+      await shoot('look-editor-scroll');
+      final drawn = find
+          .byTooltip(_t('描いたエンブレム(形・模様・頭文字)',
+              'Drawn crest (shape, pattern, initials)'))
+          .hitTestable();
+      if (drawn.evaluate().isNotEmpty) {
+        await tester.tap(drawn.first);
+        await tester.pump(const Duration(milliseconds: 400));
+        await shoot('look-editor-drawn');
+      }
+      nav.pop();
+      await tester.pump(const Duration(milliseconds: 600));
+    }
     for (final p in _en
         ? const [
             'Status',

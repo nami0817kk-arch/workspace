@@ -68,6 +68,16 @@ void main() {
       }
       expect(seen.length, greaterThan(15));
     });
+
+    test('名前に色の語があれば、その色の絵を付ける', () {
+      for (final name in ['青嵐FC', 'Blue Storm FC', '紅獅子ユナイテッド', 'Gold Town']) {
+        final named = ClubPalette.hueForName(name)!;
+        final c = ClubLook.defaultCrestFor('user', name);
+        expect(ClubPalette.hueDistance(ClubLook.crestHues(c).$1, named),
+            lessThan(30),
+            reason: '$name -> $c');
+      }
+    });
   });
 
   group('保存', () {
@@ -100,8 +110,8 @@ void main() {
     });
 
     test('画像を選ぶと色はその絵の色、描いたエンブレムに戻すと形・頭文字が残る', () {
-      const drawn = ClubLook(
-          hue: 225, accentHue: 52, shape: 2, motif: 3, initial: 'MF');
+      const drawn =
+          ClubLook(hue: 225, accentHue: 52, shape: 2, motif: 3, initial: 'MF');
       final pic = drawn.withCrest(1);
       expect(pic.crest, 1);
       expect((pic.hue, pic.accentHue), ClubLook.crestHues(1));
@@ -113,8 +123,7 @@ void main() {
   });
 
   group('自クラブ', () {
-    test('新しく始めると、25枚の1つが付き、エンブレムとユニフォームの色がそろう',
-        () async {
+    test('新しく始めると、25枚の1つが付き、エンブレムとユニフォームの色がそろう', () async {
       final gs = GameState();
       await gs.startNewGame('画像FC');
       final s = gs.save!;
@@ -136,8 +145,7 @@ void main() {
       expect(back.clubLook!.sameAs(look), isTrue);
     }, timeout: const Timeout(Duration(minutes: 3)));
 
-    test('見た目を決めていない古いセーブは、開いたときに1つ付ける。決めた見た目は残す',
-        () async {
+    test('見た目を決めていない古いセーブは、開いたときに1つ付ける。決めた見た目は残す', () async {
       final gs = GameState();
       await gs.startNewGame('古いFC');
       final json = gs.save!.toJson()..remove('clubLook');
@@ -198,7 +206,8 @@ void main() {
       await tester.pumpWidget(const MaterialApp(
           home: ClubEmblem(teamId: 'user', teamName: '自分FC', size: 40)));
       image = tester.widget<Image>(find.byType(Image));
-      expect((image.image as AssetImage).assetName, 'assets/crests/own_19.webp');
+      expect(
+          (image.image as AssetImage).assetName, 'assets/crests/own_19.webp');
       // 他のクラブには自クラブ用の画像を出さない(書き換えた名前は描く)。
       await tester.pumpWidget(const MaterialApp(
           home: ClubEmblem(teamId: 'cpu1', teamName: '自分FC', size: 40)));
@@ -220,8 +229,7 @@ void main() {
       await tester.pumpWidget(ChangeNotifierProvider<GameState>.value(
         value: gs,
         child: const MaterialApp(
-          home: Scaffold(
-              body: SingleChildScrollView(child: ClubLookEditor())),
+          home: Scaffold(body: SingleChildScrollView(child: ClubLookEditor())),
         ),
       ));
       await tester.pump();
