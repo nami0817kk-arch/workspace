@@ -13,7 +13,8 @@ void main() {
     final gs = GameState();
     await gs.startNewGame('見た目FC');
     final s = gs.save!;
-    final look = gs.currentClubLook.copyWith(
+    // 初めは画像のエンブレム。描いたエンブレムにして色・形を決める。
+    final look = gs.currentClubLook.withoutCrest().copyWith(
         hue: 225, accentHue: 52, shape: 2, motif: 3, initial: 'MF');
     expect(gs.clubLookChangeCosts, isFalse, reason: '最初の季は無料');
     final conf = s.confidence;

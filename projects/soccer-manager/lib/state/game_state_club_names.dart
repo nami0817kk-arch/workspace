@@ -47,7 +47,11 @@ extension GameStateClubNames on GameState {
       found = true;
     }
     if (!found) return false;
-    if (teamId == s.userTeamId) s.clubName = n;
+    if (teamId == s.userTeamId) {
+      s.clubName = n;
+      // 表の画像のクラブを表に無い名前にしたら、自クラブ用の画像を付ける。
+      GameStateClubLook.ensureOwnCrest(s);
+    }
     if (teamId == s.rivalTeamId) s.rivalTeamName = n;
     _notify();
     await _persistNow();

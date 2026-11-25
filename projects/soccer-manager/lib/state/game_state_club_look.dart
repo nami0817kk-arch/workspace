@@ -37,29 +37,49 @@ extension GameStateClubLook on GameState {
   /// 変えたらサポーターの期待が下がるか。
   bool get clubLookChangeCosts => _save != null && !_firstSeasonAtClub;
 
-  /// 今の見た目(決めていなければ、自動の見た目を数字にしたもの)。
+  /// 今の見た目(決めていなければ、クラブから決まる画像のエンブレム)。
   ClubLook get currentClubLook {
     final s = _save!;
-    final own = s.clubLook;
-    if (own != null) return own;
-    final palette = ClubPalette.of(s.userTeamId, clubName: s.clubName);
-    final seed = s.userTeamId.hashCode.abs();
-    final name = s.clubName.trim();
+    return s.clubLook ?? defaultClubLook(s.userTeamId, s.clubName);
+  }
+
+  /// 決めていない自クラブに付ける見た目。自クラブ用の25枚のうち、クラブの
+  /// id と名前から決まる1枚(2026-11-25。盾＋頭文字の描画は初期にしない)。
+  /// 形・模様・頭文字は「描いたエンブレムに戻す」ときの下書き。
+  static ClubLook defaultClubLook(String teamId, String clubName) {
+    final seed = teamId.hashCode.abs();
+    final name = clubName.trim();
     return ClubLook(
-      hue: palette.hue,
-      accentHue: (palette.hue + 40) % 360,
+      hue: 0,
+      accentHue: 0,
       shape: seed % 6,
       motif: (seed ~/ 6) % 6,
       initial: name.isEmpty ? '?' : String.fromCharCode(name.runes.first),
-    );
+    ).withCrest(ClubLook.defaultCrestFor(teamId, clubName));
+  }
+
+  /// 見た目を決めていない自クラブに、画像のエンブレムを1つ付ける。
+  ///
+  /// 新しく始めたとき・古いセーブを開いたとき・クラブを替えたときに呼ぶ。
+  /// 表にある名前のクラブ(買い直したクラブ)は、そのクラブの元の画像を
+  /// 出すので付けない。すでに決めた見た目(描いたエンブレムも)は変えない
+  /// (オーナーが選んだもの。画像は見た目を変える画面で勧める)。
+  static void ensureOwnCrest(SaveGame s) {
+    if (s.clubLook != null) return;
+    if (ClubNames.crestIndexOf(s.clubName) != null) return;
+    s.clubLook = defaultClubLook(s.userTeamId, s.clubName);
   }
 
   /// 見た目を決める。変えられなければ false。
   Future<bool> setClubLook(ClubLook look) async {
     final s = _save;
     if (s == null || !canChangeClubLook) return false;
-    final initial = look.initial.trim();
-    if (initial.isEmpty || initial.runes.length > 2) return false;
+    var initial = look.initial.trim();
+    if (initial.isEmpty || initial.runes.length > 2) {
+      // 画像のエンブレムなら頭文字は出ない。今の頭文字を残して決める。
+      if (look.crest == null) return false;
+      initial = currentClubLook.initial;
+    }
     if (clubLookChangeCosts) {
       _changeSupporters(-changePenalty, SupporterReason.events);
       s.clubLookChangedSeason = _clubLookSeasonKey;

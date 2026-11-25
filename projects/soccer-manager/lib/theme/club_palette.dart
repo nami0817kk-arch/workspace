@@ -28,17 +28,33 @@ class ClubPalette {
     // オーナーが決めた見た目があれば、それが先。
     final look = ClubLookRegistry.lookFor(teamId);
     if (look != null) {
+      // 画像のエンブレムを選んでいれば、その絵の2色(保存した色より先)。
+      final c = look.crest;
+      if (c != null) {
+        final (h, a) = ClubLook.crestHues(c);
+        return ClubPalette.fromHue(h, accentHue: a);
+      }
       return ClubPalette.fromHue(look.hue, accentHue: look.accentHue);
     }
     // エンブレム画像のあるクラブは、その絵の2色に合わせる。名前の色の語
     // (下の hueForName)より先に見る。画像は名前の色で描いてあるので
     // 食い違わないが、もし違っても画面に出ている絵の色が正しい。
-    final crest =
-        clubName == null ? null : ClubCrests.indexFor(teamId, clubName);
+    final crest = clubName == null
+        ? null
+        : ClubCrests.indexFor(teamId, clubName);
     if (crest != null) return ClubPalette.fromCrest(crest);
+    // 決めていない自クラブは、出している自クラブ用の画像の色。
+    final own = clubName == null
+        ? null
+        : ClubCrests.ownFallbackFor(teamId, clubName);
+    if (own != null) {
+      final (h, a) = ClubLook.crestHues(own);
+      return ClubPalette.fromHue(h, accentHue: a);
+    }
     final named = clubName == null ? null : hueForName(clubName);
     return ClubPalette.fromHue(
-        named ?? Random(teamId.hashCode).nextDouble() * 360);
+      named ?? Random(teamId.hashCode).nextDouble() * 360,
+    );
   }
 
   /// エンブレム画像 [index] の2色から。片方が白・黒・灰(-1)なら、
@@ -117,9 +133,11 @@ class ClubPalette {
 
   /// エンブレムの差し色。
   Color get accent => HSLColor.fromAHSL(
-          1, accentHue ?? (hue + 40) % 360, accentHue == null ? 0.6 : 0.62,
-          accentHue == null ? 0.30 : 0.45)
-      .toColor();
+    1,
+    accentHue ?? (hue + 40) % 360,
+    accentHue == null ? 0.6 : 0.62,
+    accentHue == null ? 0.30 : 0.45,
+  ).toColor();
 
   /// ピッチ上のユニフォーム色。芝の緑の上でも沈まないよう、
   /// エンブレムの地の色より明るくする。
@@ -152,8 +170,8 @@ class ClubPalette {
   /// 実際のサッカーがアウェイユニフォームで解決しているのと同じことをする。
   ClubPalette distinguishedFrom(ClubPalette home) =>
       hueDistance(hue, home.hue) < minimumHueSeparation
-          ? shiftedHue(140)
-          : this;
+      ? shiftedHue(140)
+      : this;
 
   /// これ以上近い色相同士は、芝の上で見分けがつかないとみなす。
   static const double minimumHueSeparation = 45;

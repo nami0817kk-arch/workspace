@@ -149,8 +149,8 @@ import '../logic/fan_segments.dart';
 import '../logic/contract_style.dart';
 import '../logic/country_coefficient.dart';
 import '../logic/big_moment.dart';
+import '../data/club_names.dart';
 import '../models/club_look.dart';
-import '../theme/club_palette.dart';
 import '../logic/sponsor_slots.dart';
 import '../logic/club_license.dart';
 import '../logic/market_trend.dart';
@@ -851,6 +851,8 @@ class GameState extends ChangeNotifier {
     _migrateEconomyIfNeeded(save);
     _migrateClubValueIfNeeded(save);
     _migrateStaffWageIfNeeded(save);
+    // 見た目を決めていない自クラブに、画像のエンブレムを1つ付ける。
+    GameStateClubLook.ensureOwnCrest(save);
     // ファンの需要を持たない旧セーブは、部と規模から作る。
     _ensureFanDemand(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
@@ -1795,6 +1797,8 @@ class GameState extends ChangeNotifier {
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _applyScenario(scenario);
+    // 自クラブのエンブレムは、自クラブ用の25枚からクラブで決まる1枚。
+    GameStateClubLook.ensureOwnCrest(_save!);
     // スタジアムに来たいファンの数(部と評判から)。
     _ensureFanDemand(_save!);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];

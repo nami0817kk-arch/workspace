@@ -1,14 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import '../data/club_crests.dart';
 import '../l10n/tr.dart';
 import '../models/club_look.dart';
 import '../theme/club_palette.dart';
 
 /// クラブのエンブレム。表(ClubNames)にある名前のクラブは画像
-/// (assets/crests。ClubCrests)を出し、それ以外(自クラブ・書き換えた名前)は
-/// チームIDから決定論的に描く。同じチームなら常に同じ形・色・イニシャルになる。
+/// (assets/crests。ClubCrests)を出す。自クラブはオーナーが選んだ画像
+/// (own_NN。決めていなければクラブから決まる1枚)か、描いたエンブレム。
+/// 名前を書き換えたほかのクラブは、チームIDから決定論的に描く。
 class ClubEmblem extends StatelessWidget {
   final String teamId;
   final String teamName;
@@ -29,8 +31,17 @@ class ClubEmblem extends StatelessWidget {
   Widget build(BuildContext context) {
     // 表にある名前のクラブは、画像生成で作ったエンブレムを出す
     // (自クラブ・見た目を試しに描くとき・表に無い名前は下の描画)。
+    final chosen = look ?? ClubLookRegistry.lookFor(teamId);
+    final own = chosen != null
+        ? chosen.crest
+        : ClubCrests.ownFallbackFor(teamId, teamName);
     final crest = look == null ? ClubCrests.indexFor(teamId, teamName) : null;
-    if (crest != null) {
+    final asset = own != null
+        ? ClubCrests.ownAssetPath(own)
+        : crest != null
+        ? ClubCrests.assetPath(crest)
+        : null;
+    if (asset != null) {
       return Semantics(
         label: Tr.pick('$teamNameのエンブレム', '$teamName crest'),
         image: true,
@@ -38,7 +49,7 @@ class ClubEmblem extends StatelessWidget {
           width: size,
           height: size,
           child: Image.asset(
-            ClubCrests.assetPath(crest),
+            asset,
             width: size,
             height: size,
             fit: BoxFit.contain,
@@ -59,10 +70,9 @@ class ClubEmblem extends StatelessWidget {
     final base = palette.base;
     final accent = palette.accent;
     // オーナーが決めた見た目があれば、形・模様・頭文字もそれに従う。
-    final chosen = look ?? ClubLookRegistry.lookFor(teamId);
-    final shapeIndex =
-        chosen?.shape ?? seed.abs() % _EmblemPainter.shapeCount;
-    final motifIndex = chosen?.motif ??
+    final shapeIndex = chosen?.shape ?? seed.abs() % _EmblemPainter.shapeCount;
+    final motifIndex =
+        chosen?.motif ??
         (seed.abs() ~/ _EmblemPainter.shapeCount) % _EmblemPainter.motifCount;
     final initial = (chosen != null && chosen.initial.trim().isNotEmpty)
         ? chosen.initial.trim()
@@ -165,11 +175,12 @@ class _EmblemPainter extends CustomPainter {
       case 2: // 円形
         return Path()..addOval(Rect.fromLTWH(0, 0, w, h));
       case 3: // 角丸の四角(近年のクラブに多い簡素な形)
-        return Path()
-          ..addRRect(RRect.fromRectAndRadius(
+        return Path()..addRRect(
+          RRect.fromRectAndRadius(
             Rect.fromLTWH(w * 0.04, h * 0.04, w * 0.92, h * 0.92),
             Radius.circular(w * 0.18),
-          ));
+          ),
+        );
       case 4: // ひし形
         return Path()
           ..moveTo(w * 0.5, 0)
@@ -213,8 +224,7 @@ class _EmblemPainter extends CustomPainter {
         canvas.translate(w / 2, h / 2);
         canvas.rotate(-pi / 5);
         canvas.drawRect(
-          Rect.fromCenter(
-              center: Offset.zero, width: w * 2, height: h * 0.24),
+          Rect.fromCenter(center: Offset.zero, width: w * 2, height: h * 0.24),
           motifPaint,
         );
         canvas.restore();
