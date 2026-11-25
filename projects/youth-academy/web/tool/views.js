@@ -815,6 +815,27 @@ async function clearEvents() {
         ok(w.YA.todoDue(tw).some((x) => x.id === 'int'), '11月の最後の週は、内部昇格が締め切りのやり残しになる');
         tw.week = 12;
         ok(!w.YA.todoDue(tw).length, '締め切りのない週は止めない');
+        // 2026-11-25：降格の年は C より上にしない・強化部長の注文は年ごとに変える
+        {
+          const Y = w.YA;
+          const ew = Y.newWorld(77, Y.makeStart({}));
+          ew.club.goals.forEach((g) => { if (g.k === 'develop') g.x = -99; if (g.k === 'promise') g.t = 0; });
+          ew.leagueEndMove = 1;
+          const t0 = ew.club.trust;
+          const er = Y.evaluate(ew).rec;
+          ok(er.releg && (er.letter === 'C' || er.letter === 'D') && ew.club.trust <= t0 - 8, `降格の年は育成と約束が届いても C 以下・信頼度が大きく下がる（${er.letter}・${Math.round(t0)}→${Math.round(ew.club.trust)}）`);
+          ok(Y.directorAsk(ew, er).id === 'up', '降格の次の年は「1年で上のリーグに戻して」');
+          ew.leagueEndMove = 0;
+          const seen = [];
+          for (let i = 0; i < 6; i++) {
+            const rec = { letter: 'B', goals: [{ k: 'result', ok: true }, { k: 'develop', ok: true }, { k: 'promise', ok: true }] };
+            ew.year = 2 + i;
+            const a = Y.directorAsk(ew, rec);
+            ok(a.id !== ew.club.dirAsk, `強化部長の注文は前の年と続けて同じにしない（${ew.year}年目：${a.id}）`);
+            ew.club.dirAsk = a.id; seen.push(a.id);
+          }
+          ok(new Set(seen).size >= 3, `目標に届いた年の注文は入れ替わる（${seen.join(',')}）`);
+        }
         // 2026-11-25「やり残しが何も出ない」→ 期限ものの下に今週やれること（灰色の札）
         tw.phase = 'plan'; tw.week = 35;
         const sp = Object.values(tw.players).filter((p) => p.grade === 1 && p.inj <= 0).slice(0, 2);
