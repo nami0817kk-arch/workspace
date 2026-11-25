@@ -213,12 +213,14 @@ void main() {
       expect(ScoutingEngine.academyTierShift(3), greaterThan(0));
       expect(ScoutingEngine.academyTierShift(1),
           greaterThan(ScoutingEngine.academyTierShift(3)));
+      // 300人では運で差が 1.77 まで縮んだ回があった(2026-11-25 の
+      // TestFlight のビルド)ので、2000人の平均で比べる。
       double meanPotential(int? tier) {
         var s = 0;
-        for (var i = 0; i < 300; i++) {
+        for (var i = 0; i < 2000; i++) {
           s += ScoutingEngine.generateAcademyGraduate(tier: tier).potential;
         }
-        return s / 300;
+        return s / 2000;
       }
 
       expect(meanPotential(3) - meanPotential(null), greaterThan(2));
