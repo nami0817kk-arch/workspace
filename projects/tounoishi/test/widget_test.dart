@@ -571,6 +571,15 @@ void main() {
     expect(html, contains('if(n<=0||(g&&g.chron))return;'));
   });
 
+  test('ゴブリンの絵: 一族6通りとよその一族の戦士（0.7.52・試作 v70）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final k in ['gob_sm', 'gob_st', 'gob_mm', 'gob_mt', 'gob_lm', 'gob_lt', 'gob_clan']) {
+      expect(html, contains(" $k:'data:image/png;base64,"), reason: k);
+    }
+    expect(html, contains("var GOBSPR={gob_sm:'gob_sm',gob_st:'gob_st',gob_mm:'gob_mm',gob_mt:'gob_mt',gob_lm:'gob_lm',gob_lt:'gob_lt'}"));
+    expect(html, contains("e.clan=1;e.spr='gob_clan';"));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
