@@ -41,6 +41,7 @@ import 'retainer_life.dart';
 import 'retainers.dart';
 import 'rng.dart';
 import 'scene_art.dart';
+import 'scholar.dart';
 import 'seasons.dart';
 import 'shadow_life.dart';
 import 'spending.dart';
@@ -182,6 +183,7 @@ class Game extends ChangeNotifier {
       ...buildTraitScenes(),
       ...buildSpendingScenes(),
       ...buildAimScenes(),
+      ...buildScholarScenes(), // 知で身を立てる道（`scholar.dart`、2026-11-25）
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -578,15 +580,17 @@ class Game extends ChangeNotifier {
       'main' => (d: .09, m: 1.2),
       _ => (d: .03, m: .6),
     };
+    // 軍師は、武と知の高いほうで戦う（`scholar.dart`）。
+    final bu = scholarBattleBu(this);
     final skill =
-        l.bu * .6 +
+        bu * .6 +
         l.chi * .15 +
         l.un * .25 +
         (l.gun ? 10 : 0) +
         (l.troops * .3 > 30 ? 30 : l.troops * .3);
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
-    dp *= battleSkillRisk(l.bu); // 腕が立たないほど死にやすい（2026-11-25、ユーザー「能力値によって戦死の確率あげる」）
+    dp *= battleSkillRisk(bu); // 腕が立たないほど死にやすい（2026-11-25、ユーザー「能力値によって戦死の確率あげる」）
     dp *= risk * spendingRisk(this); // 具足・馬・郎党（`spending.dart`）
     // 死因と結果の文に出す家の名は、いまの呼び名で（一五六七年からは徳川、一五八六年からは豊臣）。
     final en = houseName(this, e.name);
@@ -598,6 +602,7 @@ class Game extends ChangeNotifier {
         (mult *
                 gain *
                 spendingGain(this) *
+                scholarBattleGain(this) *
                 (skill / 12 + rng.range(0, 6)) *
                 (win ? 1.3 : .6) *
                 (1 + l.troops / 150))
@@ -1150,13 +1155,15 @@ class Game extends ChangeNotifier {
         final n = kPromo[l.rank + 1]!;
         if (l.merit >= n.merit &&
             l.fav >= n.fav &&
-            (l.troops >= n.troops || !canFight)) {
+            (l.troops >= n.troops ||
+                !canFight ||
+                scholarPromoOk(this, l.rank + 1))) {
           l.rank++;
           if (l.rank > l.maxRank) l.maxRank = l.rank;
           final bonus = l.rank * 10;
           l.gold += bonus;
           j(6);
-          log('昇進！${rk[l.rank]}に取り立てられた。恩賞として銭$bonus貫。', 'big');
+          log('昇進！${scholarRankName(this, l.rank)}に取り立てられた。恩賞として銭$bonus貫。', 'big');
         } else {
           break;
         }
@@ -1298,7 +1305,8 @@ class Game extends ChangeNotifier {
       if (retired) return '隠居';
       return l.ronin ? (l.female ? '流浪の身' : '浪人') : '${l.clsName}（無役）';
     }
-    return retired ? '隠居（元${rk[l.rank]}）' : rk[l.rank];
+    final name = scholarRankName(this, l.rank);
+    return retired ? '隠居（元$name）' : name;
   }
 
   String nextPromo() {
@@ -1313,7 +1321,11 @@ class Game extends ChangeNotifier {
     if (l.rank == 7) return l.female ? '好機を待つ（後見など）' : '下剋上か主君の死で大名へ';
     if (l.rank >= 8) return '天下まで：勢力占有率 ${(share * 100).round()}% / 50%';
     final n = kPromo[l.rank + 1]!;
-    final troops = canFight ? '　兵${l.troops}/${n.troops}' : '';
+    final troops = !canFight
+        ? ''
+        : scBun(this)
+        ? '　知${l.chi}/${kBunChi[l.rank + 1]}'
+        : '　兵${l.troops}/${n.troops}';
     return '功${l.merit}/${n.merit}　信頼${l.fav}/${n.fav}$troops';
   }
 

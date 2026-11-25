@@ -11,6 +11,7 @@ import 'peace.dart';
 import 'peace_life.dart';
 import 'rng.dart';
 import 'aims.dart';
+import 'scholar.dart';
 import 'spouse_match.dart';
 import 'temple.dart';
 import 'trait_scenes.dart';
@@ -55,6 +56,8 @@ List<FocusDef> adultFocusOptions(Game g) => [
   ...peaceLifeFocusOptions(g),
   // 謀反の支度・縁のある人を訪ねる・よその家に仕え直す道を探る（`aims.dart`、2026-11-25）。
   ...aimFocusOptions(g),
+  // 献策する（`scholar.dart`、2026-11-25。知で功を積む）。
+  ...scholarFocusOptions(g),
   // 銭と功の使い道は、心がけではなく画面の上の帯の「使い道」から（`spending.dart`、2026-11-25）。
 ];
 
