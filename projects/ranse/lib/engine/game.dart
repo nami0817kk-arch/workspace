@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'ability_ways.dart';
 import 'adult.dart';
 import 'aims.dart';
 import 'ashigaru.dart';
@@ -184,6 +185,7 @@ class Game extends ChangeNotifier {
       ...buildSpendingScenes(),
       ...buildAimScenes(),
       ...buildScholarScenes(), // 知で身を立てる道（`scholar.dart`、2026-11-25）
+      ...buildAbilityWayScenes(), // 政・魅・運で身を立てる道（`ability_ways.dart`、2026-11-25）
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -602,7 +604,7 @@ class Game extends ChangeNotifier {
         (mult *
                 gain *
                 spendingGain(this) *
-                scholarBattleGain(this) *
+                abilityBattleGain(this) *
                 (skill / 12 + rng.range(0, 6)) *
                 (win ? 1.3 : .6) *
                 (1 + l.troops / 150))
@@ -1094,6 +1096,7 @@ class Game extends ChangeNotifier {
       return;
     }
     spendingYear(this); // 田・知行・店などの持ち物（`spending.dart`）
+    abilityWaysYear(this); // 側近の信頼と功（`ability_ways.dart`）
     _halfYearUpkeep();
     if (l.dead == null && l.end == null) _halfYearUpkeep();
     rec();
@@ -1157,13 +1160,13 @@ class Game extends ChangeNotifier {
             l.fav >= n.fav &&
             (l.troops >= n.troops ||
                 !canFight ||
-                scholarPromoOk(this, l.rank + 1))) {
+                abilityPromoOk(this, l.rank + 1))) {
           l.rank++;
           if (l.rank > l.maxRank) l.maxRank = l.rank;
           final bonus = l.rank * 10;
           l.gold += bonus;
           j(6);
-          log('昇進！${scholarRankName(this, l.rank)}に取り立てられた。恩賞として銭$bonus貫。', 'big');
+          log('昇進！${abilityRankName(this, l.rank)}に取り立てられた。恩賞として銭$bonus貫。', 'big');
         } else {
           break;
         }
@@ -1305,7 +1308,7 @@ class Game extends ChangeNotifier {
       if (retired) return '隠居';
       return l.ronin ? (l.female ? '流浪の身' : '浪人') : '${l.clsName}（無役）';
     }
-    final name = scholarRankName(this, l.rank);
+    final name = abilityRankName(this, l.rank);
     return retired ? '隠居（元$name）' : name;
   }
 
@@ -1323,8 +1326,8 @@ class Game extends ChangeNotifier {
     final n = kPromo[l.rank + 1]!;
     final troops = !canFight
         ? ''
-        : scBun(this)
-        ? '　知${l.chi}/${kBunChi[l.rank + 1]}'
+        : abilityPromoLine(this, l.rank + 1) != null
+        ? '　${abilityPromoLine(this, l.rank + 1)}'
         : '　兵${l.troops}/${n.troops}';
     return '功${l.merit}/${n.merit}　信頼${l.fav}/${n.fav}$troops';
   }

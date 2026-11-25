@@ -10,6 +10,7 @@ import 'pastimes.dart';
 import 'peace.dart';
 import 'peace_life.dart';
 import 'rng.dart';
+import 'ability_ways.dart';
 import 'aims.dart';
 import 'scholar.dart';
 import 'spouse_match.dart';
@@ -58,6 +59,8 @@ List<FocusDef> adultFocusOptions(Game g) => [
   ...aimFocusOptions(g),
   // 献策する（`scholar.dart`、2026-11-25。知で功を積む）。
   ...scholarFocusOptions(g),
+  // 政・魅・運の重点（`ability_ways.dart`、2026-11-25）。
+  ...abilityFocusOptions(g),
   // 銭と功の使い道は、心がけではなく画面の上の帯の「使い道」から（`spending.dart`、2026-11-25）。
 ];
 
