@@ -24,12 +24,19 @@ List<Widget> presLifePanels(GameController ctl) {
   final s = ctl.game!;
   if (!s.lifeOn) return const [];
   final l = s.life, bio = l.bio;
+  // 細かい能力と説明の文は、押すと開く（1.1.0+31）
+  bool open(String id) => ctl.shown.contains('detail-$id');
+  Widget head(String title, String id) => Row(children: [
+        Expanded(child: CardTitle(title)),
+        DetailBtn(key: ValueKey('detail-$id'), open: open(id), onTap: () => ctl.toggleShown('detail-$id')),
+      ]);
+  const pad = EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad);
   return [
     Panel(
       key: const ValueKey('pres-bio'),
+      padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('経歴')),
-        const SizedBox(height: 4),
+        head(tr('経歴'), 'pres-bio'),
         Grid2([
           Kv(tr('始め方'), switch (l.start) {
             'work' => tr('会社員を{0}年してから', [l.workYears]),
@@ -39,55 +46,62 @@ List<Widget> presLifePanels(GameController ctl) {
           if (bio != null) Kv(tr('学歴'), bio.major != null ? tr('{0}・{1}', [de(EDU_JA[bio.edu]), de(MAJOR_JA[bio.major]!)]) : de(EDU_JA[bio.edu])),
           if (l.workCat != null) Kv(tr('前職'), tr('{0}の大きな会社で{1}年', [CATN[l.workCat!]!, l.workYears])),
           Kv(tr('人脈'), '${s.net}'),
-        ]),
-        if (bio?.sk != null) ...[
-          const SizedBox(height: 6),
-          for (final g in SK_GROUPS)
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Text.rich(TextSpan(style: ts(size: 12), children: [
-                TextSpan(text: '${de(g.$1)}　', style: ts(size: 12, color: Pal.mute)),
-                TextSpan(text: g.$2.map((k) => '${de(SK_JA[k]!)} ${bio!.sk![k]}').join(tr('・'))),
-              ])),
-            ),
+        ], minCell: 150),
+        if (open('pres-bio')) ...[
+          if (bio?.sk != null) ...[
+            const SizedBox(height: 6),
+            for (final g in SK_GROUPS)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text.rich(TextSpan(style: ts(size: 12), children: [
+                  TextSpan(text: '${de(g.$1)}　', style: ts(size: 12, color: Pal.mute)),
+                  TextSpan(text: g.$2.map((k) => '${de(SK_JA[k]!)} ${bio!.sk![k]}').join(tr('・'))),
+                ])),
+              ),
+          ],
+          const SizedBox(height: 4),
+          Muted(tr('勤めた業界と同じ分類の事業を自分で見ると、経験が効いて事業の力が上がります。'), size: 11.5),
         ],
-        const SizedBox(height: 4),
-        Muted(tr('勤めた業界と同じ分類の事業を自分で見ると、経験が効いて事業の力が上がります。'), size: 11.5),
       ]),
     ),
     Panel(
       key: const ValueKey('pres-private'),
+      padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('私生活')),
-        const SizedBox(height: 4),
+        head(tr('私生活'), 'pres-private'),
         Grid2([
           Kv(tr('家族'), l.married ? tr('結婚・子ども{0}人', [s.kids.length]) : tr('独身・子ども{0}人', [s.kids.length])),
           Kv(tr('個人の財産'), yen(s.wealth)),
           Kv(tr('個人保証'), l.guarantee ? tr('あり（会社の借金）') : tr('なし')),
           Kv(tr('相続税（最高）'), '${jsNum(jsRound(inheritRate(s.home, s.yr()) * 100))}%'),
-        ]),
-        const SizedBox(height: 4),
-        Muted(tr('個人保証があると、会社が倒れたときに社長の財産も失います（上場するか借金が無くなると外れます）。子どもが継ぐと、持ち株に相続税がかかり、払うために株の一部を手放します。'), size: 11.5),
+        ], minCell: 150),
+        if (open('pres-private')) ...[
+          const SizedBox(height: 4),
+          Muted(tr('個人保証があると、会社が倒れたときに社長の財産も失います（上場するか借金が無くなると外れます）。子どもが継ぐと、持ち株に相続税がかかり、払うために株の一部を手放します。'), size: 11.5),
+        ],
       ]),
     ),
     Panel(
       key: const ValueKey('pres-public'),
+      padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('世間の顔')),
-        const SizedBox(height: 4),
+        head(tr('世間の顔'), 'pres-public'),
         Grid2([
           Kv(tr('評判'), '${l.fame.round()}'),
           Kv(tr('ブランド'), '${l.brand.round()}'),
-          Kv(tr('業界団体の役職'), s.turn < l.assocUntil ? tr('あと{0}か月', [l.assocUntil - s.turn]) : tr('なし')),
         ]),
-        const SizedBox(height: 6),
-        Wrap(spacing: 6, runSpacing: 4, children: [
+        Kv(tr('業界団体の役職'), s.turn < l.assocUntil ? tr('あと{0}か月', [l.assocUntil - s.turn]) : tr('なし')),
+        const SizedBox(height: 2),
+        // ボタンは押せる範囲が 44pt あるので、行のあいだは空けない
+        Wrap(spacing: 6, runSpacing: 0, children: [
           Btn(tr('業界団体の役職に就く'), () => ctl.act(s.takeIndustryPost), key: const ValueKey('pres-assoc'), small: true, ap: s.hrs('assoc').round(), enabled: s.turn >= l.assocUntil),
           Btn(tr('取材・講演'), () => ctl.act(s.giveTalk), key: const ValueKey('pres-talk'), small: true, ap: s.hrs('media').round()),
           Btn(tr('寄付 {0}', [yen(s.donateCost())]), () => ctl.act(s.donate), key: const ValueKey('pres-donate'), small: true, ap: s.hrs('donate').round()),
         ]),
-        const SizedBox(height: 4),
-        Muted(tr('名前が知られるほど人脈とブランドが育ちますが、時間を取られ、失言すると会社の評判ごと落ちます。'), size: 11.5),
+        if (open('pres-public')) ...[
+          const SizedBox(height: 4),
+          Muted(tr('名前が知られるほど人脈とブランドが育ちますが、時間を取られ、失言すると会社の評判ごと落ちます。'), size: 11.5),
+        ],
       ]),
     ),
   ];

@@ -37,39 +37,67 @@ const sideW = 210.0;
 const railW = 66.0;
 
 // ===== 上の帯 =====
-Widget topBar(GameController ctl, {required bool side}) {
+/// 上の帯に「次の月へ」などのボタンも載せる最小の幅（字の倍率で割った幅。これより狭い縦の画面は、今までどおり下にボタンの段を置く）
+const topMergeMin = 600.0;
+
+/// 上の帯の「まとめて進める」「社長の行動」に字まで書く最小の幅（字の倍率で割った幅。これより狭いと印だけにする）
+const topLabelsMin = 760.0;
+
+/// 上の帯。[merged] のときは、数字を2段に詰めて、右端に「まとめて進める」「社長の行動」「次の月へ」を置く（1.1.0+31。下の段をなくして、中身を見える高さを広げた）
+Widget topBar(GameController ctl, {required bool side, bool merged = false, double width = 0}) {
   final s = ctl.game!;
   final rk = s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1;
   Widget stat(String k, String v, [Color c = Pal.ink, Key? key]) => Padding(
-        padding: const EdgeInsets.only(right: 12),
+        padding: EdgeInsets.only(right: merged ? 10 : 12),
         child: Text.rich(key: key, TextSpan(children: [
           TextSpan(text: k, style: ts(size: 12, color: Pal.mute)),
           TextSpan(text: v, style: ts(size: 13, color: c, bold: true)),
         ])),
       );
-  return Container(
-    decoration: const BoxDecoration(color: Pal.panel, border: Border(bottom: BorderSide(color: Pal.line))),
-    padding: const EdgeInsets.fromLTRB(10, 4, 6, 4),
-    child: Row(children: [
-      Text(ym(s.year, s.q, sp: true), key: const ValueKey('top-date'), style: ts(size: 15, color: Pal.goldtx, bold: true)),
-      const SizedBox(width: 12),
-      // 数字の列は、入りきらなければ字を縮めて1行に収める
-      Expanded(
-        child: FittedBox(
+  final date = Text(ym(s.year, s.q, sp: true), key: const ValueKey('top-date'), style: ts(size: merged ? 14 : 15, color: Pal.goldtx, bold: true));
+  final cash = FlashStat(tr('現金 '), yen(s.cash), value: s.cash, turn: s.turn);
+  final debt = stat(tr('借金 '), yen(s.debt), s.debt > 0 ? Pal.down : Pal.ink, const ValueKey('top-debt'));
+  final cap = FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx);
+  final rank = FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false);
+  final hours = HoursGauge(s, key: const ValueKey('ap'));
+  // 数字の列は、入りきらなければ字を縮めて収める
+  final stats = merged
+      ? FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
-          child: Row(children: [
-            FlashStat(tr('現金 '), yen(s.cash), value: s.cash, turn: s.turn),
-            const SizedBox(width: 12),
-            stat(tr('借金 '), yen(s.debt), s.debt > 0 ? Pal.down : Pal.ink, const ValueKey('top-debt')),
-            FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
-            const SizedBox(width: 12),
-            FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
-            const SizedBox(width: 12),
-            HoursGauge(s, key: const ValueKey('ap')),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+            Row(mainAxisSize: MainAxisSize.min, children: [date, const SizedBox(width: 10), cash, const SizedBox(width: 10), debt]),
+            Row(mainAxisSize: MainAxisSize.min, children: [cap, const SizedBox(width: 10), rank, const SizedBox(width: 10), hours]),
           ]),
-        ),
-      ),
+        )
+      : FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(children: [cash, const SizedBox(width: 12), debt, cap, const SizedBox(width: 12), rank, const SizedBox(width: 12), hours]),
+        );
+  // 狭い横の画面（667 など）では、「まとめて進める」「社長の行動」は印だけにする（「次の月へ」は字のまま、金の主ボタン）
+  final labels = width / Ui.textScale >= topLabelsMin;
+  final acts = merged && s.over == null
+      ? <Widget>[
+          const SizedBox(width: 6),
+          labels
+              ? Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true)
+              : IconBtn(Icons.fast_forward, tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu')),
+          const SizedBox(width: 4),
+          labels
+              ? Btn(tr('社長の行動'), () => openPresSheet(ctl), key: const ValueKey('pres-open'), small: true, more: true)
+              : IconBtn(Icons.directions_walk, tr('社長の行動'), () => openPresSheet(ctl), key: const ValueKey('pres-open')),
+          const SizedBox(width: 4),
+          Btn(tr('次の月へ'), () => doNext(ctl), key: const ValueKey('next'), primary: true),
+        ]
+      : const <Widget>[];
+  return Container(
+    decoration: const BoxDecoration(color: Pal.panel, border: Border(bottom: BorderSide(color: Pal.line))),
+    padding: merged ? const EdgeInsets.fromLTRB(10, 1, 6, 1) : const EdgeInsets.fromLTRB(10, 4, 6, 4),
+    child: Row(children: [
+      if (!merged) ...[date, const SizedBox(width: 12)],
+      Expanded(child: stats),
+      ...acts,
       if (!side)
         Padding(
           padding: const EdgeInsets.only(left: 4),
@@ -282,11 +310,16 @@ List<Widget> townTabL(GameController ctl, double width) {
         child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: 480, city: city), size: Size.infinite)))),
   );
   // 都市圏の切り替え（自分の国の都市。1.1.0+26）
-  final cityChips = Padding(
+  // 1行に並べ、入りきらない分は横に送る（折り返すと、街の絵の下が2段になっていた。1.1.0+31）
+  final cityChips = SingleChildScrollView(
+    key: const PageStorageKey('town-cities'),
+    scrollDirection: Axis.horizontal,
     padding: const EdgeInsets.only(top: 4),
-    child: Wrap(spacing: 6, runSpacing: 4, children: [
-      for (var i = 0; i < cities.length; i++)
+    child: Row(children: [
+      for (var i = 0; i < cities.length; i++) ...[
+        if (i > 0) const SizedBox(width: 6),
         PickChip(L.en ? cities[i].en : cities[i].ja, key: ValueKey('town-city-$i'), on: city == i, onTap: () => ctl.setTownCity(i)),
+      ],
     ]),
   );
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
@@ -329,14 +362,21 @@ List<Widget> townTabL(GameController ctl, double width) {
     ]),
   );
   final econ = countryPanel(ctl, s.home, key: const ValueKey('town-econ'), title: tr('{0}の景気', [cm[s.home]!.n]));
-  final recent = s.log.reversed.take(6).toList();
+  // 今月の分（この月と、月を進めたときに出た知らせ）だけを出し、それより前は「もっと見る」で出す（1.1.0+31）
+  final recent = s.log.reversed.take(townNewsMax).toList();
+  final cur = s.year * 12 + s.q;
+  final fresh = recent.takeWhile((n) => n.y != null && n.q != null && n.y! * 12 + n.q! >= cur - 1).length;
+  final newsOpen = ctl.shown.contains('town-news');
+  Widget line(LogEntry n) => NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n));
   final news = Panel(
     key: const ValueKey('town-news'),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       CardTitle(tr('今月のニュース')),
       const SizedBox(height: 4),
-      if (recent.isEmpty) Muted(tr('まだ知らせはありません')),
-      for (final n in recent) NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n)),
+      if (recent.isEmpty) Muted(tr('まだ知らせはありません')) else if (fresh == 0) Muted(tr('今月の知らせはありません')),
+      for (final n in recent.take(newsOpen ? recent.length : fresh)) line(n),
+      if (recent.length > fresh)
+        MoreBtn(key: const ValueKey('more-town-news'), open: newsOpen, rest: recent.length - fresh, onTap: () => ctl.toggleShown('town-news')),
     ]),
   );
   final out = <Widget>[];
@@ -359,6 +399,9 @@ List<Widget> townTabL(GameController ctl, double width) {
   out.addAll(townRivalsOf(ctl));
   return out;
 }
+
+/// 街のニュースで「もっと見る」まで含めて出す数
+const townNewsMax = 10;
 
 /// いちばん大きい宿敵（いなければ null）
 Company? topRival(Game s) {
@@ -710,6 +753,7 @@ List<Widget> worldTab(GameController ctl, double width) {
   final s = ctl.game!;
   final sel = ctl.worldSel ?? s.home;
   final open = [for (final c in CTRY) if (s.ctryOpen(c.c)) c];
+  final sorted = open.toList()..ssort((a, b) => cw(b.c, s.yr()).compareTo(cw(a.c, s.yr())));
   final map = Panel(
     key: const ValueKey('world-map'),
     padding: const EdgeInsets.all(6),
@@ -763,7 +807,9 @@ List<Widget> worldTab(GameController ctl, double width) {
         _cell(tr('関税'), c: Pal.mute),
         _cell(tr('物流'), c: Pal.mute),
       ]),
-      for (final c in open.toList()..ssort((a, b) => cw(b.c, s.yr()).compareTo(cw(a.c, s.yr()))))
+      // はじめは市場の大きい4か国（選んでいる国まで）だけを出し、残りは「もっと見る」（1.1.0+31）
+      ...firstOf(ctl, 'world-table', [
+      for (final c in sorted)
         InkWell(
           key: ValueKey('world-row-${c.c}'),
           onTap: () => ctl.setWorld(c.c),
@@ -783,9 +829,14 @@ List<Widget> worldTab(GameController ctl, double width) {
             ]),
           ),
         ),
+      ], math.max(4, sorted.indexWhere((c) => c.c == sel) + 1)),
     ]),
   );
   // 1.1.0+28 から、関税・物流・政治・伸びている業種・仕入れの網・視察を足した（world_screen.dart）
+  // iPhone の横（幅約550）は、地図と国の中身の欄を短いほうの列へ詰めて2列にし、表はその下に全部の幅で置く（1.1.0+31）
+  if (width < 620 && width >= cols2Min) {
+    return [const SizedBox(height: 6), Masonry2([map, ...worldDetailPanels(ctl, sel)]), table];
+  }
   final detail = worldDetail(ctl, sel);
   if (width >= 620) {
     return [

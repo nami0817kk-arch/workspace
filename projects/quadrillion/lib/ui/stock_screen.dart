@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'glossary.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -37,21 +38,24 @@ List<Widget> stockScreen(GameController ctl, {double width = 0}) {
   ];
 }
 
-Widget _cols(double width, List<Widget> left, List<Widget> right, {double share = .5}) {
-  if (width < stockSplitMin) return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [...left, ...right]);
-  return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    SizedBox(width: (width - 8) * share, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: left)),
-    const SizedBox(width: 8),
-    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: right)),
-  ]);
-}
-
 Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 4, children: c);
 
 // ===== 自社の株 =====
 List<Widget> _ownFace(GameController ctl, double width) {
+  // 見出しはその下のカードとひとまとまりにして、短いほうの列へ詰めて2列に並べる（1.1.0+31）
+  final g = <Widget>[];
+  Widget? h;
+  for (final w in stockTab(ctl, cos: false)) {
+    if (w is H2 || w is H2Info) {
+      h = w;
+      continue;
+    }
+    g.add(h == null ? w : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [h, w]));
+    h = null;
+  }
+  // 株価・株主・上場の有無を先に、決算と株主総会の日付はいちばん後ろに置く（短い欄を最後にすると、左右の長さがそろう）
   return [
-    _cols(width, [_pricePanel(ctl), _schedulePanel(ctl), ..._clientPanels(ctl)], stockTab(ctl, cos: false)),
+    Masonry2([_pricePanel(ctl), ...g.take(2), ..._clientPanels(ctl), ...g.skip(2), _schedulePanel(ctl)], min: stockSplitMin)
   ];
 }
 

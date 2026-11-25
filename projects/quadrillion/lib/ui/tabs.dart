@@ -27,6 +27,23 @@ Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {String k = 
   }, small: true, ap: hr(ctl.game!, k), dim: short, enabled: enabled, primary: primary, more: more, shrink: true);
 }
 
+/// 長い一覧を最初の [n] 件にして、残りは「もっと見る」で出す（1.1.0+31）。隠すのが1件だけなら、全部出す
+List<Widget> firstOf(GameController ctl, String id, List<Widget> items, int n) {
+  if (items.length <= n + 1) return items;
+  final open = ctl.shown.contains(id);
+  return [
+    ...(open ? items : items.take(n)),
+    MoreBtn(key: ValueKey('more-$id'), open: open, rest: items.length - n, onTap: () => ctl.toggleShown(id)),
+  ];
+}
+
+/// カードの細かい数字を開いているか（[DetailBtn] で開く。1.1.0+31）
+bool detailOpen(GameController ctl, String id) => ctl.shown.contains('detail-$id');
+
+/// カードの細かい数字を開く・しまうボタン
+Widget detailBtn(GameController ctl, String id, {String? label}) =>
+    DetailBtn(key: ValueKey('detail-$id'), open: detailOpen(ctl, id), label: label, onTap: () => ctl.toggleShown('detail-$id'));
+
 /// 行動にかかる社長の時間（札に出す整数）
 int hr(Game s, String k) => s.hrs(k).round();
 Widget _gap([double h = 8]) => SizedBox(height: h);
@@ -109,9 +126,8 @@ List<Widget> townRivalsOf(GameController ctl) {
   out.add(FoldHead(tr('宿敵'), key: const ValueKey('fold-rivals'), open: rivOpen, onTap: () => ctl.toggleFold('rivals'), note: tr('{0}社', [rivals.length])));
   if (rivOpen) {
     if (rivals.isEmpty) out.add(Muted(tr('まだ宿敵はいません。同じ業種でぶつかると現れます。')));
-    for (final c in rivals) {
-      out.add(ctl.openRival == c.id ? _rivalCard(ctl, c) : _rivalRow(ctl, c));
-    }
+    // 幅が足りるときは2つずつ横に並べる（1.1.0+31）
+    if (rivals.isNotEmpty) out.add(Pairs([for (final c in rivals) ctl.openRival == c.id ? _rivalCard(ctl, c) : _rivalRow(ctl, c)]));
   }
   return out;
 }
@@ -290,10 +306,12 @@ Widget _rivalRow(GameController ctl, Company c) {
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-              Text(nmL(c.name), style: ts(size: 14, bold: true)),
-              Tag(RTYPE[c.rival!.label ?? c.rival!.type] ?? ''),
-            ]),
+            // 2つ並べた狭い行では、型の札は開いたカードだけに出す（名前の下に折れて、行が高くなるため。1.1.0+31）
+            LayoutBuilder(
+                builder: (context, box) => Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                      Text(nmL(c.name), style: ts(size: 14, bold: true)),
+                      if (box.maxWidth / Ui.textScale >= 300) Tag(RTYPE[c.rival!.label ?? c.rival!.type] ?? ''),
+                    ])),
             const SizedBox(height: 2),
             Text.rich(_rivalFacts(s, c)),
           ]),
@@ -865,6 +883,8 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
             ]),
           ),
           Info(ctl, [if (b.early > s.turn) 'early', 'model']),
+          // 狭い欄では、札の幅を食わないよう字を省く
+          Flexible(child: detailBtn(ctl, 'biz-${b.id}', label: tr('相手と国'))),
         ]),
       if (!bare) ...[
       Row(children: [
@@ -919,6 +939,13 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
       if (s.unitsOn) Padding(padding: const EdgeInsets.only(top: 4), child: _unitsLine(ctl, b)),
       _gap(),
       ],
+      // 現場の力はいつも出し、競っている相手と出ている国は押すと開く（1.1.0+31）
+      Row(children: [
+        Expanded(child: crewLine),
+        Info(ctl, b.model == 'fc' ? const ['scale', 'upkeep'] : const ['scale', 'crew', 'upkeep']),
+        if (!bare) detailBtn(ctl, 'biz-${b.id}', label: tr('相手と国')),
+      ]),
+      if (detailOpen(ctl, 'biz-${b.id}')) ...[
       cs.isEmpty
           ? Muted(tr('名のある競争相手はいません'))
           : Text.rich(TextSpan(style: ts(size: 12.5), children: [
@@ -931,24 +958,15 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
                 TextSpan(text: ' ${pct(cs[i].share * 100)}'),
               ],
             ])),
-      const SizedBox(height: 6),
-      // 国と現場の2行の右に、用語の説明の「i」を1つ置く（規模の利益・現場の力・維持費）
-      Row(children: [
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text.rich(TextSpan(style: ts(size: 12.5), children: [
-            TextSpan(text: tr('出ている国 '), style: ts(size: 12.5, color: Pal.mute)),
-            TextSpan(text: cts.map((c) => '${cm[c]!.n}${(b.jv ?? []).contains(c) ? tr('（組む）') : ''}').join(tr('・'))),
-            cts.length >= 5
-                ? TextSpan(text: tr('　規模の利益 利益率＋{0}%', [jsNum(jsRound(math.min(.5, (cts.length - 4) * .06) * 100))]), style: ts(size: 12.5, color: Pal.up))
-                : TextSpan(text: tr('　5か国以上で規模の利益'), style: ts(size: 12.5, color: Pal.mute)),
-          ])),
-          const SizedBox(height: 6),
-          crewLine,
-          ]),
-        ),
-        Info(ctl, b.model == 'fc' ? const ['scale', 'upkeep'] : const ['scale', 'crew', 'upkeep']),
-      ]),
+      const SizedBox(height: 4),
+      Text.rich(TextSpan(style: ts(size: 12.5), children: [
+        TextSpan(text: tr('出ている国 '), style: ts(size: 12.5, color: Pal.mute)),
+        TextSpan(text: cts.map((c) => '${cm[c]!.n}${(b.jv ?? []).contains(c) ? tr('（組む）') : ''}').join(tr('・'))),
+        cts.length >= 5
+            ? TextSpan(text: tr('　規模の利益 利益率＋{0}%', [jsNum(jsRound(math.min(.5, (cts.length - 4) * .06) * 100))]), style: ts(size: 12.5, color: Pal.up))
+            : TextSpan(text: tr('　5か国以上で規模の利益'), style: ts(size: 12.5, color: Pal.mute)),
+      ])),
+      ],
       // 仕掛かりは種類ごとに1行。1件だけの種類は今までどおりその場で取り下げられる
       for (final g in pipeGroups(b)) g.count == 1 ? _pipeRow(ctl, b, g.idx.first) : _pipeGroupRow(ctl, b, g),
       _gap(),
@@ -1138,7 +1156,8 @@ Widget _grpHead(String label, IconData icon) => Padding(
       child: Row(children: [
         Icon(icon, size: 15, color: Pal.goldtx),
         const SizedBox(width: 4),
-        Text(label, style: ts(size: 12.5, bold: true, color: Pal.goldtx)),
+        // 狭い2列の欄では、名前を折り返す（はみ出さない）
+        Flexible(child: Text(label, style: ts(size: 12.5, bold: true, color: Pal.goldtx))),
         const SizedBox(width: 8),
         const Expanded(child: SizedBox(height: 1, child: ColoredBox(color: Pal.line))),
       ]),
@@ -1169,36 +1188,53 @@ List<Widget> presPanels(GameController ctl) {
       Text(tr('{0}（{1}歳）', [nmL(P.name), P.age]), style: ts(bold: true)),
       const SizedBox(height: 6),
       Grid2([for (final k in abKeys) AbKv(ABN[k]!, '${P.ab[k]}', P.ab[k]!, P.ab[k]!)]),
-      for (final t in P.traits)
-        Builder(builder: (_) {
-          final T = TRAITS.firstWhere((x) => x.id == t, orElse: () => STRAITS.firstWhere((x) => x.id == t));
-          return Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Wrap(spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-              Tag(T.n, kind: TagKind.gold),
-              colored('${tr('＋')}${T.g}', Pal.up, size: 12.5),
-              colored('${tr('－')}${T.b}', Pal.down, size: 12.5),
-            ]),
-          );
-        }),
+      // 特性は札だけを出し、強い点と弱い点の文は押すと開く（1.1.0+31）
+      Row(children: [
+        Expanded(
+          child: Wrap(spacing: 4, runSpacing: 2, children: [
+            for (final t in P.traits) Tag(TRAITS.firstWhere((x) => x.id == t, orElse: () => STRAITS.firstWhere((x) => x.id == t)).n, kind: TagKind.gold),
+          ]),
+        ),
+        detailBtn(ctl, 'pres-traits'),
+      ]),
+      if (detailOpen(ctl, 'pres-traits'))
+        for (final t in P.traits)
+          Builder(builder: (_) {
+            final T = TRAITS.firstWhere((x) => x.id == t, orElse: () => STRAITS.firstWhere((x) => x.id == t));
+            return Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Wrap(spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Tag(T.n, kind: TagKind.gold),
+                colored('${tr('＋')}${T.g}', Pal.up, size: 12.5),
+                colored('${tr('－')}${T.b}', Pal.down, size: 12.5),
+              ]),
+            );
+          }),
       const SizedBox(height: 8),
       Text('${tr('自分で見られる事業は{0}つまで。', [s.presCap()])}${P.age >= 55 ? tr('そろそろ後継ぎを考える年です。') : ''}', style: ts(size: 12.5)),
     ])),
   ])));
   final cu = CULT[s.culture]!;
   out.add(Panel(
+      padding: const EdgeInsets.fromLTRB(Ui.pad, 2, Ui.pad, Ui.pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Row(children: [Expanded(child: CardTitle(tr('社風'))), Tag(cu.n, kind: TagKind.gold)]),
+    // 社風を変える手は、見出しの右を押すと開く（1.1.0+31）
+    Row(children: [
+      Expanded(child: Wrap(spacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [CardTitle(tr('社風')), Tag(cu.n, kind: TagKind.gold)])),
+      if (s.cultLeft == 0) detailBtn(ctl, 'culture', label: tr('社風を変える')),
+    ]),
     const SizedBox(height: 4),
     Wrap(spacing: 8, children: [colored('${tr('＋')}${cu.g}', Pal.up, size: 12.5), colored('${tr('－')}${cu.b}', Pal.down, size: 12.5)]),
-    const SizedBox(height: 6),
-    if (s.cultLeft > 0)
-      Muted(tr('「{0}」に切り替え中（あと{1}か月）', [CULT[s.cultNext]!.n, s.cultLeft]))
-    else
+    if (s.cultLeft > 0) ...[
+      const SizedBox(height: 6),
+      Muted(tr('「{0}」に切り替え中（あと{1}か月）', [CULT[s.cultNext]!.n, s.cultLeft])),
+    ] else if (detailOpen(ctl, 'culture')) ...[
+      const SizedBox(height: 6),
       _wrap([
         for (final k in CULT.keys.where((k) => k != s.culture))
           Tooltip(message: '${tr('＋')}${CULT[k]!.g}${tr('／')}${tr('－')}${CULT[k]!.b}', child: _apBtn(ctl, tr('{0}にする', [CULT[k]!.n]), () => ctl.act(() => s.changeCulture(k)), k: 'culture')),
       ]),
+    ],
   ])));
   final succs = [...s.staff, ...s.kids.where((k) => k.age >= 18)];
   out.add(Panel(
@@ -1774,9 +1810,13 @@ List<Widget> numTab(GameController ctl) {
       Muted(tr('時価総額'), size: 12),
     ]),
   ];
-  // 上位10・自分の前後5・宿敵を出す。あいだが飛ぶところは「…」の行で区切る
+  // 上位10・自分の前後5・宿敵を出す。あいだが飛ぶところは「…」の行で区切る。
+  // はじめは上位3・自分の前後2・宿敵だけにして、残りは「もっと見る」（1.1.0+31）
+  final all = rankShown(rk);
+  final rankOpen = ctl.shown.contains('rank');
+  final few = rankFew(rk);
   var prev = -1;
-  for (final i in rankShown(rk)) {
+  for (final i in rankOpen ? all : few) {
     if (i != prev + 1) {
       lines.add(const Padding(padding: EdgeInsets.symmetric(vertical: 1), child: Icon(Icons.more_horiz, key: ValueKey('rank-gap'), size: 16, color: Pal.mute)));
     }
@@ -1794,7 +1834,7 @@ List<Widget> numTab(GameController ctl) {
     lines.add(Container(
       key: ValueKey('rank-${i + 1}'),
       color: x.me ? Pal.goldBg : null,
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(children: [
         SizedBox(width: Ui.sw(44), child: Text('${i + 1}', style: st)),
         // 宿敵には、その宿敵の色の丸を付ける
@@ -1805,16 +1845,40 @@ List<Widget> numTab(GameController ctl) {
       ]),
     ));
   }
+  if (all.length > few.length) {
+    lines.add(MoreBtn(key: const ValueKey('more-rank'), open: rankOpen, rest: all.length - few.length, onTap: () => ctl.toggleShown('rank')));
+  }
   out.add(Panel(key: const ValueKey('rank'), child: Column(children: lines)));
-  out.add(Padding(
-    padding: const EdgeInsets.only(top: 2),
-    child: Row(children: [
-      const Padding(padding: EdgeInsets.only(right: 6), child: RivalDot('#f2c14e')),
-      Expanded(child: Muted(tr('色の四角は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています'), size: 12)),
-    ]),
-  ));
+  // 出している行の説明は、全部を出したときだけ添える（たたんでいるときは、上位3社・前後1社・宿敵）
+  if (rankOpen || all.length == few.length) {
+    out.add(Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Row(children: [
+        const Padding(padding: EdgeInsets.only(right: 6), child: RivalDot('#f2c14e')),
+        Expanded(child: Muted(tr('色の四角は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています'), size: 12)),
+      ]),
+    ));
+  }
   out.addAll(chronSection(ctl));
-  return out;
+  // 見出しはその下の欄とひとまとまりにして、幅が足りるときは短いほうの列へ詰めて2列に並べる（1.1.0+31）
+  final groups = <List<Widget>>[];
+  for (final w in out) {
+    if (w is H2 || w is H2Info || w is FoldHead || groups.isEmpty) {
+      groups.add([w]);
+    } else {
+      groups.last.add(w);
+    }
+  }
+  return [Masonry2([for (final g in groups) Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: g)])];
+}
+
+/// 世界ランキングで、はじめに出す行（上位3・自分の前後1・宿敵）。残りは「もっと見る」で [rankShown] まで出す
+List<int> rankFew(List<RankRow> rk) {
+  final me = rk.indexWhere((x) => x.me);
+  return [
+    for (var i = 0; i < rk.length; i++)
+      if (i < 3 || (me >= 0 && (i - me).abs() <= 1) || rk[i].c?.rival != null) i,
+  ];
 }
 
 /// 決算の内訳の行（id・名前の鍵・額。出るお金はマイナス）
@@ -1876,7 +1940,9 @@ List<Widget> chronSection(GameController ctl) {
     out.add(FoldHead(tr('すべての記録'), key: const ValueKey('fold-chron'), open: open, onTap: () => ctl.toggleFold('chron-all'), note: tr('{0}件', [s.history.length])));
     if (!open) return out;
   }
-  out.add(Panel(key: const ValueKey('chron-all'), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [for (final e in s.history.reversed) row(e)])));
+  // 記録が少ないうちも、はじめは新しい3件だけにして、残りは「もっと見る」（1.1.0+31）
+  final rows = [for (final e in s.history.reversed) row(e)];
+  out.add(Panel(key: const ValueKey('chron-all'), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: long ? rows : firstOf(ctl, 'chron', rows, 3))));
   return out;
 }
 
@@ -1919,18 +1985,45 @@ List<Widget> zukanInds(GameController ctl) {
     Progress(tr('手がけた業種'), done, s.inds.length, key: const ValueKey('ind-progress')),
     Muted(tr('手がけたことのある業種は、生まれた年・頂点の年・利益率・稼ぎ方が見えます。業種を押すと、37の特性と市場の大きさの推移が見えます。')),
   ];
+  // 分類ごとにたたみ、押すとその分類の業種が開く。幅が足りるときは2列に詰めて並べる（1.1.0+31）
+  // たたんだ分類は2つずつ横に並べ、開いた分類はその場所で全部の幅を使う（並びの順は変えない）
+  final cats = <Widget>[], closed = <Widget>[];
+  void flush() {
+    if (closed.isNotEmpty) cats.add(Pairs([...closed]));
+    closed.clear();
+  }
+
   for (final cat in CATN.keys) {
     final list = s.inds.where((i) => i.cat == cat).toList();
     if (list.isEmpty) continue;
     final future = list.where((i) => indLook(s, i) == 'future').length;
-    out.add(Padding(
-      padding: const EdgeInsets.only(top: 14, bottom: 2),
-      child: Row(children: [
-        Expanded(child: Text(CATN[cat]!, style: Ui.h3)),
-        Muted('${list.where((i) => s.handled(i.id)).length} / ${list.length}', size: 12),
-      ]),
-    ));
-    out.add(Panel(
+    final open = ctl.shown.contains('zukan-cat-$cat');
+    final head = TapCard(
+      inkKey: ValueKey('ind-cat-head-$cat'),
+      expanded: open,
+      margin: EdgeInsets.zero,
+      border: open ? Pal.gold : Pal.line,
+      onTap: () => ctl.toggleShown('zukan-cat-$cat'),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: minTap),
+        padding: const EdgeInsets.fromLTRB(Ui.pad, 6, 6, 6),
+        child: Row(children: [
+          Expanded(child: Text(CATN[cat]!, style: Ui.h3)),
+          Muted('${list.where((i) => s.handled(i.id)).length} / ${list.length}', size: 12),
+          Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: Pal.mute),
+        ]),
+      ),
+    );
+    if (!open) {
+      closed.add(Padding(padding: const EdgeInsets.symmetric(vertical: Ui.cardGap), child: head));
+      continue;
+    }
+    flush();
+    cats.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: Ui.cardGap),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      head,
+      Panel(
         key: ValueKey('ind-cat-$cat'),
         padding: const EdgeInsets.symmetric(horizontal: Ui.pad, vertical: 4),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1974,8 +2067,11 @@ List<Widget> zukanInds(GameController ctl) {
                 Muted('×$future', size: 13),
               ]),
             ),
-        ])));
+        ])),
+    ])));
   }
+  flush();
+  out.add(Padding(padding: const EdgeInsets.only(top: 6), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: cats)));
   return out;
 }
 
@@ -1985,9 +2081,10 @@ List<Widget> zukanAchs(GameController ctl) {
   return [
     H2(tr('実績')),
     Progress(tr('達成した実績'), s.ach.keys.where(achm.containsKey).length, ACHS.length, key: const ValueKey('ach-progress')),
+    // 幅が足りるときは2つずつ横に並べる（1.1.0+31）
     Panel(
         padding: const EdgeInsets.symmetric(horizontal: Ui.pad, vertical: 4),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        child: Pairs(min: cols2Min - 2 * Ui.pad - 2, [
           for (final a in ACHS)
             if (s.achWhen(a.id) case final w)
               Container(
@@ -2028,10 +2125,10 @@ List<Widget> zukanSyns(GameController ctl) {
   final out = <Widget>[H2Info(tr('シナジー図鑑'), ctl, const ['synergy'])];
   out.add(Progress(tr('見つけたシナジー'), s.found.length, s.syns.length, key: const ValueKey('syn-progress')));
   out.add(Muted(tr('2つの事業を同時に持つと見つかります。見つけた組み合わせは事業の力を2割上げます。')));
-  out.add(Panel(
-      child: Column(children: [
-    for (final x in s.syns)
-      Builder(builder: (_) {
+  // 見つけた組み合わせと手がかりのあるものを先に全部出し、まだ何も分からないものは最初の数件だけ（残りは「もっと見る」。1.1.0+31）
+  final known = s.syns.where((x) => s.found[x.k] != null || s.hint[x.k] != null).toList();
+  final unknown = s.syns.where((x) => s.found[x.k] == null && s.hint[x.k] == null).toList();
+  Widget synRow(Synergy x) {
         final f = s.found[x.k];
         final hn = f == null && s.hint[x.k] != null;
         return Container(
@@ -2056,16 +2153,33 @@ List<Widget> zukanSyns(GameController ctl) {
             SizedBox(width: Ui.sw(50), child: Text(f != null ? yearL(f) : '', textAlign: TextAlign.right, style: ts(size: 13, color: Pal.mute))),
           ]),
         );
-      }),
+  }
+
+  out.add(Panel(
+      key: const ValueKey('syn-list'),
+      child: Column(children: [
+    for (final x in known) synRow(x),
+    ...firstOf(ctl, 'syn-unknown', [for (final x in unknown) synRow(x)], 8),
   ])));
   out.add(H2(tr('大シナジー')));
-  for (final g in s.bigs) {
-    final f = s.big[g.k];
+  // 完成したものは2つずつ横に並べ、まだのものは「？？？ ×数」の1枚にまとめる（同じ文の札が並んでいた。1.1.0+31）
+  final bigDone = s.bigs.where((g) => s.big[g.k] != null).toList();
+  final bigLeft = s.bigs.length - bigDone.length;
+  out.add(Pairs([
+    for (final g in bigDone)
+      Panel(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(g.name, style: ts(bold: true, color: Pal.goldtx)),
+        Muted('${g.set.map((x) => indm[x]!.name).join(' × ')}${tr('（{0}年に完成）', [s.big[g.k]!])}'),
+      ])),
+  ]));
+  if (bigLeft > 0) {
     out.add(Panel(
+        key: const ValueKey('big-left'),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(f != null ? g.name : tr('？？？'), style: ts(bold: true, color: f != null ? Pal.goldtx : Pal.mute)),
-      Muted(f != null ? '${g.set.map((x) => indm[x]!.name).join(' × ')}${tr('（{0}年に完成）', [f])}' : tr('3つの業種をそろえると完成。3つとも力が4割上がる')),
-    ])));
+          Text('${tr('？？？')} ×$bigLeft', style: ts(bold: true, color: Pal.mute)),
+          Muted(tr('3つの業種をそろえると完成。3つとも力が4割上がる')),
+        ])));
   }
   return out;
 }
@@ -2086,6 +2200,11 @@ List<Widget> bizSplit(GameController ctl, double width) {
   final bar = _delegBar(ctl);
   // 人が足りない事業・責任者に置ける部下があれば、まとめての手（足りない人をまとめて雇う・空いている部下を置く）も左に出す
   final attn = list.isEmpty ? null : _bizAttention(ctl);
+  // 右の中身が狭い（iPhone の横）ときは、一覧を上に横に並べて、中身のカードを2列にする（1.1.0+31）
+  // 1つの欄にまとめて返す（一覧は見える所しか組まないので、分けると、送ったときに上の札が木から消える。2列の画面と同じ）
+  if (width - leftW - 8 < splitStripBelow) {
+    return [Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _bizStrip(ctl, width, list, sel, many: many, showNew: showNew, bar: bar, attn: attn))];
+  }
   final left = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
     Padding(
       padding: const EdgeInsets.only(top: 6, bottom: 4),
@@ -2136,6 +2255,58 @@ List<Widget> bizSplit(GameController ctl, double width) {
       SizedBox(width: leftW, child: left),
       const SizedBox(width: 8),
       Expanded(child: right),
+    ]),
+  ];
+}
+
+/// 右の中身の幅がこれより狭いと、一覧を上に横に並べて、中身を2列にする（事業・人の画面。1.1.0+31）
+const splitStripBelow = 560.0;
+
+/// 上に並べる一覧の札の幅（3つ並ぶくらい）
+double stripPickW(double width) => clampD((width - 18) / 4, 124, 200);
+
+/// 事業の画面の、一覧を上に並べた形（iPhone の横）。上に事業の札と「新しい事業」、下に中身を2列（左：数字と表・右：足りないもの・まとめての手）
+List<Widget> _bizStrip(GameController ctl, double width, List<Biz> list, Biz? sel,
+    {required bool many, required bool showNew, Widget? bar, Widget? attn}) {
+  final s = ctl.game!;
+  // 4つまでなら、札を少し細くして「新しい事業」と同じ1行に収める（名前が切れるほど細くなるとき＝業種名の長い英語は、今までの幅で2行にする）
+  final fit = list.isEmpty ? 0.0 : (width - 6 * (list.length + 1) - Ui.sw(124) - minTap) / list.length;
+  final pw = list.length <= 4 && fit >= Ui.sw(L.en ? 128 : 86) ? math.min(fit, 200.0) : stripPickW(width);
+  final at = sel == null ? -1 : list.indexOf(sel);
+  final picks = [for (final b in list) SizedBox(width: pw, child: _bizPick(ctl, b, b == sel))];
+  final head = <Widget>[
+    if (many)
+      Padding(
+        padding: const EdgeInsets.only(top: 6, bottom: 4),
+        child: Wrap(key: const ValueKey('split-mysort'), spacing: 4, runSpacing: 4, children: [
+          for (final o in myBizSorts)
+            PickChip(tr(o.$2), key: ValueKey('mysort-${o.$1}'), on: ctl.myBizSort == o.$1, onTap: () {
+              ctl.myBizSort = o.$1;
+              ctl.render();
+            }),
+        ]),
+      ),
+    // 事業が多いときは、選んでいるものまでと最初の8つを出し、残りは「もっと見る」。「新しい事業」は札の並びの終わりに置く
+    Padding(
+      padding: EdgeInsets.only(top: many ? 0 : 4),
+      child: Wrap(spacing: 6, runSpacing: 0, crossAxisAlignment: WrapCrossAlignment.center, children: [
+        ...firstOf(ctl, 'biz-picks', picks, math.max(8, at + 1)),
+        Btn(tr('＋ 新しい事業'), () => ctl.showNewBiz(), key: const ValueKey('biz-new'), small: true, primary: showNew),
+        if (list.isNotEmpty) Info(ctl, const ['deleg']),
+      ]),
+    ),
+  ];
+  if (sel == null) return [...head, ?bar, ..._newBizSection(ctl)];
+  return [
+    ...head,
+    // カードは上から順に、短いほうの列へ詰める（左右の長さをそろえる）。「今月やること」から飛んだときは、ここまで送る
+    Masonry2(key: ctl.bizHeadKey, [
+      _bizHead(ctl, sel),
+      if (s.unitsOn) bizUnitsPanel(ctl, sel),
+      if (s.unitsOn) bizNeedsPanel(ctl, sel),
+      _bizCard(ctl, sel, bare: true),
+      ?bar,
+      ?attn,
     ]),
   ];
 }
@@ -2334,10 +2505,14 @@ Widget bizUnitsPanel(GameController ctl, Biz b) {
   }
   final cap = s.capUnits(b);
   final full = s.limitOf(b) == 'cap';
+  // 立地ごとの表は細かい数字なので、押すと開く（店の数の合計と、足りているかの1行はいつも出す。1.1.0+31）
+  final zoned = KIND_ZONED.contains(k) && keys.isNotEmpty;
+  final table = !zoned || detailOpen(ctl, 'units-${b.id}');
   return Panel(
     key: ValueKey('biz-units-${b.id}'),
+    padding: EdgeInsets.fromLTRB(Ui.pad, zoned ? 0 : Ui.pad, Ui.pad, Ui.pad),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(title),
+      if (zoned) Row(children: [Expanded(child: CardTitle(title)), detailBtn(ctl, 'units-${b.id}', label: tr('立地ごとの表'))]) else CardTitle(title),
       if (b.lic > 0)
         Text(tr('許可が下りるまで あと{0}か月。下りるまでは営業できません', [b.lic]), style: ts(size: 12.5, color: Pal.warn))
       else
@@ -2357,8 +2532,7 @@ Widget bizUnitsPanel(GameController ctl, Biz b) {
                 : tr('{0}は足りています。客が足りず、稼働率は{1}%です', [tr(KIND_UNIT_JA[k]!), jsRound(util * 100)]),
             key: ValueKey('units-limit-${b.id}'),
             style: ts(size: 12, color: full ? Pal.up : Pal.warn)),
-      const SizedBox(height: 4),
-      ...rows,
+      if (table) ...[const SizedBox(height: 4), ...rows],
     ]),
   );
 }
@@ -2427,6 +2601,8 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
         const SizedBox(height: 6),
         CardTitle(tr('今月出ている物件（{0}件）', [b.offers.length])),
         if (offers.isEmpty) Muted(tr('今月は出ていません'), size: 12),
+        // いちばん割のよい1件を出し、残りは「もっと見る」（1.1.0+31）
+        ...firstOf(ctl, 'offers-${b.id}', [
         for (var i = 0; i < offers.length; i++)
           Container(
             key: ValueKey('offer-$i'),
@@ -2442,6 +2618,7 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
               _apBtn(ctl, tr('出す（{0}）', [yen(s.unitCapexAt(b, offers[i].s))]), () => ctl.act(() => s.openUnits(b, offers[i].s, 1), mark: 'act'), k: 'build'),
             ]),
           ),
+        ], 1),
       ] else if (b.lic == 0)
         Padding(
           padding: const EdgeInsets.only(top: 4),
@@ -2450,7 +2627,9 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
             child: _apBtn(ctl, tr('{0}を開く（1つ {1}）', [tr(KIND_UNIT_JA[k]!), yen(s.unitCapexAvg(b))]), () => ctl.act(() => s.openBest(b, 1), mark: 'act'), k: 'build'),
           ),
         ),
-      Muted(tr('開くまで{0}〜{1}か月。開いてから1〜2年は売上が育つ途中で、固定費は丸ごとかかります', [s.prof(b).open.$1, s.prof(b).open.$2]), size: 11.5),
+      // 店舗型は、物件の「もっと見る」を開いたときだけ添える（1.1.0+31）
+      if (k != 'shop' || offers.length <= 2 || ctl.shown.contains('offers-${b.id}'))
+        Muted(tr('開くまで{0}〜{1}か月。開いてから1〜2年は売上が育つ途中で、固定費は丸ごとかかります', [s.prof(b).open.$1, s.prof(b).open.$2]), size: 11.5),
     ]),
   );
 }

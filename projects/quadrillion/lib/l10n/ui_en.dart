@@ -719,4 +719,15 @@ const Map<String, String> uiEn = {
   // 読み上げ（VoiceOver）に渡すグラフの説明
   '{0}。はじめ {1}、今 {2}': '{0}. Started at {1}, now {2}',
   '{0}。今の売上 {1}、利益 {2}': '{0}. Revenue now {1}, profit {2}',
+  // 長い一覧をたたむ・細かい数字を押してから開く（1.1.0+31）
+  'もっと見る（あと{0}件）': 'Show {0} more',
+  'たたむ': 'Show less',
+  '詳しく': 'Details',
+  'しまう': 'Hide',
+  '今月の知らせはありません': 'No news this month',
+  '立地ごとの表': 'By location',
+  '相手と国': 'Rivals & countries',
+  '社風を変える': 'Change culture',
+  '仕入れ先を変える': 'Change suppliers',
+  '上の一覧から人を選んでください。': 'Pick someone from the list above.',
 };

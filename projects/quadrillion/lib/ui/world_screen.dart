@@ -39,7 +39,11 @@ String worldRoadCell(Game s, String c) {
           : tr('弱い');
 }
 
-Widget worldDetail(GameController ctl, String c) {
+Widget worldDetail(GameController ctl, String c) =>
+    Column(key: const ValueKey('world-detail'), crossAxisAlignment: CrossAxisAlignment.stretch, children: worldDetailPanels(ctl, c));
+
+/// 押した国の中身の欄（景気・人口・関税と物流と政治・伸びている業種・自社の出方・仕入れの網）
+List<Widget> worldDetailPanels(GameController ctl, String c) {
   final s = ctl.game!;
   final mine = s.biz.where((b) => s.ctryOf(b).contains(c)).toList();
   final cities = econData.cities(c);
@@ -51,7 +55,10 @@ Widget worldDetail(GameController ctl, String c) {
   final shock = s.trade.shock[c];
   final cc = s.capCtl(c);
   final inputs = s.biz.where((b) => s.inputOf(b) != null).toList();
-  return Column(key: const ValueKey('world-detail'), crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+  // 関税・物流・政治は、要点（関税・運び方・運賃・政治）だけを出し、残りの細かい数字は押すと開く（1.1.0+31）
+  final more = ctl.shown.contains('detail-world-trade');
+  final supplyOpen = ctl.shown.contains('detail-world-supply');
+  return [
     countryPanel(ctl, c, title: '${cm[c]!.n}${c == s.home ? tr('（本拠）') : ''}'),
     Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -60,40 +67,43 @@ Widget worldDetail(GameController ctl, String c) {
           Kv(tr('失業率'), '${pctD(s.ev(c, 'unemp'))}%'),
           Kv(tr('市場の大きさ'), tr('{0}の{1}倍', [cm[s.home]!.n, (cw(c, s.yr()) / (cw(s.home, s.yr()) > 1e-9 ? cw(s.home, s.yr()) : 1e-9)).toStringAsFixed(2)])),
           Kv(tr('平均賃金'), tr('{0}／年', [yen(s.ev(c, 'wage_usd') * s.usdJpy())])),
-        ]),
+        ], minCell: 125),
         if (cities.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('主な都市：{0}', [cities.take(4).map((x) => L.en ? x.en : x.ja).join(tr('・'))]), size: 12)),
       ]),
     ),
     // 関税・物流・政治
     Panel(
       key: const ValueKey('world-trade'),
+      padding: const EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(child: CardTitle(tr('関税・物流・政治'))),
           if (stops.isNotEmpty) Tag(tx(stops.first.ja), kind: TagKind.bad),
           if (shock != null) Padding(padding: const EdgeInsets.only(left: 4), child: Tag(tr('政変'), kind: TagKind.bad)),
+          DetailBtn(key: const ValueKey('detail-world-trade'), open: more, onTap: () => ctl.toggleShown('detail-world-trade')),
         ]),
-        const SizedBox(height: 4),
         Grid2([
           Kv(tr('関税の平均'), _pct1(kp(TARIFF[c] ?? const [(1980, 8.0)], s.yr()) / 100)),
           if (c != s.home) Kv(tr('{0}から入る物', [cm[s.home]!.n]), _pct1(s.tariffOf(c, s.home))),
-          Kv(tr('WTO'), wto == 0 || s.year >= wto ? tr('加盟') : tr('{0}年に加盟', [wto])),
           if (c != s.home) Kv(tr('運び方'), tr('{0}・{1}日', [tr(SHIP_MODE_JA[ship.mode]!), ship.days.round()])),
           if (c != s.home) Kv(tr('運賃'), _pct1(ship.freight)),
-          Kv(tr('電気'), knows ? _pct1(s.powerOf(c)) : _level(s.powerOf(c))),
-          Kv(tr('道路と物流'), knows ? _pct1(s.roadOf(c)) : _level(s.roadOf(c))),
-          Kv(tr('ネットを使う人'), knows ? _pct1(s.teleOf(c)) : _level(s.teleOf(c))),
           Kv(tr('政治'), knows ? tr('{0}（揺れ {1}）', [_risk(s.polRisk(c)), (s.polRisk(c) * 100).round()]) : _risk(s.polRisk(c))),
-          if (c != s.home) Kv(tr('立ち上げ'), tr('{0}か月', [s.setupMonths(c, 'solo')])),
-          if (c != s.home) Kv(tr('送金の制限'), cc > 0 ? tr('利益の{0}', [_pct1(cc)]) : tr('なし')),
-          if (c != s.home) Kv(tr('税の取り決め'), s.treaty(c) ? tr('あり') : tr('なし（送ると1割）')),
-        ]),
-        if (c != s.home)
+          if (more) ...[
+            Kv(tr('WTO'), wto == 0 || s.year >= wto ? tr('加盟') : tr('{0}年に加盟', [wto])),
+            Kv(tr('電気'), knows ? _pct1(s.powerOf(c)) : _level(s.powerOf(c))),
+            Kv(tr('道路と物流'), knows ? _pct1(s.roadOf(c)) : _level(s.roadOf(c))),
+            Kv(tr('ネットを使う人'), knows ? _pct1(s.teleOf(c)) : _level(s.teleOf(c))),
+            if (c != s.home) Kv(tr('立ち上げ'), tr('{0}か月', [s.setupMonths(c, 'solo')])),
+            if (c != s.home) Kv(tr('送金の制限'), cc > 0 ? tr('利益の{0}', [_pct1(cc)]) : tr('なし')),
+            if (c != s.home) Kv(tr('税の取り決め'), s.treaty(c) ? tr('あり') : tr('なし（送ると1割）')),
+          ],
+        ], minCell: 125),
+        if (more && c != s.home)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Muted(ftas.isEmpty ? tr('{0}との貿易協定：なし', [cm[s.home]!.n]) : tr('{0}との貿易協定：{1}', [cm[s.home]!.n, ftas.map((f) => de(f.ja)).toSet().join(tr('・'))]), size: 12),
           ),
-        if (!knows) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('視察すると、電気・道路・ネット・政治の数字と伸びている業種が分かります'), size: 12)),
+        if (more && !knows) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('視察すると、電気・道路・ネット・政治の数字と伸びている業種が分かります'), size: 12)),
         if (c != s.home && s.ctryOpen(c))
           Padding(
             padding: const EdgeInsets.only(top: 6),
@@ -136,14 +146,18 @@ Widget worldDetail(GameController ctl, String c) {
     if (inputs.isNotEmpty)
       Panel(
         key: const ValueKey('world-supply'),
+        padding: const EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad),
+        // 仕入れ先の国はいつも出し、足す・やめるの手と説明は押すと開く（1.1.0+31）
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          CardTitle(tr('仕入れの網')),
-          const SizedBox(height: 2),
-          Muted(tr('仕入れ先を分けると高くつくが、1か国が止まっても作り続けられる'), size: 12),
-          for (final b in inputs) _supplyRow(ctl, s, b, c),
+          Row(children: [
+            Expanded(child: CardTitle(tr('仕入れの網'))),
+            DetailBtn(key: const ValueKey('detail-world-supply'), open: supplyOpen, label: tr('仕入れ先を変える'), onTap: () => ctl.toggleShown('detail-world-supply')),
+          ]),
+          if (supplyOpen) Muted(tr('仕入れ先を分けると高くつくが、1か国が止まっても作り続けられる'), size: 12),
+          for (final b in inputs) _supplyRow(ctl, s, b, c, acts: supplyOpen),
         ]),
       ),
-  ]);
+  ];
 }
 
 Widget _mineRow(Game s, Biz b, String c) {
@@ -162,7 +176,7 @@ Widget _mineRow(Game s, Biz b, String c) {
   );
 }
 
-Widget _supplyRow(GameController ctl, Game s, Biz b, String c) {
+Widget _supplyRow(GameController ctl, Game s, Biz b, String c, {bool acts = true}) {
   final inp = s.inputOf(b)!;
   final l = s.supOf(b);
   final ok = s.srcOk(b, c);
@@ -178,7 +192,9 @@ Widget _supplyRow(GameController ctl, Game s, Biz b, String c) {
           ]),
           style: ts(size: 12.5)),
       if (inp.$3) Muted(tr('止まると作れなくなる部品'), size: 11.5),
-      if (has && l.length > 1)
+      if (!acts)
+        const SizedBox.shrink()
+      else if (has && l.length > 1)
         Align(
           alignment: Alignment.centerLeft,
           child: Btn(tr('{0}から仕入れるのをやめる', [cm[c]!.n]), () => ctl.act(() => s.dropSupplier(b, c)), small: true),

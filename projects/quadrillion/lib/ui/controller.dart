@@ -269,8 +269,16 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     folded.remove('mybiz');
     _autoFold = false;
     notifyListeners();
-    _afterFrame(_bizTop);
+    _afterFrame(() {
+      _bizTop();
+      // 一覧を上に並べた形（iPhone の横・1.1.0+31）で事業が多いと、中身が画面の下に押し出されるので、中身の頭まで送る
+      final c = bizHeadKey.currentContext;
+      if (c != null) Scrollable.ensureVisible(c);
+    });
   }
+
+  /// 事業の画面（一覧を上に並べた形）の、中身のカードの並びの場所
+  final GlobalKey bizHeadKey = GlobalKey();
 
   /// 「事業」の画面の「新しい事業」で、その名前の業種を探す
   void goNewInd(String name) {
@@ -317,6 +325,15 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
+  /// 「もっと見る」で全部を出している一覧と、「詳しく」で細かい数字を開いているカード（1.1.0+31。画面だけの状態）
+  final Set<String> shown = {};
+
+  /// 一覧の残り・カードの細かい数字を出す・しまう
+  void toggleShown(String id) {
+    if (!shown.remove(id)) shown.add(id);
+    notifyListeners();
+  }
+
   /// 「街」で詳しく開いている宿敵の会社の id（開けるのは1つだけ）
   int? openRival;
 
@@ -341,6 +358,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     openRival = null;
     openStaff = null;
     folded.clear();
+    shown.clear();
   }
 
   SetupConfig setup = SetupConfig();

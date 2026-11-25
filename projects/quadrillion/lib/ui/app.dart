@@ -421,7 +421,9 @@ class MainScreen extends StatelessWidget {
           children: [?result, ...body],
         );
       });
-      final bottom = s.over == null
+      // 横の画面では、ボタンは上の帯の右端に載せて、下の段をなくす（1.1.0+31。中身を見える高さを広げた）
+      final merged = box.maxWidth / Ui.textScale >= topMergeMin;
+      final bottom = s.over == null && !merged
           ? Container(
               decoration: const BoxDecoration(color: Pal.panel, border: Border(top: BorderSide(color: Pal.line))),
               padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
@@ -448,7 +450,7 @@ class MainScreen extends StatelessWidget {
             )
           : null;
       return Column(children: [
-        topBar(ctl, side: side),
+        topBar(ctl, side: side, merged: merged, width: box.maxWidth),
         Expanded(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             leftRail(ctl),

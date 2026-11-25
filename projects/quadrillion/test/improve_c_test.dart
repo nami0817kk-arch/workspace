@@ -351,10 +351,14 @@ void main() {
       final s = _midGame();
       final ctl = await _pump(tester, game: s);
       ctl.zukanView = 'ind';
-      ctl.setTab('zukan');
-      await tester.pump();
+      // 1.1.0+31 から分類ごとにたたんであるので、見る分類を開いておく
       final y = s.yr();
       final mine = indm[s.biz.first.ind]!;
+      final other0 = s.liveInds().firstWhere((i) => !s.handled(i.id));
+      final fut0 = s.inds.firstWhere((i) => i.b > y && s.seen[i.id] == null);
+      ctl.shown.addAll({for (final c in [mine.cat, other0.cat, fut0.cat]) 'zukan-cat-$c'});
+      ctl.setTab('zukan');
+      await tester.pump();
       await _scrollTo(tester, _key('ind-done-${mine.id}'));
       final row = _key('ind-done-${mine.id}');
       expect(find.descendant(of: row, matching: find.text(mine.name)), findsOneWidget);
@@ -832,6 +836,8 @@ void main() {
           await _sweep(tester, () async => _noJapanese(tester, '$t $size'));
           expect(tester.takeException(), isNull, reason: '$t $size');
         }
+        // 1.1.0+31 から業種の分類・まだ分からないシナジーはたたんであるので、全部開いて確かめる
+        ctl.shown.addAll({for (final c in CATN.keys) 'zukan-cat-$c', 'syn-unknown'});
         for (final v in ['syn', 'ind', 'ach']) {
           ctl.zukanView = v;
           ctl.setTab('zukan');

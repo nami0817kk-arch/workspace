@@ -3,6 +3,8 @@
 /// 右に1人の中身（経歴・分野ごとの能力・人柄・暮らし・健康・やる気・給料と相場。下に昇給・異動・研修・任せる・話を聞く・解雇）
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../game/game.dart';
@@ -61,7 +63,9 @@ List<Widget> peopleSplit(GameController ctl, double width) {
     sel = list.where((p) => p.id == ctl.openPerson).firstOrNull ?? (seg == 'exec' ? null : list.firstOrNull);
   }
   final leftW = clampD(width * .32, 168, 250);
-  final m = s.hireMarket0;
+  // 右の中身が狭い（iPhone の横）ときは、一覧を上に横に並べて、中身のカードを2列にする（1.1.0+31）
+  // 1つの欄にまとめて返す（分けると、一覧を送ったときに上の札が木から消える。2列の画面と同じ）
+  if (width - leftW - 8 < splitStripBelow) return [Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _peopleStrip(ctl, width, list, sel, presSel))];
   final left = Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
@@ -112,33 +116,7 @@ List<Widget> peopleSplit(GameController ctl, double width) {
         ),
       const SizedBox(height: 8),
       // 採用＝新卒・中途・引き抜き（押すと、その道の候補を一覧に出す）
-      Panel(
-        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(tr('採用'), style: ts(size: 12.5, bold: true)),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 4,
-              runSpacing: 4,
-              children: [
-                for (final c in candSrcs)
-                  Btn(
-                    tr('{0}（{1}人）', [tr(c.$2), s.cands.where((p) => (p.src ?? 'mid') == c.$1).length]),
-                    () => ctl.setPeopleSeg('cand', src: c.$1),
-                    key: ValueKey('hire-${c.$1}'),
-                    small: true,
-                    primary: seg == 'cand' && ctl.candSrc == c.$1,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(tr('会社の評判 {0}・失業率 {1}%', [s.coRep().round(), s.unempOf().toStringAsFixed(1)]), style: ts(size: 11.5, color: Pal.mute)),
-            Text(m, style: ts(size: 11.5, color: Pal.mute)),
-          ],
-        ),
-      ),
+      _hirePanel(ctl),
       Padding(key: const ValueKey('face-legend'), padding: const EdgeInsets.only(top: 6, bottom: 4), child: faceLegend()),
     ],
   );
@@ -155,6 +133,89 @@ List<Widget> peopleSplit(GameController ctl, double width) {
         Expanded(child: right),
       ],
     ),
+  ];
+}
+
+/// 採用の欄（新卒・中途・引き抜きのボタンと、評判・失業率・市場のひとこと）
+Widget _hirePanel(GameController ctl) {
+  final s = ctl.game!;
+  final seg = ctl.peopleSeg;
+  return Panel(
+    key: const ValueKey('hire-panel'),
+    padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // 見出しはボタンと同じ行に置く（1.1.0+31）
+        Wrap(
+          spacing: 4,
+          runSpacing: 0,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Padding(padding: const EdgeInsets.only(right: 2), child: Text(tr('採用'), style: ts(size: 12.5, bold: true))),
+            for (final c in candSrcs)
+              Btn(
+                tr('{0}（{1}人）', [tr(c.$2), s.cands.where((p) => (p.src ?? 'mid') == c.$1).length]),
+                () => ctl.setPeopleSeg('cand', src: c.$1),
+                key: ValueKey('hire-${c.$1}'),
+                small: true,
+                primary: seg == 'cand' && ctl.candSrc == c.$1,
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(tr('会社の評判 {0}・失業率 {1}%', [s.coRep().round(), s.unempOf().toStringAsFixed(1)]), style: ts(size: 11.5, color: Pal.mute)),
+        Text(s.hireMarket0, style: ts(size: 11.5, color: Pal.mute)),
+      ],
+    ),
+  );
+}
+
+/// 人の画面の、一覧を上に並べた形（iPhone の横。1.1.0+31）。上に区分・並べ替え・人の札、下に中身を2列
+List<Widget> _peopleStrip(GameController ctl, double width, List<Person> list, Person? sel, bool presSel) {
+  final s = ctl.game!;
+  final seg = ctl.peopleSeg;
+  final pw = stripPickW(width);
+  final i = peopleSorts.indexWhere((o) => o.$1 == ctl.peopleSort);
+  final next = peopleSorts[(i + 1) % peopleSorts.length].$1;
+  final picks = <Widget>[
+    if (seg == 'exec') SizedBox(width: pw, child: _presRow(ctl, presSel)),
+    for (final p in list) SizedBox(width: pw, child: _personRow(ctl, p, p == sel)),
+  ];
+  final at = presSel ? 0 : picks.length - list.length + (sel == null ? -1 : list.indexOf(sel));
+  final head = <Widget>[
+    Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 4),
+      child: Wrap(spacing: 6, runSpacing: 4, children: [
+        for (final g in peopleSegs)
+          PickChip(tr('{0} {1}', [tr(g.$2), _segCount(s, g.$1)]), key: ValueKey('pseg-${g.$1}'), on: seg == g.$1, onTap: () => ctl.setPeopleSeg(g.$1)),
+        PickChip(tr('並べ替え：{0}', [tr(peopleSorts[i < 0 ? 0 : i].$2)]), key: const ValueKey('psort'), on: false, onTap: () => ctl.setPeopleSort(next)),
+      ]),
+    ),
+    Wrap(spacing: 6, runSpacing: 0, children: firstOf(ctl, 'people-picks', picks, math.max(6, at + 1))),
+    if (list.isEmpty && seg != 'exec')
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Muted(switch (seg) {
+          'mgr' => tr('事業を任せている部下はいません。'),
+          'cand' => tr('今月はこの道の候補はいません。'),
+          _ => tr('社外の知り合いはまだいません。辞めた部下はここに残り、呼び戻せます。'),
+        }),
+      ),
+  ];
+  final legend = Padding(key: const ValueKey('face-legend'), padding: const EdgeInsets.only(top: 6, bottom: 4), child: faceLegend());
+  if (presSel) {
+    final p = presPanels(ctl), l = presLifePanels(ctl);
+    // 社長の中身（能力・社風・後継ぎ・経歴・私生活・世間の顔）と採用の欄を、短いほうの列へ詰めて2列に並べる
+    return [
+      ...head,
+      Masonry2([...p, ...l, _hirePanel(ctl), legend]),
+    ];
+  }
+  return [
+    ...head,
+    if (sel == null) Panel(child: Muted(tr('上の一覧から人を選んでください。'))) else personDetail(ctl, sel, seg),
+    Masonry2([_hirePanel(ctl), legend]),
   ];
 }
 
@@ -430,23 +491,15 @@ Widget personDetail(GameController ctl, Person p, String seg) {
   final acts = _actions(ctl, p, job, isCand: isCand, isOut: isOut);
   return LayoutBuilder(
     builder: (context, c) {
-      final wide = c.maxWidth >= 560;
-      final a = [career, person, life, pay];
+      // iPhone の横（幅約550）でも2列にする（1.1.0+31）
+      final wide = c.maxWidth >= cols2Min;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           head,
+          // 短いほうの列へ詰めて2列に並べる（1.1.0+31）
           if (wide)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: a),
-                ),
-                const SizedBox(width: 6),
-                Expanded(child: skills),
-              ],
-            )
+            Masonry2([skills, career, person, life, pay])
           else ...[
             career,
             skills,

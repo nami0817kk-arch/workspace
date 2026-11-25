@@ -304,6 +304,12 @@ class Pilot {
   /// 押した回数（[press] で押せた数。押す回数を比べる点検で使う）
   int taps = 0;
 
+  /// 長い一覧の「もっと見る」の先にある行なら、先に「もっと見る」を押して出す（1.1.0+31）
+  Future<void> showRow(String rowKey, String moreKey) async {
+    if (_has(find.byKey(ValueKey(rowKey)))) return;
+    if (_has(find.byKey(ValueKey(moreKey)))) await pressKey(moreKey);
+  }
+
   Future<bool> pressText(String label) => press(find.text(label), '「$label」');
   Future<bool> pressKey(String key) => press(find.byKey(ValueKey(key)), key);
 
@@ -461,6 +467,7 @@ class Pilot {
   Future<void> _select(Biz b) async {
     if (_split) {
       if (ctl.openBiz != b.id || ctl.bizNew) {
+        await showRow('biz-row-${b.id}', 'more-biz-picks');
         await pressKey('biz-row-${b.id}');
       }
     } else if (s.biz.length >= 3 && ctl.openBiz != b.id) {
@@ -693,6 +700,7 @@ class Pilot {
     // 1.1.0+27 から人の画面は2列。左の区分で「採用の候補」を選び、候補の行を押して、右の「雇う」を押す
     if (find.byKey(const ValueKey('pseg-cand')).evaluate().isNotEmpty) {
       await press(find.byKey(const ValueKey('pseg-cand')), '採用の候補');
+      await showRow('person-row-${p.id}', 'more-people-picks');
       await press(find.byKey(ValueKey('person-row-${p.id}')), '候補の行');
     } else {
       await reveal(find.text(tr('採用の候補')));
@@ -1157,6 +1165,7 @@ class Pilot {
     if (find.byKey(const ValueKey('pseg-exec')).evaluate().isNotEmpty) {
       for (final p in {if (s.staff.isNotEmpty) s.staff.first, if (s.staff.isNotEmpty) s.staff.last}) {
         await pressKey(s.biz.any((b) => b.mgr == p.id) ? 'pseg-mgr' : 'pseg-exec');
+        await showRow('person-row-${p.id}', 'more-people-picks');
         await pressKey('person-row-${p.id}');
         if (p == s.staff.last) {
           final n = s.staff.length;
@@ -1219,6 +1228,12 @@ class Pilot {
     for (final v in zukanViews) {
       await pressKey('zukan-${v.$1}');
       if (ctl.zukanView != v.$1) note('図鑑が${v.$1}に替わらない');
+      // 業種は分類ごとにたたんであるので（1.1.0+31）、自分の事業の分類を開いて見る
+      if (v.$1 == 'ind' && s.biz.isNotEmpty) {
+        final cat = indm[s.biz.first.ind]!.cat;
+        if (!ctl.shown.contains('zukan-cat-$cat')) await pressKey('ind-cat-head-$cat');
+        if (!ctl.shown.contains('zukan-cat-$cat')) note('図鑑の分類が開かない');
+      }
       await sweep();
     }
     await _peek(find.byKey(const ValueKey('info-synergy')), '用語（シナジー）');

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../game/faces.dart' show faceAsset;
 import '../l10n/l10n.dart';
@@ -351,6 +352,163 @@ class FoldHead extends StatelessWidget {
       );
 }
 
+/// 「もっと見る」の行（1.1.0+31）。長い一覧の最初の何件かの下に置き、押すと残りを出す（開いているときは「たたむ」）
+class MoreBtn extends StatelessWidget {
+  final bool open;
+
+  /// たたんでいるときに隠れている件数
+  final int rest;
+  final VoidCallback onTap;
+  const MoreBtn({super.key, required this.open, required this.rest, required this.onTap});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        expanded: open,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(Ui.rBtn),
+          onTap: onTap,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: minTap),
+            alignment: Alignment.center,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Flexible(child: Text(open ? tr('たたむ') : tr('もっと見る（あと{0}件）', [rest]), style: ts(size: 12.5, color: Pal.goldtx, bold: true))),
+              Icon(open ? Icons.expand_less : Icons.expand_more, size: 20, color: Pal.goldtx),
+            ]),
+          ),
+        ),
+      );
+}
+
+/// カードの細かい数字を開く・しまう小さなボタン（1.1.0+31）。見た目は字と印だけで、押せる範囲は 44pt
+class DetailBtn extends StatelessWidget {
+  final bool open;
+  final VoidCallback onTap;
+
+  /// 閉じているときの字（既定は「詳しく」）
+  final String? label;
+  const DetailBtn({super.key, required this.open, required this.onTap, this.label});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        expanded: open,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(Ui.rBtn),
+          onTap: onTap,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: minTap, minWidth: minTap),
+            padding: const EdgeInsets.only(left: 6),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Flexible(child: Text(open ? tr('しまう') : (label ?? tr('詳しく')), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 12, color: Pal.goldtx))),
+              Icon(open ? Icons.expand_less : Icons.expand_more, size: 18, color: Pal.goldtx),
+            ]),
+          ),
+        ),
+      );
+}
+
+/// 幅が足りるときは2列に並べる（左右それぞれの中身は縦に積む）。狭いときは左の下に右を続ける（1.1.0+31）
+class Cols2 extends StatelessWidget {
+  final List<Widget> left, right;
+
+  /// 2列にする最小の幅
+  final double min;
+  final int flexL, flexR;
+  const Cols2(this.left, this.right, {super.key, this.min = cols2Min, this.flexL = 1, this.flexR = 1});
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+      builder: (context, c) => c.maxWidth < min
+          ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [...left, ...right])
+          : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(flex: flexL, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: left)),
+              const SizedBox(width: 8),
+              Expanded(flex: flexR, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: right)),
+            ]));
+}
+
+/// カードを2列に詰めて並べる（1.1.0+31）。上から順に、そのとき短いほうの列の下へ置く（高さの違うカードでも、左右の長さがそろう）。
+/// 幅が [min] より狭いときは1列
+class Masonry2 extends StatelessWidget {
+  final List<Widget> children;
+  final double min;
+  const Masonry2(this.children, {super.key, this.min = cols2Min});
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+      builder: (context, c) => c.maxWidth < min
+          ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children)
+          : _Masonry(gap: 8, children: children));
+}
+
+class _Masonry extends MultiChildRenderObjectWidget {
+  final double gap;
+  const _Masonry({required this.gap, required super.children});
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderMasonry(gap);
+  @override
+  void updateRenderObject(BuildContext context, _RenderMasonry renderObject) => renderObject.gap = gap;
+}
+
+class _MasonryData extends ContainerBoxParentData<RenderBox> {}
+
+class _RenderMasonry extends RenderBox with ContainerRenderObjectMixin<RenderBox, _MasonryData>, RenderBoxContainerDefaultsMixin<RenderBox, _MasonryData> {
+  double _gap;
+  _RenderMasonry(this._gap);
+  set gap(double v) {
+    if (v == _gap) return;
+    _gap = v;
+    markNeedsLayout();
+  }
+
+  @override
+  void setupParentData(RenderBox child) {
+    if (child.parentData is! _MasonryData) child.parentData = _MasonryData();
+  }
+
+  @override
+  void performLayout() {
+    final w = constraints.maxWidth;
+    final colW = (w - _gap) / 2;
+    final h = [0.0, 0.0];
+    var child = firstChild;
+    while (child != null) {
+      final i = h[0] <= h[1] + .5 ? 0 : 1;
+      child.layout(BoxConstraints.tightFor(width: colW), parentUsesSize: true);
+      final pd = child.parentData! as _MasonryData;
+      pd.offset = Offset(i == 0 ? 0 : colW + _gap, h[i]);
+      h[i] += child.size.height;
+      child = pd.nextSibling;
+    }
+    size = constraints.constrain(Size(w, math.max(h[0], h[1])));
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) => defaultPaint(context, offset);
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) => defaultHitTestChildren(result, position: position);
+}
+
+/// 同じ形の札（宿敵の行・実績の行など）を、幅が足りるときは2つずつ横に並べる（1.1.0+31）
+class Pairs extends StatelessWidget {
+  final List<Widget> children;
+  final double min;
+  const Pairs(this.children, {super.key, this.min = cols2Min});
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
+        if (c.maxWidth < min) return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children);
+        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          for (var i = 0; i < children.length; i += 2)
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(child: children[i]),
+              const SizedBox(width: 8),
+              Expanded(child: i + 1 < children.length ? children[i + 1] : const SizedBox()),
+            ]),
+        ]);
+      });
+}
+
+/// 2列にする最小の幅（iPhone の横の真ん中の列は約550）
+const cols2Min = 500.0;
+
 /// 能力の細い棒（0〜99）。値が幅でしか分かっていないときは、その幅を薄い帯で見せる
 class AbBar extends StatelessWidget {
   final int lo, hi;
@@ -529,9 +687,20 @@ class Kv extends StatelessWidget {
 /// 2列に並べる（試作の grid2）
 class Grid2 extends StatelessWidget {
   final List<Widget> children;
-  const Grid2(this.children, {super.key});
+
+  /// 1つの升の幅がこれより狭いときは、1列に並べる（値が長い文の欄で、字が豆粒に縮まないように。0なら常に2列。1.1.0+31）
+  final double minCell;
+  const Grid2(this.children, {super.key, this.minCell = 0});
   @override
   Widget build(BuildContext context) {
+    if (minCell > 0) {
+      return LayoutBuilder(
+          builder: (context, c) => (c.maxWidth - 12) / 2 < minCell * Ui.textScale
+              ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  for (final w in children) Padding(padding: const EdgeInsets.symmetric(vertical: 3), child: w),
+                ])
+              : Grid2(children));
+    }
     final rows = <Widget>[];
     for (var i = 0; i < children.length; i += 2) {
       rows.add(Padding(
@@ -837,6 +1006,36 @@ class Btn extends StatelessWidget {
   }
 
   Widget _fit(Widget t, bool shrink) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
+}
+
+/// 印だけのボタン（狭い上の帯の「まとめて進める」「社長の行動」。1.1.0+31）。長押しと読み上げで名前が分かる。押せる範囲は 44pt
+class IconBtn extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  const IconBtn(this.icon, this.label, this.onTap, {super.key});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        label: label,
+        button: true,
+        excludeSemantics: true,
+        onTap: onTap,
+        child: Tooltip(
+          message: label,
+          child: TapArea(
+            onTap: onTap,
+            child: Material(
+              color: Pal.panel2,
+              shape: btnShape(Pal.line),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(Ui.rBtn),
+                onTap: onTap,
+                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), child: Icon(icon, size: 20, color: Pal.ink)),
+              ),
+            ),
+          ),
+        ),
+      );
 }
 
 /// この下のボタンは、字を縮めずに折り返す（幅の狭い右の帯）

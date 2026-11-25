@@ -160,6 +160,8 @@ void main() {
       final s = _run(150);
       s.chron('ipo', 'テストで一番新しい記録');
       final ctl = await _pump(tester, game: s, size: const Size(390, 20000));
+      // 1.1.0+31 から、記録が少ないうちも新しい3件より前は「もっと見る」の先にある。開いて並びを見る
+      ctl.shown.add('chron');
       ctl.setTab('num');
       await tester.pump();
       expect(find.text('社史'), findsOneWidget);
