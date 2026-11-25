@@ -1,4 +1,4 @@
-// ことばの一覧が、ゲームにある字（清音46字）だけで書けていて、段ごとの字数が合っているか
+// ことばの一覧が、ゲームにある字（清音・濁点・半濁点・っゃゅょ の74字）だけで書けていて、段ごとの字数が合っているか
 var assert = require('assert');
 var W = require('../prototype/words.js'), G = require('../prototype/glyphs.js');
 var ok = new Set(Object.keys(G.chars)), seen = new Set();

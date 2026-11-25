@@ -26,6 +26,7 @@
 
 ■ 遊び方
 ・指でなぞって字を動かし、はなすと落ちます。「まわす」で回してから落とせます
+・字は五十音に、が・ぱ などの濁点・半濁点と、小さい っ・ゃ・ゅ・ょ を合わせた74字。がっこう・きょう も作れます
 ・字と字が触れ合っていれば、たて・よこ・右から左・下から上、どの向きでも読めたら ことば になります
 ・2字で100点、3字で400点、4字で900点。長いことばほど大きく、1字で同時にいくつもできると倍に
 ・持っている字とことばになる字は光り、落とす先でできそうなことばも「ねこ ？」と教えてくれます
@@ -36,7 +37,7 @@
 台ごとに景色が変わり、積むほど空が夕焼けから夜へ移っていきます。
 
 ■ ことば帳
-作ったことばは「ことば帳」に集まります（2000語以上）。集めた数で、新しい台と字の色がひらきます。
+作ったことばは「ことば帳」に集まります（約4,000語）。集めた数で、新しい台と字の色がひらきます。
 
 ■ アイテム（あり／なしを選べます）
 のり（くっつく）・いた（平らな板）・とりけし（最後の字をどける）・こおり（いまの字を固める）。
@@ -55,7 +56,8 @@ Hiragana letters drop one at a time. Stack them on the stage, and when touching 
 - Every letter shows its romaji, so you can play before you can read kana.
 - Make a word and it pops up with romaji and English: ねこ — neko — cat.
 - Touching letters count in any direction: top to bottom, left to right, even backwards.
-- Over 2,000 everyday words — animals, food, nature, verbs and adjectives — with kanji and English meanings, from the JMdict dictionary.
+- Nearly 4,000 everyday words — animals, food, nature, verbs and adjectives — with kanji and English meanings, from the JMdict dictionary.
+- All 74 hiragana you need: the basic kana plus が, ぱ and small っ ゃ ゅ ょ — so you can build がっこう (gakkou, school) and きょう (kyou, today).
 - Your word book keeps every word you find, with kanji and meaning. Collect more to unlock new stages and letter colors.
 - Six stages with Japanese scenery: a garden, a shrine with a seesaw, a tea field, a river, the sea and a snowy mountain.
 - Turn romaji off when you can read the letters yourself.

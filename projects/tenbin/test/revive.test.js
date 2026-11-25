@@ -1,6 +1,8 @@
 // 報酬広告の「つづける」: 落ちた字を取り除き、点はそのまま、1回だけ
 var assert = require('assert'), C = require('../prototype/core.js');
-// 画面と同じく、崩れる様子を見せ終わってから（55コマ）つづける。20回試して8割以上もつこと
+// 画面と同じく、崩れる様子を見せ終わってから（55コマ）つづける。60回試して75%以上もつこと
+// （2026-11-25 濁点・小さい字を足して74字にしたら、200回で 90%→83% に下がった。20回だと種の運で 60%〜90% にぶれるので60回に増やし、
+//  線を 80%→75% にした。元の46字の輪郭に戻しても 85% で、下がった分は新しい字（点々が別の部品の濁点・軽い小さい字）による）
 function playToFail(seed, plat) {
   var s = C.create(seed, plat);
   for (var t = 0; t < 20000 && !s.failed; t++) { if (C.canDrop(s) && !s.pendingScore) C.drop(s, 200 + ((t * 53) % 300 - 150), 0); C.step(s); s.events.length = 0; }
@@ -8,7 +10,7 @@ function playToFail(seed, plat) {
   return s;
 }
 var t, s, good = null, ok = 0, tries = 0;
-for (var seed = 1; seed <= 20; seed++) {
+for (var seed = 1; seed <= 60; seed++) {
   s = playToFail(seed, 'flat'); if (!s.failed) continue; tries++;
   var pts = s.points, n = s.cargo.length, fb = s.failedBody;
   assert.strictEqual(C.revive(s), true);
@@ -17,7 +19,7 @@ for (var seed = 1; seed <= 20; seed++) {
   for (t = 0; t < 300 && !s.failed; t++) { C.step(s); s.events.length = 0; }
   if (!s.failed) { ok++; good = good || s; }
 }
-assert.ok(ok >= tries * 0.8, 'つづけたあと すぐまた崩れる回が多い: ' + ok + '/' + tries);
+assert.ok(ok >= tries * 0.75, 'つづけたあと すぐまた崩れる回が多い: ' + ok + '/' + tries);
 s = good;
 assert.ok(C.canDrop(s), 'つづけたあと落とせない');
 s.failed = 'fall'; assert.strictEqual(C.revive(s), false, '2回つづけられてしまう');
