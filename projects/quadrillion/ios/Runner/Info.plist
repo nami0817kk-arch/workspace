@@ -72,5 +72,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- 横だけにするには iPad の画面分割を外す必要がある（無いと ITMS-90474 で受け取りを断られる。1.1.0+30 で踏んだ） -->
+	<key>UIRequiresFullScreen</key>
+	<true/>
 </dict>
 </plist>
