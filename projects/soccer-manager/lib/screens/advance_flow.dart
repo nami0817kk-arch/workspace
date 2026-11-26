@@ -8,6 +8,7 @@ import '../logic/cup_engine.dart';
 import '../logic/day_events.dart';
 import '../logic/economy_scale.dart';
 import '../models/match_result.dart';
+import '../monetization/quarterly_ad.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/achievement_unlock_notifier.dart';
@@ -52,7 +53,15 @@ IconData advanceButtonIcon(GameState gs) =>
 ///   起きたかを1行で知らせる。
 ///
 /// 自クラブの出ないカップ戦は、その日までに来ていれば先に済ませる。
+///
+/// 進め終えたら、ゲームの中で3か月たっていれば全画面広告を出す
+/// ([maybeShowQuarterlyAd])。
 Future<void> advanceToNextStop(BuildContext context) async {
+  await _advanceToNextStop(context);
+  if (context.mounted) await maybeShowQuarterlyAd(context);
+}
+
+Future<void> _advanceToNextStop(BuildContext context) async {
   final gs = context.read<GameState>();
   final first = gs.nextStop;
   if (first == null) {
@@ -372,4 +381,5 @@ Future<void> showSimAheadDialog(BuildContext context) async {
     ),
   );
   if (context.mounted) showAchievementUnlockNotification(context, gameState);
+  if (context.mounted) await maybeShowQuarterlyAd(context);
 }

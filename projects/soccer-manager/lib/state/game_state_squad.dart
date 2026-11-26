@@ -11,44 +11,13 @@ extension GameStateSquad on GameState {
   }
 
   /// 営業ブーストの倍率。ブーストが残っている節の週収入にかかる。
-  /// 資金を直接配らないので、赤字を消すほどの力は持たない。
+  ///
+  /// 動画広告のご褒美だった。動画広告は 2026-11-26 にやめたので新しく
+  /// 貯まることはないが、前の版で貯めたぶん(最大3節)は使い切るまで効く。
   static const double marketingBoostMultiplier = 1.5;
 
-  /// 貯めておける営業ブーストの上限(節数)。
-  static const int marketingBoostCap = 3;
-
-  /// 営業ブーストの残り(節数)。
+  /// 営業ブーストの残り(節数)。前の版で貯めたぶんだけ。
   int get marketingBoostWeeks => _save?.marketingBoostWeeks ?? 0;
-
-  /// 営業ブーストが上限まで貯まっていて、受け取っても入らないか。
-  ///
-  /// 広告を出す前にこれを見る(MonetizationController.claimReward の
-  /// bankFull)。見ずに出していた頃は、上限で広告を見ると回数だけ減って
-  /// 何も入らなかった。
-  bool get marketingBoostFull => marketingBoostWeeks >= marketingBoostCap;
-
-  /// 上限のとき、あと何節ぶん使えば次を受け取れるか。上限でなければ 0。
-  int get marketingBoostWeeksUntilRoom =>
-      marketingBoostFull ? marketingBoostWeeks - marketingBoostCap + 1 : 0;
-
-  /// リワード広告の視聴、またはサポーター購入による特典を受け取る。
-  /// 次の1節だけ、チケット・スポンサー・グッズの収入が上がる。
-  ///
-  /// 広告を見せたか・購入済みかの判定は MonetizationController の責務で、
-  /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す。
-  /// 戻り値は受け取り後の残り節数。上限のときは何も変えない
-  /// (入っていないのに「強化した」とニュースに残さない)。
-  int claimMarketingBoost() {
-    if (_save == null) return 0;
-    if (marketingBoostFull) return _save!.marketingBoostWeeks;
-    _save!.marketingBoostWeeks =
-        (_save!.marketingBoostWeeks + 1).clamp(0, marketingBoostCap);
-    _logNews(Tr.pick('営業を強化した。次の1節は収入が増える。',
-        'Marketing pushed: income is up for the next matchday.'));
-    _notify();
-    _persist();
-    return _save!.marketingBoostWeeks;
-  }
 
   /// 資金パックの購入で受け取る額(万円)。所属ディビジョンに比例する。
   int purchasedFundsAmount(FundsPack pack) =>

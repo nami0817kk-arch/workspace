@@ -26,7 +26,6 @@ import '../logic/sponsor_slots.dart';
 import '../widgets/shell_nav.dart';
 import '../widgets/todo_list.dart';
 import '../widgets/rules_card.dart';
-import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
@@ -83,8 +82,9 @@ class FinanceScreen extends StatelessWidget {
         drawer: const QuickAccessDrawer(),
         body: TabBarView(
           children: [
-            // 概要: 今年のお金だけ。押す所(提案の承認・営業の強化・予算の
-            // 配り方)を上に置き、数字はその下(2026-11-25 の第7段)。
+            // 概要: 今年のお金だけ。押す所(提案の承認・予算の配り方)を
+            // 上に置き、数字はその下(2026-11-25 の第7段)。
+            // 動画広告の「営業を強化」は 2026-11-26 にやめた。
             ResponsiveBody(
               // 広い画面(iPad の横向きなど)では2列に並べる。
               child: AutoColumns(
@@ -92,7 +92,6 @@ class FinanceScreen extends StatelessWidget {
                   // 監督からの提案(承認待ち)は先頭に。提案が無ければ何も出ない。
                   const ProposalCard(),
                   const _RuleAlertLink(),
-                  const RewardFundsCard(),
                   const _YearMoneyCard(),
                   const BudgetPlanCard(),
                   const _PolicyLine(),

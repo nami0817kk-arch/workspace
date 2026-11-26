@@ -19,7 +19,7 @@ import '../models/team.dart';
 import '../models/league_theme.dart';
 import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
-import '../monetization/monetization_controller.dart';
+import '../monetization/quarterly_ad.dart';
 import '../services/review_prompt.dart';
 import '../state/game_state.dart';
 import '../services/feedback_service.dart';
@@ -868,6 +868,7 @@ class HomeScreen extends StatelessWidget {
       duration: const Duration(seconds: 6),
     ));
     _showMatchdayNotifications(context, gameState);
+    await maybeShowQuarterlyAd(context);
   }
 
   /// ライブ観戦せず、次節の結果だけを一括で確定させる(クイックシム)。
@@ -1316,12 +1317,9 @@ class HomeScreen extends StatelessWidget {
       if (context.mounted) _showProgressFailedSnackBar(context, e);
       return;
     }
-    // 全画面広告はここだけ。シーズンの区切りは進行が一段落する場所で、
-    // 試合中やメニュー操作の途中に割り込むことがない。サポーターには
-    // 出ない(MonetizationController 側で判定している)。
-    if (context.mounted) {
-      await context.read<MonetizationController>().showSeasonInterstitial();
-    }
+    // 全画面広告は、ゲームの中で3か月たつごと(2026-11-26。以前はシーズンの
+    // 切り替わりに1回)。シーズン開始のレポートより先に出す。
+    if (context.mounted) await maybeShowQuarterlyAd(context);
     if (context.mounted) {
       await _showSeasonStartReport(context, gameState);
     }

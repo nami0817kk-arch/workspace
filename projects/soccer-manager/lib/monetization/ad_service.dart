@@ -6,22 +6,21 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// 広告の読み込みと表示。
 ///
-/// 2種類ある。任意で見るリワード広告と、シーズンの切り替わりで一度だけ出る
-/// 全画面広告(インタースティシャル)。後者はサポーター購入で出なくなる。
+/// 出すのは全画面広告(インタースティシャル)の1種類だけ。ゲームの中で
+/// 3か月たつごとに1回出る([MonetizationController.showQuarterlyInterstitial])。
+/// 「広告を消す」の購入で出なくなる。
+///
+/// 自分で選んで見る動画広告(リワード)は 2026-11-26 にやめた。ご褒美の
+/// 「次の1節の収入1.5倍」が要らないと決まったため。見られる前から先に
+/// 読み込んでいたので、表示率(7日でリクエスト231回に表示6回)を下げる
+/// いちばんの原因でもあった。
 ///
 /// 実装を差し替えられるようにしてあるのは、広告SDKがAndroid/iOSでしか
 /// 動かないため。Web版・テスト・デスクトップでは何もしない実装を使う。
 abstract class AdService {
   Future<void> initialize();
 
-  /// 表示できる広告が手元にあるか。無ければボタンを押させない。
-  bool get isRewardedAdReady;
-
-  /// 広告を最後まで見せる。特典を与えてよい場合だけ true を返す。
-  /// 途中で閉じられた場合は false。
-  Future<bool> showRewardedAd();
-
-  /// シーズンの切り替わりで出す全画面広告が手元にあるか。
+  /// 全画面広告が手元にあるか。
   bool get isInterstitialAdReady;
 
   /// 全画面広告を出し、閉じられるまで待つ。特典は無いので結果を返さない。
@@ -35,12 +34,6 @@ abstract class AdService {
 class NoOpAdService implements AdService {
   @override
   Future<void> initialize() async {}
-
-  @override
-  bool get isRewardedAdReady => false;
-
-  @override
-  Future<bool> showRewardedAd() async => false;
 
   @override
   bool get isInterstitialAdReady => false;
@@ -59,17 +52,8 @@ class NoOpAdService implements AdService {
 /// 本物の広告が出ず規約違反にならないようにするため。
 ///
 ///     flutter build appbundle --release \
-///       --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-xxx/yyy \
 ///       --dart-define=ADMOB_INTERSTITIAL_ANDROID=ca-app-pub-xxx/zzz
 class AdMobAdService implements AdService {
-  static const _androidUnitId = String.fromEnvironment(
-    'ADMOB_REWARDED_ANDROID',
-    defaultValue: 'ca-app-pub-3940256099942544/5224354917',
-  );
-  static const _iosUnitId = String.fromEnvironment(
-    'ADMOB_REWARDED_IOS',
-    defaultValue: 'ca-app-pub-3940256099942544/1712485313',
-  );
   static const _interstitialAndroidUnitId = String.fromEnvironment(
     'ADMOB_INTERSTITIAL_ANDROID',
     defaultValue: 'ca-app-pub-3940256099942544/1033173712',
@@ -79,9 +63,6 @@ class AdMobAdService implements AdService {
     defaultValue: 'ca-app-pub-3940256099942544/4411468910',
   );
 
-  RewardedAd? _ad;
-  bool _loading = false;
-  DateTime? _adLoadedAt;
   InterstitialAd? _interstitial;
   DateTime? _interstitialLoadedAt;
   Completer<void>? _pendingInterstitialLoad;
@@ -91,11 +72,10 @@ class AdMobAdService implements AdService {
   /// **AdMob の広告は1時間で期限切れになる。** 公式が「1時間ごとに捨てて
   /// 読み直せ」と書いている。持ったままにしていたため、起動時に読んだ広告を
   /// 何時間も「準備できている」と扱い、いざ出そうとすると失敗していた。
-  /// 実測(7日)で リクエスト231回に対して表示6回。
-  /// https://developers.google.com/admob/android/rewarded
+  /// https://developers.google.com/admob/android/interstitial
   static const Duration adLifetime = Duration(minutes: 55);
 
-  /// シーズンの切り替わりで広告を読むのに待てる時間。
+  /// 広告を出す場面で読むのに待てる時間。
   /// これを過ぎたら広告なしで先へ進める。
   static const Duration interstitialLoadTimeout = Duration(seconds: 5);
 
@@ -105,22 +85,14 @@ class AdMobAdService implements AdService {
       loadedAt == null ||
       (now ?? DateTime.now()).difference(loadedAt) >= adLifetime;
 
-  /// 期限切れの広告を捨てて読み直す。
+  /// 期限切れの広告を捨てる。
   void _dropIfExpired() {
-    if (_ad != null && adExpired(_adLoadedAt)) {
-      _ad!.dispose();
-      _ad = null;
-      _adLoadedAt = null;
-      unawaited(_load());
-    }
     if (_interstitial != null && adExpired(_interstitialLoadedAt)) {
       _interstitial!.dispose();
       _interstitial = null;
       _interstitialLoadedAt = null;
     }
   }
-
-  static String get _unitId => _isIOS ? _iosUnitId : _androidUnitId;
 
   static String get _interstitialUnitId =>
       _isIOS ? _interstitialIosUnitId : _interstitialAndroidUnitId;
@@ -129,16 +101,13 @@ class AdMobAdService implements AdService {
 
   /// 既定のテスト用IDのままか。設定画面に警告を出すために使う。
   ///
-  /// **いま動いているプラットフォームのIDだけを見る。** 4つ全部を見ると、
+  /// **いま動いているプラットフォームのIDだけを見る。** 両方を見ると、
   /// iOS ビルドでは Android 用の --dart-define が渡らず既定のテストIDのまま
   /// 残るため、iOS のIDを正しく渡していても警告が出てしまう(実際に出た)。
   /// Web版は広告SDKを読み込まないので、判定する意味がない。
   static bool get isUsingTestUnitId {
     if (kIsWeb) return false;
-    final ids = _isIOS
-        ? const [_iosUnitId, _interstitialIosUnitId]
-        : const [_androidUnitId, _interstitialAndroidUnitId];
-    return ids.any((id) => id.startsWith(_testUnitIdPrefix));
+    return _interstitialUnitId.startsWith(_testUnitIdPrefix);
   }
 
   /// Platform は Web で参照できない。判定の手前で kIsWeb を見ること。
@@ -153,10 +122,9 @@ class AdMobAdService implements AdService {
   @override
   Future<void> initialize() async {
     await MobileAds.instance.initialize();
-    unawaited(_load());
-    // **インタースティシャルは起動時に読まない。** 出るのはシーズンの
-    // 切り替わりだけで、1シーズンは38節ある。起動時に読んでも、出す頃には
-    // 必ず期限切れになっている。出す直前に読む([showInterstitialAd])。
+    // **起動時には読まない。** 出るのはゲームの中の3か月ごとで、起動して
+    // すぐ出すとは限らない。読んで出さずに捨てると、リクエストだけが
+    // 数えられて表示率が下がる。出す直前に読む([showInterstitialAd])。
   }
 
   /// 広告が届く（か、届かないと分かる）まで完了しない Future を返す。
@@ -205,115 +173,6 @@ class AdMobAdService implements AdService {
     return completer.future;
   }
 
-  Future<void> _load() async {
-    if (_loading || _ad != null) return;
-    _loading = true;
-    try {
-      await RewardedAd.load(
-        adUnitId: _unitId,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-          onAdLoaded: (ad) {
-            _ad = ad;
-            _adLoadedAt = DateTime.now();
-            _loading = false;
-          },
-          onAdFailedToLoad: (error) {
-            // 読み込み失敗は珍しくない(在庫切れ・通信断)。
-            // 例外にせず、次に押されたときに読み直す。
-            _ad = null;
-            _loading = false;
-          },
-        ),
-      );
-    } catch (_) {
-      _ad = null;
-      _loading = false;
-    }
-  }
-
-  @override
-  bool get isRewardedAdReady {
-    _dropIfExpired();
-    return _ad != null;
-  }
-
-  @override
-  Future<bool> showRewardedAd() async {
-    _dropIfExpired();
-    final ad = _ad;
-    if (ad == null) {
-      unawaited(_load());
-      return false;
-    }
-    _ad = null;
-    _adLoadedAt = null;
-
-    // 次回のために先読みしておく。
-    return showAndAwaitReward(ad, onClosed: () => unawaited(_load()));
-  }
-
-  /// 閉じる通知の後に、報酬の通知を待つ時間。
-  ///
-  /// 報酬の通知と閉じる通知は別々に届き、順番は決まっていない。閉じた
-  /// 時点で報酬が来ていなくても、少しだけ待ってから「見なかった」と決める。
-  static const Duration rewardAfterCloseGrace = Duration(seconds: 1);
-
-  /// リワード広告を出し、**閉じられるまで待って**から、報酬が付いたかを返す。
-  ///
-  /// **`ad.show(...)` を `await` しても広告は待てない。** あれが返るのは
-  /// 「ネイティブ側に表示を頼み終えた」時点で、報酬(`onUserEarnedReward`)も
-  /// 閉じる通知も後から届く。`await` の直後に報酬の有無を見ていた頃は、
-  /// 動画を最後まで見ても**常に「見なかった」になり、資金が入らなかった**。
-  /// 全画面広告([showInterstitialAd])と同じく、閉じる通知を `Completer` で待つ。
-  ///
-  /// 広告を差し替えて検査するため、インスタンスの状態に触れない形で切り出してある。
-  @visibleForTesting
-  static Future<bool> showAndAwaitReward(
-    RewardedAd ad, {
-    void Function()? onClosed,
-    Duration rewardGrace = rewardAfterCloseGrace,
-  }) async {
-    var earned = false;
-    var failedToShow = false;
-    final rewarded = Completer<void>();
-    final closed = Completer<void>();
-
-    void finish(RewardedAd ad) {
-      if (closed.isCompleted) return;
-      ad.dispose();
-      onClosed?.call();
-      closed.complete();
-    }
-
-    ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: finish,
-      onAdFailedToShowFullScreenContent: (ad, _) {
-        failedToShow = true;
-        finish(ad);
-      },
-    );
-
-    try {
-      await ad.show(onUserEarnedReward: (_, __) {
-        earned = true;
-        if (!rewarded.isCompleted) rewarded.complete();
-      });
-    } catch (_) {
-      // 表示を頼むこと自体に失敗した。閉じる通知は来ないので、ここで終える。
-      failedToShow = true;
-      finish(ad);
-    }
-    await closed.future;
-
-    // 報酬の通知が閉じる通知より遅れて届くことがある。表示に失敗したときは
-    // 報酬が来ることはないので待たない。
-    if (!earned && !failedToShow) {
-      await rewarded.future.timeout(rewardGrace, onTimeout: () {});
-    }
-    return earned;
-  }
-
   @override
   bool get isInterstitialAdReady {
     _dropIfExpired();
@@ -324,8 +183,7 @@ class AdMobAdService implements AdService {
   Future<void> showInterstitialAd() async {
     _dropIfExpired();
     if (_interstitial == null) {
-      // **出す直前に読む。** シーズンの切り替わりは数秒かかる処理の後なので、
-      // ここで少し待てる。起動時に先読みしても必ず期限切れになっていた。
+      // **出す直前に読む。** 節を進める処理の後なので、ここで少し待てる。
       await _loadInterstitial().timeout(interstitialLoadTimeout,
           onTimeout: () {});
     }
@@ -337,12 +195,11 @@ class AdMobAdService implements AdService {
     _interstitial = null;
     _interstitialLoadedAt = null;
 
-    // 閉じられるまで待たないと、広告の裏で次のシーズンの画面が
-    // 動き出してしまう。
+    // 閉じられるまで待たないと、広告の裏で次の画面が動き出してしまう。
     final closed = Completer<void>();
     void finish(Ad ad) {
       ad.dispose();
-      // 次のシーズンは38節先なので、ここでは先読みしない(期限切れになる)。
+      // 次に出すのは3か月先なので、ここでは先読みしない(期限切れになる)。
       if (!closed.isCompleted) closed.complete();
     }
 
@@ -356,8 +213,6 @@ class AdMobAdService implements AdService {
 
   @override
   void dispose() {
-    _ad?.dispose();
-    _ad = null;
     _interstitial?.dispose();
     _interstitial = null;
   }
