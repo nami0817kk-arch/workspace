@@ -440,6 +440,11 @@ extension GameTurn on Game {
     for (final b in biz) {
       b.rh.add(b.rev);
       if (b.rh.length > 13) b.rh.removeAt(0);
+      // 利益とシェアの推移（画面だけに使う。1.1.0+40）
+      b.ph.add(b.profit);
+      if (b.ph.length > 13) b.ph.removeAt(0);
+      b.sph.add(b.share);
+      if (b.sph.length > 13) b.sph.removeAt(0);
     }
     hist.add(HistEntry(t: '$year-$q', cap: cap, rev: rev, cash: cash, pre: pre));
     if (hist.length > 1200) hist.removeAt(0);

@@ -583,11 +583,14 @@ class MainScreen extends StatelessWidget {
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             leftRail(ctl),
             Expanded(child: center),
+            // 右の帯は、件数だけの細い帯にたためる（1.1.0+40。たたんだ形は端末に残る）
             if (side)
               Container(
-                width: sideW,
+                width: ctl.sideFolded ? sideFoldW : sideW,
                 decoration: const BoxDecoration(color: Pal.sky, border: Border(left: BorderSide(color: Pal.line))),
-                child: NoShrink(child: ListView(key: const ValueKey('side'), padding: const EdgeInsets.fromLTRB(6, 2, 6, 10), children: sideItems(ctl))),
+                child: ctl.sideFolded
+                    ? sideFoldedBar(ctl)
+                    : NoShrink(child: ListView(key: const ValueKey('side'), padding: const EdgeInsets.fromLTRB(6, 2, 6, 10), children: sideItems(ctl))),
               ),
           ]),
         ),
