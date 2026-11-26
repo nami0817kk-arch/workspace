@@ -304,7 +304,7 @@ void main() {
           if (t == 'biz') {
             expect(find.byType(Btn), findsWidgets);
             expect(find.byType(Pick<int>), findsOneWidget, reason: '開いた1つの事業の責任者');
-            expect(find.byType(Pick<String>), findsNWidgets(2), reason: '値付けと絞り込み');
+            expect(find.byType(Pick<String>), findsOneWidget, reason: '値付け（絞り込みは札と分段に置き換えた）');
           }
         }
         for (final open in <void Function()>[

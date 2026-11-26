@@ -71,7 +71,7 @@ class GuideBar extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10),
       child: Material(
         color: Pal.goldBg,
-        shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.gold), borderRadius: BorderRadius.circular(10)),
+        shape: Ui.cardShape(Pal.gold),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: go,
