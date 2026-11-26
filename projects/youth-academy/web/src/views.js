@@ -74,7 +74,7 @@
   const gradeName = (g) => '高' + g;
   const fatColor = (v) => (v > 75 ? '#d63a3a' : v > 50 ? '#f0a020' : '#1a9d57');
   const fatBar = (p, wd) => h('div', { class: 'bar', style: `width:${wd || 40}px` }, h('i', { style: `width:${p.fat}%;background:${fatColor(p.fat)}` }));
-  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.state && p.state.w > 0 ? h('span', { class: 'fit ' + (p.state.k === 'peak' ? 'good' : 'bad') }, p.state.k === 'peak' ? '伸び盛り' : '壁') : null, p.star ? h('span', { class: 'chip trait' }, '★注目') : null, p.awake ? h('span', { class: 'fit good' }, `覚醒（${p.awake.y}年目）`) : null, p.youthCaps ? h('span', { class: 'chip pers' }, `${p.youthTeam || '年代別代表'} ${p.youthCaps}回`) : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
+  const flags = (p) => [p.inj > 0 ? h('span', { class: 'fit bad' }, '怪我' + p.inj + '週') : null, p.spurt > 0 ? h('span', { class: 'fit good' }, '成長期') : null, p.state && p.state.w > 0 ? h('span', { class: 'fit ' + (p.state.k === 'peak' ? 'good' : 'bad') }, p.state.k === 'peak' ? '伸び盛り' : '壁') : null, p.kd && YA.kadaiDef ? h('span', { class: 'chip trait' }, '課題：' + YA.kadaiDef(p.kd.t).name) : null, p.awake ? h('span', { class: 'fit good' }, `覚醒（${p.awake.y}年目）`) : null, p.youthCaps ? h('span', { class: 'chip pers' }, `${p.youthTeam || '年代別代表'} ${p.youthCaps}回`) : null, p.unrest >= 3 ? h('span', { class: 'fit bad' }, '不満') : null];
 
   // 週を進めるボタン（ホームと練習で同じ言葉・同じ大きさ）
   const WEEK_GO = 'この週で行く ▶';
@@ -129,7 +129,7 @@
       noticeList(w, close)));
   }
   YA.openNotices = openNotices;
-  // 今週気にかけたい子：理由を短く添える。★の子は鍵の進みも
+  // 今週気にかけたい子：理由を短く添える。課題中の子は期限の近さも
   function careList(w, S) {
     const why = new Map();
     const add = (p, t) => { if (!why.has(p)) why.set(p, t); };
@@ -138,10 +138,8 @@
     for (const p of S.tired) add(p, '疲れ ' + Math.round(p.fat));
     for (const p of S.lowconf) add(p, '自信なし');
     for (const p of Object.values(w.players)) {
-      if (!p.star || !p.keys) continue;
-      const k = p.keys.filter((x) => !x.done && x.need > 0).sort((a, b) => b.have / b.need - a.have / a.need)[0];
-      if (k && k.h >= 2 && k.need - k.have <= Math.max(1, k.need * 0.25)) add(p, '鍵まであと少し');
-      else if (k && k.due && k.due <= w.year * 100 + w.week + 4) add(p, '鍵の期限が近い');
+      const ks = p.kd && YA.kadaiState ? YA.kadaiState(w, p) : null;
+      if (ks && ks.len - ks.e <= 2) add(p, '課題の期間が残りわずか');
     }
     for (const p of S.hot) add(p, p.spurt > 0 ? '成長期' : '好調');
     return [...why.entries()];
@@ -217,11 +215,12 @@
     const right = h('div', { class: 'card pbody home-right', style: 'width:230px;flex:none' });
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
     const care = careList(w, S);
-    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, care.slice(0, 8).map(([p, t]) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, (p.star ? '★' : '') + p.name.split(' ')[0]), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, t), h('b', { style: 'color:#7a8aa6;flex:none', 'aria-hidden': 'true' }, '›')))));
+    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, care.slice(0, 8).map(([p, t]) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, p.name.split(' ')[0]), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, t), h('b', { style: 'color:#7a8aa6;flex:none', 'aria-hidden': 'true' }, '›')))));
     if (!care.length) right.append(h('div', { class: 'note' }, '大きな心配はありません'));
     if (care.length > 8) right.append(h('div', { class: 'sub', style: 'font-size:11px' }, `ほか${care.length - 8}人`));
     wrap.append(left, mid, right);
     page.append(wrap);
+    if (YA.kadaiBand) page.append(YA.kadaiBand(w, rerender));
     main.append(page);
     if (w.phase === 'event' && w.events.length) showEvent();
     else if (!U().app.holdPrompts) YA.promptsFor();
@@ -476,25 +475,13 @@
   // ---------- 選手 ----------
   // 伸びしろの星：5つのうち黒がいくつか（黒＝確実にある分、灰＝あるかもしれない分、白抜き＝なさそう）
   YA.starsEl = (r) => h('span', { class: 'stars' }, ...[0, 1, 2, 3, 4].map((i) => h('span', { class: i < r[0] ? 'on' : i < r[1] ? 'mid' : 'off' }, i < r[1] ? '★' : '☆')));
-  // ★の子の信頼と覚醒の鍵（決定102・106・110）
-  function keysBox(w, p) {
-    if (!p.star && !p.aw) return h('div', {});
-    const lv = YA.trustLv(p);
-    const box = h('div', { class: 'card', style: 'padding:6px 9px;margin:2px 0 6px;background:#fffaf0;border-color:#f0cf55' },
-      h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap' }, h('b', {}, '覚醒の鍵'), h('span', { class: 'chip gray' }, `信頼 ${'●'.repeat(lv)}${'○'.repeat(5 - lv)} ${YA.TRUST_NAME[lv]}`), p.aw ? h('span', { class: 'chip trait', title: (p.aw.as || []).join('・') }, `${p.aw.form}・特性「${p.aw.trait}」`) : null, p.aw && (p.aw.as || []).length ? h('small', { class: 'sub', style: 'flex-basis:100%;font-size:11px' }, `覚醒の特性「${p.aw.trait}」：${p.aw.as.join('・')}`) : null));
-    const ks = p.star ? YA.keysOf(w, p) : [];
-    if (ks.length) box.append(...ks.map((k) => h('div', { style: 'font-size:12px;' + (k.done ? 'color:#1e6b37;font-weight:700' : '') }, `［${k.sys}］ ` + YA.keyText(w, p, k))));
-    else if (p.aw) box.append(h('div', { class: 'sub', style: 'font-size:12px' }, 'いまは次の鍵の気配はない'));
-    if (p.star && ks.length && !ks.every((k) => k.h >= 2)) box.append(h('div', { class: 'sub', style: 'font-size:11px' }, '面談・試合・コーチの報告で、ヒントが少しずつ見えてきます。信頼が低いと本音を話さず、見えにくくなります'));
-    return box;
-  }
   // ---------- 選手 ----------
   // 2026-11-25 画面の構成の作り直し（ユーザー決定・FM 寄り）：一覧を全面に出し、押すと詳しい画面を全面で開く。
   //   一覧の列：印・位置・名前・学年とチーム・総合・伸び（見抜く目なら将来）・調子・疲れ・今季（A の出場・得点・平均採点）・今週の伸び
   //   詳しい画面：上の帯（顔・名前・位置・学年とチーム・総合と伸び・性格・利き足・身長・★・Bに回す・…・前後・一覧へ）と、
   //   小タブ プロフィール（能力の数字の表・ポジションの図・情報・特性・直近の採点・状態）／育成／コーチの報告／成績／経歴
   const SORTV = { pos: null, ovr: (p) => YA.ovr(p), grow: (p) => Object.values(p.gain || {}).reduce((a, b) => a + b, 0), trust: (p) => (p.tr == null ? 50 : p.tr), fat: (p) => p.fat || 0, mins: (p) => p.minsA || 0, conf: (p) => p.conf || 0, form: (p) => p.form || 0, wk: (p) => weekGain(W(), p) };
-  // 今週の伸び（ホームから移した 2026-11-25）：★の子は伸びた能力の数、ほかは矢印の数
+  // 今週の伸び（ホームから移した 2026-11-25）：課題中の子は伸びた能力の数、ほかは矢印の数
   function weekGain(w, p) {
     const G = w.growth && w.growth.y === w.year && w.week - w.growth.w <= 1 ? w.growth : null;
     if (!G) return 0;
@@ -525,9 +512,9 @@
   const formArrow = (p) => { const f = p.form || 0; return f >= 1 ? h('b', { style: 'color:#1a8a4a' }, '↑') : f <= -1 ? h('b', { style: 'color:#c8402f' }, '↓') : h('span', { class: 'sub' }, '→'); };
   function playerRows(w, ui) {
     const all = Object.values(w.players);
-    const f2 = (p, k) => k === 'all' || k === p.team || k === String(p.grade) || k === p.pos || (k === 'star' && p.star) || (k === 'inj' && p.inj > 0);
+    const f2 = (p, k) => k === 'all' || k === p.team || k === String(p.grade) || k === p.pos || (k === 'star' && !!p.kd) || (k === 'inj' && p.inj > 0);
     const sv = SORTV[ui.psort];
-    return all.filter((p) => f2(p, ui.pf)).sort((a, b) => (sv ? (ui.pdesc === false ? -1 : 1) * (sv(b) - sv(a)) : 0) || (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
+    return all.filter((p) => f2(p, ui.pf)).sort((a, b) => (sv ? (ui.pdesc === false ? -1 : 1) * (sv(b) - sv(a)) : 0) || YA.POS15.indexOf(a.main) - YA.POS15.indexOf(b.main) || b.grade - a.grade || YA.ovr(b) - YA.ovr(a));
   }
   function viewPlayers(main) {
     const w = W();
@@ -541,8 +528,8 @@
     ui.pOpen = false;
     const all = Object.values(w.players);
     const filtered = playerRows(w, ui);
-    const f2 = (p, k) => k === 'all' || k === p.team || k === String(p.grade) || k === p.pos || (k === 'star' && p.star) || (k === 'inj' && p.inj > 0);
-    const FILT = [['all', '全員'], ['A', 'Aチーム'], ['B', 'Bチーム'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '★の子'], ['inj', '怪我']];
+    const f2 = (p, k) => k === 'all' || k === p.team || k === String(p.grade) || k === p.pos || (k === 'star' && !!p.kd) || (k === 'inj' && p.inj > 0);
+    const FILT = [['all', '全員'], ['A', 'Aチーム'], ['B', 'Bチーム'], ['1', '高1'], ['2', '高2'], ['3', '高3'], ['GK', 'GK'], ['DF', 'DF'], ['MF', 'MF'], ['FW', 'FW'], ['star', '課題中'], ['inj', '怪我']];
     const selStyle = 'padding:3px 4px;min-height:34px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-size:12px;min-width:0';
     const chips = h('select', { title: '絞り込み', style: selStyle }, ...FILT.map(([k, n]) => h('option', { value: k, selected: ui.pf === k }, (k === 'all' ? '絞り：' : '') + n + (k === 'all' ? '' : `（${all.filter((p) => f2(p, k)).length}）`))));
     chips.addEventListener('change', () => { ui.pf = chips.value; rerender(); });
@@ -553,18 +540,18 @@
     const eye = YA.ent && YA.ent.eye && YA.futurePoint;
     // 列（見出しを押すと並べ替え。同じ見出しをもう一度押すと逆順）
     const COLS = [
-      ['印', 30, null], ['位置', 40, 'pos'], ['名前', 0, null], ['学年', 44, null], ['総合', 38, 'ovr'], [eye ? '将来' : '伸び', 44, 'grow'],
+      ['印', 52, null], ['位置', 40, 'pos'], ['名前', 0, null], ['学年', 44, null], ['総合', 38, 'ovr'], [eye ? '将来' : '伸び', 44, 'grow'],
       ['調子', 34, 'form'], ['疲れ', 46, 'fat'], ['今季', 92, 'mins'], ['今週', 40, 'wk'],
     ];
     const cell = (wd, kid, st) => h('span', { style: (wd ? `flex:none;width:${wd}px;` : 'flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;') + 'text-align:' + (wd ? 'center' : 'left') + ';font-size:12px;' + (st || '') }, kid);
     const lhead = h('div', { class: 'row plhead', style: 'gap:4px;padding:2px 8px;font-size:10.5px;color:#7a8aa6;font-weight:800;border-bottom:1px solid var(--line)' },
       COLS.map(([n, wd, k]) => k ? h('button', { class: 'phbtn' + (ui.psort === k ? ' on' : ''), style: (wd ? `flex:none;width:${wd}px;` : 'flex:1;') + 'border:none;background:none;font:inherit;color:' + (ui.psort === k ? 'var(--navy)' : 'inherit') + ';padding:0;min-height:26px;cursor:pointer', onclick: () => { if (ui.psort === k) ui.pdesc = ui.pdesc === false; else { ui.psort = k; ui.pdesc = true; } rerender(); } }, n + (ui.psort === k && k !== 'pos' ? (ui.pdesc === false ? '▲' : '▼') : '')) : h('span', { style: wd ? `flex:none;width:${wd}px;text-align:center` : 'flex:1' }, n)));
-    const marks = (p) => h('span', { style: 'display:inline-flex;gap:1px' }, p.star ? h('b', { style: 'color:#e6a800' }, '★') : null, w.captain === p.id ? h('b', { style: 'color:var(--navy)', title: '' }, 'C') : null, p.inj > 0 ? h('span', { class: 'fit bad', style: 'padding:0 2px' }, '怪') : null, p.unrest >= 3 ? h('span', { class: 'fit bad', style: 'padding:0 2px' }, '不') : null);
+    const marks = (p) => h('span', { style: 'display:inline-flex;gap:1px' }, p.kd && YA.kadaiDef ? h('span', { class: 'chip trait kchip', style: 'font-size:10.5px;padding:0 4px;line-height:16px' }, YA.kadaiDef(p.kd.t).short) : null, w.captain === p.id ? h('b', { style: 'color:var(--navy)', title: '' }, 'C') : null, p.inj > 0 ? h('span', { class: 'fit bad', style: 'padding:0 2px' }, '怪') : null, p.unrest >= 3 ? h('span', { class: 'fit bad', style: 'padding:0 2px' }, '不') : null);
     const list = h('div', { class: 'plist scroll ptable', style: 'flex:1;min-height:0' }, filtered.map((p) => {
       const sa = seasonA(w, p);
       const wg = weekGain(w, p);
       return h('button', { class: 'pitem prow', onclick: () => { ui.pSel = p.id; ui._pSeen = p.id; ui.pOpen = true; ui.pTab = ui.pTab || 'prof'; ui._plistTop = list.scrollTop; rerender(); } },
-        cell(30, marks(p)), cell(40, posc(p)),
+        cell(52, marks(p)), cell(40, posc(p)),
         cell(0, h('span', {}, h('span', { class: 'num', style: 'margin-right:4px' }, p.num), h('span', { class: 'nm' }, p.name))),
         cell(44, gradeName(p.grade) + p.team, 'color:#5a6a84'),
         cell(38, h('b', {}, YA.rating(p))),
@@ -626,9 +613,6 @@
     const ix = rows.findIndex((p) => p.id === sel.id);
     const go = (d) => { const n = rows[(ix + d + rows.length) % rows.length]; if (n) { ui.pSel = n.id; ui._pSeen = n.id; rerender(); const d2 = document.querySelector('#main .pdetail'); if (d2) d2.scrollTop = 0; } };
     const persTop = Object.values(YA.persVisible ? YA.persVisible(sel) : sel.pers || {}).filter((t) => t && t !== 'ふつう').slice(0, 2);
-    const starBtn = YA.starOpen(w, sel)
-      ? h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`)
-      : (sel.star ? h('span', { class: 'chip trait' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める'));
     const head = h('div', { class: 'row phead', style: 'flex-wrap:wrap;gap:5px;padding:2px 2px 0' },
       h('button', { class: 'btn sm', onclick: () => { ui.pOpen = false; rerender(); } }, '‹ 一覧'),
       YA.faceEl(W(), sel, 40),
@@ -638,9 +622,8 @@
       (YA.ent && YA.ent.eye && YA.futurePoint) ? h('span', { class: 'chip trait', tip: '見抜く目：' + YA.futureRange(w, sel).text }, '将来 ' + YA.futurePoint(sel)) : h('span', { class: 'chip trait', tip: '伸びしろ：' + YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)])),
       persTop.length ? h('span', { class: 'chip pers' }, persTop.join('・')) : null,
       h('span', { class: 'sub', style: 'font-size:11px' }, `${sel.foot === 'L' ? '左足' : sel.foot === 'B' ? '両足' : '右足'}・${sel.height}cm`),
-      ...flags(sel).filter((e) => e && e.textContent !== '★注目'),
+      ...flags(sel).filter(Boolean),
       h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる'),
-      starBtn,
       h('button', { class: 'btn sm', 'aria-label': 'ほかの操作', style: 'min-width:38px;padding:4px 8px', onclick: () => playerMenu(w, sel) }, '…'),
       h('span', { class: 'grow' }),
       h('button', { class: 'btn sm', 'aria-label': '前の選手', onclick: () => go(-1) }, '◀'),
@@ -649,9 +632,8 @@
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const starMsg0 = ui.starMsg;
     ui.starMsg = null;
-    // 育成：鍵・育て方（計画・診断・師匠・転向）・面談・進路・★の子と過ごす
+    // 育成：育て方（計画・診断・師匠・転向）・面談・進路・課題中の子と過ごす
     const growT = h('div', {});
-    growT.append(keysBox(w, sel));
     const ex = YA.playerExtras(w, sel);
     for (const c of [...ex.querySelectorAll('[data-grp="grow"]')]) growT.append(c);
     const talk = h('div', { style: 'margin-top:4px' });
@@ -681,6 +663,9 @@
     // コーチの報告：見立て（概要）・伸びのグラフ・調子と性格・事情・キャプテンとポジション（様子）
     const rep = h('div', {});
     const ov = YA.playerOverview ? YA.playerOverview(w, sel) : h('div', {});
+    // 手がかり欄と「課題を出す」（2026-11-26 課題の仕組み：コーチの報告の一番上）
+    if (starMsg0) rep.append(h('div', { class: 'note', style: 'color:var(--ink)' }, starMsg0));
+    if (YA.kadaiBox) rep.append(YA.kadaiBox(w, sel, rerender));
     rep.append(ov, growthBox(sel));
     {
       const g = (v, lo, hi) => (v >= hi ? '良い' : v <= lo ? '低い' : 'ふつう');

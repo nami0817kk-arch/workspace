@@ -155,7 +155,7 @@
   // ---------- 育成基金（決定135）：連帯貢献金はクラブ予算と別に貯まる。使い道は自分で決める ----------
   YA.FUND_USES = [
     { k: 'facility', name: '施設の建て増し', cost: 800, note: '施設の積み立てが600万円（施設1段ぶん）進みます' },
-    { k: 'trip', name: '海外遠征', cost: 600, note: '全員の自信が上がり、★の子との信頼が深まります' },
+    { k: 'trip', name: '海外遠征', cost: 600, note: '全員の自信が上がり、課題中の子との信頼が深まります' },
     { k: 'scout', name: '腕の良いスカウトを雇う', cost: 700, note: '今年は、月ごとに見に行ける回数が1回増えます' },
     // 毎年くり返し使える使い道（2026-11-17 直し：前は使い道が少なく、10年目に予算の2.5倍たまっていた）。どれも1年に1回
     { k: 'staff', name: 'スタッフの給料に回す', cost: 500, yearly: true, note: '今年の予算が500万円増えます（スタッフの入れ替えや遠征に使えます）' },
@@ -345,7 +345,7 @@
   const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
   function dexTab(body, w) {
     const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
-    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種から10種ごとに（5・10・20・30・40・50・60・70・80種）育成基金のごほうび（300万円〜4000万円）。'));
+    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '課題で子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種から10種ごとに（5・10・20・30・40・50・60・70・80種）育成基金のごほうび（300万円〜4000万円）。'));
     const next = [5, 10, 20].find((x) => x > n);
     if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
     // 4列の札にして、見つけた形を金色で先に（2026-11-16 見つけた形が一覧のいちばん下にあった）
@@ -353,7 +353,7 @@
     body.append(h('div', { class: 'scroll', style: 'margin-top:5px;flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;gap:5px;align-content:start' }, sorted.map((f) => {
       const d = (w.dex || {})[f.k];
       return h('div', { class: 'card', style: 'padding:6px 7px;display:flex;flex-direction:column;gap:2px;min-height:74px;flex:none;' + (d ? 'background:linear-gradient(180deg,#fff8d6,#ffefb0);border-color:#e6c200' : 'background:#f3f6fb;opacity:.85') },
-        h('div', { class: 'row', style: 'gap:4px' }, h('span', { style: `font-size:16px;color:${d ? '#c99a00' : '#b9c3d3'}` }, d ? '★' : '？'), h('b', { style: 'font-size:12px;line-height:1.25' }, d ? f.name : '？？？？')),
+        h('div', { class: 'row', style: 'gap:4px' }, h('span', { style: `font-size:16px;color:${d ? '#c99a00' : '#b9c3d3'}` }, d ? '✦' : '？'), h('b', { style: 'font-size:12px;line-height:1.25' }, d ? f.name : '？？？？')),
         h('div', { class: 'note', style: 'font-size:11.5px;line-height:1.35' }, d ? `特性「${f.trait}」` : `向く位置：${f.pos.slice(0, 3).map((x) => YA.posJa ? YA.posJa(x) : x).join('・')}`),
         h('div', { class: 'note', style: 'font-size:11px;line-height:1.35' }, d ? `最初の子 ${d.name}（${d.y}年目）・${d.n}回` : leanHint(f)));
     })));

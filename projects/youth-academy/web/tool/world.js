@@ -31,6 +31,7 @@ require(path.join(__dirname, '../src/traits2.js'));
 require(path.join(__dirname, '../src/persona.js'));
 require(path.join(__dirname, '../src/cond2.js'));
 require(path.join(__dirname, '../src/stars2.js'));
+require(path.join(__dirname, '../src/kadai.js'));
 require(path.join(__dirname, '../src/team2.js'));
 require(path.join(__dirname, '../src/records.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
@@ -115,7 +116,7 @@ const w = YA.newWorld(42);
 check(w);
 const cnt = { 1: 0, 2: 0, 3: 0 };
 Object.values(w.players).forEach((p) => cnt[p.grade]++);
-ok(cnt[1] === 12 && cnt[2] === 12 && cnt[3] === 12, '各学年12人 ' + JSON.stringify(cnt));
+ok(cnt[1] === 11 && cnt[2] === 11 && cnt[3] === 11, '各学年11人（2026-11-26 から） ' + JSON.stringify(cnt));
 ok(Object.values(w.players).filter((p) => p.team === 'A').length === 20, 'Aは20人');
 const a0 = playYear(w, { talk: true, camp: 'domestic', scout: true });
 console.log('1年目 能力の合計の平均', a0.startAvg.toFixed(0), '->', a0.endAvg.toFixed(0), '出来事', a0.events, '怪我', a0.injuries);
@@ -192,7 +193,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
 {
   const mk = (seed) => YA.newWorld(seed, YA.makeStart({ name: '点検', career: 0, club: 2, points: {}, noFire: false }));
   const wf = mk(21);
-  ok(!wf.firstSel && Object.keys(wf.players).length === 36, '始めた時点ではセレクションを開かない');
+  ok(!wf.firstSel && Object.keys(wf.players).length === 33, '始めた時点ではセレクションを開かない');
   ok(wf.scouting.cands.length === 0 && !wf.scouting.intOpen && !wf.scouting.selOpen, '初年度の始めは候補がいない');
   ok(!YA.scoutHint(mk(1)) || /スカウトに出る/.test(YA.scoutHint(mk(1))), '4月はスカウトに出られる');
   // スカウトに出る：月3回まで
@@ -242,7 +243,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(ic.every((c) => c.persSeen), '26週の申し送りで性格が見える');
   let oki = 0;
   for (const c of ic) if (YA.signCand(wf, c.id).ok) oki++;
-  ok(oki === 8 - 0 || oki === 12 - 3 && oki <= 8, '内部昇格は8人まで、全体12人の枠内 ' + oki);
+  ok(oki === 8, '内部昇格は8人まで、全体11人の枠内 ' + oki);
   ok(YA.signedCount(wf, 'int') <= 8, '内部昇格は8人まで');
   // 12月：スカウトの返事
   wf.week = 28;
@@ -272,7 +273,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   for (const c of cands.slice(0, 8)) if (YA.signCand(wf, c.id).ok) okc++;
   ok(okc >= 1 && okc <= 3 && YA.signedCount(wf, 'sel') <= 3, 'セレクションからは3人まで ' + okc);
   const held = wf.scouting.cands.filter((c) => c.status === 'signed').length;
-  ok(held <= 12, '新入生は12人まで ' + held);
+  ok(held <= 11, '新入生は11人まで ' + held);
   wf.week = 35;
   YA.weekExtras(wf);
   const lateSel = cands.find((c) => c.status === 'open');
@@ -291,9 +292,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const lg = wf.leagueLevel;
   const grad = YA.endWeek(wf);
   const g1 = Object.values(wf.players).filter((p) => p.grade === 1);
-  ok(g1.length === 12 && Object.keys(wf.players).length === 36, '3月に高1が12人 ' + g1.length);
-  // 決めた子にGKがいなくて12人そろっているときは、1人外して一般入団のGKを入れる決まり（scout.js の intake）
-  const signedGK = wf.scouting.cands.length >= 0 && names.length >= 12 && !g1.some((p) => p.pos === 'GK' && names.indexOf(p.name) >= 0);
+  ok(g1.length === 11 && Object.keys(wf.players).length === 33, '3月に高1が11人 ' + g1.length);
+  // 決めた子にGKがいなくて11人そろっているときは、1人外して一般入団のGKを入れる決まり（scout.js の intake）
+  const signedGK = wf.scouting.cands.length >= 0 && names.length >= 11 && !g1.some((p) => p.pos === 'GK' && names.indexOf(p.name) >= 0);
   const inN = names.filter((nm) => g1.some((p) => p.name === nm)).length;
   ok(inN === names.length || (signedGK && inN === names.length - 1), '決めた子が高1に入る ' + inN + '/' + names.length);
   const carried = wf.scouting.cands.filter((c) => nxIds.indexOf(c.id) >= 0);
@@ -303,7 +304,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const wg = mk(22);
   YA.simulate(wg, { until: 'year', stopOnImportant: false });
   const gg = Object.values(wg.players);
-  ok(wg.year === 2 && gg.filter((p) => p.grade === 1).length === 12 && gg.length >= 36, 'おまかせ進行で1年回しても高1が12人');
+  ok(wg.year === 2 && gg.filter((p) => p.grade === 1).length === 11 && gg.length >= 33, 'おまかせ進行で1年回しても高1が11人');
   ok(gg.filter((p) => p.grade === 1 && p.hist.some((x) => /で入団/.test(x.t) && !/一般/.test(x.t))).length >= 3, 'おまかせでも内部昇格・スカウト・セレクションから入団する');
 }
 // 試合の経験：出た選手に、出場時間・採点・頭の経験値などの記録が残る
@@ -384,9 +385,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(!YA.changePos(w9, ps.find((p) => p.pos === 'GK').id, 'CB').ok, 'GKは変えられない');
   // 関係
   ok(w9.rel.filter((x) => x.k === 'friend').length === 8 && w9.rel.filter((x) => x.k === 'rival').length === 6, '関係が作られる');
-  // 移籍（解任・契約満了）：36人を一から知る
+  // 移籍（解任・契約満了）：33人を一から知る
   YA.moveTo(w9, { tier: 3, name: '大阪 サンライズU-18', budget: 1000 }, 'テスト');
-  ok(Object.keys(w9.players).length === 36 && w9.clubName === '大阪 サンライズU-18' && w9.club.tier === 3 && w9.league.level === 3, '新しいクラブで新しい36人');
+  ok(Object.keys(w9.players).length === 33 && w9.clubName === '大阪 サンライズU-18' && w9.club.tier === 3 && w9.league.level === 3, '新しいクラブで新しい33人');
   check(w9);
 }
 {
@@ -566,7 +567,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(wn.coachName === 'テスト監督' && wn.coach.teach === 11 && wn.coach.eye === 11 && wn.coach.talk === 12 && wn.coach.exp === 3, '経歴と配分が能力に出る ' + JSON.stringify(wn.coach));
   ok(wn.club.tier === 1 && wn.clubName.indexOf('マリーナス') >= 0 && wn.club.noFire && wn.league.level === 1, '選んだクラブ（1部）で始まる');
   const wt3 = YA.newWorld(5, YA.makeStart({ career: 'pro', club: 6, points: {} }));
-  const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / 36;
+  const avg = (wx) => Object.values(wx.players).reduce((a, p) => a + YA.ovr(p), 0) / Object.keys(wx.players).length;
   ok(wt3.club.tier === 3 && wt3.coachName === '監督', '3部のクラブ・名前が空なら「監督」');
   ok(avg(wn) > avg(wt3), '上の部のクラブのほうが選手の素質が高い ' + avg(wn).toFixed(2) + ' vs ' + avg(wt3).toFixed(2));
   ok(YA.CAREER_POINTS === 6 && YA.START_CLUBS.length >= 8, '配分の点数とクラブの数');
@@ -1327,75 +1328,102 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(q.youthCaps === 1 && q.away === 1, '送り出すと代表の回数が増え、1週間離れる');
   const a = YA.alumniEntry(wn2, q, 'test'); ok(a.nat === 0 && a.youthCaps === 1, '卒業生の日本代表（A代表）に、ユース年代の回数は混ぜない');
 }
-// 覚醒（決定101〜110）：★の子だけが、隠れた鍵を満たして覚醒する。★は各学年4人まで、信頼は5段階
+// 課題（2026-11-26 ★と覚醒の鍵をやめて置き換えた）：全員に合う課題・同時5人まで・合えば覚醒・外れればあきらめ・4週あけ
 {
   const w0 = YA.newWorld(8);
-  const g1 = Object.values(w0.players).filter((p) => p.grade === 1);
-  for (let i = 0; i < YA.STAR_MAX; i++) ok(YA.setStar(w0, g1[i], true).ok, '★を付けられる ' + i);
-  ok(!YA.setStar(w0, g1[YA.STAR_MAX], true).ok && !g1[YA.STAR_MAX].star, '★は各学年4人まで');
-  ok(YA.setStar(w0, g1[0], false).ok && YA.setStar(w0, g1[YA.STAR_MAX], true).ok, '外せば別の子に付け替えられる');
-  // ★は入団から4週のうちに決める（決定150）。初年度も高1だけ
-  {
-    const g2 = Object.values(w0.players).filter((p) => p.grade === 2);
-    ok(g2.length > 0 && !YA.starOpen(w0, g2[0]) && YA.starOpen(w0, g1[0]), '初年度も★は高1だけ');
-    const g3 = Object.values(w0.players).filter((p) => p.grade === 3);
-    ok(!YA.setStar(w0, g3[0], true).ok && !g3[0].star, '初年度も高3には★を付けられない');
-    w0.week = 30;
-    ok(!YA.starOpen(w0, g1[1]), '初年度も入団から4週をすぎると決められない');
-    // 初年度の早咲き：高1に fast が置かれ、★を付けると AでもBでも進む軽い鍵を持つ（一年目に2人くらい覚醒）
-    const wf1 = YA.newWorld(12);
-    const fs = Object.values(wf1.players).filter((p) => p.fast);
-    ok(fs.length === YA.FIRST_FAST && fs.every((p) => p.grade === 1), '初年度の早咲きは高1に' + YA.FIRST_FAST + '人');
-    ok(YA.setStar(wf1, fs[0], true).ok && fs[0].keys.length === 2 && fs[0].keys.every((k) => YA.EARLY_KEYS.includes(k.id)), '初年度の早咲きの鍵は試合に出れば進むもの');
-    ok(/早く化け/.test(YA.starRecommend(wf1) || ''), '初年度の★のおすすめは早咲きの子');
-    const wn = YA.newWorld(9);
-    wn.year = 2;
-    wn.week = 3;
-    const n1 = Object.values(wn.players).filter((p) => p.grade === 1);
-    const n2 = Object.values(wn.players).filter((p) => p.grade === 2);
-    ok(YA.setStar(wn, n1[0], true).ok && n1[0].star, '2年目の入団から4週のうちは新入生に★を付けられる');
-    ok(!YA.setStar(wn, n2[0], true).ok && !n2[0].star, '2年目は高2に★を付けられない');
-    wn.week = YA.STAR_WEEKS + 1;
-    ok(!YA.setStar(wn, n1[1], true).ok && !n1[1].star, '入団から4週をすぎると新入生にも付けられない');
-    ok(!YA.setStar(wn, n1[0], false).ok && n1[0].star, '入団から4週をすぎると外せない（付け替えもできない）');
-    ok(/入団/.test(YA.setStar(wn, n1[1], true).msg), '付けられない理由が入団時に決める旨で出る');
-    // 年度末：★の高1・高2との「この一年」の節目の会話
-    wn.week = YA.WEEKS - 1;
-    n1[0].o0 = Math.round(YA.ovr(n1[0]) * 10) / 10 - 0.6;
-    YA.gradTalks(wn);
-    const fx = (wn.forced || []).filter((e) => e.id === 'ms' && e.pid === n1[0].id && e.ms === 'term');
-    ok(fx.length === 1, '★の高1に年度末の「この一年」の会話が出る');
-    ok(/から.*へ伸びた/.test(YA.eventView(wn, fx[0]).text || JSON.stringify(YA.eventView(wn, fx[0]))), 'この一年の伸び（年度はじめ→いま）が会話に出る');
-    YA.yearStart(wn);
-    ok(n1[0].o0 != null && Math.abs(n1[0].o0 - Math.round(YA.ovr(n1[0]) * 10) / 10) < 0.01, '年度はじめに総合力を控える');
-    // 卒業後も★の子は便りで追える
-    wn.alumni.push({ name: '試験 卒業', year: 1, star: true, status: 'pro', club: '試験FC', league: 'J2', apps: 12, goals: 3, retired: false });
-    wn.week = 20;
-    YA.alumniTick(wn);
-    ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業★/.test(t)), '卒業した★の子が便りに出る');
-  }
-  const ks = YA.keysOf(w0, g1[1]);
-  ok(ks.length >= 2 && ks.length <= 3 && new Set(ks.map((k) => k.sys)).size === ks.length, '鍵は2〜3個で系統が重ならない ' + ks.map((k) => k.id));
-  ok(JSON.stringify(YA.keysOf(w0, g1[1])) === JSON.stringify(ks), '同じ子の鍵は変わらない');
-  ok(ks.every((k) => /^？/.test(YA.keyText(w0, g1[1], k))), '最初は鍵が「？」');
-  ok(Object.values(w0.players).filter((p) => p.fast).length >= 1, '鍵の短い子が混ざっている');
-  ok(YA.trustLv(g1[1]) === 3, '信頼は「ふつう」から');
-  ok((w0.forced || []).some((e) => e.id === 'ms' && e.ms === 'star'), '★を付けると最初の会話が来る');
+  const ps = Object.values(w0.players);
+  const kinds = new Set(ps.map((p) => p.kf && p.kf.t));
+  console.log('  課題：33人の合う課題', [...kinds].join('・'));
+  ok(ps.length === 33 && ps.every((p) => p.kf && p.kc && p.kc.coach && p.kc.coach.t && !p.star), '33人全員に合う課題とコーチの見立てがあり、最初はだれも課題中でない');
+  ok(YA.KADAI.length === 10 && kinds.size >= 6, '課題は10種類、合う課題は6種類以上に散る ' + kinds.size);
+  ok(JSON.stringify(ps.map((p) => p.kf)) === JSON.stringify(Object.values(YA.newWorld(8).players).map((p) => p.kf)), '同じ世界なら合う課題は同じ（選手ごとの乱数）');
+  ok(ps.every((p) => !YA.kadaiDef(p.kf.t).pick || p.kf.c != null), '中身のある課題は中身まで決まっている');
+  const c0 = YA.kadaiClues(w0, ps[1]);
+  ok(c0.length === 3 && c0[0][1] !== '？' && c0[1][1] === '？' && c0[2][1] === '？', '最初はコーチの見立てだけ。本人の言葉と試合の場面は「？」');
+  ok(ps.every((p) => p.kSelfAt - (w0.year * 40 + w0.week) >= 8 && p.kSelfAt - (w0.year * 40 + w0.week) <= 12), '本人の言葉は入団から2〜3か月後');
+  // 同時に5人まで
+  w0.week = 2;
+  const g = ps.filter((p) => p.pos !== 'GK' && !YA.kadaiDef(p.kf.t).why(w0, p)).slice(0, 7);
+  for (let i = 0; i < 5; i++) { const p = g[i]; const r = YA.kadaiGive(w0, p, p.kf.t, p.kf.c); ok(r.ok && p.star && p.kd && p.kd.fit === 'yes', '合う課題を出せる ' + i + ' ' + r.msg); }
+  ok(YA.kadaiActive(w0).length === 5 && !YA.kadaiGive(w0, g[5], 'eye').ok && /5人/.test(YA.kadaiWhy(w0, g[5])), '課題は同時に5人まで');
+  ok((w0.forced || []).some((e) => e.id === 'ms' && e.ms === 'star'), '初めての課題で最初の会話が来る');
   const e0 = w0.forced.find((e) => e.id === 'ms');
   const v0 = YA.eventView(w0, e0);
-  ok(v0 && v0.opts.length === 3 && /信頼/.test(v0.text) && !/undefined|null|NaN/.test(v0.text), '節目の会話の文 ' + (v0 && v0.text));
-  // 鍵を全部満たすと覚醒し、形と特性が付く
-  const q = g1[2];
-  YA.keysOf(w0, q);
-  const r0 = YA.rating(q);
-  for (const k of q.keys) YA.keyProgress(w0, q, k.id, k.need);
-  if (q.keys.some((k) => k.id === 'conf' && !k.done)) q.keys.forEach((k) => { k.done = 1; });
-  w0.week = 10;
-  YA.awakeWeek(w0);
-  ok(q.awake && q.aw && q.aw.trait && YA.rating(q) > r0 + 3, '鍵がそろうと覚醒する ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
+  ok(v0 && v0.opts.length === 3 && /課題/.test(v0.text) && /信頼/.test(v0.text) && !/undefined|null|NaN/.test(v0.text), '最初の会話の文 ' + (v0 && v0.text));
+  ok(YA.trustLv(g[0]) === 3, '信頼は「ふつう」から');
+  // 前半は気づかない。後半に出場した試合で気づいて覚醒する
+  const q = g[0];
+  ok(!YA.kadaiSpark(w0, q, { which: 'A', mins: 90, rating: 8 }), '前半（苦しむ時期）は試合で気づかない');
+  const c1 = q.conf;
+  YA.kadaiWeek(w0); w0.week++; YA.kadaiWeek(w0);
+  ok(q.conf < c1, '前半は自信が少し下がる ' + c1 + '→' + q.conf);
+  w0.week = 2 + Math.ceil(q.kd.len / 2);
+  let sp = 0;
+  for (let i = 0; i < 20 && !sp; i++) { w0.week++; if (YA.kadaiSpark(w0, q, { which: 'B', mins: 70, rating: 6.8 })) sp = w0.week; }
+  ok(sp > 0 && !YA.kadaiSpark(w0, q, { which: 'B', mins: 0, rating: 7 }), '後半は出場した試合で気づく（出ていなければ気づかない）');
+  const r0 = YA.rating(q), t0 = q.kd.t;
+  YA.kadaiAwakenNow(w0, q);
+  ok(q.awake && q.aw && q.aw.trait && YA.rating(q) > r0 && !q.kd && !q.star && q.kHist.slice(-1)[0].r === 'awake', '合う課題で気づくと覚醒し、課題が終わる ' + t0 + ' ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
+  ok(q.awake.kadai && q.kf.g === 1 && q.kc.self === null && q.kc.coach && q.kf.t !== t0, '1回目の覚醒のあと、次の合う課題と新しい手がかりが決まる');
   const ev = (w0.forced || []).find((e) => e.id === 'awake');
   const v = ev && YA.eventView(w0, ev);
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
+  // 4週あける
+  ok(/4週/.test(YA.kadaiWhy(w0, q) || ''), '終わった子に次の課題を出せるのは4週あけてから');
+  w0.week += 4;
+  ok(!YA.kadaiWhy(w0, q), '4週たてば次の課題を出せる');
+  // 外れ：期間の1/3〜半分のあいだに本人があきらめる（信頼・自信が下がり、手がかりが1つ増える）
+  const z = g[5];
+  const wrong = YA.KADAI.find((d) => d.k !== z.kf.t && !d.why(w0, z) && d.k !== z.kf.sec);
+  const wc = wrong.pick ? YA.kadaiOpts(w0, z, wrong.k)[0] : null;
+  w0.week = 5;
+  ok(YA.kadaiGive(w0, z, wrong.k, wc).ok && z.kd.fit === 'no', '外れの課題も出せる（合っているかは出さない）');
+  const len = z.kd.len, tr0 = z.tr, cf0 = z.conf;
+  let gave = 0;
+  for (let i = 1; i <= len && !gave; i++) { w0.week = 5 + i; YA.kadaiWeek(w0); if (!z.kd) gave = i; }
+  ok(gave >= Math.floor(len / 3) && gave <= Math.ceil(len / 2) && z.kHist.slice(-1)[0].r === 'gaveup', `外れは期間の1/3〜半分であきらめる（${gave}/${len}週）`);
+  ok(z.tr < tr0 && z.conf < cf0 && z.kc.more.length === 1 && YA.kadaiClues(w0, z).length === 4, 'あきらめると信頼・自信が下がり、打ち明けた言葉が手がかりに増える ' + z.kc.more[0]);
+  // 自分で途中でやめる
+  YA.kadaiStop(w0, g[1]);
+  ok(!g[1].kd && g[1].kHist.slice(-1)[0].r === 'stop', '自分で途中でやめられる');
+  // 種類は合うが中身が違う：少し伸びる。あきらめない
+  const hz = ps.find((p) => !p.kd && !p.kHist && YA.kadaiDef(p.kf.t).pick && !YA.kadaiDef(p.kf.t).why(w0, p) && YA.kadaiOpts(w0, p, p.kf.t).length >= 2);
+  const hc = YA.kadaiOpts(w0, hz, hz.kf.t).find((c) => c !== hz.kf.c);
+  w0.week = 3;
+  ok(YA.kadaiGive(w0, hz, hz.kf.t, hc).ok && hz.kd.fit === 'half', '種類だけ合う課題 ' + hz.kd.t);
+  const ab0 = YA.abSum(hz);
+  for (let i = 1; i <= hz.kd.len + 1 && hz.kd; i++) { w0.week = 3 + i; YA.kadaiWeek(w0); }
+  ok(!hz.kd && hz.kHist.slice(-1)[0].r === 'half' && YA.abSum(hz) > ab0, '種類だけ合うと、あきらめずに少し伸びる');
+  // 合う課題でも、試合に出ないまま期間が終わると「気づけずに終わった」
+  const mz = g[2];
+  for (let i = 1; i <= mz.kd.len + 1 && mz.kd; i++) { w0.week = 2 + i; YA.kadaiWeek(w0); }
+  ok(!mz.kd && mz.kHist.slice(-1)[0].r === 'miss' && !mz.awake, '試合に出さないまま終わると、気づけずに終わる');
+  // 面談で本人の言葉が出る（入団から2〜3か月）
+  const tz = ps.find((p) => p.kc && !p.kc.self && !p.kd);
+  w0.year = 1; w0.week = 15; tz.talk = -99;
+  const tr = YA.talk(w0, tz.id, 'listen');
+  ok(tr.ok && tz.kc.self && /手がかり/.test(tr.extra || ''), '面談で本人の言葉が手がかりに加わる ' + tz.kc.self);
+  ok(YA.kadaiRec(w0, tz) && YA.kadaiRec(w0, tz).t, 'コーチのおすすめがある');
+  // 年度末：課題中の高1・高2との「この一年」の節目の会話
+  const wn = YA.newWorld(9);
+  const n1 = Object.values(wn.players).filter((p) => p.grade === 1);
+  n1[0].star = true;
+  wn.week = YA.WEEKS - 1;
+  n1[0].o0 = Math.round(YA.ovr(n1[0]) * 10) / 10 - 0.6;
+  YA.gradTalks(wn);
+  const fx = (wn.forced || []).filter((e) => e.id === 'ms' && e.pid === n1[0].id && e.ms === 'term');
+  ok(fx.length === 1, '課題中の高1に年度末の「この一年」の会話が出る');
+  ok(/から.*へ伸びた/.test(YA.eventView(wn, fx[0]).text || JSON.stringify(YA.eventView(wn, fx[0]))), 'この一年の伸び（年度はじめ→いま）が会話に出る');
+  YA.yearStart(wn);
+  ok(n1[0].o0 != null && Math.abs(n1[0].o0 - Math.round(YA.ovr(n1[0]) * 10) / 10) < 0.01, '年度はじめに総合力を控える');
+  // 卒業後も、課題で覚醒した子は便りで追える
+  wn.alumni.push({ name: '試験 卒業', year: 1, star: true, form: '闘将になる', status: 'pro', club: '試験FC', league: 'J2', apps: 12, goals: 3, retired: false });
+  wn.week = 20;
+  YA.alumniTick(wn);
+  ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業（1年目卒）/.test(t)), '課題で覚醒した卒業生が便りに出る');
+  JSON.parse(JSON.stringify(w0));
+}
+{
   ok(YA.AWAKE_FORMS.length >= 80 && new Set(YA.AWAKE_FORMS.map((f) => f.k)).size === YA.AWAKE_FORMS.length && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は80種類・中身が正しい');
   ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
   // プロの卒業生からの知らせ：どの種類のどの言い回しも、文が崩れない。毎週届き、同じ種類が続かない
@@ -1444,22 +1472,35 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     YA.traitUse(wg, { trUse: { [pk.id + '|足でのセーブ']: 7 } });
     ok(pk.trUse['足でのセーブ'] === 1 && !YA.isGold(pk, '足でのセーブ'), '1試合で7回効いても、効いた試合は1と数える（' + pk.trUse['足でのセーブ'] + '）');
   }
-  // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
-  let star = 0, other = 0, yrs = 0;
+  // おまかせ進行で3年回す：コーチのおすすめどおりに課題が出て、同時5人まで・33人・年の覚醒は5〜7人前後
+  let aw = 0, other = 0, yrs = 0, given = 0, gaveup = 0, maxAct = 0, half = 0, miss = 0, sizeBad = 0;
   for (const seed of [8, 21]) {
     const wa = YA.newWorld(seed);
-    // ★は高1だけなので、初年度は覚醒がほぼ起きない。2年目からの3年でならす
-    for (let y = 0; y < 4; y++) {
-      const yy = wa.year; let g = 0;
-      if (y === 0) ok(Object.values(wa.players).every((p) => !p.star || p.grade === 1), '初年度の★は高1だけ（おまかせ）');
-      while (wa.year === yy && g++ < 60) YA.simulate(wa, { until: 'week', stopOnImportant: false });
-      if (y > 0) { yrs++; star += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0; }
-      ok(Object.values(wa.players).every((p) => !p.star || YA.starsIn(wa, p.grade).length <= YA.STAR_MAX), '★は各学年4人まで（おまかせ）');
+    const og = YA.kadaiGive;
+    YA.kadaiGive = function () { const r = og.apply(this, arguments); if (r.ok) given++; return r; };
+    for (let y = 0; y < 3; y++) {
+      const yy = wa.year; let gg = 0;
+      while (wa.year === yy && gg++ < 60) {
+        YA.simulate(wa, { until: 'week', stopOnImportant: false });
+        maxAct = Math.max(maxAct, YA.kadaiActive(wa).length);
+        const n = Object.keys(wa.players).length;
+        if (n < 31 || n > 36) sizeBad++;
+      }
+      yrs++;
+      aw += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
+      gaveup += wa.kadaiN && wa.kadaiN.y === yy ? wa.kadaiN.give || 0 : 0;
+      for (const p of Object.values(wa.players)) for (const hh of p.kHist || []) if (hh.y === yy) { if (hh.r === 'half') half++; if (hh.r === 'miss') miss++; }
     }
-    other += Object.values(wa.players).filter((p) => p.awake && !p.awake.form).length;
+    YA.kadaiGive = og;
+    other += Object.values(wa.players).filter((p) => p.awake && !p.awake.kadai).length;
   }
-  ok(other === 0, '★でない子の運任せの覚醒はない ' + other);
-  ok(star >= yrs * 0.8 && star <= yrs * 3.5, '覚醒はならして1年に1〜3人（' + star + '/' + yrs + '年）');
+  console.log(`  課題（おまかせ ${yrs}年）：出した${given}・覚醒${aw}・あきらめ${gaveup}・少し伸びた${half}・気づけず${miss}・同時の最大${maxAct}人`);
+  ok(maxAct <= YA.KADAI_MAX && maxAct >= 4, '同時に課題を出しているのは5人まで（おまかせ）' + maxAct);
+  ok(sizeBad === 0, 'おまかせでも人数は33人前後');
+  ok(given >= yrs * 10, 'おまかせで課題が回る（1年に10件以上）' + given + '/' + yrs + '年');
+  ok(gaveup >= 1, '外れた課題はあきらめになる ' + gaveup);
+  ok(other === 0, '課題なしの運任せの覚醒はない ' + other);
+  ok(aw >= yrs * 4 && aw <= yrs * 8.5, '覚醒はならして1年に5〜7人前後（' + aw + '/' + yrs + '年）');
 }
 // クラブを移った（契約満了・解任）あとも、入団の暦まで止まらずに1年回せる
 {
@@ -1539,7 +1580,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.TONES.length >= 10, '口調が10通り以上ある');
   const ws = YA.newWorld(77);
   const toneSet = new Set(Object.values(ws.players).map((p) => YA.toneOf(p)));
-  ok(toneSet.size >= 6 && [...toneSet].every((t) => YA.TONES.indexOf(t) >= 0), '性格から口調が決まり、36人で6種類以上に散る ' + toneSet.size);
+  ok(toneSet.size >= 6 && [...toneSet].every((t) => YA.TONES.indexOf(t) >= 0), '性格から口調が決まり、33人で6種類以上に散る ' + toneSet.size);
   const p0 = Object.values(ws.players)[0];
   ok(YA.toneOf(p0) === YA.toneOf(p0), '口調は決まっている');
   const seen = [];
@@ -1549,7 +1590,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const w3 = YA.newWorld(41);
   const kinds = new Set(), paths = [];
   let gy = 0, startY = w3.year;
-  // ★は初年度から高1だけなので、★の高3が出るのは3年目。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
+  // 課題中の高3が22週にいれば面談が出る。全員がトップに上がる年もあるので、面談が出るまで5年まで回す
   while ((w3.year < startY + 3 || !paths.length) && w3.year < startY + 5 && gy++ < 320) {
     YA.autoPlan(w3);
     if (w3.week === YA.CAMP_WEEK) w3.campChoice = 'domestic';
@@ -1561,7 +1602,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       if (e.id === 'path') {
         const v = YA.eventView(w3, e);
         const p = w3.players[e.pid];
-        ok(p.star && v.opts.length >= 2 && v.opts.length <= 3 && /おすすめ/.test(v.opts[0]), '進路面談：★の子に候補2〜3個、先頭がおすすめ');
+        ok(p.star && v.opts.length >= 2 && v.opts.length <= 3 && /おすすめ/.test(v.opts[0]), '進路面談：課題中の子に候補2〜3個、先頭がおすすめ');
         const idx = paths.length % v.opts.length;
         const r = YA.resolveEvent(w3, e, idx);
         ok(/「/.test(r.line) && !!p._p2, '進路面談：選んだ道が残り、口調の返事が出る');
@@ -1583,8 +1624,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     }
     YA.endWeek(w3);
     if (w3.pendingContract) YA.renewContract(w3);
-    // ★は毎年付ける（面談の対象）
-    if (w3.week === 3) YA.autoStars(w3);
+    // 課題は autoScout（おまかせの暦）が毎週出す（面談の対象）
   }
   console.log('節目の場面', [...kinds].join(','), '／面談の選択', paths.join(','), '／遅咲き', w3.alumni.filter((a) => a.late).length, '／path2', w3.alumni.filter((a) => a.path2).map((a) => a.path2 + ':' + a.status).join(','));
   ok(kinds.has('enter') && kinds.has('grad') && kinds.has('camp'), '入学式・夏合宿・卒業式の場面が出る');
@@ -1686,7 +1726,6 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const wv = YA.newWorld(41);
   let gv = 0;
   while (wv.year < 4 && gv++ < 300) YA.simulate(wv, { until: 'week', stopOnImportant: false });
-  ok(!!YA.KEY_DEF.alum, '鍵「憧れの卒業生と話す」がある');
   ok(wv.letters && Object.keys(wv.letters).length >= 1 && Object.values(wv.letters).every((l) => l.length >= 1), '卒業生の便りが年ごとに貯まる');
   ok((wv.inbox || []).some((n) => /卒業生の便りが\d+件/.test(n.text)), '便りが届いたと知らされる');
   ok(wv.alumni.some((a) => a.visits >= 1), '卒業生がオフに顔を出す（2年目以降）');
@@ -1698,9 +1737,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const v = YA.eventView(wv, ev);
   ok(v && v.opts && v.opts.length === 3, '顔を出した場面の選択肢は3つ');
   const st = Object.values(wv.players).find((p) => p.grade <= 2 && p.pos !== 'GK') || Object.values(wv.players)[0];
-  YA.setStar(wv, st, true);
+  st.star = true;
   const rr = YA.resolveEvent(wv, ev, 1);
-  ok(rr && rr.line, '★の子と話してもらえる');
+  ok(rr && rr.line && /課題中の子/.test(v.opts[1]), '課題中の子と話してもらえる');
 }
 // 3段目：課金・広告・セーブ枠・オリジナル選手（shop.js）
 {
@@ -1813,8 +1852,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const w = YA.newWorld(21);
   const g1 = Object.values(w.players).filter((q) => q.grade === 1 && !q.inj);
   const p = g1[0], p2 = g1[1], other = Object.values(w.players).find((q) => q.grade === 2);
-  YA.setStar(w, p, true); YA.setStar(w, p2, true);
-  ok(YA.STAR_ACTS.length === 12 && YA.starActWhy(w, other, 'meal') === '★の子だけにできることです', '★の子だけにできる働きかけが12（2026-11-20 に6つ足した）');
+  YA.kadaiGive(w, p, p.kf.t, p.kf.c); YA.kadaiGive(w, p2, p2.kf.t, p2.kf.c);
+  ok(p.star && p2.star && YA.STAR_ACTS.length === 12 && YA.starActWhy(w, other, 'meal') === '課題に取り組んでいる子だけにできることです', '課題中の子だけにできる働きかけが12（2026-11-20 に6つ足した）');
   const tr0 = p.tr == null ? 50 : p.tr;
   let r = YA.starAct(w, p, 'meal');
   ok(r.ok && p.tr > tr0 && r.line && (p.mem || []).some((m) => m.k === 'sa'), 'ご飯に連れて行くと信頼が上がり、記憶に残る');
@@ -1841,7 +1880,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(!p.pact && p.conf > cf0 && Object.values(p.ab).reduce((t, v) => t + v, 0) >= sum0, '約束に届くと自信が上がって伸びる');
   r = YA.starAct(w, p2, 'pact');
   const cf2 = p2.conf;
-  ok(r.ok && p2.pact, '別の★の子とも約束できる');
+  ok(r.ok && p2.pact, '別の課題中の子とも約束できる');
   w.week += YA.PACT_WEEKS; YA.rivalWeek(w);
   ok(!p2.pact && p2.conf < cf2, '約束に届かないと自信が下がる');
 }

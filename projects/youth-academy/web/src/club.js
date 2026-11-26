@@ -339,7 +339,7 @@
     YA.autoPlan(w);
     YA.relations && YA.relations(w);
     YA.yearStart(w);
-    YA.noteTier(w, 1, `${offer.name}（${YA.TIER_NAME[offer.tier]}）に移りました。${reason || ''}新しい36人を一から知りましょう`);
+    YA.noteTier(w, 1, `${offer.name}（${YA.TIER_NAME[offer.tier]}）に移りました。${reason || ''}新しい33人を一から知りましょう`);
   };
 
   // ---------- 出来事の追加：トップ・代表・クラブの要望・取材・規律・引き抜き ----------
@@ -351,9 +351,7 @@
 
   E.push({ id: 'top', name: 'トップチームの打診', weight: 0.9,
     pick: (w, r) => {
-      const keyed = best(w, (q) => q.star && q.grade >= 2 && !away(q) && YA.ovr(q) >= 10 && (q.keys || []).some((k) => k.id === 'top' && !k.done));
-      if (keyed && r.chance(0.8)) return keyed;
-      const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null;
+            const p = best(w, (q) => q.grade >= 2 && !away(q) && q.team === 'A' && YA.ovr(q) >= 10.8); return p && r.chance(0.7) ? p : null;
     },
     text: (p, w) => `トップチーム（${w.top ? w.top.name + '・' + YA.J_NAME[w.top.j] : 'トップ'}）の監督から連絡があった。「${pname(p)}（総合力${YA.rating(p)}）を、今週の練習に参加させてほしい」`,
     opts: [
@@ -428,7 +426,7 @@
     w.forced = (w.forced || []).concat([{ id: 'awake', pid: p.id, week: w.week, year: w.year }]);
     return p;
   };
-  const AWAKE_WHY = { star: '★注目の印を付けて、ずっと見てきた子だ。', talk: '面談で何度も話してきた子だ。', mins: 'Aで使い続けてきた子だ。', none: '誰も予想していなかった。' };
+  const AWAKE_WHY = { star: '課題で向き合ってきた子だ。', talk: '面談で何度も話してきた子だ。', mins: 'Aで使い続けてきた子だ。', none: '誰も予想していなかった。' };
   E.push({ id: 'awake', name: '覚醒', weight: 0,
     pick: () => null,
     text: (p) => { const a = p.awake || {}; return `${pname(p)}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した。総合力 ${a.from}→${a.to}。${AWAKE_WHY[a.why] || ''}練習での動きが別人のようで、これからの伸び方も一段上がる`; },
@@ -436,7 +434,7 @@
       o('大いに褒めて乗せる（伸び盛りが長く続く）', 'push', null, (w, p) => { p.state = { k: 'peak', w: 16 }; p.conf = clamp(p.conf + 5, 0, 100); return { line: `${p.name.split(' ')[0]}は目を輝かせた。伸び盛りがしばらく続きそうだ`, small: '伸び盛り 16週・自信 +5' }; }),
       o('「ここからが勝負だ」と気を引き締める（地力を固める）', 'firm', null, (w, p) => { for (const a of ['予測', 'ポジショニング', 'チームワーク']) if (p.ab[a] != null) p.prog[a] = (p.prog[a] || 0) + 0.9; return { line: `${p.name.split(' ')[0]}は黙ってうなずき、練習に戻った`, small: '予測・ポジショニング・チームワークが伸びやすくなった' }; }),
     ] });
-  YA.EVENT_ABOUT.awake = '年に1〜2人、急に一段上の選手になる子が出ます。★注目の印を付けた子・面談でよく話す子・Aで使い続けている子ほど起きやすくなります。';
+  YA.EVENT_ABOUT.awake = '年に1〜2人、急に一段上の選手になる子が出ます。課題を出した子・面談でよく話す子・Aで使い続けている子ほど起きやすくなります。';
   const CLUB_REQ = [
     { text: 'クラブから要望が届いた。「若手を育てる方針のため、高1をもっと試合で使ってほしい」', yes: (w) => { w.club.reqYoung = 6; }, yesMsg: '今後6週、高1を使う約束', trust: [4, -6] },
     { text: 'クラブから要望が届いた。「スポンサー行事に、主力を2人出してほしい」', yes: (w) => { const ps = Object.values(w.players).filter((p) => p.team === 'A' && !away(p)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).slice(0, 2); ps.forEach((p) => (p.away = 1)); }, yesMsg: '主力2人が今週は不在になる', trust: [5, -5] },
@@ -739,7 +737,7 @@
     },
     text: (p, w) => `トップチーム（${w.top.name}・${YA.J_NAME[w.top.j]}）が、${p.num}番 ${p.name}（高${p.grade}・総合力${YA.rating(p)}）にプロ契約を打診してきた。トップの主力と並ぶ力だ`,
     opts: [
-      { label: '送り出す（プロ契約。ユースからは抜ける）', kind: 'push', run: (w, p, r) => { YA.earlyPro(w, p.id); const fill = Object.keys(w.players).length < 36; if (fill) YA.newcomer(w, r, 1); return { line: 'プロ契約を結び、トップチームへ上がった' + (fill ? '。空いた枠には、U-15から1人上がった' : ''), small: '評判 +2・信頼度 +2' }; } },
+      { label: '送り出す（プロ契約。ユースからは抜ける）', kind: 'push', run: (w, p, r) => { YA.earlyPro(w, p.id); const fill = Object.keys(w.players).length < (YA.ROSTER || 33); if (fill) YA.newcomer(w, r, 1); return { line: 'プロ契約を結び、トップチームへ上がった' + (fill ? '。空いた枠には、U-15から1人上がった' : ''), small: '評判 +2・信頼度 +2' }; } },
       { label: '卒業まではユースで育てる', kind: 'firm', run: (w, p) => { p.unrest += 2; p._earlyNo = w.year * 100 + w.week; YA.addTrust(w, -2, 'トップの打診を断った'); return { line: '残ることになった。本人は少し不満そうだ', small: '信頼度 -2・不満 +2' }; } },
     ] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};

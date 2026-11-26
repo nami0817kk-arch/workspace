@@ -1,4 +1,4 @@
-// ★の子に自分からできること（2026-11-16「★の選手に自分からできるアクションを増やしたい」）。
+// ★の子に自分からできること（2026-11-16「★の選手に自分からできるアクションを増やしたい」）。2026-11-26 から課題中の子にできること。
 // これまで★の子に自分から働きかけられるのは面談（月1回・全員共通）だけだった。
 // ★の子にだけ、6つの働きかけを足す。★の子全体で1週に YA.STAR_ACT_WEEK 回まで、同じ働きかけは同じ子に間をあける。
 // 効き目は信頼・自信・不満・能力・戦術理解・覚醒の鍵のヒント。目標の約束は4週のうちに届くかで結果が分かれる。
@@ -27,10 +27,10 @@
   YA.STAR_ACTS = [
     { k: 'stay', name: '居残り練習に付き合う', cd: 3, about: '苦手な能力を1つ一緒に鍛える。伸びることがある（信頼が高いほど伸びやすい）。少し疲れる',
       need: (w, p) => (p.inj > 0 ? '怪我が治ってからにしましょう' : p.fat >= 80 ? '疲れが溜まっています。今週は休ませましょう' : null) },
-    { k: 'video', name: '試合の映像を一緒に見る', cd: 3, about: '最近の試合を一緒に見返す。戦術理解と自信が上がり、覚醒の鍵のヒントが見えることがある',
+    { k: 'video', name: '試合の映像を一緒に見る', cd: 3, about: '最近の試合を一緒に見返す。戦術理解と自信が上がり、手がかりが見えることがある',
       need: (w, p) => (p.lm && wk(w) - (p.lm.y * 40 + p.lm.w) <= 3 ? null : '最近（3週以内）の試合に出ていません') },
-    { k: 'hint', name: '覚醒の手がかりを話し合う', cd: 4, about: 'まだ見えていない覚醒の鍵のヒントを一緒に探す。信頼が高いほど見つかりやすい',
-      need: (w, p) => (p.aw ? 'もう覚醒しています' : (p.keys || []).some((k) => !k.done && k.h < 2) ? null : '見えていない鍵がありません') },
+    { k: 'hint', name: 'じっくり本音を聞く', cd: 4, about: 'まだ見えていない手がかり（本人の言葉・試合の場面）を一緒に探す。信頼が高いほど見つかりやすい',
+      need: (w, p) => (p.kc && p.kc.self && p.kc.match ? '手がかりはもう出そろっています' : null) },
     { k: 'meal', name: 'ご飯に連れて行く', cd: 4, about: 'ゆっくり話を聞く。信頼が大きく上がり、不満が和らぐ' },
     { k: 'pact', name: '目標を約束する', cd: 6, about: `${YA.PACT_WEEKS}週のうちの目標を一緒に決める（点を取る子は「Aで2点」、ほかは「Aに3試合出る」）。届けば自信と信頼が上がって能力が伸びる。届かないと少し下がる`,
       // 期限までに残っているAの試合が目標の数より少ないときは組めない（2026-11-17 直し：試合の無い時期にも組めていた）
@@ -41,7 +41,7 @@
         if (n < need) return `${YA.PACT_WEEKS}週のうちに残っているAの試合が${n}試合で、目標（${scorer(p) ? '2点' : '3試合'}）に届きません。試合の多い時期に約束しましょう`;
         return null;
       } },
-    { k: 'ob', name: '卒業生に会わせる', cd: 40, about: 'プロになった卒業生と話す機会を作る（同じポジションの先輩を先に）。自信が上がり、鍵のヒントが見えることがある。1人の子に年1回',
+    { k: 'ob', name: '卒業生に会わせる', cd: 40, about: 'プロになった卒業生と話す機会を作る（同じポジションの先輩を先に）。自信が上がり、手がかりが見えることがある。1人の子に年1回',
       need: (w, p) => (obFor(w, p) ? null : 'プロになった卒業生がまだいません') },
   ];
   const def = (k) => YA.STAR_ACTS.find((x) => x.k === k);
@@ -50,7 +50,7 @@
   YA.starActWhy = function (w, p, k) {
     const d = def(k);
     if (!d || !p) return 'できません';
-    if (!p.star) return '★の子だけにできることです';
+    if (!p.star) return '課題に取り組んでいる子だけにできることです';
     if (p.away > 0) return 'いまチームを離れています';
     const last = (p.sa || {})[k];
     if (last != null && wk(w) - last < d.cd) return `${d.name}は同じ子に${d.cd >= 40 ? '年1回' : d.cd + '週に1回'}です（あと${d.cd - (wk(w) - last)}週）`;
@@ -81,12 +81,12 @@
       p.conf = clamp(p.conf + 3, 0, 100);
       YA.addTr(w, p, 2);
       const seen = YA.hintUp ? YA.hintUp(w, p, 0.35, '映像を見て') : false;
-      msg = `${first(p)}と、この前の試合の映像を見返した。戦術理解+4・自信+3${seen ? '。覚醒の鍵のヒントが見えた' : ''}`;
+      msg = `${first(p)}と、この前の試合の映像を見返した。戦術理解+4・自信+3${seen ? '。手がかりが見えた' : ''}`;
       q = pick(w, p, k, ['あの場面、もう半歩前にいればよかったんですね', '自分のプレーを外から見るの、初めてでした', '次は、ここで顔を上げます']);
     } else if (k === 'hint') {
       YA.addTr(w, p, 2);
       const seen = YA.hintUp ? YA.hintUp(w, p, 0.85, '話し合って') : false;
-      msg = seen ? `${first(p)}と、これからのことを話し合った。覚醒の鍵のヒントが見えた` : `${first(p)}と、これからのことを話し合った。まだはっきりしないが、本人は何かを感じているようだ（信頼が高いほど見つかりやすい）`;
+      msg = seen ? `${first(p)}の本音を、じっくり聞いた。手がかりが見えた` : `${first(p)}の本音を、じっくり聞いた。まだはっきりしないが、本人は何かを感じているようだ（信頼が高いほど見つかりやすい）`;
       q = pick(w, p, k, ['何が足りないのか、少し分かってきた気がします', '自分でも、まだ言葉にできないんです', '監督に話したら、すっきりしました']);
     } else if (k === 'meal') {
       YA.addTr(w, p, 8);
@@ -108,7 +108,7 @@
       YA.addTr(w, p, 3);
       a.bond = a.bond == null ? a.bond : Math.min(6, a.bond + 0.2);
       const seen = YA.hintUp ? YA.hintUp(w, p, 0.5, '卒業生と話して') : false;
-      msg = `卒業生の${a.name}（${a.club}）に、${first(p)}と会ってもらった。プロの話に目を輝かせていた。自信+6${seen ? '。覚醒の鍵のヒントが見えた' : ''}`;
+      msg = `卒業生の${a.name}（${a.club}）に、${first(p)}と会ってもらった。プロの話に目を輝かせていた。自信+6${seen ? '。手がかりが見えた' : ''}`;
       q = pick(w, p, k, [`${a.name.split(' ')[1] || a.name}さんみたいになりたいです`, 'プロの世界のこと、もっと知りたくなりました', '同じユースから、あそこまで行けるんですね']);
     }
     w.saUsed = w.saUsed && w.saUsed.k === wk(w) ? w.saUsed : { k: wk(w), n: 0 };
@@ -151,9 +151,9 @@
 
   if (YA.MEM_NAME) YA.MEM_NAME.sa = '二人の時間';
 
-  // 選手の画面（★の子だけ）：6つの働きかけと結果
+  // 選手の画面（課題中の子だけ）：働きかけと結果
   // 働きかけの効き目を短い札で
-  YA.STAR_ACT_TAGS = { stay: ['苦手な能力↑', '疲れ'], video: ['戦術理解↑', '自信↑', '鍵のヒント'], hint: ['鍵のヒント'], meal: ['信頼↑↑', '不満↓'], pact: [`${YA.PACT_WEEKS}週の目標`, '届けば能力↑'], ob: ['自信↑', '鍵のヒント', '年1回'] };
+  YA.STAR_ACT_TAGS = { stay: ['苦手な能力↑', '疲れ'], video: ['戦術理解↑', '自信↑', '手がかり'], hint: ['手がかり'], meal: ['信頼↑↑', '不満↓'], pact: [`${YA.PACT_WEEKS}週の目標`, '届けば能力↑'], ob: ['自信↑', '手がかり', '年1回'] };
   YA.starActsEl = function (w, p, rerender) {
     if (!p || !p.star || !YA._ui) return null;
     const h = YA._ui.h;
@@ -164,7 +164,7 @@
     // 説明の全文は「説明を見る」で開く（title の長押しは iPhone で見えないので本文に出す）
     const full = !!app.saAbout;
     return h('div', { class: 'card', style: 'padding:6px 9px;margin:6px 0;background:#fff8e1;border-color:#e6c200' },
-      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `★の子と過ごす（今週あと${Math.max(0, left)}回・★の子全体で週${YA.STAR_ACT_WEEK}回）`), h('button', { class: 'btn sm', onclick: () => { app.saAbout = !full; if (rerender) rerender(); } }, full ? '説明を閉じる' : '説明を見る')),
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, `課題中の子と過ごす（今週あと${Math.max(0, left)}回・課題中の子全体で週${YA.STAR_ACT_WEEK}回）`), h('button', { class: 'btn sm', onclick: () => { app.saAbout = !full; if (rerender) rerender(); } }, full ? '説明を閉じる' : '説明を見る')),
       p.pact ? h('div', { class: 'note', style: 'color:var(--ink)' }, YA.pactLine(w, p)) : null,
       h('div', { style: 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:4px' },
         YA.STAR_ACTS.map((d) => {

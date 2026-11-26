@@ -1,10 +1,10 @@
 // 釣り合いの点検：複数のシードで数年ずつおまかせで回し、例外・異常な数・人数の減少・予算の暴走・評価の張り付き・
-// 昇降格の偏り・プロ級の割合（決定75：12人中2〜3人）・1週の想定時間を調べる。
+// 昇降格の偏り・プロ級の割合（決定75：1学年11人中2〜3人）・課題と覚醒の数（年5〜7人前後）・1週の想定時間を調べる。
 //   node tool/balance.js            … CI と同じ（6シード×3年＋1部と3部）
 //   node tool/balance.js 10 20      … シード10個×20年（長い試し）
 'use strict';
 const path = require('path');
-for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'body', 'pos2', 'traits2', 'persona', 'cond2', 'stars2', 'team2', 'records']) require(path.join(__dirname, '../src/' + f + '.js'));
+for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'body', 'pos2', 'traits2', 'persona', 'cond2', 'stars2', 'kadai', 'team2', 'records']) require(path.join(__dirname, '../src/' + f + '.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => {
@@ -14,12 +14,15 @@ const ok = (c, m) => {
   }
 };
 // 2026-11-17：育成・クラブの釣り合いの直し（42〜62）に合わせて、疲れ・怪我・退団の理由・接し方・卒業時の平均・基金・大会も見る
-const G = { fat: [], tired: 0, kinds: {}, injLong: 0, injAll: 0, matchInj: 0 };
+const G = { fat: [], tired: 0, kinds: {}, injLong: 0, injAll: 0, matchInj: 0, maxKadai: 0, kadaiWeeks: 0 };
 {
   const ew = YA.endWeek;
   YA.endWeek = function (w) {
     const ps = Object.values(w.players);
     G.fat.push(ps.reduce((a, p) => a + p.fat, 0) / ps.length);
+    const nk = ps.filter((p) => p.kd).length;
+    G.maxKadai = Math.max(G.maxKadai, nk);
+    G.kadaiWeeks++;
     return ew.apply(this, arguments);
   };
   const re = YA.resolveEvent;
@@ -47,6 +50,7 @@ for (const r of runs) {
     const lv0 = st.w.leagueLevel;
     const al0 = st.w.alumni.length;
     const tr0 = (st.w.trophies || []).length;
+    const yy = st.w.year;
     try {
       rep = YA.testYear(st);
     } catch (e) {
@@ -57,7 +61,7 @@ for (const r of runs) {
     all.push(Object.assign({ seed: r.seed }, m));
     const bad = YA.findBadNumber(st.w);
     ok(!bad, `数の異常 seed${r.seed} 年${y + 1}: ${bad}`);
-    ok(m.players >= 34 && m.players <= 44, `人数 seed${r.seed} 年${y + 1}: ${m.players}`);
+    ok(m.players >= 31 && m.players <= 41, `人数 seed${r.seed} 年${y + 1}: ${m.players}`);
     ok(m.budget >= 500 && m.budget <= 9000 && m.salaries <= m.budget, `予算 seed${r.seed} 年${y + 1}: ${m.budget}（給料${m.salaries}）`);
     ok(m.trustAfter >= 0 && m.trustAfter <= 100 && m.repAfter >= 0 && m.repAfter <= 100, '信頼度・評判の範囲');
     const nw = st.w.alumni.slice(al0);
@@ -65,7 +69,8 @@ for (const r of runs) {
     yrs.push({ seed: r.seed, tier: r.tier, y: y + 1, level: lv0, gradAvg: gr.length ? gr.reduce((a, b) => a + b, 0) / gr.length : null, early: nw.filter((a) => /高.でトップ昇格/.test(a.note || '')).length,
       pro: m.gradPaths.pro, quits: nw.filter((a) => a.status === 'left').map((a) => (/退団（(.+)）/.exec(a.note || '') || [])[1] || '?'),
       cups: (st.w.trophies || []).slice(tr0).length, fund: st.w.fund || 0, total: st.w.club.total, injLong: st.w.inbox.filter((n) => n.year === y + 1 && /全治(\d+)週/.test(n.text) && +/全治(\d+)週/.exec(n.text)[1] >= 8).length,
-      matchInj: st.w.inbox.filter((n) => n.year === y + 1 && /試合で怪我/.test(n.text)).length });
+      matchInj: st.w.inbox.filter((n) => n.year === y + 1 && /試合で怪我/.test(n.text)).length,
+      awake: st.w.awakeN && st.w.awakeN.y === yy ? st.w.awakeN.n : 0, kgive: st.w.kadaiN && st.w.kadaiN.y === yy ? st.w.kadaiN.give || 0 : 0 });
   }
   ok(st.w.alumni.length >= 12 * Math.min(2, r.years), `卒業生が積み上がる seed${r.seed}`);
 }
@@ -113,7 +118,16 @@ ok(moves.stay / n >= 0.25, `昇降格が多すぎない ${JSON.stringify(moves)}
 ok(moves.up + moves.down >= 2, `昇降格がまったく無いのは偏り ${JSON.stringify(moves)}`);
 if (moves.up + moves.down >= 6) ok(Math.min(moves.up, moves.down) / (moves.up + moves.down) >= 0.15, `昇格・降格の偏り ${JSON.stringify(moves)}`);
 const pro = mean((m) => m.gradPaths.pro);
-ok(pro >= 1.2 && pro <= 4, `プロ級の割合が決定75の目安（12人中2〜3人）から離れすぎない: ${pro.toFixed(2)}人/年`);
+ok(pro >= 1.2 && pro <= 4, `プロ級の割合が決定75の目安（11人中2〜3人）から離れすぎない: ${pro.toFixed(2)}人/年`);
+// 課題（2026-11-26）：おまかせで回すと、同時5人まで・覚醒はならして年5〜7人前後・外れたらあきらめもある
+{
+  const awY = yrs.reduce((a, x) => a + x.awake, 0) / yrs.length;
+  const gvY = yrs.reduce((a, x) => a + x.kgive, 0) / yrs.length;
+  console.log(`課題：覚醒 ${awY.toFixed(2)}人/年・あきらめ ${gvY.toFixed(2)}件/年・同時の最大 ${G.maxKadai}人（${G.kadaiWeeks}週を見た）`);
+  ok(G.kadaiWeeks > 100 && G.maxKadai <= YA.KADAI_MAX && G.maxKadai >= 4, `課題は同時に5人まで（最大${G.maxKadai}人）`);
+  ok(awY >= 4 && awY <= 8.5, `覚醒はならして年5〜7人前後: ${awY.toFixed(2)}人/年`);
+  ok(gvY > 0, `外れた課題はあきらめになる: ${gvY.toFixed(2)}件/年`);
+}
 ok(share((m) => m.trustAfter >= 99 || m.trustAfter <= 1) <= 0.4, '信頼度が上限・下限に張り付いていない');
 // 60 評価：育成の目標は部と施設に合わせ、約束の目標はおまかせでも届くことがある（B に偏らない）
 const minutes = mean((m) => m.minutesPerWeek);

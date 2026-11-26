@@ -1,4 +1,4 @@
-// 選手を構成する要素 段階6「★の子」（2026-11-19 ⑨）
+// 選手を構成する要素 段階6「★の子」（2026-11-19 ⑨）。2026-11-26 から★の子＝いま課題に取り組んでいる子（p.star）
 // ・信頼の段階で開くもの（YA.TRUST_UNLOCK：日誌・本音・働きかけ・隠れた力・覚醒の鍵）
 // ・働きかけ 6→12（staracts.js の6つに、ここの6つを足す。信頼の段階で開く）
 // ・★の子の日誌（毎週1行。信頼2から読める）
@@ -20,7 +20,7 @@
     { lv: 3, k: 'honest', t: '本音（進路の希望と、いまの悩み）が分かる' },
     { lv: 3, k: 'acts3', t: '働きかけ「別の位置を試させる」「本を薦める」' },
     { lv: 4, k: 'hidden', t: '隠れた力がコーチの言葉で全部分かる' },
-    { lv: 5, k: 'key', t: '覚醒の鍵のヒントが毎月ひとつ見えやすくなる' },
+    { lv: 5, k: 'key', t: '手がかりが毎月ひとつ見えやすくなる' },
   ];
   YA.trustOpen = (p, k) => { const u = YA.TRUST_UNLOCK.find((x) => x.k === k); return !!u && p.star && lvOf(p) >= u.lv; };
 
@@ -121,7 +121,7 @@
   };
 
   // ---------- ★の子どうしの関係 ----------
-  YA.STAR_REL = { rival: 'ライバル', mate: '同期の★', line: '同じ位置の先輩後輩' };
+  YA.STAR_REL = { rival: 'ライバル', mate: '同期の課題仲間', line: '同じ位置の先輩後輩' };
   YA.starRels = function (w, p) {
     if (!p.star) return [];
     const out = [];
@@ -169,9 +169,9 @@
     for (const p of all(w)) {
       if (!p.star) continue;
       p.diary = (p.diary || []).concat([{ y: w.year, w: w.week, t: diaryLine(w, p) }]).slice(-10);
-      // 同期の★がいると支え合う
+      // 同期の課題中の子がいると支え合う
       if (YA.starRels(w, p).some((x) => x.k === 'mate' && !(x.q.inj > 0))) p.conf = clamp(p.conf + 0.5, 0, 100);
-      // 深い信頼：月のはじめに鍵のヒント
+      // 深い信頼：月のはじめに手がかり
       if (lvOf(p) >= 5 && YA.calendar && YA.calendar(w.week).nth === 1 && YA.hintUp) YA.hintUp(w, p, 0.9, '深い信頼で');
     }
     return res;
@@ -199,7 +199,7 @@
       if (!p.star) return el;
       try {
         const doc = el.ownerDocument;
-        const sec = Array.from(el.querySelectorAll('.ovsec')).find((s) => s.querySelector('.ovh') && /★ この子と/.test(s.querySelector('.ovh').textContent));
+        const sec = Array.from(el.querySelectorAll('.ovsec')).find((s) => s.querySelector('.ovh') && /課題中/.test(s.querySelector('.ovh').textContent));
         if (!sec) return el;
         const add = (txt, css) => { const d = doc.createElement('div'); d.className = 'ovinfo'; d.style.cssText = 'font-size:11.5px;line-height:1.45' + (css ? ';' + css : ''); d.textContent = txt; sec.append(d); return d; };
         const lv = lvOf(p);
@@ -210,7 +210,7 @@
           add(`本音：進路は「${wish || '未定'}」を望んでいる。いまの悩みは「${worry}」`, 'color:#6b4e00');
         }
         const rels = YA.starRels(w, p);
-        if (rels.length) add('★の子どうし：' + rels.map((x) => `${x.q.name}（${YA.STAR_REL[x.k]}）`).join('・'), 'color:#0d4a72');
+        if (rels.length) add('課題中の子どうし：' + rels.map((x) => `${x.q.name}（${YA.STAR_REL[x.k]}）`).join('・'), 'color:#0d4a72');
         if (YA.trustOpen(p, 'diary') && (p.diary || []).length) {
           const d = add('', 'background:#fffaf0;border-radius:6px;padding:4px 7px;margin-top:3px');
           const hd = doc.createElement('b'); hd.textContent = '日誌'; hd.style.fontSize = '11px'; d.append(hd);

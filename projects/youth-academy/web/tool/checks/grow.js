@@ -20,7 +20,7 @@ module.exports = (YA, ok) => {
         YA.runTraining(w);
         for (const p of Object.values(w.players)) { if (p.inj > 0 && p._injLen === p.inj) inj++; p.inj = 0; }
       }
-      return { g: sumAll(w) - s0, fat: Object.values(w.players).reduce((s, p) => s + p.fat, 0) / 36, inj };
+      return { g: sumAll(w) - s0, fat: Object.values(w.players).reduce((s, p) => s + p.fat, 0) / Object.keys(w.players).length, inj };
     };
     const L = run('light'), N = run('normal'), H = run('hard');
     ok(H.g > N.g * 1.15 && H.g < N.g * 1.5, `きつい練習は伸び約1.3倍（普通${N.g.toFixed(0)}・きつい${H.g.toFixed(0)}）`);
@@ -231,7 +231,7 @@ module.exports = (YA, ok) => {
     ok(ws.cup.summer.groupDone && ws.cup.summer.grank === 1 && !ws.cup.summer.alive && ws.cup.summer.result, '夏はグループ1位で決勝トーナメントへ（結果 ' + ws.cup.summer.result + '）');
   }
 
-  // 59 ★の約束は、期限までに残っているAの試合が足りないと組めない
+  // 59 課題中の子の約束は、期限までに残っているAの試合が足りないと組めない
   {
     const w = YA.newWorld(47);
     const p = Object.values(w.players).find((q) => q.grade === 1);

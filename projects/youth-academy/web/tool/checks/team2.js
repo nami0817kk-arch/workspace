@@ -8,7 +8,7 @@ module.exports = (YA, ok) => {
   ok(cs.every((c) => c.ids.length >= 2 && c.name && c.kind), '輪には名前と寮か自宅かがある');
   ok(cs.every((c) => { const g = c.ids.map((id) => w.players[id].grade); return g.filter((x) => x === c.grade).length >= g.length * 0.5; }), '輪は学年でまとまりやすい');
   const inC = Object.values(w.players).filter((p) => p.circle).length;
-  ok(inC >= 26, `ほとんどの子がどこかの輪にいる（${inC}/36）`);
+  ok(inC >= 26, `ほとんどの子がどこかの輪にいる（${inC}/${Object.keys(w.players).length}）`);
   // 主将の性格
   const capOf = (t) => { const c = Object.values(w.players)[0]; w.captain = c.id; const old = c.pers['人との関わり']; c.pers['人との関わり'] = t; const e = YA.capEffect(w); c.pers['人との関わり'] = old; return e; };
   ok(capOf('リーダー気質').v > capOf('一匹狼').v && capOf('リーダー気質').k < capOf('一匹狼').k, '主将の性格でまとまりやすさが変わる');
@@ -25,8 +25,9 @@ module.exports = (YA, ok) => {
   // 割れると雰囲気が下がり、働きかけでおさまる
   w.atmo = 60;
   w.split = { a: cs[0].id, b: cs[1].id, w: 0 };
-  for (let k = 0; k < 6; k++) { w.week = 10 + k; YA.teamWeek(w); }
-  ok(w.atmo < 60, '割れていると雰囲気が下がる ' + w.atmo);
+  // 3週目からは自然におさまることがある（シードしだい）ので、割れているあいだの2週で見る
+  for (let k = 0; k < 2; k++) { w.week = 10 + k; YA.teamWeek(w); }
+  ok(w.split && w.atmo < 60, '割れていると雰囲気が下がる ' + w.atmo);
   let ended = false;
   for (let k = 0; k < 12 && !ended; k++) { w.teamActM = null; w.week = 10 + k; YA.teamAct(w, 'talk'); ended = !w.split; if (!ended) w.split = w.split || null; }
   ok(ended, '輪の中心と話すと、ぎくしゃくがおさまる');

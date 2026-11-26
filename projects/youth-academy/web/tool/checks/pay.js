@@ -48,17 +48,18 @@ module.exports = (YA, ok) => {
     YA.entSet({ used: 30, spent: [] });
     const used = new Set(Object.values(w.players).map((p) => p.name));
     w.originals = [];
-    for (let i = 0; i < 12; i++) w.originals.push(Object.assign(spec('左足 ' + i), { pos: i % 2 ? 'LW' : 'LB', foot: 'L', serial: i + 1 }));
+    const GN = YA.GRADE_N || 11; // 1学年の枠（2026-11-26 に12→11）
+    for (let i = 0; i < GN; i++) w.originals.push(Object.assign(spec('左足 ' + i), { pos: i % 2 ? 'LW' : 'LB', foot: 'L', serial: i + 1 }));
     withBridge(() => YA.intake(w, YA.rngOf(9), used));
     const os = Object.values(w.players).filter((p) => /^左足 /.test(p.name));
-    ok(os.length === 12 && os.every((p) => p.foot === 'L'), '課金: オリジナル選手が全員入団し、利き足は左 ' + os.length);
+    ok(os.length === GN && os.every((p) => p.foot === 'L'), '課金: オリジナル選手が全員入団し、利き足は左 ' + os.length);
     ok(os.filter((p) => p.sideP === 'L').length >= 6, '課金: 左利きのオリジナル選手は、左サイドが得意な子が多い ' + os.map((p) => p.sideP).join());
     ok(os.every((p) => (p.habits || []).length === 0), '課金: オリジナル選手に悪い癖は付かない');
     YA.entSet(null);
   }
 
   // 2026-11-20「オリジナル選手が一覧から消える」：トップ昇格の話をコーチに任されて、入団直後に消えていた。
-  // オリジナル選手のプロの話・退団などは★の子と同じく選ばせる（コーチに任せない）
+  // オリジナル選手のプロの話・退団などは課題中の子と同じく選ばせる（コーチに任せない）
   {
     const w = YA.newWorld(307);
     const ps = Object.values(w.players).filter((p) => p.grade === 1);
@@ -69,7 +70,7 @@ module.exports = (YA, ok) => {
     const evs = [{ id: 'early', pid: orig.id, week: w.week, year: w.year }, { id: 'quit', pid: orig.id, week: w.week, year: w.year }, { id: 'early', pid: plain.id, week: w.week, year: w.year }];
     const left = YA.autoNonStar(w, evs);
     ok(left.filter((e) => e.pid === orig.id).length === 2 && w.players[orig.id], '課金: オリジナル選手のプロの話・退団は、コーチに任せず選ばせる');
-    ok(!left.some((e) => e.pid === plain.id), '課金: ほかの★以外の子は、これまでどおりコーチに任せる');
+    ok(!left.some((e) => e.pid === plain.id), '課金: ほかの課題中でない子は、これまでどおりコーチに任せる');
   }
 
   // 2026-11-20：点検用の試しの世界の試合では、広告を出す番にしない

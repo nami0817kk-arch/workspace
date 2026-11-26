@@ -132,7 +132,7 @@
       const m = (p.mem || []).find((x) => x.k === 'pitch' && x.promise && !x.checked);
       if (!m || p.grade !== 1) continue;
       m.checked = true;
-      const kept = m.promise === '出場機会' ? (p.minsA || 0) >= 180 : m.promise === '目をかける' ? !!p.star : m.promise === '10番' ? true : true;
+      const kept = m.promise === '出場機会' ? (p.minsA || 0) >= 180 : m.promise === '目をかける' ? !!(p.star || p.kEver) : m.promise === '10番' ? true : true;
       m.kept = kept;
       if (YA.addTr) YA.addTr(w, p, kept ? 4 : -6, kept ? '口説いたときの約束を守った' : '口説いたときの約束が守られていない');
       if (!kept) { p.unrest = (p.unrest || 0) + 2; YA.noteTier(w, 1, `${p.name}が「入るとき、${m.promise === '出場機会' ? '試合に出られると言われた' : '目をかけると言われた'}のに」とこぼしている`, p.id); }

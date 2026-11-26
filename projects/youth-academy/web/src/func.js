@@ -395,7 +395,7 @@
     const fan = all(w).filter((p) => p.star && p.pos === a.pos);
     for (const p of fan) conf(p, 3);
     const play = !s ? 'ベンチから声を出していた' : s.goals >= 5 ? 'ゴール前で何度も相手を脅かしていた' : s.apps >= 20 ? '中心選手として90分走り切った' : '途中から出て、短い時間で見せ場を作った';
-    return { ok: true, msg: `${a.club}の試合を観に行った。${a.name}は${play}。${fan.length ? `一緒に行った★の子${fan.length}人が、目を輝かせていた（自信 +3）` : ''}` };
+    return { ok: true, msg: `${a.club}の試合を観に行った。${a.name}は${play}。${fan.length ? `一緒に行った課題中の子${fan.length}人が、目を輝かせていた（自信 +3）` : ''}` };
   };
   // 卒業生の成績の表（2026-11-15「バロンドールとかの要素・ゴール数やアシスト、出場数」）。GK は得点・アシストの代わりに完封
   YA.alumniStats = function (w, a) {
@@ -446,7 +446,7 @@
     YA._v.modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(860px,98%);max-height:96%;padding:12px;gap:4px;overflow:auto' },
       h('div', { class: 'row', style: 'gap:6px' },
         h('span', { class: 'pos ' + a.pos }, (YA.POS_LABEL && YA.POS_LABEL[a.main]) || a.pos),
-        h('b', { style: 'font-size:16px' }, a.name + (a.star ? ' ★' : '')),
+        h('b', { style: 'font-size:16px' }, a.name),
         h('span', { class: 'sub grow' }, `${a.year}年目卒・${a.age != null ? a.age + '歳' : ''}・いま ${status}`),
         h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('div', { class: 'note' }, `総合力 ${YA.rate(a.ovr)}（${YA.levelOf ? YA.levelOf(YA.rate(a.ovr)) : ''}）` + (a.status === 'pro' && !a.retired ? `・市場価値 ${YA.yen(val)}` : '') + (a.valueMax ? `・最高 ${YA.yen(a.valueMax)}` : '') + (a.hof ? `・${a.hof === 'full' ? '殿堂入り' : '殿堂候補'}` : '')),
@@ -499,7 +499,7 @@
           h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${a.name}（${a.year}年目卒${a.age ? '・' + a.age + '歳' : ''}）`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
           h('div', { class: 'note' }, `${a.club || ''}${a.league ? '（' + a.league + (YA.clubStr && YA.clubStr(a.club, w) != null ? '・クラブの強さ ' + YA.clubStr(a.club, w) : '') + '）' : ''}・本人 ${YA.rate(a.ovr)}・通算${YA.statLine(a, a.pos === 'GK')}${a.bdBest ? '・バロンドール最高' + a.bdBest + '位' : ''}${a.bond == null ? '' : `・絆 ${a.bond}/6`}`),
           h('div', { class: 'row', style: 'gap:5px;flex-wrap:wrap;margin:4px 0' },
-            h('button', { class: 'btn sm' + (a.fav ? ' on' : ''), onclick: () => { a.fav = !a.fav; save(); draw(); } }, a.fav ? '★ 追っている（外す）' : '☆ この子を追う'),
+            h('button', { class: 'btn sm' + (a.fav ? ' on' : ''), onclick: () => { a.fav = !a.fav; save(); draw(); } }, a.fav ? '◎ 追っている（外す）' : '○ この子を追う'),
             h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniContact(w, a); msg.textContent = r.msg; save(); draw(); } }, '連絡する（年1回）'),
             h('button', { class: 'btn sm', onclick: () => { const r = YA.alumniWatch(w, a); msg.textContent = r.msg; save(); draw(); } }, '試合を観に行く（年1回）'),
             h('button', { class: 'btn sm pri', onclick: () => YA.careerPage(w, a) }, '経歴をまとめて見る')),
@@ -529,11 +529,11 @@
   // ---------- 用語集 ----------
   YA.GLOSSARY = [
     ['総合力', '能力をまとめた数字（0〜200）。100がプロ入りの目安、155が日本代表級'],
-    ['伸びしろ（★）', 'コーチの見立てで、どこまで伸びそうか。見る目が良いほど確か'],
-    ['★注目', '特に目をかける子。高1にだけ、入団から4週のうちに決める。覚醒するのは★の子だけ'],
-    ['覚醒の鍵', '★の子が化けるためのきっかけ。そろうと覚醒し、能力と特別な特性が付く'],
+    ['伸びしろ（星）', 'コーチの見立てで、どこまで伸びそうか。見る目が良いほど確か'],
+    ['課題', '子が化けるために出す課題（10種類）。同時に5人まで。合っていれば、期間の後半に出た試合で気づいて覚醒する。外れると途中であきらめる'],
+    ['手がかり', '合う課題を見抜くための3つ（コーチの見立て・本人の言葉・試合の場面）。答えは出ないので、手がかりから推理する'],
     ['覚醒の図鑑', '目覚めた形の一覧。接し方（寄り添う・厳しく・背中を押す・任せる）で出やすい形が変わる'],
-    ['信頼（5段階）', '★の子との信頼。高いほど鍵のヒントが早く見え、卒業後の絆も深くなる'],
+    ['信頼（5段階）', '課題を出した子との信頼。高いほど本音を話して手がかりが早く見え、卒業後の絆も深くなる。課題が終わっても残る'],
     ['絆', '卒業生との結びつき（0〜6）。高いと便りが温かく、コーチとして戻ったり、中学生を紹介したりする'],
     ['事情', 'その子の背景。面談や出来事で少しずつ分かり、出来事の中身が変わる'],
     ['続き物', '2話にわたる出来事。どう向き合ったかで結末が変わる。条件がそろうと思わぬ結末も'],
@@ -556,34 +556,29 @@
     const monthEnds = wk < YA.WEEKS && YA.monthIdx(wk + 1) !== YA.monthIdx(wk);
     const toPlayer = (id, pTab) => (app) => { app.tab = 'players'; if (id) app.pSel = id; app.pTab = pTab; };
     const toClub = (ct) => (app) => { app.tab = 'club'; app.ct = ct; };
-    // ★注目：高1に、入団から4週のうち。過ぎると付けられない
-    if (YA.STAR_WEEKS && wk <= YA.STAR_WEEKS) {
-      const n = YA.starsIn(w, 1).length;
-      const nx = YA.starPick(w, 1)[0];
-      if (n < YA.STAR_MAX && nx) out.push({ id: 'star', tab: 'players', go: toPlayer(nx.id, 'info'), t: `高1の★注目を決める（${n}/${YA.STAR_MAX}人）`, left: YA.STAR_WEEKS - wk, hard: true, after: '★は付けられなくなり、空いた枠はこの学年のあいだ空いたままです' });
-    }
     const S = w.scouting;
     if (S) {
       const wn = YA.scoutWindow(w);
       const held = (k) => S.cands.filter((c) => (!k || c.kind === k) && (c.status === 'signed' || c.status === 'offered')).length;
-      const seats = `来年の高1 ${held()}/12人`;
-      if (wn.int && held() < 12) out.push({ id: 'int', tab: 'club', go: toClub('int'), t: `内部昇格を決める（${seats}）`, left: 27 - wk, hard: true, after: '内部昇格は決められなくなり、空いた枠は一般入団（見ていない子）で埋まります' });
-      if (wn.sel && held() < 12) out.push({ id: 'sel', tab: 'club', go: toClub('sel'), t: `セレクションの合否を決める（${seats}）`, left: 34 - wk, hard: true, after: 'セレクションは締め切られ、空いた枠は一般入団（見ていない子）で埋まります' });
+      const GN = YA.GRADE_N || 11;
+      const seats = `来年の高1 ${held()}/${GN}人`;
+      if (wn.int && held() < GN) out.push({ id: 'int', tab: 'club', go: toClub('int'), t: `内部昇格を決める（${seats}）`, left: 27 - wk, hard: true, after: '内部昇格は決められなくなり、空いた枠は一般入団（見ていない子）で埋まります' });
+      if (wn.sel && held() < GN) out.push({ id: 'sel', tab: 'club', go: toClub('sel'), t: `セレクションの合否を決める（${seats}）`, left: 34 - wk, hard: true, after: 'セレクションは締め切られ、空いた枠は一般入団（見ていない子）で埋まります' });
       const open = S.cands.filter((c) => c.kind === 'scout' && c.status === 'open' && !c.next).length;
-      if (wn.scout && open && held('scout') < 3 && held() < 12) out.push({ id: 'offer', tab: 'club', go: toClub('scout'), t: `スカウトした子に声をかける（${held('scout')}/3人・11月まで）`, left: 27 - wk, hard: true, after: '声をかけられるのは11月までです。会った子には、もう声をかけられません' });
+      if (wn.scout && open && held('scout') < 3 && held() < GN) out.push({ id: 'offer', tab: 'club', go: toClub('scout'), t: `スカウトした子に声をかける（${held('scout')}/3人・11月まで）`, left: 27 - wk, hard: true, after: '声をかけられるのは11月までです。会った子には、もう声をかけられません' });
       const acts = YA.scoutActsLeft(w);
       if (monthEnds && wn.explore && acts > 0) out.push({ id: 'scoutact', tab: 'club', go: toClub('scout'), t: `スカウトに出る（今月あと${acts}回）`, left: 0, hard: false, tag: '今月まで' });
     }
-    // 年度はじめ（4週まで）：方針・★の子の育成計画
+    // 年度はじめ（4週まで）：方針・課題中の子の育成計画
     if (wk <= 4) {
       if (YA.policyCard && w.policySeenY !== w.year) out.push({ id: 'policy', tab: 'club', go: toClub('over'), t: '指導の方針を見直す', left: 4 - wk, hard: false });
       const np = all(w).filter((p) => p.star && !(p.yplan && p.yplan.y === w.year));
-      if (np.length) out.push({ id: 'yplan', tab: 'players', go: toPlayer(np[0].id, 'grow'), t: `★の子の育成計画を立てる（まだ${np.length}人）`, left: 4 - wk, hard: false });
+      if (np.length) out.push({ id: 'yplan', tab: 'players', go: toPlayer(np[0].id, 'grow'), t: `課題中の子の育成計画を立てる（まだ${np.length}人）`, left: 4 - wk, hard: false });
     }
-    // 面談は1人と月1回：月の最後の週に、まだ話していない★の子
+    // 面談は1人と月1回：月の最後の週に、まだ話していない課題中の子
     if (monthEnds && YA.canTalk) {
       const nt = all(w).filter((p) => p.star && YA.canTalk(w, p));
-      if (nt.length) out.push({ id: 'talk', tab: 'players', go: toPlayer(nt[0].id, 'talk'), t: `★の子と今月の面談（まだ${nt.length}人）`, left: 0, hard: false, tag: '今月まで' });
+      if (nt.length) out.push({ id: 'talk', tab: 'players', go: toPlayer(nt[0].id, 'talk'), t: `課題中の子と今月の面談（まだ${nt.length}人）`, left: 0, hard: false, tag: '今月まで' });
     }
     return out.sort((a, b) => a.left - b.left || (b.hard ? 1 : 0) - (a.hard ? 1 : 0));
   };
@@ -602,17 +597,22 @@
       const acts = YA.scoutActsLeft(w);
       if (acts > 0) out.push({ id: 'scoutw', tab: 'club', go: (app) => { app.tab = 'club'; app.ct = 'scout'; }, t: `スカウトに出る（今月あと${acts}回）`, soft: true, tag: '今月' });
     }
-    // 今月まだ面談していない★の子（月末の週は期限ものの「今月の面談」が出る）
+    // 課題を出せる枠が空いている（2026-11-26 課題の仕組み）
+    if (YA.kadaiLeft && YA.kadaiLeft(w) > 0) {
+      const c = ps.filter((p) => !YA.kadaiWhy(w, p)).sort((a, b) => YA.coachStars(w, b) - YA.coachStars(w, a) || a.grade - b.grade)[0];
+      if (c) out.push({ id: 'kadai', tab: 'players', go: (app) => { app.tab = 'players'; app.pSel = c.id; app.pTab = 'rep'; app.pOpen = true; }, t: `課題を出す（枠があと${YA.kadaiLeft(w)}つ）`, soft: true, tag: '今週' });
+    }
+    // 今月まだ面談していない課題中の子（月末の週は期限ものの「今月の面談」が出る）
     if (!due.has('talk') && YA.canTalk) {
       const nt = ps.filter((p) => p.star && YA.canTalk(w, p));
-      if (nt.length) out.push({ id: 'talkw', tab: 'players', go: toPlayer(nt[0].id, 'grow'), t: `★の子と面談する（今月まだ${nt.length}人）`, soft: true, tag: '今月' });
+      if (nt.length) out.push({ id: 'talkw', tab: 'players', go: toPlayer(nt[0].id, 'grow'), t: `課題中の子と面談する（今月まだ${nt.length}人）`, soft: true, tag: '今月' });
     }
-    // ★の子と過ごす働きかけの残り
+    // 課題中の子と過ごす働きかけの残り
     if (YA.starActLeft) {
       const st = ps.filter((p) => p.star && p.inj <= 0);
       const left = YA.starActLeft(w);
       const can = YA.starActWhy && YA.STAR_ACTS ? st.find((p) => YA.STAR_ACTS.some((a) => !YA.starActWhy(w, p, a.k))) : st[0];
-      if (st.length && left > 0 && can) out.push({ id: 'staract', tab: 'players', go: toPlayer(can.id, 'grow'), t: `★の子と過ごす（今週あと${left}回）`, soft: true, tag: '今週' });
+      if (st.length && left > 0 && can) out.push({ id: 'staract', tab: 'players', go: toPlayer(can.id, 'grow'), t: `課題中の子と過ごす（今週あと${left}回）`, soft: true, tag: '今週' });
     }
     // 今週の試合の先発に、けが・疲れの大きい子（練習のあと、試合の前）
     if (w.phase === 'match' && YA.matchOf && YA.matchOf(w)) {
@@ -691,7 +691,7 @@
     const gk = a.pos === 'GK';
     const y = [];
     const route = a.route ? ROUTE_WORD[a.route] || a.route + 'で入ってきた' : null;
-    y.push(`${route ? `${a.joinY ? a.joinY + '年目に' : ''}${route}` : '監督が来たときには、もうチームにいた'}${posWord(a)}${a.star ? '（★注目）' : ''}${a.capt ? '。最後の年はキャプテンを務めた' : ''}。`);
+    y.push(`${route ? `${a.joinY ? a.joinY + '年目に' : ''}${route}` : '監督が来たときには、もうチームにいた'}${posWord(a)}${a.form ? '' : a.star ? '（課題に取り組んだ子）' : ''}${a.capt ? '。最後の年はキャプテンを務めた' : ''}。`);
     const pv = (a.pers || []).find((v) => YA.PERS_NOTE && YA.PERS_NOTE[v]);
     if (pv) y.push(`性格は${pv}。${YA.PERS_NOTE[pv].replace(/（.*?）/g, '')}子だった。`);
     if (a.bg && YA.BG_NAME && YA.BG_NAME[a.bg]) y.push(`じつは「${YA.BG_NAME[a.bg]}」という事情を抱えていた。`);
@@ -743,7 +743,7 @@
   YA.alumniTagline = function (a) {
     if (a.status === 'left') return null;
     const lg = a.status === 'pro' ? lgShort(a.league) : a.status === 'univ' ? '大学' : '社会人';
-    const head = a.form ? `「${a.form}」に目覚めた、` : a.capt ? '元キャプテンの、' : a.star ? '★注目だった、' : (a.traits || [])[0] ? `「${a.traits[0]}」の、` : '';
+    const head = a.form ? `「${a.form}」に目覚めた、` : a.capt ? '元キャプテンの、' : a.star ? '課題に向き合った、' : (a.traits || [])[0] ? `「${a.traits[0]}」の、` : '';
     return `${head}${a.retired ? '元' : ''}${lg}の${posWord(a)}`;
   };
   YA.alumniStoryEl = function (w, a) {
@@ -901,12 +901,11 @@
       rl.length
         ? h('div', { class: 'ovform' }, ...rl.map((x) => h('div', { class: 'fbar', tip: `${YA.ywName(x.y, x.w)}（${x.t}）${x.o ? '・' + x.o : ''}${x.g ? `・${x.g}得点` : ''}${x.a ? `・${x.a}アシスト` : ''}` }, h('i', { style: `height:${Math.round(clamp((x.r - 4) / 5, 0.08, 1) * 100)}%;background:${x.r >= 7.5 ? '#1a9d57' : x.r >= 6.5 ? '#7dbf3f' : x.r >= 5.8 ? '#f2b84c' : '#e06a5a'}` }), h('span', {}, x.r.toFixed(1)), h('small', {}, x.t))))
         : h('div', { class: 'sub', style: 'font-size:11.5px' }, 'まだ記録した試合がありません（これからの試合が5つまで並びます）'));
-    // ★の子：信頼と覚醒の鍵の近さ
+    // 課題中の子：信頼と課題の進み
     let star = null;
-    if (p.star && YA.keysOf) {
-      const ks = YA.keysOf(w, p);
-      const done = ks.filter((k) => k.done).length;
-      star = sec('★ この子と', h('div', { class: 'ovtext' }, `信頼：${YA.TRUST_NAME[YA.trustLv(p)]}　／　${p.aw ? `覚醒した（${p.aw.form}）` : ks.length ? `覚醒の鍵 ${done}/${ks.length} がそろった` : '覚醒の鍵はまだ見えない'}`));
+    if (p.star && YA.kadaiState) {
+      const ks = YA.kadaiState(w, p);
+      star = sec('課題中のこの子と', h('div', { class: 'ovtext' }, `信頼：${YA.TRUST_NAME[YA.trustLv(p)]}　／　${ks ? `課題「${ks.name}」${ks.e}/${ks.len}週・${ks.word}` : ''}`));
     }
     return h('div', { class: 'overview' }, report, h('div', { class: 'ovcols' }, h('div', { class: 'ovcol' }, prof, pos), h('div', { class: 'ovcol' }, state, games, traits, star)));
   };
