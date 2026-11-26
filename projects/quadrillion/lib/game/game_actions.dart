@@ -10,6 +10,9 @@ extension GameActions on Game {
     final nt = needT('start');
     if (nt != null) return nt;
     if (biz.any((b) => b.ind == id)) return M('すでにその業種にいます');
+    // 株を過半持つ子会社がいる業種は、自社では始めない（1.1.0+36。game_names.dart）
+    final sb = subBlock(id);
+    if (sb != null) return sb;
     final lm = licMissing(id);
     if (lm != null) return lm;
     if (bankCtl > 0 && biz.isNotEmpty) return M('銀行が経営に口を出している間は、新しい事業を始められません');
@@ -521,6 +524,10 @@ extension GameActions on Game {
 
   String pivot(Biz b, String id) {
     final to = indm[id]!;
+    if (biz.any((x) => x.ind == id)) return M('すでにその業種にいます');
+    // 子会社のいる業種へは移らない（始めるときと同じ決まり。1.1.0+36）
+    final sb = subBlock(id);
+    if (sb != null) return sb;
     final c = capexOf(to);
     if (cash < c) return M('元手が足りません');
     final nt = needT('pivot');
@@ -886,13 +893,20 @@ extension GameActions on Game {
                   ? 'free'
                   : 'merit';
 
-  String spinOff(Biz b) {
+  /// 事業を分社する。[name] は子会社の名前（null なら今までどおり仕組みが付ける。1.1.0+36）
+  String spinOff(Biz b, {String? name}) {
     final p = staffById(b.mgr);
     if (p == null) return M('先に責任者を置いてください。その人が子会社の社長になります');
+    final n = name?.trim();
+    if (n != null) {
+      final e = coNameErr(n);
+      if (e != null) return e;
+    }
     final nt = spendT('spin');
     if (nt != null) return nt;
     final ind = indm[b.ind]!;
-    final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 0);
+    // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない）
+    final c = mkCo(tierOf(b), ind.cat, name: n, presName: p.name, fam: 0);
     c.presAge = p.age.toDouble();
     c.parent = 'player';
     c.stakePlayer = 100;

@@ -193,4 +193,13 @@ const Map<String, String> corpEn = {
   '{0}〜{1}': '{0}-{1}',
   '宿敵の本拠': 'Rival HQ',
   '{0}年{1}月': '{0}/{1}',
+  // ===== 子会社の名前と、子会社と同じ業種（1.1.0+36。game_names.dart） =====
+  '子会社「{0}」がこの業種にいます。広げるなら子会社に任せます': 'Your subsidiary {0} is already in this industry. To grow here, leave it to the subsidiary',
+  '名前を入れてください': 'Enter a name',
+  '使えない文字が入っています': 'The name contains characters that cannot be used',
+  '名前は全角{0}字（半角{1}字）までです': 'Names can be up to {1} letters long',
+  '「{0}」という会社はもうあります': 'A company called {0} already exists',
+  '名前を変えられるのは、株を過半持つ会社だけです': 'You can only rename companies you own more than half of',
+  '今と同じ名前です': 'That is already its name',
+  '{0}の名前を「{1}」に変えました': 'Renamed {0} to {1}',
 };

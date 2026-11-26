@@ -262,10 +262,11 @@ extension GameView on Game {
         add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(fresh.ind)], 'biz', fresh);
       } else if (decs.isNotEmpty && turn % 6 == 0) {
         final b = decs[(turn ~/ 6) % decs.length];
-        add(70, pivotTargets(b).isNotEmpty ? '「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます' : '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です', [I(b.ind)], 'biz', b);
+        add(70, pivotTargets(b).any((i) => subOn(i.id) == null) ?'「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます' : '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です', [I(b.ind)], 'biz', b);
       }
     }
-    final hots = inds.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
+    // 子会社のいる業種は自社では始めないので勧めない（1.1.0+36）
+    final hots = inds.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id) && subOn(i.id) == null).toList()
       ..ssort((p, q) => q.size.compareTo(p.size));
     if (!extras) {
       if (hots.isNotEmpty) add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(hots[0].id)]);

@@ -1167,7 +1167,8 @@ extension GameTurn on Game {
     }
     o = o.copy();
     if (o.k == 'newbiz') {
-      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      // 子会社のいる業種は提案しない（1.1.0+36）
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && subOn(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
       if (cs.isEmpty) return null;
       final ni = pick(cs);
       o.ind = ni.id;
@@ -1316,7 +1317,8 @@ extension GameTurn on Game {
     }
     o = o.copy();
     if (o.k == 'newbiz') {
-      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      // 子会社のいる業種は提案しない（1.1.0+36）
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && subOn(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
       if (cs.isEmpty) return null;
       final ni = pick(cs);
       o.ind = ni.id;
@@ -1381,6 +1383,9 @@ extension GameTurn on Game {
       crisis['pc'] = turn;
     } else if (o.k == 'newbiz') {
       if (biz.any((x) => x.ind == o.ind)) return M('その業種にはもう入っていました');
+      // 提案のあとで子会社がその業種に入った（分社・買収）ときも始めない
+      final sb = subBlock(o.ind!);
+      if (sb != null) return sb;
       cfAdd('grow', -o.cost);
       b.mgr = null;
       final nb = Biz(id: uid(), ind: o.ind!, power: o.cost * newPow, crew: o.cost * newPow * 1.2, mgr: p.id);

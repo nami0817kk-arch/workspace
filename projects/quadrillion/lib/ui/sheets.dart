@@ -248,6 +248,7 @@ void openStart(GameController ctl) {
         Say(face: presFace(s, size: faceBig), who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]), text: tr('手元にあるのは{0}。まずは何で稼ぐか決めよう。', [yen(s.cash)])),
         const SizedBox(height: 6),
         for (final i in list)
+          // 子会社のいる業種は薄くして理由を出し、選べなくする（1.1.0+36）
           ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () {
             if (s.modelsFor(i.id).length > 1) {
               openModel(ctl, i.id);
@@ -256,7 +257,7 @@ void openStart(GameController ctl) {
             final m = s.startBiz(i.id);
             ctl.save();
             ctl.toast(m);
-          }, subs: [_indNote(s, i)]),
+          }, key: ValueKey('start-${i.id}'), enabled: s.subBlock(i.id) == null, subs: [s.subBlock(i.id) ?? _indNote(s, i)]),
         _cancel(ctl),
       ]));
 }
@@ -270,9 +271,10 @@ void openModel(GameController ctl, String id, [Biz? b]) {
         _note(b != null
             ? '${tr('切り替えると、混乱で力が1割5分落ちます。')}${hNote(s, 'model')}'
             : '${tr('元手 {0}。稼ぎ方は、あとから変えられます。', [yen(s.capexOf(ind))])}${hNote(s, 'start')}'),
+        if (b == null && s.subBlock(id) != null) _note(s.subBlock(id)!),
         for (final m in ms)
           ChoiceBtn('${MODELN[m]}${b != null && b.model == m ? tr('（今）') : ''}', () => ctl.act(() => b != null ? s.changeModel(b, m) : s.startBiz(id, m)),
-              enabled: !(b != null && b.model == m), subs: [MODELD[m]!]),
+              enabled: !(b != null && b.model == m) && (b != null || s.subBlock(id) == null), subs: [MODELD[m]!]),
         _cancel(ctl),
       ]));
 }
@@ -285,8 +287,11 @@ void openPivot(GameController ctl, Biz b) {
         H2(tr('「{0}」の業態を変える', [from.name]), top: true),
         _note('${tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。')}${hNote(s, 'pivot')}'),
         for (final i in list)
-          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), ap: hrS(s, 'pivot'), subs: [
-            tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
+          // 子会社のいる業種は薄くして理由を出し、選べなくする（1.1.0+36）
+          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)),
+              key: ValueKey('pivot-${i.id}'), enabled: s.cash >= s.capexOf(i) && s.subBlock(i.id) == null, ap: hrS(s, 'pivot'), subs: [
+            s.subBlock(i.id) ??
+                tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
           ]),
         _cancel(ctl),
       ]));
@@ -518,7 +523,11 @@ void openShape(GameController ctl, Biz b) {
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の形を変える', [ind.name]), top: true),
         _note(p != null ? '${tr('責任者は{0}です。', [nmL(p.name)])}${hNote(s, 'spin')}' : tr('先に責任者を置いてください。その人が社長になります。')),
-        ChoiceBtn(tr('分社する'), () => ctl.act(() => s.spinOff(b)), enabled: p != null, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
+        // 名前を決めてから分社する（1.1.0+36）
+        ChoiceBtn(tr('分社する'), () {
+          if (ctl.noAp('spin')) return;
+          openSpinName(ctl, b);
+        }, enabled: p != null, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
         ChoiceBtn(tr('渡して独立させる'), () => ctl.act(() => s.releaseBiz(b)), enabled: p != null, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
         if (s.extras) ...[
           H3(tr('現地法人に分ける')),
@@ -541,12 +550,176 @@ void openLocal(GameController ctl, Biz b, String c) {
         H2(tr('「{0}」の{1}の現地法人', [ind.name, cm[c]!.n]), top: true),
         _note('${hNote(s, 'local')}${tr('社長を部下から選ぶか、現地で雇います（相棒は本社に残ります）。')}'),
         for (final p in s.localPresCands().take(6))
-          ChoiceBtn(tr('{0}を社長にする', [nmL(p.name)]), () => ctl.act(() => s.makeLocal(b, c, p.id)),
+          ChoiceBtn(tr('{0}を社長にする', [nmL(p.name)]), () => openLocalName(ctl, b, c, p.id),
               enabled: s.canT('local'),
               subs: [[tr('{0}歳', [p.age]), for (final k in abKeys) '${ABN[k]} ${s.showAb(p, k)}'].join('　')]),
-        ChoiceBtn(tr('現地で社長を雇う'), () => ctl.act(() => s.makeLocal(b, c)), enabled: s.canT('local'), subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
+        ChoiceBtn(tr('現地で社長を雇う'), () => openLocalName(ctl, b, c), enabled: s.canT('local'), subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
         _cancel(ctl),
       ]));
+}
+
+// ===== 子会社の名前（1.1.0+36） =====
+
+/// 分社する子会社の名前を決める（案が入っている）
+void openSpinName(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final p = s.staffById(b.mgr);
+  final idea = s.subNameIdea(ind.cat);
+  ctl.showSheet((_) => CoNameSheet(
+        key: const ValueKey('name-spin'),
+        ctl: ctl,
+        title: tr('「{0}」を分社する', [ind.name]),
+        note: p != null ? tr('子会社の名前を決めます。社長は{0}です。名前はあとから「株」の画面で変えられます。', [nmL(p.name)]) : '',
+        initial: idea,
+        ok: tr('この名前で分社する'),
+        apply: (n) => s.spinOff(b, name: n),
+      ));
+}
+
+/// 現地法人の名前を決める（社長を選んだあと）
+void openLocalName(GameController ctl, Biz b, String c, [int? presId]) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final p = presId == null ? null : s.staffById(presId);
+  final idea = s.subNameIdea(ind.cat);
+  ctl.showSheet((_) => CoNameSheet(
+        key: const ValueKey('name-local'),
+        ctl: ctl,
+        title: tr('「{0}」の{1}の現地法人', [ind.name, cm[c]!.n]),
+        note: p != null
+            ? tr('現地法人の名前を決めます。社長は{0}です。名前はあとから「株」の画面で変えられます。', [nmL(p.name)])
+            : tr('現地法人の名前を決めます。社長は現地で雇います。名前はあとから「株」の画面で変えられます。'),
+        initial: idea,
+        ok: tr('この名前で作る'),
+        apply: (n) => s.makeLocal(b, c, presId, n),
+      ));
+}
+
+/// 子会社（株を過半持つ会社）の名前を変える
+void openRename(GameController ctl, Company c) {
+  final s = ctl.game!;
+  ctl.showSheet((_) => CoNameSheet(
+        key: ValueKey('name-co-${c.id}'),
+        ctl: ctl,
+        title: tr('{0}の名前を変える', [nmL(c.name)]),
+        note: tr('手は使いません。これまでの記録には、そのときの名前のまま残ります。'),
+        initial: c.name,
+        self: c,
+        ok: tr('この名前にする'),
+        apply: (n) => s.renameCo(c, n),
+      ));
+}
+
+/// 会社の名前を入れる小窓。はじめは [initial]（今の言語の書き方で）が入っていて、そのまま決めても書き換えてもよい。
+/// 使えない名前（空・長すぎ・ほかの会社と同じ）は、その場で理由を出して決めさせない
+class CoNameSheet extends StatefulWidget {
+  final GameController ctl;
+  final String title, note, initial, ok;
+  final Company? self;
+  final String Function(String name) apply;
+  const CoNameSheet(
+      {super.key, required this.ctl, required this.title, required this.note, required this.initial, required this.ok, required this.apply, this.self});
+
+  @override
+  State<CoNameSheet> createState() => CoNameSheetState();
+}
+
+class CoNameSheetState extends State<CoNameSheet> {
+  late final TextEditingController _c = TextEditingController(text: nmL(widget.initial));
+  String? _err;
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  /// 欄の字を、しまう名前にする（案を書き換えていなければ、案の元の名前のまま。英語の画面でも日本語の画面に戻せるように）
+  String get _name {
+    final t = _c.text.trim();
+    return t == nmL(widget.initial).trim() ? widget.initial : t;
+  }
+
+  void _submit() {
+    final s = widget.ctl.game!;
+    final n = _name;
+    final self = widget.self;
+    if (self != null && n == self.name) {
+      widget.ctl.closeSheet();
+      return;
+    }
+    final e = s.coNameErr(n, self: self);
+    if (e != null) {
+      setState(() => _err = e);
+      return;
+    }
+    FocusManager.instance.primaryFocus?.unfocus();
+    widget.ctl.act(() => widget.apply(n));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    OutlineInputBorder b(Color c, [double w = 1]) => OutlineInputBorder(borderRadius: BorderRadius.circular(Ui.rBtn), borderSide: BorderSide(color: c, width: w));
+    return _col([
+      H2(widget.title, top: true),
+      if (widget.note.isNotEmpty) _note(widget.note),
+      TextField(
+        key: const ValueKey('co-name-field'),
+        controller: _c,
+        autofocus: false,
+        autocorrect: false,
+        maxLines: 1,
+        textInputAction: TextInputAction.done,
+        onChanged: (_) {
+          if (_err != null) setState(() => _err = null);
+        },
+        onSubmitted: (_) => _submit(),
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        style: ts(size: 16),
+        cursorColor: Pal.goldtx,
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: Pal.panel2,
+          labelText: tr('会社の名前'),
+          labelStyle: ts(size: 13, color: Pal.mute),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          border: b(Pal.line),
+          enabledBorder: b(Pal.line),
+          focusedBorder: b(Pal.gold, 2),
+          suffixIcon: IconButton(
+            key: const ValueKey('co-name-clear'),
+            tooltip: tr('名前を消す'),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
+            icon: const Icon(Icons.close, size: 18, color: Pal.mute),
+            onPressed: () => setState(() {
+              _c.clear();
+              _err = null;
+            }),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 6, bottom: 4),
+        child: _err != null
+            ? Text(tx(_err), key: const ValueKey('co-name-err'), style: ts(size: 13, bold: true, color: Pal.down))
+            : Muted(tr('全角{0}字（半角{1}字）まで。ほかの会社と同じ名前は使えません。', [GameNames.nameMax, GameNames.nameMax * 2]), size: 12),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: Wrap(spacing: 8, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
+          Btn(widget.ok, _submit, primary: true, key: const ValueKey('co-name-ok')),
+          Btn(tr(widget.self != null ? '元の名前に戻す' : '案に戻す'), () => setState(() {
+                _c.text = nmL(widget.initial);
+                _err = null;
+              }), small: true),
+          Btn(tr('やめる'), widget.ctl.closeSheet, small: true),
+        ]),
+      ),
+    ]);
+  }
 }
 
 void openEnter(GameController ctl, Biz b) {
@@ -595,7 +768,7 @@ void showHelp(GameController ctl) {
     ('任せる', '社長が直接見られる事業は2つまで。それより多いと放置された事業が弱ります。「人」で採用し、責任者に置きましょう。責任者は利益の一部を自分で事業に回します。能力は働かせるまで幅でしか分かりません。'),
     ('裏の手', '「街」の宿敵の欄から、引き抜き・産業スパイ・ロビー活動・粉飾決算・談合が使えます。効き目は大きいかわりに、ばれると重い罰があります。使うほどばれやすくなります。宿敵も同じ手を使ってきます。もみ消した不祥事は、数年後にもっと大きくなって戻ってくることがあります。'),
     ('売り抜け', '「株」の画面で、持ち株を売る、非上場に戻す、会社を丸ごと売る、ができます。売ったお金はあなたの財産になり、半分を元手にもう一度起業します。勝ち負けは、今の会社の時価総額とあなたの財産の合計で測ります。倒した宿敵は、一族や元の社員が新しい会社を作って戻ってきます。'),
-    ('組む・会社の形', '「株」の画面で、他社と販売の提携・共同開発・製造を任せる、で組めます。相手から話が来ることもあります。裏切って客を奪うこともできますが、評判が落ちます。事業ごとに業界団体にも入れます。会社が大きくなったら、持株会社、分社、子会社の上場、事業を部下に渡して独立させる、会社を2つに割る、ができます。分社した子会社の社長は自分の判断で動きます。'),
+    ('組む・会社の形', '「株」の画面で、他社と販売の提携・共同開発・製造を任せる、で組めます。相手から話が来ることもあります。裏切って客を奪うこともできますが、評判が落ちます。事業ごとに業界団体にも入れます。会社が大きくなったら、持株会社、分社、子会社の上場、事業を部下に渡して独立させる、会社を2つに割る、ができます。分社した子会社の社長は自分の判断で動きます。子会社の名前は作るときに決め、あとから「株」の画面で変えられます。株を過半持つ子会社がいる業種は、自社では始めず子会社に任せます。'),
     ('お金の縛り', '投資家からお金を集めると「3年以内に上場」が条件になります。社債は5年後に全額返します。取引先の出資を受けると、その取引先と同じ業種に入ったとき取引を切られます。資金が尽きかけると、宿敵が出資を持ちかけてきます。'),
     ('社風', '「人」で社風を選べます。実力主義・家族的・体育会系・自由放任・堅実。切り替えには2年かかり、その間は人が辞めやすくなります。買収した会社の社風が違うと、合併のときにぶつかります。'),
     ('海外', '事業ごとに「海外に出る」から、24か国に出られます。単独で出る（6か月）、地元の会社と組む（3か月・その国の利益は半分）、地元の会社を買う（すぐ・高い）の3つ。国の市場は年とともに変わり、中国は2000年代、インドは2030年代に大きくなります。中国のネットと金融は、組まないと入れません。'),

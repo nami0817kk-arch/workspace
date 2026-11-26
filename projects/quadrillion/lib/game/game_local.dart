@@ -56,12 +56,18 @@ extension GameLocal on Game {
     return '${pick(NAMEP[k]![1])}・${pick(NAMEP[k]![0])}';
   }
 
-  /// 事業のある国の分を現地法人に分ける。presId が null なら現地で社長を雇う
-  String makeLocal(Biz b, String c, [int? presId]) {
+  /// 事業のある国の分を現地法人に分ける。presId が null なら現地で社長を雇う。
+  /// [name] は現地法人の名前（null なら今までどおり仕組みが付ける。1.1.0+36）
+  String makeLocal(Biz b, String c, [int? presId, String? name]) {
     if (!extras) return M('今は使えません');
     if (c == home) return M('始めた国の分は分けられません');
     if (!ctryOf(b).contains(c)) return M('その国には出ていません');
     if (hasLocal(c, b.ind)) return M('その国にはもう現地法人があります');
+    final n = name?.trim();
+    if (n != null) {
+      final e = coNameErr(n);
+      if (e != null) return e;
+    }
     Person? p;
     if (presId != null) {
       p = staffById(presId);
@@ -90,7 +96,8 @@ extension GameLocal on Game {
       presAge = ri(38, 56).toDouble();
       trait = pick(STRAITS).id;
     }
-    final co = mkCo(0, ind.cat, presName: presName, fam: 0);
+    // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない）
+    final co = mkCo(0, ind.cat, name: n, presName: presName, fam: 0);
     co.presAge = presAge;
     co.parent = 'player';
     co.stakePlayer = 100;
