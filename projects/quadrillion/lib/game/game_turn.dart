@@ -907,7 +907,7 @@ extension GameTurn on Game {
               c.rel = 40;
               c.g = .02;
               b.power *= .85;
-              fire(star);
+              fire(star, 'indep');
               return M('{0}は{1}を立ち上げました。株の30%はあなたのものです', [Nm(star.name), Nm(c.name)]);
             }),
             Choice(M('給料を倍にして引き留める'), M('毎月の給料が{0}増える。野心は消えない', [Y(star.salary)]), () {
@@ -929,7 +929,7 @@ extension GameTurn on Game {
               c.g = .025;
               c.rel = -20;
               b.power *= .8;
-              fire(star);
+              fire(star, 'indep');
               return M('{0}は{1}を立ち上げ、あなたの客を奪い始めました', [Nm(star.name), Nm(c.name)]);
             }),
           ]));
@@ -980,6 +980,7 @@ extension GameTurn on Game {
             Choice(M('売る'), M('{0}が入る。その事業は相手のものになる', [Y(price)]), () {
               cfAdd('bizSale', price);
               buyer.biz.add(CoBiz(ind: b.ind, power: b.power));
+              pipeBack(b);
               biz.remove(b);
               buyer.rel += 15;
               tieRec(buyer, 'f', M('「{0}」を売り渡した', [I(b.ind)]));
@@ -1040,7 +1041,8 @@ extension GameTurn on Game {
   /// 部下が会社を去る。[why] は社外に残すときの理由（quit 辞めた / poached 引き抜かれた / fired 解雇 / retired 引退）
   void fire(Person p, [String why = 'quit']) {
     final was = staff.contains(p);
-    if (extras && was) toAlumni(p, why);
+    // 独立してよその会社の社長になった人（indep）は、社外の一覧に入れない（呼び戻せない。1.1.0+37）
+    if (extras && was && why != 'indep') toAlumni(p, why);
     if (p.partner && p.stake != 0) {
       sh.pt = math.max(0, sh.pt - p.stake);
       if (listed) {
@@ -1167,8 +1169,8 @@ extension GameTurn on Game {
     }
     o = o.copy();
     if (o.k == 'newbiz') {
-      // 子会社のいる業種は提案しない（1.1.0+36）
-      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && subOn(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      // 子会社のいる業種・資格が無い業種・銀行の口出し・売ったときの約束の業種は提案しない（始めるときと同じ決まり。1.1.0+36・+37）
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && newIndBlock(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
       if (cs.isEmpty) return null;
       final ni = pick(cs);
       o.ind = ni.id;
@@ -1317,8 +1319,8 @@ extension GameTurn on Game {
     }
     o = o.copy();
     if (o.k == 'newbiz') {
-      // 子会社のいる業種は提案しない（1.1.0+36）
-      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && subOn(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      // 子会社のいる業種・資格が無い業種・銀行の口出し・売ったときの約束の業種は提案しない（始めるときと同じ決まり。1.1.0+36・+37）
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && newIndBlock(i.id) == null && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
       if (cs.isEmpty) return null;
       final ni = pick(cs);
       o.ind = ni.id;
@@ -1375,6 +1377,7 @@ extension GameTurn on Game {
     } else if (o.k == 'exit') {
       if (biz.length < 2) return M('その提案はもう意味がなくなっていました');
       cfAdd('bizSale', sellValue(b));
+      pipeBack(b);
       biz.remove(b);
     } else if (o.k == 'culture') {
       if (cultLeft > 0 || culture == o.ind) return M('その提案はもう意味がなくなっていました');
@@ -1383,8 +1386,8 @@ extension GameTurn on Game {
       crisis['pc'] = turn;
     } else if (o.k == 'newbiz') {
       if (biz.any((x) => x.ind == o.ind)) return M('その業種にはもう入っていました');
-      // 提案のあとで子会社がその業種に入った（分社・買収）ときも始めない
-      final sb = subBlock(o.ind!);
+      // 提案のあとで子会社がその業種に入った（分社・買収）・銀行が口を出し始めた、などのときも始めない
+      final sb = newIndBlock(o.ind!);
       if (sb != null) return sb;
       cfAdd('grow', -o.cost);
       b.mgr = null;
@@ -1516,7 +1519,9 @@ extension GameTurn on Game {
       }
     }
     if (tie == null && biz.isNotEmpty && rnd() < .008) {
-      final c = pickOr(cos.where((x) => x.alive && x.rival == null && x.parent != 'player' && x.tier == 0 && x.cap > cap * 2).toList());
+      // 自分と同じ業種にいる会社からは来ない（受けた翌月に「同じ商売を始めるとは」で切られていた。1.1.0+37）
+      final mine = <String>{for (final b in biz) b.ind};
+      final c = pickOr(cos.where((x) => x.alive && x.rival == null && x.parent != 'player' && x.tier == 0 && x.cap > cap * 2 && !x.biz.any((b) => mine.contains(b.ind))).toList());
       if (c != null) {
         final money = cap * .12 + 1e7 * nom();
         final inds = c.biz.map((b) => b.ind).toList();

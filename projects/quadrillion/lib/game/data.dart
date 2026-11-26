@@ -443,6 +443,12 @@ const List<String> CITY = ['東京', '上海', 'ニューヨーク'];
 
 const Map<String, String> CO_SUF = {'food': '食品', 'live': '不動産', 'make': '工業', 'ene': 'エナジー', 'link': '物産', 'money': '銀行', 'net': 'テック', 'fun': 'エンタテインメント', 'med': 'メディカル', 'fut': 'ラボ'};
 
+/// 会社の名前の終わりの言葉（会社の種類）。自社の名前から子会社の冠を取るときに外す（1.1.0+37。game_names.dart）
+const List<String> CO_TAILS = ['ホールディングス', 'グループ', '株式会社', '有限会社', '商会', '商事', '産業', '本社', '社'];
+
+/// 会社の名前の頭に付く会社の種類
+const String CO_HEAD = '株式会社';
+
 const Map<String, String> CO_FSUF = {'food': 'フーズ', 'live': 'リアルティ', 'make': 'インダストリーズ', 'ene': 'エナジー', 'link': 'ロジスティクス', 'money': 'キャピタル', 'net': 'システムズ', 'fun': 'スタジオ', 'med': 'ファーマ', 'fut': 'ダイナミクス'};
 
 const Map<String, String> NAMEC = {'jp': 'jp', 'cn': 'zh', 'tw': 'zh', 'sg': 'zh', 'kr': 'ko', 'in': 'hi', 'id': 'id', 'th': 'th', 'vn': 'vi', 'ph': 'tl', 'us': 'en', 'ca': 'en', 'uk': 'en', 'au': 'en', 'za': 'en', 'mx': 'es', 'es': 'es', 'br': 'pt', 'de': 'de', 'fr': 'fr', 'it': 'it', 'ru': 'ru', 'sa': 'ar', 'ng': 'yo'};

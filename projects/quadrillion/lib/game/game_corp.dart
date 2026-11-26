@@ -323,6 +323,8 @@ extension GameCorp on Game {
   /// CPU の会社が倒れる（客と店は市場に戻る。あなたの取引先なら売掛金が戻らない）
   void coFail(Company c, void Function(String, [String]) N) {
     c.alive = false;
+    // 倒れた会社が持っていたあなたの株は、市場に出る（1.1.0+37。残すと合併を止められ、自社株買いのたびに割合が膨らんだ）
+    rivSharesOut(c);
     if (c.rival != null) {
       rivalDefeated(c);
       N(M('宿敵の{0}が借金を返せずに倒れました', [Nm(c.name)]), 'big');
@@ -355,6 +357,9 @@ extension GameCorp on Game {
               t.loc == null &&
               t.rival == null &&
               t.cap < b.cap * .3 &&
+              // あなたが3分の1以上持つ会社（合併などを止められる）と、あなたが買う話を進めている会社は買えない（1.1.0+37）
+              pctOf(t) < blockPct &&
+              dealOf(t) == null &&
               (finOf(t).distress >= 3 || t.biz.any((x) => inds.contains(x.ind)) || r?.type == 'fund'))
           .toList()
         ..ssort((x, y) => (finOf(y).distress - finOf(x).distress) != 0 ? finOf(y).distress - finOf(x).distress : y.cap.compareTo(x.cap));
@@ -389,6 +394,15 @@ extension GameCorp on Game {
       }
       b.cash += math.max(0.0, t.cash);
       t.alive = false;
+      // あなたが少し持っていた株は、買収の値段で買い取られる（残りの株主にも同じ値段を払う。1.1.0+37。前は消えて何も入らなかった）
+      final mine = pctOf(t);
+      if (mine > 0) {
+        final v = price * mine / 100;
+        cfAdd('stock', v);
+        t.stakePlayer = 0;
+        N(M('{0}が{1}を買収し、あなたが持っていた株{2}は{3}で買い取られました', [Nm(b.name), Nm(t.name), pct(mine), Y(v)]), 'good');
+      }
+      rivSharesOut(t);
       clientGone(t, N, bought: b);
       if (b.rival != null) N(M('{0}が{1}を{2}で買収し、さらに大きくなりました', [Nm(b.name), Nm(t.name), Y(price)]), 'bad');
     }
@@ -786,6 +800,56 @@ extension GameCorp on Game {
     return (1, 0, 0);
   }
 
+  /// 株主が応じて、払うのを待っている買収（審査・手続き中で、現金で払うもの）の額。[skip] は今見ている話
+  double dealsCommitted([MaDeal? skip]) {
+    var t = 0.0;
+    for (final d in corp.deals) {
+      if (identical(d, skip) || d.pay != 'cash' || (d.stage != 'review' && d.stage != 'close')) continue;
+      final c = coById(d.co);
+      if (c != null && c.alive) t += dealPrice(c, d);
+    }
+    return t;
+  }
+
+  /// 買収の資金を銀行から借りる（5年で返す。銀行の管理・格付け・借りられる額は、ふつうに借りるときと同じ。時間はかからない）
+  bool dealLoan(double a) {
+    if (a <= 0) return true;
+    if (bankCtl > 0 || ratingIdx() >= 3 || borrowRoom() < a) return false;
+    loans.add(Loan(id: _loanId(), lender: _lenderFor(), amt: a, orig: a, rate: loanRate(a), left: loanTermDefault, term: loanTermDefault, at: turn));
+    cfAdd('borrow', a);
+    return true;
+  }
+
+  /// あなたが3分の1以上持つと、その会社の合併などの大事な決定を止められる（市場で買えるのもここまで）
+  static const blockPct = 100 / 3;
+
+  /// 他社が持っていたあなたの会社の株を手放させる（1.1.0+37）。
+  /// 子会社になった会社は親の株を持ち続けられないので（現実の会社法でも、子会社は親会社の株を早めに処分する）市場で売り、
+  /// 倒れた・買われて消えた会社の持ち分も市場に出る。上場していなければ、投資家が引き取る
+  void rivSharesOut(Company c) {
+    final x = sh.riv.remove(c.id);
+    if (x == null || x <= 0) return;
+    if (listed) {
+      sh.float += x;
+    } else {
+      sh.vc += x;
+    }
+    if (c.alive) {
+      c.cash += cap * x / 100;
+      log.add(LogEntry(M('子会社になった{0}が持っていたあなたの会社の株{1}は、市場で売られました（子会社は親会社の株を持てません）', [Nm(c.name), pct(x)]), 'good', year, q));
+    }
+  }
+
+  /// 他社があなたのグループに入った（子会社になった・合併した）。外の会社だった頃の値下げ合戦・提携・取引先の出資の縛りを片付ける（1.1.0+37）
+  void joinedGroup(Company c) {
+    rivSharesOut(c);
+    for (final b in biz) {
+      if (b.attack > 0 && b.target == c.id) b.attack = 0;
+    }
+    deals.removeWhere((d) => d.co == c.id);
+    if (tie?.co == c.id) tie = null;
+  }
+
   String maCancel(Company c) {
     final d = dealOf(c);
     if (d == null) return M('この会社とは話を進めていません');
@@ -817,7 +881,8 @@ extension GameCorp on Game {
           d.left = 1;
         case 'offer':
           final price = dealPrice(c, d);
-          if (d.pay == 'cash' && cash < price) {
+          // 株主が応じたあとに払う約束の買収（審査・手続き中）の額も数える（1.1.0+37。前は1件ずつしか見ず、同時に進めると払いすぎた）
+          if (d.pay == 'cash' && cash - dealsCommitted(d) < price) {
             corp.deals.remove(d);
             N(M('{0}を買うお金（{1}）が足りず、話は流れました', [Nm(c.name), Y(price)]), 'bad');
             continue;
@@ -848,6 +913,16 @@ extension GameCorp on Game {
           d.left = 1;
         case 'close':
           corp.deals.remove(d);
+          // 手続きの時点で足りなければ、買収の資金を銀行から借りる。借りられなければ話は流れる（1.1.0+37）
+          if (d.pay == 'cash') {
+            final price = dealPrice(c, d);
+            final lack = price - cash;
+            if (lack > 0 && !dealLoan(lack)) {
+              N(M('手続きの時点で{0}を買うお金（{1}）が足りず、銀行も貸してくれないため、話は流れました', [Nm(c.name), Y(price)]), 'bad');
+              continue;
+            }
+            if (lack > 0) N(M('{0}を買うお金の足りない{1}を、銀行から借りました', [Nm(c.name), Y(lack)]));
+          }
           N(closeDeal(c, d), 'big');
       }
     }
@@ -909,6 +984,7 @@ extension GameCorp on Game {
     }
     if (c.parent != 'player' && d.target > 50) {
       c.parent = 'player';
+      joinedGroup(c);
       rivalDefeated(c);
       presXp('zai', 4, big: true);
       chron('buy', M(c.rival != null ? '{0}（宿敵）の株を{1}握り、子会社にした' : '{0}の株を{1}握り、子会社にした', [Nm(c.name), pct(pctOf(c))]));

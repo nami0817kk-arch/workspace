@@ -257,6 +257,10 @@ void main() {
       final serial = s.serial;
       await tester.tap(find.textContaining('約束なしで売る').first);
       await tester.pump();
+      // 1.1.0+37 から、先に新しい会社の名前を決める（案が入っている）。そのあと、いつもの確かめの小窓
+      expect(find.byKey(const ValueKey('name-sell')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('co-name-ok')));
+      await tester.pump();
       expect(s.serial, serial);
       expect(find.textContaining('本当によいですか'), findsOneWidget);
       await tester.tap(find.widgetWithText(DangerBtn, '売る'));

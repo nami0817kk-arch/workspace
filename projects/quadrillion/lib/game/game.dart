@@ -170,7 +170,9 @@ class SetupConfig {
   int year;
   List<String> traits;
   String home;
-  String? name;
+
+  /// 社長の名前・自社の名前（始める画面で決める。空なら今までどおり、社長は仕組みが名付け、自社は名前なし。1.1.0+37）
+  String? name, co;
   String diff;
 
   /// 社長の始め方（grad 大学を出てすぐ・work 会社員を何年かしてから）・勤める年数・勤める業種の分類（1.1.0+30）
@@ -187,6 +189,7 @@ class SetupConfig {
       List<String>? traits,
       this.home = 'jp',
       this.name,
+      this.co,
       this.diff = 'normal',
       this.start = 'grad',
       this.workYears = 0,
@@ -380,6 +383,9 @@ class Game {
   double wealth = 0, land = 0;
   bool holding = false;
   int cooked = 0, dirty = 0, rep = 0, rest = 0, gen = 1, serial = 0;
+
+  /// 自社の名前（始める画面で決める。空なら名前なし＝今までどおり「あなたのグループ」。1.1.0+37。game_names.dart）
+  String myCo = '';
   int? lastOffer;
   int vcDeadline = 0;
   bool everBiz = false, ruDone = false;
@@ -544,7 +550,8 @@ class Game {
   }
 
   Company mkCo(int tier, String cat, {String? name, String? presName, Rival? rival, double? fam}) {
-    final used = cos.map((c) => c.name).toSet();
+    // 自社の名前とも重ならないようにする（1.1.0+37）
+    final used = {...cos.map((c) => c.name), if (myCo.isNotEmpty) myCo};
     var n = '';
     for (var i = 0; i < 20; i++) {
       n = coName(tier, cat);
@@ -580,7 +587,12 @@ class Game {
     reg = regFor(cfg.year.toDouble());
     home = cfg.home;
     pres = President(name: 'x', age: 22, traits: cfg.traits.toList(), ab: {});
-    pres.name = cfg.name ?? nm();
+    // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない。1.1.0+37）
+    final auto = nm();
+    final given = cfg.name?.trim() ?? '';
+    pres.name = given.isNotEmpty ? given : auto;
+    final co = cfg.co?.trim() ?? '';
+    myCo = co.isNotEmpty && GameNames.myNameErrStatic(co) == null ? co : '';
     pres.ab = {'tou': ri(35, 55), 'kai': ri(35, 55), 'ei': ri(35, 55), 'zai': ri(35, 55)};
     // 自分で振り分けたなら、それを使う（乱数は引いたまま捨てて、ほかの並びをずらさない。1.1.0+32）
     final ab0 = cfg.ab;
@@ -708,7 +720,11 @@ class Game {
     }
     log.add(LogEntry(M('{0}年、{1}は{2}会社を立ち上げた。手元の資金は{3}。', [year, Nm(pres.name), M(hasT('noble') ? '親の援助を受けて' : 'わずかな元手で'), Y(cash)]), 'big'));
     history = [];
-    chron('found', M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
+    chron(
+        'found',
+        myCo.isNotEmpty
+            ? M('{0}（{1}歳）が{2}で「{3}」を立ち上げた。元手は{4}', [Nm(pres.name), pres.age, C(home), Nm(myCo), Y(cash)])
+            : M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
     trackPeaks();
     ensureFaces();
     // 決算書の記録は、立ち上げた月から（元手が資本金。1.1.0+34）
@@ -1172,6 +1188,7 @@ class Game {
         'rest': rest,
         'gen': gen,
         'serial': serial,
+        'myCo': myCo,
         'lastOffer': lastOffer,
         'vcDeadline': vcDeadline,
         'everBiz': everBiz,
@@ -1281,6 +1298,7 @@ class Game {
       ..rest = i('rest')
       ..gen = i('gen', 1)
       ..serial = i('serial')
+      ..myCo = (j['myCo'] as String?) ?? ''
       ..lastOffer = j['lastOffer'] == null ? null : (j['lastOffer'] as num).round()
       ..vcDeadline = i('vcDeadline')
       ..everBiz = j['everBiz'] == true

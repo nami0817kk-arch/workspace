@@ -202,4 +202,24 @@ const Map<String, String> corpEn = {
   '名前を変えられるのは、株を過半持つ会社だけです': 'You can only rename companies you own more than half of',
   '今と同じ名前です': 'That is already its name',
   '{0}の名前を「{1}」に変えました': 'Renamed {0} to {1}',
+  // ===== 1.1.0+37（洗い出しの直し・自社の名前） =====
+  '{0}が{1}を買収し、あなたが持っていた株{2}は{3}で買い取られました': '{0} bought {1}. Your {2} stake was bought out for {3}',
+  '手続きの時点で{0}を買うお金（{1}）が足りず、銀行も貸してくれないため、話は流れました': "At closing you lacked the money to buy {0} ({1}) and the bank wouldn't lend, so the deal fell through",
+  '{0}を買うお金の足りない{1}を、銀行から借りました': 'Borrowed the missing {1} from the bank to buy {0}',
+  '子会社になった{0}が持っていたあなたの会社の株{1}は、市場で売られました（子会社は親会社の株を持てません）':
+      'The {1} of your shares held by your new subsidiary {0} were sold on the market (a subsidiary cannot hold its parent\'s shares)',
+  '{0}には「{1}」の事業があり、会社を売ったときの約束で、まだ自社には入れられません': '{0} runs a {1} business, which your non-compete from selling your company still keeps you out of',
+  '市場で買えるのは株の3分の1までです。それより上は「買う話を始める」（TOB）で買います': 'On the market you can buy up to a third of the shares. Beyond that, make a tender offer (TOB)',
+  '途中の仕掛かりは半分の{0}が戻りました': 'Half of the work in progress, {0}, was recovered',
+  '相棒は本社に残します。ほかの部下を責任者に置いてから分社してください': 'Partners stay at HQ. Put another manager in charge before spinning off',
+  '{0}は今、よその会社の社長をしています': '{0} is now running another company',
+  '新しい会社の名前は「{0}」です': 'Your new company is {0}',
+  '{0}（あなた）': '{0} (you)',
+  '「{0}」は前の会社の名前として残ります。新しい名前を決めてください': '{0} stays as the name of your old company. Choose a new name',
+  '「{0}」は自社の名前です': '{0} is your own company\'s name',
+  '{0}（{1}歳）が{2}で「{3}」を立ち上げた。元手は{4}': '{0} (age {1}) founded {3} in {2} with {4}',
+  '{0}で株の51%を買い、子会社にする。同じ業種のシェアが大きいと当局の審査に入る。関係は悪くなる':
+      'Buy 51% for {0} and make it a subsidiary. A large combined share means an antitrust review. Relations worsen',
+  '{0}を競り落としました。同じ業種のシェアが大きいため、当局の審査に入ります（約{1}か月）。通れば子会社になります':
+      'You won the bid for {0}. Your combined share is large, so it goes to antitrust review (about {1} months). If cleared, it becomes a subsidiary',
 };

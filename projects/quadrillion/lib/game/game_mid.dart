@@ -528,6 +528,9 @@ extension GameMid on Game {
   /// 取り合いに競り勝つ値段（相手の会社の時価総額の65%。株51%に上乗せを付けた額）
   double bidCost(Company t) => t.cap * .65;
 
+  /// 競り勝つときの上乗せ（株51%に上乗せを付けて、時価総額の65%になる）
+  static const bidPrem = .65 / .51 - 1;
+
   /// 助けを求められたときに貸す額（相手の売上3か月分。少なくとも1000万円×物価）
   double helpCost(Company c) => math.max(c.rev * 3, 1e7 * nom());
 
@@ -643,15 +646,18 @@ extension GameMid on Game {
           calcAll();
         }
         return _rs(c, k, M('売りに出た{0}を、{1}（{2}）と取り合うことになりました。', [Nm(t.name), Nm(c.presName), Nm(c.name)]), [
-          Choice(M('競り勝つ'), M('{0}で株の51%を買い、子会社にする。関係は悪くなる', [Y(cost)]), () {
-            if (cash < cost || !t.alive || t.parent == 'player') return M('お金が足りず、競り負けました');
-            cfAdd('stock', -cost);
-            t.fam = math.min(t.fam, 49);
-            t.stakePlayer = 51;
+          // 1.1.0+37 から、競り勝っても当局の審査（独禁法）を通す。止められる心配が無ければ、その場で買い取って子会社にする
+          // （前は審査なしで51%になり、同じ業種のシェアが大きくても子会社にできた）
+          Choice(M('競り勝つ'), M('{0}で株の51%を買い、子会社にする。同じ業種のシェアが大きいと当局の審査に入る。関係は悪くなる', [Y(cost)]), () {
+            if (!t.alive || t.parent == 'player' || dealOf(t) != null) return M('お金が足りず、競り負けました');
+            final rv = reviewOf(t);
+            final d = MaDeal(co: t.id, stage: 'review', left: rv.$1, target: 51, prem: bidPrem, block: rv.$2, divest: rv.$3);
+            if (cash - dealsCommitted() < dealPrice(t, d)) return M('お金が足りず、競り負けました');
             c.rel -= 12;
             tieRec(c, 'g', M('{0}を競り落とした', [Nm(t.name)]));
-            afterStake(t);
-            return M('{0}を競り落とし、子会社にしました', [Nm(t.name)]);
+            if (rv.$2 <= 0 && rv.$3 <= 0) return Cat([M('{0}を競り落とし、子会社にしました', [Nm(t.name)]), closeDeal(t, d)], ja: '。', en: '. ');
+            corp.deals.add(d);
+            return M('{0}を競り落としました。同じ業種のシェアが大きいため、当局の審査に入ります（約{1}か月）。通れば子会社になります', [Nm(t.name), rv.$1]);
           }),
           Choice(M('譲って貸しを作る'), M('お金はかからない。相手が大きくなるが、関係が良くなる'), () {
             if (t.alive && t.parent != 'player') absorb();

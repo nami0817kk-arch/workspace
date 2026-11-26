@@ -631,6 +631,8 @@ extension GamePeople on Game {
   String rehire(Person p) {
     if (!alumni.contains(p)) return M('今はこの手は使えません');
     if (p.left == 'fired') return M('{0}は解雇した人なので、戻ってくれません', [Nm(p.name)]);
+    // よその会社の社長をしている人は戻らない（前のセーブで、独立させた人が社外に残っているとき。1.1.0+37）
+    if (presElsewhere(p)) return M('{0}は今、よその会社の社長をしています', [Nm(p.name)]);
     if (p.age >= retireAge()) return M('{0}はもう引退しています', [Nm(p.name)]);
     p.src = 'back';
     p.salary = jsRound(mktPay(p) * 1.05).toDouble();
@@ -646,6 +648,12 @@ extension GamePeople on Game {
     staff.add(p);
     return M('{0}を呼び戻しました（毎月の給料 {1}）', [Nm(p.name), Y(p.salary)]);
   }
+
+  /// ほかの会社（生きている会社。あなたの子会社も）の社長をしているか（1.1.0+37）
+  bool presElsewhere(Person p) => cos.any((c) => c.alive && c.presName == p.name);
+
+  /// 社外の一覧に出す人（よその会社の社長をしている人は出さない）
+  List<Person> alumniShown() => alumni.where((p) => !presElsewhere(p)).toList();
 
   /// 辞めた人を「社外」に残す（新しい順に8人まで）
   void toAlumni(Person p, String why) {

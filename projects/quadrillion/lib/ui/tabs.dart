@@ -840,7 +840,8 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
   final s = ctl.game!;
   final ind = indm[b.ind]!;
   final p = s.staffById(b.mgr);
-  final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id)).toList();
+  // 海外だけの事業には、家族の事情で赴任を断る人を出さない（1.1.0+37）
+  final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id) && !s.postingNo(b, x)).toList();
   final cs = s.competitors(b);
   final cts = s.ctryOf(b);
   Widget crewLine;
@@ -1133,7 +1134,7 @@ List<Widget> _bizTopMoves(GameController ctl, Biz b) {
         key: ValueKey('top-hire-${b.id}'), small: true, shrink: true, ap: hr(s, 'crew'), dim: s.cash < cost || !s.canT('crew')));
   }
   if (b.mgr == null) {
-    final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id)).toList()..ssort((x, y) => y.ab[ind.key]!.compareTo(x.ab[ind.key]!));
+    final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id) && !s.postingNo(b, x)).toList()..ssort((x, y) => y.ab[ind.key]!.compareTo(x.ab[ind.key]!));
     if (free.isNotEmpty) {
       out.add(Btn(tr('{0}を責任者に置く', [nmL(free.first.name)]), () {
         s.setManager(b, free.first.id);
@@ -1729,8 +1730,10 @@ Widget _coCard(GameController ctl, Company c) {
     _gap(),
     _wrap([
       // 自分の子会社で、市場に株が出ていないときは「市場で買う」を出さない（押せないボタンが並ぶだけになる）
-      if (!(mine && s.floatOf(c) <= 0))
+      // 市場で買えるのは3分の1まで。それより上は「買う話を始める」（TOB）で（1.1.0+37）
+      if (!(mine && s.floatOf(c) <= 0) && !(!mine && s.unitsOn && s.mktRoom(c) == 0))
         _apBtn(ctl, tr('市場で5%買う（{0}）', [yen(c.cap * .0525)]), () => ctl.act(() => s.buyStake(c, 5)), k: 'own', enabled: s.floatOf(c) > 0),
+      if (!mine && s.unitsOn && s.mktRoom(c) == 0) Muted(tr('市場で買えるのは3分の1までです。それより上は「買う話を始める」（TOB）で買います'), size: 12),
       if (own < 50.1 && !s.unitsOn)
         _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['50.1', yen(s.tobCost(c, 50.1)), _pct0(s.tobChance(c, 50.1))]), () => ctl.act(() => s.tob(c, 50.1)), k: 'tob'),
       if (own > 50 && own < 66.7 && !s.unitsOn)
@@ -1969,7 +1972,8 @@ Color chronColor(String k) => switch (k) {
 /// 「数字」の下の社史（新しい順）
 List<Widget> chronSection(GameController ctl) {
   final s = ctl.game!;
-  final out = <Widget>[H2(tr('社史'))];
+  // 自社の名前があれば「〇〇の社史」（1.1.0+37）
+  final out = <Widget>[H2(s.myCo.isNotEmpty ? tr('{0}の社史', [nmL(s.myCo)]) : tr('社史'))];
   if (s.history.isEmpty) {
     out.add(Muted(tr('まだ記録がありません。上場・買収・海外進出などの節目がここに残ります。')));
     return out;

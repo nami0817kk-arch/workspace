@@ -251,9 +251,12 @@ class SetupScreen extends StatelessWidget {
           _opt([
             // 統計がまだ無い年の国は選べない（ロシアは1991年まで。1.1.0+25）
             for (final x in CTRY.where((x) => st.year >= econData.availableFrom(x.c)))
-              ChoiceBtn(x.n, () => set(() => st.home = x.c),
+              ChoiceBtn(x.n, () => set(() => ctl.setHome(x.c)),
                   on: st.home == x.c, subs: [tr('{0}・市場 ×{1}', [x.city, (cw(x.c, y) / cw('jp', y)).toStringAsFixed(2)])]),
           ]),
+          // 社長の名前と自社の名前（1.1.0+37）。案が入っていて、空にすると今までどおり（社長はおまかせ・自社は名前なし）
+          H2(tr('名前')),
+          SetupNames(key: ValueKey('setup-names-${st.home}'), ctl: ctl),
           H2(tr('社長の特性（2つ選ぶ）')),
           Padding(padding: const EdgeInsets.only(bottom: 8), child: Muted(tr('どの特性にも強い点と弱い点があります'))),
           _opt([
@@ -335,8 +338,9 @@ class SetupScreen extends StatelessWidget {
                     yes: tr('上書きして始める'),
                     onYes: go);
               }
-            }, primary: true, enabled: st.traits.length >= 2 && st.abLeft() == 0),
+            }, primary: true, enabled: st.traits.length >= 2 && st.abLeft() == 0 && setupNameErr(st) == null),
           ),
+          if (setupNameErr(st) != null) Padding(padding: const EdgeInsets.only(top: 6), child: Muted(tr('名前を直してください'))),
           if (st.abLeft() != 0) Padding(padding: const EdgeInsets.only(top: 6), child: Muted(tr('社長の腕の持ち点を、残さず振り分けてください'))),
         ]),
       ),
@@ -383,7 +387,9 @@ class SetupScreen extends StatelessWidget {
             child: info == null
                 ? Muted(tr('空き'), size: 13)
                 : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('${ym(info.year, info.q)}${tr('　')}${nmL(info.name)}', style: ts(size: 14, bold: true)),
+                    // 自社の名前があれば、社長の名前の前に出す（1.1.0+37）
+                    Text('${ym(info.year, info.q)}${tr('　')}${info.co.isNotEmpty ? '${nmL(info.co)}${tr('・')}' : ''}${nmL(info.name)}',
+                        style: ts(size: 14, bold: true), maxLines: 2, overflow: TextOverflow.ellipsis),
                     Text(
                         '${tr('時価総額{0}・世界{1}', [yen(info.cap), info.rank > 0 ? tr('{0}位', [info.rank]) : '―'])}'
                         '\n${modeName(info.mode)}${tr('・')}${diffOf(info.diff).n}${info.ended ? tr('・決着済み') : ''}',
@@ -400,7 +406,85 @@ class SetupScreen extends StatelessWidget {
         ]),
       );
 
-  static String _slotShort(SlotInfo? i) => i == null ? tr('空き') : tr('使用中：{0} {1}', [yearL(i.year), nmL(i.name)]);
+  static String _slotShort(SlotInfo? i) => i == null ? tr('空き') : tr('使用中：{0} {1}', [yearL(i.year), nmL(i.co.isNotEmpty ? i.co : i.name)]);
+}
+
+/// 始める画面の名前の欄のどちらかが使えない理由（両方使えるなら null）
+String? setupNameErr(SetupConfig st) => GameNames.presNameErr(st.name ?? '') ?? GameNames.myNameErrStatic(st.co ?? '');
+
+/// 始める画面の、社長の名前と自社の名前の欄（1.1.0+37）。
+/// 案が入っている（英語の画面では読みで見せ、書き換えなければ元の名前のまま持つ）。空にすると今までどおり
+class SetupNames extends StatefulWidget {
+  final GameController ctl;
+  const SetupNames({super.key, required this.ctl});
+
+  @override
+  State<SetupNames> createState() => SetupNamesState();
+}
+
+class SetupNamesState extends State<SetupNames> {
+  SetupConfig get st => widget.ctl.setup;
+  late final String _name0 = st.name ?? '', _co0 = st.co ?? '';
+  late final TextEditingController _name = TextEditingController(text: nmL(_name0)), _co = TextEditingController(text: nmL(_co0));
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _co.dispose();
+    super.dispose();
+  }
+
+  /// 欄の字を、しまう名前にする（案を書き換えていなければ案の元の名前のまま）
+  static String _keep(String text, String idea) => text.trim() == nmL(idea).trim() ? idea : text.trim();
+
+  Widget _field(String label, TextEditingController c, String key, String? err, String hint, void Function(String) onChanged) {
+    OutlineInputBorder b(Color col, [double w = 1]) => OutlineInputBorder(borderRadius: BorderRadius.circular(Ui.rBtn), borderSide: BorderSide(color: col, width: w));
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        TextField(
+          key: ValueKey(key),
+          controller: c,
+          autocorrect: false,
+          maxLines: 1,
+          textInputAction: TextInputAction.done,
+          onChanged: (v) {
+            onChanged(v);
+            widget.ctl.render();
+          },
+          onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+          style: ts(size: 15),
+          cursorColor: Pal.goldtx,
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true,
+            fillColor: Pal.panel,
+            labelText: label,
+            labelStyle: ts(size: 13, color: Pal.mute),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            border: b(Pal.line),
+            enabledBorder: b(Pal.line),
+            focusedBorder: b(Pal.gold, 2),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 3, left: 2),
+          child: err != null ? Text(tx(err), key: ValueKey('$key-err'), style: ts(size: 12, bold: true, color: Pal.down)) : Muted(hint, size: 12),
+        ),
+      ]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final nErr = GameNames.presNameErr(st.name ?? ''), cErr = GameNames.myNameErrStatic(st.co ?? '');
+    final cols = MediaQuery.sizeOf(context).width >= 700;
+    final a = _field(tr('社長の名前'), _name, 'setup-pres-name', nErr, tr('空にすると、おまかせで決まります'), (v) => st.name = _keep(v, _name0));
+    final b = _field(tr('自社の名前'), _co, 'setup-co-name', cErr, tr('空にすると、名前なしで始めます。子会社の名前の案にも使います'), (v) => st.co = _keep(v, _co0));
+    return cols
+        ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: a), const SizedBox(width: 8), Expanded(child: b)])
+        : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [a, b]);
+  }
 }
 
 String modeName(String m) => switch (m) {
@@ -555,7 +639,9 @@ class EndScreen extends StatelessWidget {
               Row(children: [
                 presFace(s, size: faceBig),
                 const SizedBox(width: 10),
-                Expanded(child: Muted('${nmL(s.pres.name)}${s.gen > 1 ? tr('（{0}代目）', [s.gen]) : ''}${tr('・')}${ym(s.year, s.q)}')),
+                Expanded(
+                    child: Muted(
+                        '${s.myCo.isNotEmpty ? '${nmL(s.myCo)}${tr('・')}' : ''}${nmL(s.pres.name)}${s.gen > 1 ? tr('（{0}代目）', [s.gen]) : ''}${tr('・')}${ym(s.year, s.q)}')),
               ]),
               const SizedBox(height: 14),
               Panel(
