@@ -1,0 +1,156 @@
+# 物語完結型ショート 中山道の旅 s3（2026-11-26）。本編 scripts/nakasendo-story.yaml（12/1 12:00 公開予定、https://youtu.be/Vj8CBOvN-YM）から。12/2 13:30 に予約。
+# 形式は rujin_s1〜s5・michizane_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 中山道の旅_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/nakasendo/main/ の N）の切り出しだけ。新しい絵は作らない。
+# 切り口：和田峠の永代人馬施行所と東餅屋の茶屋（本編 序章・第5章・第6章、naka-16・17・18・25・28）。
+# hook＝峠で粥と焚火がただだったのは本当か（答えはこのショートの中：1828年から11月〜3月、1000両の寄付の利子で）。
+# tease＝和田峠を越えた商人が、和田の宿で言われた宿代はいくらか（答えは本編 第5章：872文、naka-03）。
+# 季節：施し の時期は「11月から3月」と月で言い、「冬」とは言わない（旧暦の1〜3月は春）。
+# 数え直し：文政11年＝1828。1000両の利子の半分＝50両は事実カードの言葉（利率は言わない）。和田峠の高さは長和町の「約1600m」だけ（食い違いは本編）。
+# 理解テスト：①中山道の和田峠の施行所の話 ②1828年、和田峠（同じ年に碓氷峠にも） ③江戸の豪商の寄付の利子で、旅人に粥と焚火、牛馬に煮た麦をただで出した ④峠の茶屋も扶持を受けて旅人を助けた
+title: "中山道｜峠の粥と焚火はただ"
+yt_title: "中山道でいちばん高い和田峠では、旅人に粥と焚火がただで振る舞われた　江戸の豪商の1000両から生まれた施行所"
+description: |-
+  中山道でいちばん高い峠、和田峠。長和町によると、高さはおよそ1600メートルです。
+  峠の東の東餅屋には茶屋が5軒あり、寛永のころから、1軒ごとに1日玄米5合の扶持を受けて、峠で困った旅人を助けていました。
+  江戸の呉服町の豪商、かせや与兵衛が幕府に寄付した1,000両。その利子の半分、50両を元手に、文政11年、1828年、和田峠に永代人馬施行所が置かれます。11月から3月のあいだは、峠を越える旅人に粥と焚火を、牛や馬には1年じゅう、小桶1杯の煮た麦を、どれもただで出しました。同じ年、碓氷峠にも笹沢の人馬施行所ができています。
+  本編では、近江の商人の道中日記で、中山道の峠と宿代を宿場ごとに追っています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#中山道"
+- "#和田峠"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/nakasendo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nakasendo_story_s3
+header:
+  tag: "和田峠（中山道）"
+  title: "峠の粥と焚火が、《ただ》？"
+now:
+- {at: "中山道の和田峠では", text: "江戸時代　和田峠", point: 0}
+- {at: "寛永のころから", text: "寛永のころ　東餅屋", point: 0}
+- {at: "1828年", text: "1828年　和田峠", point: 1}
+timeline:
+- {label: "寛永"}
+- {label: "1828"}
+cards:
+  - type: table
+    title: 和田峠の施行所
+    from: 1000両を寄付した
+    until: 11月から3月
+    items:
+      - {at: "1000両を寄付した", text: "豪商が幕府に　1000両"}
+      - {at: "その利子の半分", text: "利子の半分　50両を元手に"}
+    text_y: 0.70
+shots:
+  N03_1:
+    kind: "ai"
+    file: "nakasendo/main/N03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N03"
+  N17_2:
+    kind: "ai"
+    file: "nakasendo/main/N17.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N17"
+  N18_3:
+    kind: "ai"
+    file: "nakasendo/main/N18.jpg"
+    focus: [0.55, 0.5]
+    move: "right"
+    must: "N18"
+  N19_4:
+    kind: "ai"
+    file: "nakasendo/main/N19.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "N19"
+  N19_5:
+    kind: "ai"
+    file: "nakasendo/main/N19.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "N19"
+  N03_6:
+    kind: "ai"
+    file: "nakasendo/main/N03.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "N03"
+  N03_7:
+    kind: "ai"
+    file: "nakasendo/main/N03.jpg"
+    focus: [0.22, 0.5]
+    move: "right"
+    must: "N03"
+  N01_8:
+    kind: "ai"
+    file: "nakasendo/main/N01.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "N01"
+  N09_9:
+    kind: "ai"
+    file: "nakasendo/main/N09.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "N09"
+lines:
+  # fact: naka-16, naka-17
+- 語り: "中山道の和田峠では、峠を越える旅人に、粥と焚火が、ただで振る舞われた。"
+  shot: N03_1
+  tone: 強調
+  pause: 0.12
+  # fact: naka-25
+- 語り: "和田峠は、中山道でいちばん高い峠。長和町によると、高さは、およそ1600メートルある。"
+  shot: N17_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-28
+- 語り: "峠の東の東餅屋には、茶屋が5軒あった。寛永のころから、1軒ごとに、1日玄米5合の扶持を受け、峠で困った旅人を助けた。"
+  shot: N18_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-16
+- 語り: "江戸の呉服町の豪商、かせや与兵衛が、幕府に1000両を寄付した。"
+  shot: N19_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-16
+- 語り: "その利子の半分、50両を元手に、1828年、文政11年。和田峠に、永代人馬施行所が置かれた。"
+  shot: N19_5
+  tone: 重い
+  pause: 0.12
+  # fact: naka-17
+- 語り: "11月から3月のあいだ、峠を越える旅人には、粥と焚火を出した。"
+  shot: N03_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-17
+- 語り: "牛や馬には、1年じゅう、小桶1杯の煮た麦を。どれも、ただだった。"
+  shot: N03_7
+  tone: 強調
+  pause: 0.12
+  # fact: naka-18
+- 語り: "同じ1828年、碓氷峠にも、笹沢の人馬施行所ができた。費用は、全部、元手のお金を貸した利子で、まかなわれた。"
+  shot: N01_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第5章（naka-03 和田の宿で872文）
+- 語り: "では、1835年にこの峠を越えた近江の商人は、和田の宿で、宿代をいくらと言われたのか。"
+  shot: N09_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,253 @@
+# 物語型の本編の見た目と絵の割り当て：渋沢栄一のその後（scripts/shibusawa-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/2 19:00 公開予定）。uesugi_main_look.yaml・majogari_main_look.yaml を写した。絵は Gemini（Chrome）で作った写実の油彩。
+# 時代の考証：明治元年〜2年の慶喜（髷あり）・渋沢（パリで髷を落とした短い髪）。明治中期以降の男は散切り頭（髷を描かない）。
+#   慶喜の葬儀（大正2年）は僧侶・鳥居を描かない。家紋・字は入れない。
+# 実在の写真（パブリックドメイン）は額（frame:）で：渋沢（1866ごろ・1867パリ・1900・1922以前）・慶喜（1867・明治の狩猟姿・晩年3枚）。
+# プロンプトは scratchpad/main-shibusawa/shibusawa_prompts.py。
+script: scripts/shibusawa-story.yaml
+out: shibusawa_story_main
+art_dir: out/story/shibusawa/main
+main_art_dir: out/story/shibusawa/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 渋沢栄一は、なぜ旧主の伝記に25年をかけたのか
+    now: null
+    dates: {}
+  1:
+    label: 第1章 駿府の宝台院　記録で変わる再会の場面
+    now: null
+    dates:
+      8: 慶応3年
+      9: 明治元年
+      10: 明治元年12月19日
+      11: 明治元年12月23日
+      12: 明治20年
+      14: 大正2年
+      15: 昭和5年
+      18: null
+      19: 明治元年12月
+  2:
+    label: 第2章 なぜ水戸へ行かせなかったのか
+    now: 明治元年12月
+    dates:
+      27: 昭和5年
+      28: null
+      29: 明治元年12月
+      30: 明治2年1月16日
+      33: 明治2年
+      34: 明治33年
+      35: 明治17年6月1日
+      36: null
+  3:
+    label: 第3章 帝国ホテルの宴会のあと「どうぞ止めて呉れ」
+    now: 明治26年
+    dates:
+      46: null
+      48: 明治34年春
+  4:
+    label: 第4章 静岡から東京へ　公爵になった旧主
+    now: 明治30年11月
+    dates:
+      53: 明治32年
+      54: 明治32年6月27日
+      55: 昭和2年
+      56: 明治35年
+      58: null
+  5:
+    label: 第5章 昔夢会　慶喜は語りたがらなかった
+    now: 明治40年6月24日
+    dates:
+      62: 明治40年7月23日
+      67: 大正2年5月3日
+      68: null
+      69: 大正2年
+  6:
+    label: 第6章 命日に仕上がった8冊
+    now: 大正2年11月22日
+    dates:
+      73: 大正2年11月30日
+      74: null
+      75: 大正4年4月
+      77: 大正6年11月22日
+      82: 大正7年1月
+      83: 大正7年3月18日
+      85: null
+  7:
+    label: まとめ 渋沢栄一は、なぜ25年をかけたのか
+    now: null
+    dates: {}
+no_tag_from: 95
+references:
+- 渋沢栄一記念財団『渋沢栄一伝記資料』デジタル版（第2・27・29・47・57巻。渋沢の日記・『雨夜譚』・『竜門雑誌』・『徳川慶喜公伝』自序と跋・『昔夢会筆記』例言・墓前の言葉・中外商業新報・国民新聞・実業之日本・東京日日新聞）　https://eiichi.shibusawa.or.jp/denkishiryo/digital/main/
+- 渋沢栄一編『徳川慶喜公伝』（竜門社、1918年）・『昔夢会筆記』（1915年）
+- 安藤優一郎「薩長と戦わず逃げた徳川慶喜の苦しすぎる弁明」（PRESIDENT Online、2021年）
+credits:
+  paintings/shibusawa_portrait_1922.jpg: 渋沢栄一の肖像写真（1922年以前。パブリックドメイン）
+  paintings/shibusawa_portrait_1900.jpg: 渋沢栄一の肖像写真（1900年『青淵先生六十年史』。パブリックドメイン）
+  paintings/shibusawa_paris_1867.jpg: パリの渋沢栄一（1867年の写真。パブリックドメイン）
+  paintings/yoshinobu_shibusawa_samurai_1866.jpg: 渋沢栄一（1866年ごろの写真。パブリックドメイン）
+  paintings/yoshinobu_portrait_1867_full.jpg: 徳川慶喜（1867年の写真。パブリックドメイン）
+  paintings/yoshinobu_portrait_hunting.png: 徳川慶喜（明治の写真。パブリックドメイン）
+  paintings/yoshinobu_portrait_jakonoma.jpg: 晩年の徳川慶喜（写真。パブリックドメイン）
+  paintings/yoshinobu_portrait_late_13.jpg: 晩年の徳川慶喜（写真。パブリックドメイン）
+  paintings/yoshinobu_portrait_late_14.jpg: 晩年の徳川慶喜（写真。パブリックドメイン）
+ai:
+  K01: {scene: 明治元年、駿府の寺の門と旅姿の若い男, pan: h, crops: &id001 {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  K02: {scene: 行灯の粗末な部屋の慶喜と頭を下げる渋沢, pan: zoom, crops: {wide: [1.15, 0.5, 0.45], left: [1.2, 0.38, 0.42], right: [1.2, 0.62, 0.45]}}
+  K03: {scene: 夜の部屋に入ってくる慶喜と驚く若い男, pan: h, crops: *id001}
+  K04: {scene: 明治初めの静岡の町並みと富士山, pan: h, crops: *id001}
+  K05: {scene: 商法会所の帳場, pan: h, crops: *id001}
+  K06: {scene: 屋敷の庭で写真機を構える男, pan: h, crops: *id001}
+  K07: {scene: 座敷で噺を聞いて笑う屋敷の主と客, pan: h, crops: *id001}
+  K08: {scene: 洋風ホテルの一室で語り合う2人, pan: h, crops: *id001}
+  K09: {scene: 書斎で手紙を読み考え込む男, pan: h, crops: {wide: [1.5, 0.66, 0.48], left: [1.5, 0.63, 0.48], right: [1.5, 0.69, 0.48]}}
+  K10: {scene: 深川の屋敷で文書を写す2人, pan: h, crops: *id001}
+  K11: {scene: 兜町の川べりのヴェネツィア風の洋館, pan: h, crops: *id001}
+  K12: {scene: 洋館の2階の編纂所, pan: h, crops: *id001}
+  K13: {scene: 応接間で昔を語る白髪の老人と聞き手, pan: h, crops: *id001}
+  K14: {scene: 飛鳥山の屋敷の庭園, pan: h, crops: *id001}
+  K15: {scene: 巣鴨の屋敷の門と人力車, pan: h, crops: *id001}
+  K16: {scene: 夜明け前の屋敷の門に急ぐ人力車, pan: h, crops: *id001}
+  K17: {scene: 上野の葬儀の斎場, pan: h, crops: *id001}
+  K18: {scene: 谷中の墓前に積まれた8冊の本, pan: h, crops: *id001}
+  K19: {scene: 大正の印刷所で製本する職人, pan: h, crops: *id001}
+  K20: {scene: 書斎の机に並ぶ8冊の和綴じ本, pan: h, crops: *id001}
+  K21: {scene: ホテルの大広間で記者を前に話す老人, pan: h, crops: *id001}
+  K22: {scene: 夜の書斎で原稿を読む白い口ひげの老人, pan: zoom, crops: {wide: [1.15, 0.45, 0.45], left: [1.2, 0.38, 0.42], right: [1.2, 0.6, 0.45]}}
+  K23: {scene: 明治元年の横浜港に着いた船, pan: h, crops: *id001}
+  K24: {scene: 冬枯れの寺の本堂と門の番, pan: h, crops: *id001}
+  KEND: {scene: 静岡の町と富士山の遠景（終了画面、右半分に空）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+# 序章（0〜6）
+- 0 ai:K20 wide
+- 0.1 frame:paintings/shibusawa_portrait_1922.jpg
+- 1 frame:paintings/yoshinobu_portrait_jakonoma.jpg
+- 2 ai:K09 wide
+- 3 ai:K22 wide
+- 4 ai:K18 wide
+- 5 ai:K20 wide
+- 6 ai:K01 wide            # 覚えてほしい名前（6）の下地
+# 第1章（7〜20）
+- 7 frame:paintings/yoshinobu_shibusawa_samurai_1866.jpg
+- 8 frame:paintings/shibusawa_paris_1867.jpg
+- 9 frame:paintings/yoshinobu_portrait_1867_full.jpg
+- 10 ai:K23 wide
+- 11 ai:K24 wide
+- 12 ai:K24 left
+- 13 ai:K01 left
+- 14 ai:K02 right
+- 15 ai:K03 wide
+- 16 ai:K03 left
+- 17 ai:K02 left           # 史料の札（竜門雑誌498号）
+- 18 ai:K03 right          # 図：再会の記録
+- 19 ai:K24 right
+- 20 ai:K04 wide
+# 第2章（21〜38）
+- 21 ai:K24 right
+- 22 ai:K01 right
+- 23 ai:K04 left
+- 24 ai:K03 right
+- 25 ai:K24 wide
+- 26 ai:K02 wide           # 史料の札（雨夜譚）
+- 27 ai:K03 wide
+- 28 frame:paintings/yoshinobu_portrait_hunting.png
+- 29 ai:K04 right
+- 30 ai:K05 wide
+- 31 ai:K05 left
+- 32 ai:K05 right          # 図：商法会所
+- 33 ai:K23 left
+- 34 ai:K06 wide
+- 35 ai:K06 left
+- 36 ai:K07 wide
+- 37 ai:K08 left
+- 38 ai:K08 right
+# 第3章（39〜51）
+- 39 frame:paintings/shibusawa_portrait_1900.jpg
+- 40 ai:K08 wide
+- 41 ai:K09 wide
+- 42 frame:paintings/yoshinobu_portrait_jakonoma.jpg
+- 43 ai:K09 left           # 史料の札（自序）
+- 44 ai:K09 right
+- 45 frame:paintings/yoshinobu_portrait_late_14.jpg
+- 46 ai:K20 left           # 図：始めた年
+- 47 ai:K18 left
+- 48 ai:K10 wide
+- 49 ai:K10 left
+- 50 ai:K20 left
+- 51 ai:K04 wide
+# 第4章（52〜59）
+- 52 ai:K04 left
+- 53 ai:K15 wide
+- 54 ai:K14 wide
+- 55 ai:K15 right
+- 56 frame:paintings/yoshinobu_portrait_late_13.jpg
+- 57 frame:paintings/yoshinobu_portrait_jakonoma.jpg
+- 58 ai:K12 left
+- 59 ai:K13 wide
+# 第5章（60〜70）
+- 60 ai:K11 wide
+- 61 ai:K12 wide           # 図：編纂の顔ぶれ
+- 62 ai:K13 wide
+- 63 ai:K13 left
+- 64 frame:paintings/yoshinobu_portrait_late_14.jpg
+- 65 ai:K13 right          # 史料の札（例言）
+- 66 ai:K14 left           # 図：昔夢会
+- 67 ai:K14 right
+- 68 ai:K13 wide
+- 69 ai:K22 wide
+- 70 ai:K16 wide
+# 第6章（71〜87）
+- 71 frame:paintings/yoshinobu_portrait_late_14.jpg
+- 72 ai:K16 left
+- 73 ai:K17 wide
+- 74 ai:K22 left
+- 75 ai:K19 wide
+- 76 ai:K20 wide
+- 77 ai:K19 left
+- 78 ai:K18 wide
+- 79 ai:K20 right
+- 80 ai:K18 right          # 史料の札（墓前）
+- 81 frame:paintings/yoshinobu_portrait_jakonoma.jpg
+- 82 ai:K19 wide           # 図：慶喜公伝
+- 83 ai:K21 wide
+- 84 ai:K21 left
+- 85 ai:K21 right          # 図：かかった年数
+- 86 frame:paintings/shibusawa_portrait_1922.jpg
+- 87 ai:K22 wide
+# まとめ（88〜96）
+- 88 ai:K22 right
+- 89 ai:K18 wide
+- 90 ai:K02 wide
+- 91 frame:paintings/yoshinobu_portrait_jakonoma.jpg
+- 92 ai:K10 wide
+- 93 ai:K13 left
+- 94 ai:K18 right          # 史料の札（中外商業新報）
+- 95 ai:K01 wide
+- 96 ai:KEND wide
+- end ai:KEND wide
+focus: {}
+fx:
+  K02: {lamp: {region: [0.68, 0.15, 0.82, 0.6], alpha: 0.10}}
+  K22: {lamp: {region: [0.05, 0.3, 0.25, 0.75], alpha: 0.10}}
+figures: []
+parts:
+- {type: names, from: 6, to: 6, title: この物語で覚えてほしい名前, every: 0.7,
+   items: [[渋沢栄一, 慶喜の元の家来・実業家, paintings/shibusawa_portrait_1900.jpg, [0.5, 0.3]],
+           [徳川慶喜, 最後の将軍, paintings/yoshinobu_portrait_late_13.jpg, [0.5, 0.3]],
+           [萩野由之, 伝記の編纂の主任, null]]}
+- {type: quote, from: 17, to: 17, label: 史料, text: 今日はそんな愚痴を聞くために／会つたのではない, source: 渋沢栄一の談話（『竜門雑誌』第498号、1930年）}
+- {type: quote, from: 26, to: 26, label: 史料, text: 連中の妬心を引起して／結局は足下の身に害を生ずる虞れもある, source: 渋沢栄一『雨夜譚』（1887年）}
+- {type: quote, from: 43, to: 43, label: 史料, text: 公は御許諾がない／どうぞ止めて呉れと仰せられた, source: 渋沢栄一『徳川慶喜公伝』自序（1918年）}
+- {type: quote, from: 65, to: 65, label: 史料, text: 速記者ありては話しにくしと仰せられて／第十四よりは又筆記となれり, source: 渋沢栄一『昔夢会筆記』例言（1915年）}
+- {type: quote, from: 80, to: 80, label: 史料, text: 一身は唯だ公に奉ずるを以て／世を終らむと思ふた, source: 渋沢栄一「興山公御墓前に於て」（1917年）}
+- {type: quote, from: 94, to: 94, label: 史料, text: 天下後世の為に／公の寃魂を慰めんと欲する, source: 中外商業新報（1918年。『竜門雑誌』第359号に転載）}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 6, note: 覚えてほしい名前}
+- {line: 17, note: 愚痴の史料札}
+- {line: 18, note: 再会の記録}
+- {line: 61, note: 編纂の顔ぶれ}
+- {line: 80, note: 墓前の史料札}
+- {end: true, note: 終了画面}
