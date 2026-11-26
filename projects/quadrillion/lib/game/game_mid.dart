@@ -421,8 +421,8 @@ extension GameMid on Game {
 
   /// 得と損を効かせる。裏目に出たら true
   bool _ceApply(String c, CeOpt o, double s, double unit, double rev0) {
-    cash -= o.u * unit + o.fine * s * rev0;
-    cash += o.gain * s * rev0;
+    cfAdd('sp', -(o.u * unit + o.fine * s * rev0));
+    cfAdd('sp', o.gain * s * rev0);
     var failed = false;
     if (o.risk > 0 && rnd() * 100 < o.risk) {
       failed = true;
@@ -577,7 +577,7 @@ extension GameMid on Game {
         return _rs(c, k, M('{0}（{1}）が、あなたの「{2}」と同じ商売を始めました。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('広告で迎え撃つ'), M('{0}で6か月の広告を打つ。相手の出足をくじくが、関係は悪くなる', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、迎え撃てませんでした');
-            cash -= cost;
+            cfAdd('grow', -cost);
             b.ad = 6;
             b.adCost = 0;
             x.power *= .75;
@@ -606,7 +606,7 @@ extension GameMid on Game {
         return _rs(c, k, M('{0}（{1}）に、「{2}」の現場の人をまとめて引き抜かれました。現場の力が8%落ちています。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('引き抜き返す'), M('{0}で相手の人を引き抜く。現場は元に戻り、相手は弱るが、関係は悪くなる', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、引き抜き返せませんでした');
-            cash -= cost;
+            cfAdd('grow', -cost);
             b.crew = crewOf(b) + lost;
             for (final x in c.biz) {
               x.power *= .96;
@@ -645,7 +645,7 @@ extension GameMid on Game {
         return _rs(c, k, M('売りに出た{0}を、{1}（{2}）と取り合うことになりました。', [Nm(t.name), Nm(c.presName), Nm(c.name)]), [
           Choice(M('競り勝つ'), M('{0}で株の51%を買い、子会社にする。関係は悪くなる', [Y(cost)]), () {
             if (cash < cost || !t.alive || t.parent == 'player') return M('お金が足りず、競り負けました');
-            cash -= cost;
+            cfAdd('stock', -cost);
             t.fam = math.min(t.fam, 49);
             t.stakePlayer = 51;
             c.rel -= 12;
@@ -672,7 +672,7 @@ extension GameMid on Game {
         final cost = devCost(b, 1);
         String joint(double mine) {
           b.pipe.add(Pipe(k: 'dev', cost: cost * 1.5, left: ri(devMonths[1].$1, devMonths[1].$2), sz: 1));
-          cash -= mine;
+          cfAdd('grow', -mine);
           for (final x in c.biz) {
             x.power *= 1.04;
           }
@@ -711,7 +711,7 @@ extension GameMid on Game {
               scandal = math.max(scandal, 8);
               return M('お金が足りず、会見を開けませんでした。騒ぎは長引きます');
             }
-            cash -= cost;
+            cfAdd('misc', -cost);
             scandal = math.max(scandal, 3);
             return M('謝罪会見を開き、騒ぎは早めに収まりました');
           }),
@@ -741,7 +741,7 @@ extension GameMid on Game {
         return _rs(c, k, M('{0}（{1}）の資金繰りが苦しくなり、あなたに助けを求めてきました。', [Nm(c.presName), Nm(c.name)]), [
           Choice(M('お金を貸す'), M('{0}を貸す。見返りに相手の株を5%受け取り、大きな恩を売る', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、貸せませんでした');
-            cash -= cost;
+            cfAdd('stock', -cost);
             c.cash += cost;
             if (floatOf(c) >= 5) c.stakePlayer += 5;
             c.rel += 25;
@@ -754,7 +754,7 @@ extension GameMid on Game {
               if (cash < cheap) return M('お金が足りず、買い取れませんでした');
               final b = biz.where((y) => y.ind == x.ind).firstOrNull;
               if (b == null || !c.biz.contains(x)) return M('その話はもう無くなっていました');
-              cash -= cheap;
+              cfAdd('grow', -cheap);
               c.cash += cheap;
               b.power += x.power * .7;
               b.crew = crewOf(b) + x.power * .7;

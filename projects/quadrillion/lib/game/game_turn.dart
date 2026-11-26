@@ -8,6 +8,8 @@ extension GameTurn on Game {
     final news = <LogEntry>[];
     void N(String m, [String t = '']) => news.add(LogEntry(m, t));
     final over0 = over, won0 = won, peak0 = peakRank;
+    // 決算書で締める月（1.1.0+34）
+    final finY = year, finM = q;
     // 選ばれないままの小さな知らせ（経営会議の提案・大型の受注・大物の売り込み）は、断る・見送る方で片付ける（1.1.0+30）
     for (final m in settleSmall()) {
       if (m.isNotEmpty) N(m);
@@ -196,7 +198,7 @@ extension GameTurn on Game {
         if (p.trait == 'careful') rate = .15;
         if (p.trait == 'gambler') rate = .6;
         final gain = b.profit * rate;
-        cash -= gain;
+        cfAdd('grow', -gain);
         var eff = invEff * math.pow(1 - b.share, 2) * smallBonus(b);
         if (p.trait == 'genius') eff *= .5 + rnd() * 1.6;
         if (p.trait == 'gambler' && rnd() < .2) eff = 0;
@@ -357,15 +359,20 @@ extension GameTurn on Game {
     final p0 = pre;
     // 税金は国と年の法人税率で、今年の利益の積み上げにかける（赤字の月は今年払った分から戻る。1.1.0+25）
     final tax = monthTax(p0);
-    cash += p0 - tax;
+    // 決算書：損益の内訳を写し、本業の入りから利息と税を分ける（1.1.0+34。記録だけ）
+    finPl(p0);
+    books.add('tax', tax);
+    cfAdd('op', p0 - tax);
+    books.move('op', 'tax', -tax);
+    books.move('op', 'intr', -interest);
     // 売掛金：代金をもらうまでの月が長い業種は、売上が伸びた分だけ現金が遅れて入る（1.1.0+26）
     // （売掛は4か月かけて今の売上に追いつく。始めた月に数か月分の現金がいきなり消えないように）
     final ar1 = ar + (receivables() - ar) * .25;
-    cash -= ar1 - ar;
+    cfAdd('ar', -(ar1 - ar));
     ar = ar1;
     lastTax = tax;
     for (final c in subs()) {
-      if (c.profit > 0) cash += c.profit * .4 * pctOf(c) / 100;
+      if (c.profit > 0) cfAdd('div', c.profit * .4 * pctOf(c) / 100);
     }
     if (scandal > 0) scandal--;
     // 借金の元本を返す・不況の貸しはがし・足りない分の手当て（1.1.0+25）
@@ -491,13 +498,17 @@ extension GameTurn on Game {
     if (log.length > 300) log.removeRange(0, log.length - 300);
     // 新しく来た人・年代をまたいだ人・代替わりした宿敵に顔を割り当てる（乱数は使わない）
     ensureFaces();
+    // 決算書の月の締め（1.1.0+34。記録だけ）
+    finClose(finY, finM);
     return news;
   }
 
   void rebirth() {
     chron('rebirth', M('会社が倒産した。残った人脈で、もう一度ゼロから始めた'));
+    finCut();
     biz = [];
     staff = [];
+    cfTag = 'reset';
     cash = 1e7 * nom();
     loans = [];
     bankCtl = 0;
@@ -510,6 +521,7 @@ extension GameTurn on Game {
       c.stakePlayer = 0;
       if (c.parent == 'player') c.parent = null;
     }
+    finRebase();
   }
 
   void presDies(void Function(String, [String]) N) {
@@ -741,7 +753,7 @@ extension GameTurn on Game {
           choices: [
             Choice(M('組む'), M('相手の株5%を{0}で買う。相手も5%持つが、乗っ取りには使わない', [Y(c.cap * .05)]), () {
               if (cash < c.cap * .05) return M('お金が足りず、提携は流れました');
-              cash -= c.cap * .05;
+              cfAdd('stock', -(c.cap * .05));
               c.stakePlayer = c.stakePlayer + 5;
               sh.ally += math.min(5, sh.float);
               sh.float = math.max(0, sh.float - 5);
@@ -809,7 +821,7 @@ extension GameTurn on Game {
           ]),
           choices: [
             Choice(M('謝罪会見を開く'), M('{0}をかけて謝る。事業の力が1割落ちる', [Y(math.max(b.rev * .1, 1e6))]), () {
-              cash -= math.max(b.rev * .1, 1e6);
+              cfAdd('misc', -math.max(b.rev * .1, 1e6));
               b.power *= hasT('careful') ? .95 : .9;
               if (liar != null) liar.traitKnown = true;
               return M('謝罪し、騒ぎは収まりました');
@@ -882,7 +894,7 @@ extension GameTurn on Game {
             Choice(M('出資して送り出す'), M('{0}を出資し、新しい会社の株を30%持つ。事業の力は1割5分落ちる', [Y(b.rev * .5)]), () {
               final cost = b.rev * .5;
               if (cash < cost) return M('お金が足りず、出資できませんでした');
-              cash -= cost;
+              cfAdd('stock', -cost);
               final c = mkCo(0, indm[b.ind]!.cat, presName: star.name, fam: 50);
               c.biz.add(CoBiz(ind: b.ind, power: b.power * .25));
               c.stakePlayer = 30;
@@ -960,7 +972,7 @@ extension GameTurn on Game {
           text: M('{0}が、あなたの「{1}」を相場の1.5倍、{2}で買いたいと言っています。', [Nm(buyer.presName), I(b.ind), Y(price)]),
           choices: [
             Choice(M('売る'), M('{0}が入る。その事業は相手のものになる', [Y(price)]), () {
-              cash += price;
+              cfAdd('bizSale', price);
               buyer.biz.add(CoBiz(ind: b.ind, power: b.power));
               biz.remove(b);
               buyer.rel += 15;
@@ -979,6 +991,7 @@ extension GameTurn on Game {
       events.add(GameEvent(title: M('荒れる株主総会'), text: M('利益が落ちたことに、株主が怒っています。「社長は責任を取れ」という声も出ています。'), choices: [
         Choice(M('配当を増やして鎮める'), M('{0}を株主に配る', [Y(extras ? meetingDividend() : math.max(cash * .1, 0))]), () {
           if (!extras) {
+            cfTag = 'payout';
             cash *= .9;
             return M('配当を増やし、総会は収まりました');
           }
@@ -1000,6 +1013,8 @@ extension GameTurn on Game {
           final a = math.max(cash, 1e7);
           loanFromEvent(a);
           land = land + a;
+          // 決算書：借りたお金で土地を買った（現金は通らない。1.1.0+34）
+          books.add('landNC', a);
           return M('土地を買いました');
         }),
         Choice(M('断る'), M('何も起きない'), () => M('断りました')),
@@ -1313,21 +1328,21 @@ extension GameTurn on Game {
     if (b == null || p == null) return M('その提案はもう意味がなくなっていました');
     if (o.cost > cash) return M('お金が足りず、提案は実行できませんでした');
     if (o.k == 'crew' && o.n > 0) {
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       _addHeads(b, o.n);
     } else if (o.k == 'crew') {
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.crew = crewOf(b) + o.cost * 4;
       b.upkeep = b.upkeep + o.cost * .008;
     } else if (o.k == 'dev' && o.sz != null) {
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.pipe.add(Pipe(k: 'dev', cost: o.cost, left: ri(devMonths[o.sz!].$1, devMonths[o.sz!].$2), by: p.id, sz: o.sz));
     } else if (o.k == 'grow') {
       final go = growOpt(b, cash);
       if (go == null) return M('その提案はもう意味がなくなっていました');
       go.run();
     } else if (o.k == 'build' || o.k == 'dev') {
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.pipe.add(Pipe(k: o.k, cost: o.cost, left: o.k == 'dev' ? ri(3, 6) : ri(1, 2), by: p.id));
     } else if (o.k == 'cut') {
       b.price = 'cut';
@@ -1335,13 +1350,13 @@ extension GameTurn on Game {
       b.upkeep *= .8;
       b.crew = crewOf(b) * .93;
     } else if (o.k == 'ad') {
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.ad = 6;
       b.adCost = 0;
     } else if (o.k == 'abroad') {
       final c = o.c!, mode = o.mode!;
       if (ctryOf(b).contains(c) || b.pipe.any((x) => x.k == 'enter') || !entryModes(b, c).contains(mode)) return M('その提案はもう意味がなくなっていました');
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.pipe.add(Pipe(k: 'enter', c: c, mode: mode, cost: o.cost, pw: o.cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5, left: mode == 'jv' ? 3 : 6));
     } else if (o.k == 'price') {
       b.price = o.ind!;
@@ -1351,7 +1366,7 @@ extension GameTurn on Game {
       b.power *= .85;
     } else if (o.k == 'exit') {
       if (biz.length < 2) return M('その提案はもう意味がなくなっていました');
-      cash += sellValue(b);
+      cfAdd('bizSale', sellValue(b));
       biz.remove(b);
     } else if (o.k == 'culture') {
       if (cultLeft > 0 || culture == o.ind) return M('その提案はもう意味がなくなっていました');
@@ -1360,7 +1375,7 @@ extension GameTurn on Game {
       crisis['pc'] = turn;
     } else if (o.k == 'newbiz') {
       if (biz.any((x) => x.ind == o.ind)) return M('その業種にはもう入っていました');
-      cash -= o.cost;
+      cfAdd('grow', -o.cost);
       b.mgr = null;
       final nb = Biz(id: uid(), ind: o.ind!, power: o.cost * newPow, crew: o.cost * newPow * 1.2, mgr: p.id);
       biz.add(nb);
@@ -1450,7 +1465,7 @@ extension GameTurn on Game {
       events.add(GameEvent(vc: true, title: M('投資家が上場を迫る'), text: M('「3年以内に上場する」という約束の期限が来ました。投資家は株{0}を持っています。', [pct(sh.vc)]), choices: [
         Choice(M('株を買い戻す'), M('{0}を払い、投資家の株をすべて引き取る', [Y(cost)]), () {
           if (cash < cost) return M('お金が足りません。投資家はあと1年だけ待つと言いました');
-          cash -= cost;
+          cfAdd('payout', -cost);
           sh.own += sh.vc;
           sh.vc = 0;
           vcDeadline = 0;
@@ -1502,7 +1517,7 @@ extension GameTurn on Game {
             choices: [
               Choice(M('受ける'), M('{0}が入る。同じ分類の事業の力が少し上がる', [Y(money)]), () {
                 if (sh.own < 40) return M('持ち株が足りず、話は流れました');
-                cash += money;
+                cfAdd('equity', money);
                 sh.own -= 8;
                 sh.ally += 8;
                 tie = Tie(co: c.id, inds: inds, cats: cats);
@@ -1526,7 +1541,7 @@ extension GameTurn on Game {
             text: M('{0}が「資金に困っているそうだな。{1}出してやろう。そのかわり株を20%もらう」と言っています。', [Nm(c.presName), Y(money)]),
             choices: [
               Choice(M('受ける'), M('お金は助かるが、宿敵があなたの株を20%持つ'), () {
-                cash += money;
+                cfAdd('equity', money);
                 final x = math.min(20.0, sh.own - 10);
                 sh.own -= x;
                 sh.riv[c.id] = (sh.riv[c.id] ?? 0) + x;
@@ -1634,7 +1649,7 @@ extension GameTurn on Game {
         if (rnd() < .015) {
           b.cartel = 0;
           final fine = b.rev * 12 * .15;
-          cash -= fine;
+          cfAdd('sp', -fine);
           scandal = math.max(scandal, 12);
           N(M('「{0}」の談合が発覚し、罰金{1}を払いました', [I(b.ind), Y(fine)]), 'bad');
         }
@@ -1693,10 +1708,10 @@ extension GameTurn on Game {
       final s = suits.removeAt(0);
       final c = coById(s.co);
       if (s.against) {
-        cash -= s.amt;
+        cfAdd('sp', -s.amt);
         N(M('約束破りの裁判に負け、{0}を払いました', [Y(s.amt)]), 'bad');
       } else if (rnd() < .6 && c != null) {
-        cash += s.amt;
+        cfAdd('sp', s.amt);
         N(M('{0}との裁判に勝ち、賠償金{1}を受け取りました', [Nm(c.name), Y(s.amt)]), 'good');
       } else {
         N(M('裁判に負けました。訴えは退けられました'), 'bad');

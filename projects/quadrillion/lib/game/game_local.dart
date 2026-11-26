@@ -174,7 +174,7 @@ extension GameLocal on Game {
     if (f == null || c.locRivPct <= 0) return M('買い戻す株はありません');
     final x = localBuybackCost(c);
     if (cash < x) return M('お金が足りず、買い戻せませんでした');
-    cash -= x;
+    cfAdd('stock', -x);
     f.cash += x;
     c.locRivPct = 0;
     c.locRiv = null;
@@ -200,7 +200,7 @@ extension GameLocal on Game {
           if (th >= 25)
             Choice(M('持ち株を売り渡す'), M('{0}が入る。現地法人は相手のものになる', [Y(sale)]), () {
               final v = c.cap * c.stakePlayer / 100 * 1.3;
-              cash += v;
+              cfAdd('stock', v);
               for (final b in c.biz) {
                 f.biz.add(CoBiz(ind: b.ind, power: b.power));
               }
@@ -365,7 +365,7 @@ extension GameLocal on Game {
         say: M('すぐに頭を下げるべきです。長引くほど株価に響きます'),
         d: M('{0}をかけて謝る。騒ぎが半年ほど早く収まる', [Y(apo)]),
         f: () {
-          cash -= apo;
+          cfAdd('misc', -apo);
           scandal = math.max(0, scandal - 6);
           return M('謝罪会見を開き、騒ぎは収まり始めました');
         },
@@ -389,7 +389,7 @@ extension GameLocal on Game {
         say: M('謝るより、良い話で上書きしましょう。広告を打てば客は戻ります'),
         d: M('{0}をかけて広告を打つ。騒ぎがかなり早く収まる', [Y(pr)]),
         f: () {
-          cash -= pr;
+          cfAdd('grow', -pr);
           scandal = math.max(0, scandal - 8);
           return M('広告を打ち、信用を取り戻しにかかりました');
         },
@@ -412,7 +412,7 @@ extension GameLocal on Game {
           final a = math.min(want, room);
           if (a <= 0) return M('銀行はこれ以上貸してくれませんでした');
           loanFromEvent(a);
-          cash += a;
+          cfAdd('borrow', a);
           return M('銀行から{0}を借りました', [Y(a)]);
         },
       );
@@ -426,7 +426,7 @@ extension GameLocal on Game {
             if (biz.length < 2) return M('売れる資産がありませんでした');
             final w = (biz.toList()..ssort((a, b) => a.profit.compareTo(b.profit)))[0];
             final v = sellValue(w);
-            cash += v;
+            cfAdd('bizSale', v);
             biz.remove(w);
             calcAll();
             return M('「{0}」を{1}で手放しました', [I(w.ind), Y(v)]);
@@ -459,7 +459,7 @@ extension GameLocal on Game {
             const k = 100 / 110;
             _dilute(k);
             sh.float = sh.float * k + 10 * k;
-            cash += money;
+            cfAdd('equity', money);
             calcAll();
             return M('新しい株を出し、{0}を集めました', [Y(money)]);
           },
@@ -471,7 +471,7 @@ extension GameLocal on Game {
           d: M('株を10%渡して{0}を集める。上場の約束がつく', [Y(cap * .1)]),
           f: () {
             final money = cap * .1;
-            cash += money;
+            cfAdd('equity', money);
             sh.own -= 10;
             sh.vc += 10;
             if (vcDeadline == 0) vcDeadline = turn + 36;

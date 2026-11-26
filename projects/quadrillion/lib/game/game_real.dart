@@ -349,7 +349,7 @@ extension GameReal on Game {
     if (m != null) return m;
     final r = loanRate(a);
     loans.add(Loan(id: _loanId(), lender: _lenderFor(), amt: a, orig: a, rate: r, left: term, term: term, at: turn));
-    cash += a;
+    cfAdd('borrow', a);
     presXp('zai', 2);
     calcAll();
     return M('{0}を借りました（年{1}%・{2}年で返す・毎月の返済 約{3}）', [Y(a), pctD(r * 100), (term / 12).round(), Y(a / term + a * r / 12)]);
@@ -370,7 +370,7 @@ extension GameReal on Game {
       left -= p;
     }
     loans.removeWhere((l) => l.amt <= 1);
-    cash -= a;
+    cfAdd('repay', -a);
     calcAll();
     return M('{0}を返しました', [Y(a)]);
   }
@@ -387,7 +387,7 @@ extension GameReal on Game {
     if (m != null) return m;
     final r = math.max(.004, loanRate(a) - .005);
     loans.add(Loan(id: _loanId(), lender: 'bond', amt: a, orig: a, rate: r, left: 60, term: 60, bullet: true, at: turn));
-    cash += a;
+    cfAdd('borrow', a);
     presXp('zai', 2);
     calcAll();
     return M('社債で{0}を集めました（年{1}%・5年後にまとめて返す）', [Y(a), pctD(r * 100)]);
@@ -399,7 +399,7 @@ extension GameReal on Game {
     if (bankCtl > 0 || ratingIdx() >= 3 || borrowRoom() < a) return false;
     final r = loanRate(a) + .02;
     loans.add(Loan(id: _loanId(), lender: 'bridge', amt: a, orig: a, rate: r, left: 12, term: 12, at: turn));
-    cash += a;
+    cfAdd('borrow', a);
     N?.call(M('資金が足りず、銀行からつなぎの融資{0}を受けました（年{1}%・1年で返す）', [Y(a), pctD(r * 100)]), 'bad');
     return true;
   }
@@ -425,7 +425,7 @@ extension GameReal on Game {
       l.left--;
     }
     loans.removeWhere((l) => l.amt <= 1 || l.left <= 0);
-    cash -= due;
+    cfAdd('repay', -due);
     lastPrincipal = due;
   }
 
@@ -449,7 +449,7 @@ extension GameReal on Game {
       l.amt -= l.amt * k;
     }
     loans.removeWhere((l) => l.amt <= 1);
-    cash -= owe;
+    cfAdd('repay', -owe);
     N(M('不況で銀行が貸しはがしに来ました。格付け{0}のため、借金の{1}割（{2}）をすぐ返すよう求められ、返しました', [rating(), jsRound(k * 10), Y(owe)]), 'bad');
     missed = math.max(missed, 6);
   }
@@ -462,7 +462,7 @@ extension GameReal on Game {
     while (cash < 0 && biz.length > 1) {
       final w = (biz.toList()..ssort((a, b) => a.profit.compareTo(b.profit)))[0];
       final v = sellValue(w);
-      cash += v;
+      cfAdd('bizSale', v);
       biz.remove(w);
       N(M('返すお金が足りず、「{0}」を{1}で手放しました', [I(w.ind), Y(v)]), 'bad');
     }
@@ -477,6 +477,7 @@ extension GameReal on Game {
       }
       final a = -cash;
       loans.add(Loan(id: _loanId(), lender: 'main', amt: a, orig: a, rate: loanRate() + .02, left: 36, term: 36, at: turn));
+      cfTag = 'borrow';
       cash = 0;
       N(M('資金が尽きかけ、メインバンクが経営に口を出してきました。返す期限はのびましたが、2年のあいだ新しく借りられません'), 'bad');
       chron('board', M('資金繰りに行き詰まり、メインバンクの管理下に入った'));

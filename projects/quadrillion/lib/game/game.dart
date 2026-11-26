@@ -46,6 +46,7 @@ part 'game_corp.dart';
 part 'game_life.dart';
 part 'game_pres.dart';
 part 'game_traits.dart';
+part 'game_fin.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -274,7 +275,22 @@ class Game {
   String diff = 'normal';
   Difficulty get dif => diffOf(diff);
   int startYear = 1980, year = 1980, q = 1;
-  double cash = 0;
+
+  /// 手元の現金。動いた額は、直前に [cfTag] で付けた種類ごとに決算書の記録へ入る（1.1.0+34。game_fin.dart）。
+  /// 種類を付けずに動かした分は 'unc'（分類していない出入り）に入る
+  double _cash = 0;
+  double get cash => _cash;
+  set cash(double v) {
+    books.flow(cfTag, v - _cash);
+    _cash = v;
+    cfTag = 'unc';
+  }
+
+  /// 次に現金を動かすときの種類（動かすと 'unc' に戻る。保存しない）
+  String cfTag = 'unc';
+
+  /// 決算書の記録（1.1.0+34。game_fin.dart）
+  FinBooks books = FinBooks();
 
   // ===== 現実に寄せた仕組み（1.1.0+25 から） =====
   /// 借りたお金（1口ずつ。借金の合計は [GameReal.debt]）
@@ -692,6 +708,8 @@ class Game {
     chron('found', M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
     trackPeaks();
     ensureFaces();
+    // 決算書の記録は、立ち上げた月から（元手が資本金。1.1.0+34）
+    finStart();
   }
 
   void normalizeAll(bool init) {
@@ -1171,6 +1189,7 @@ class Game {
         'crisis': crisis,
         'ach': ach,
         'everInd': everInd.toList(),
+        'books': books.toJson(),
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -1188,7 +1207,8 @@ class Game {
       ..startYear = i('startYear')
       ..year = i('year')
       ..q = i('q', 1)
-      ..cash = d('cash')
+      .._cash = d('cash')
+      ..books = FinBooks.fromJson((j['books'] as Map?)?.cast<String, dynamic>())
       ..loans = l('loans', Loan.fromJson)
       ..loanSeq = i('loanSeq')
       ..fcSeed = i('fcSeed', 1)
@@ -1324,6 +1344,8 @@ class Game {
     }
     // 顔の絵は 1.0.0+21 から。古いセーブの人には、読み込んだときに割り当てる
     s.ensureFaces();
+    // 決算書の記録は 1.1.0+34 から。それより前のセーブは、読み込んだ月から記録する（前の年は「記録なし」）
+    if (!s.books.on) s.finStart();
     return s;
   }
 }

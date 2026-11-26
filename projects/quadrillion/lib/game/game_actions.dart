@@ -17,7 +17,7 @@ extension GameActions on Game {
       return M('会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）');
     }
     final free = biz.isEmpty && !everBiz;
-    cash -= c;
+    cfAdd('capex', -c);
     capSpend(c, profileOf(ind).life);
     useT('start');
     everBiz = true;
@@ -43,7 +43,7 @@ extension GameActions on Game {
     if (cost <= 0) return M('お金がありません');
     final nt = needT('invest');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('invest');
     final rel = cost / math.max(b.rev + capexOf(indm[b.ind]!), 1);
     var eff = invEff * math.pow(1 - b.share, 2) * clampD(math.pow(rel, -.12).toDouble(), .55, 1.3) * smallBonus(b);
@@ -117,7 +117,7 @@ extension GameActions on Game {
     if (extras && hasLocal(c, b.ind)) return M('その国には現地法人が出ています');
     final cost = entryCost(b, c, mode);
     if (cash < cost) return M('お金が足りません');
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('enter');
     presXp('ei', 1.5);
     final pw = cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5;
@@ -189,7 +189,7 @@ extension GameActions on Game {
     if (cost <= 0) return M('お金がありません');
     final nt = needT('dev');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('dev');
     final left = ri(3, 6);
     b.pipe.add(Pipe(k: 'dev', cost: cost, left: left));
@@ -209,7 +209,7 @@ extension GameActions on Game {
     }
     final nt = needT('build');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('build');
     final left = b.model == 'fc' ? 1 : ri(1, 2);
     b.pipe.add(Pipe(k: 'build', cost: cost, left: left));
@@ -242,7 +242,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = needT('build');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('build');
     final left = b.model == 'fc' ? 1 : ri(1, 2);
     b.pipe.add(Pipe(k: 'build', cost: cost, left: left));
@@ -261,7 +261,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = needT('extend');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('extend');
     b.pipe.add(Pipe(k: 'build', cost: cost, left: 1, ext: true));
     calcAll();
@@ -283,7 +283,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = needT('dev');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('dev');
     final left = ri(devMonths[sz].$1, devMonths[sz].$2);
     b.pipe.add(Pipe(k: 'dev', cost: cost, left: left, sz: sz));
@@ -328,7 +328,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = needT('crew');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('crew');
     _addHeads(b, n);
     presXp('tou', .4);
@@ -429,7 +429,7 @@ extension GameActions on Game {
   }
 
   String _hireCrew(Biz b, double cost) {
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('crew');
     b.crew = crewOf(b) + cost * 4;
     b.upkeep = b.upkeep + cost * .008;
@@ -439,7 +439,7 @@ extension GameActions on Game {
 
   /// 決まった額を払う。手元で足りない分は銀行から借りて払う（借りたときだけ文を返す）
   String? payOut(double a) {
-    cash -= a;
+    cfAdd('payout', -a);
     if (cash >= 0) return null;
     final lack = math.min(a, -cash);
     // 1.1.0+25 から、つなぎの融資にする（借りられなければ、月の終わりの資金繰りで手当てする）
@@ -459,7 +459,7 @@ extension GameActions on Game {
   String cancelPipe(Biz b, int i) {
     if (i < 0 || i >= b.pipe.length) return M('取り下げるものがありません');
     final x = b.pipe.removeAt(i);
-    cash += x.cost * .5;
+    cfAdd('grow', x.cost * .5);
     return M('取り下げて、{0}を取り戻しました', [Y(x.cost * .5)]);
   }
 
@@ -468,7 +468,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = needT('ad');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('ad');
     b.ad = 6;
     b.adCost = 0;
@@ -525,7 +525,7 @@ extension GameActions on Game {
     if (cash < c) return M('元手が足りません');
     final nt = needT('pivot');
     if (nt != null) return nt;
-    cash -= c;
+    cfAdd('grow', -c);
     useT('pivot');
     final from = b.ind;
     final keep = b.power * .5 * (mkt(to) > 0 ? math.min(1, mkt(to) / math.max(mkt(indm[b.ind]!), 1)) : 1) + c * newPow;
@@ -561,7 +561,7 @@ extension GameActions on Game {
     final nt = needT('sell');
     if (nt != null) return nt;
     final v = sellValue(b);
-    cash += v;
+    cfAdd('bizSale', v);
     useT('sell');
     // 人たらしは情に流されて切るのに手間取る（時間が倍）
     if (hasT('charm')) useT('sell');
@@ -577,7 +577,7 @@ extension GameActions on Game {
     // 経歴を持つ人は、採用の道で費用が違う（新卒は採用の費用・中途は紹介の手数料・引き抜きは高い手数料。1.1.0+27）
     final sign = hireFeeOf(p);
     if (cash < sign) return M(p.real ? '採用の費用が足りません' : '支度金が足りません');
-    cash -= sign;
+    cfAdd('grow', -sign);
     useT('hire');
     cands.remove(p);
     staff.add(p);
@@ -612,7 +612,7 @@ extension GameActions on Game {
     // 経歴を持つ人を解雇すると、国と時代の慣習で決まる手当を払い、終身雇用が強いほどほかの部下のやる気も下がる（1.1.0+27）
     if (p.real && extras) {
       final pay = p.salary * severanceMonths();
-      cash -= pay;
+      cfAdd('grow', -pay);
       fire(p, 'fired');
       // 仲裁役がいると、ほかの部下の動揺は半分で収まる（1.1.0+33）
       final hit = normOf().life * 8 * (anyTr('mediate') ? .5 : 1);
@@ -711,7 +711,7 @@ extension GameActions on Game {
       chron('partner', M('{0}（{1}歳）が相棒になった。株を{2}%渡した', [Nm(p.name), p.age, x]));
       final m = <Object?>[M('{0}が相棒になりました。株を{1}%渡しました', [Nm(p.name), x])];
       if (p.money != null && p.money != 0) {
-        cash += p.money!;
+        cfAdd('equity', p.money!);
         m.add(M('{0}を出資してくれました', [Y(p.money!)]));
       }
       m.add(M('相棒が責任者の事業は力が1割5分上がります'));
@@ -763,7 +763,7 @@ extension GameActions on Game {
     if (kind == 'work') {
       useT('work');
       final v = workIncome();
-      cash += v;
+      cfAdd('nonop', v);
       calcAll();
       return M('受託の仕事を片付け、{0}を稼ぎました', [Y(v)]);
     }
@@ -783,7 +783,7 @@ extension GameActions on Game {
   String sellLand() {
     final v = land;
     if (v <= 0) return M('土地を持っていません');
-    cash += v;
+    cfAdd('land', v);
     land = 0;
     calcAll();
     return M('土地を{0}で売りました', [Y(v)]);
@@ -797,7 +797,7 @@ extension GameActions on Game {
     lastOffer = turn;
     if (sh.own <= 40) return M('これ以上持ち株を減らすと経営権が危うくなります');
     final money = cap * .1;
-    cash += money;
+    cfAdd('equity', money);
     sh.own -= 10;
     sh.vc += 10;
     useT('vc');
@@ -933,7 +933,7 @@ extension GameActions on Game {
     final v = c.cap * .3 * .95;
     c.stakePlayer -= 30;
     c.listed = true;
-    cash += v;
+    cfAdd('stock', v);
     calcAll();
     if (c.loc != null) {
       chron('ipo', M('現地法人{0}を{1}の市場に上場させた。{2}が入った', [Nm(c.name), C(c.loc!), Y(v)]));
@@ -1002,7 +1002,7 @@ extension GameActions on Game {
     if (nt != null) return nt;
     final cost = dirtyCost(kind);
     if (cash < cost) return M('お金が足りません');
-    cash -= cost;
+    cfAdd('misc', -cost);
     useT('dirty');
     final caught = rnd() < dirtyRisk(kind, c);
     dirty++;
@@ -1020,7 +1020,7 @@ extension GameActions on Game {
       m = [M('{0}の腕利き、{1}を引き抜きました', [Nm(c.name), Nm(p.name)])];
       if (caught) {
         final pay = math.max(c.cap * .005, cost * 2);
-        cash -= pay;
+        cfAdd('sp', -pay);
         scandal = math.max(scandal, 6);
         m.add(M('しかし訴えられ、賠償金{0}を払いました', [Y(pay)]));
       }
@@ -1080,7 +1080,7 @@ extension GameActions on Game {
       if (caught) {
         b.cartel = 0;
         final fine = b.rev * 12 * .15;
-        cash -= fine;
+        cfAdd('sp', -fine);
         scandal = math.max(scandal, 12);
         m.add(M('しかし当局に見つかり、罰金{0}を払いました', [Y(fine)]));
       }
@@ -1102,6 +1102,7 @@ extension GameActions on Game {
     if (nt != null) return nt;
     if (biz.isEmpty) return M('売る事業がありません');
     useT('sellco');
+    finCut();
     final price = salePrice(nc);
     final old = mkCo(0, 'link', name: '${Game.famOf(pres.name)}グループ', presName: nm(), fam: 0);
     old.biz = biz.map((b) => CoBiz(ind: b.ind, power: b.power)).toList();
@@ -1139,8 +1140,11 @@ extension GameActions on Game {
     everBiz = false;
     serial++;
     wealth = wealth + price * .5;
+    cfTag = 'reset';
     cash = price * .5;
     calcAll();
+    // 決算書：前の会社との差を「入れ替え」にする（1.1.0+34）
+    finRebase();
     return Cat([
       M('会社を{0}に{1}で売りました。半分を自分の財産に、半分を元手に、新しい会社を立ち上げます', [Nm(c.name), Y(price)]),
       if (nc) M('{0}年間は同じ業種に入らない約束です', [jsNum(jsRound((noncomp!.until - turn) / 12))]),
@@ -1176,7 +1180,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません（{0} 必要）', [Y(cost)]);
     final nt = spendT('private');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('payout', -cost);
     sh.own += out;
     sh.float = 0;
     for (final i in sh.riv.keys.toList()) {
@@ -1239,7 +1243,7 @@ extension GameActions on Game {
     const k = 100 / 110;
     _dilute(k);
     sh.float = sh.float * k + 10 * k;
-    cash += money;
+    cfAdd('equity', money);
     presXp('zai', 2);
     calcAll();
     return M('新しい株を市場に出し、{0}を集めました。持ち株は{1}に下がりました', [Y(money), pct(sh.own)]);
@@ -1253,7 +1257,7 @@ extension GameActions on Game {
     final nt = spendT('ipo');
     if (nt != null) return nt;
     final money = cap * .25;
-    cash += money;
+    cfAdd('equity', money);
     const k = 100 / 120;
     _dilute(k);
     sh.float = sh.float * k + 20 * k;
@@ -1284,7 +1288,7 @@ extension GameActions on Game {
     x = math.min(x, sh.float);
     final cost = cap * x / 100 * 1.15;
     if (cash < cost) return M('お金が足りません');
-    cash -= cost;
+    cfAdd('payout', -cost);
     sh.float -= x;
     normSh();
     liarCheck();
@@ -1311,7 +1315,7 @@ extension GameActions on Game {
     if (ally == null) return M('頼める相手がいません');
     final cost = ally.cap * .05;
     if (cash < cost) return M('{0}の株を買うお金が足りません', [Nm(ally.name)]);
-    cash -= cost;
+    cfAdd('stock', -cost);
     ally.stakePlayer = ally.stakePlayer + 5;
     final x = math.min(10.0, sh.float);
     sh.float -= x;
@@ -1321,7 +1325,7 @@ extension GameActions on Game {
   }
 
   String doDilute() {
-    cash += cap * .15 * .9;
+    cfAdd('equity', cap * .15 * .9);
     sh.ally += 15;
     normSh();
     liarCheck();
@@ -1351,7 +1355,7 @@ extension GameActions on Game {
     if (nt != null) return nt;
     final c = expandCost();
     if (cash < c) return M('お金が足りません');
-    cash -= c;
+    cfAdd('grow', -c);
     region++;
     for (final b in biz) {
       b.power *= 1.2;
@@ -1375,7 +1379,7 @@ extension GameActions on Game {
     final cost = c.cap * x / 100 * 1.05;
     if (cash < cost) return M('お金が足りません');
     final before = pctOf(c);
-    cash -= cost;
+    cfAdd('stock', -cost);
     c.stakePlayer = before + x;
     useT('own');
     presXp('zai', 1.5);
@@ -1426,7 +1430,7 @@ extension GameActions on Game {
     liarCheck();
     tieRec(c, 'g', M('TOBを仕掛けた'));
     if (rnd() < tobChance(c, target)) {
-      cash -= cost;
+      cfAdd('stock', -cost);
       final need = target - pctOf(c);
       final fromFloat = math.min(need, floatOf(c));
       c.fam -= math.max(0, need - fromFloat);
@@ -1435,7 +1439,7 @@ extension GameActions on Game {
       afterStake(c);
       return M('TOB成功！{0}の株を{1}まで買い取りました', [Nm(c.name), pct(target)]);
     }
-    cash -= cost * .03;
+    cfAdd('misc', -(cost * .03));
     c.rel -= 20;
     return M('TOBは失敗しました。株主が応じてくれませんでした（手数料 {0}）', [Y(cost * .03)]);
   }
@@ -1453,7 +1457,7 @@ extension GameActions on Game {
   String sellStake(Company c) {
     final x = pctOf(c);
     final v = c.cap * x / 100 * .95;
-    cash += v;
+    cfAdd('stock', v);
     c.stakePlayer = 0;
     if (c.parent == 'player') c.parent = null;
     calcAll();
