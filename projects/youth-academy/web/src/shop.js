@@ -469,7 +469,7 @@
             }));
           }),
           // 覚醒の形
-          h('div', { class: 'h', style: 'margin-top:4px' }, '覚醒の形（★を付けて鍵がそろうと、この形で目覚めます）'),
+          h('div', { class: 'h', style: 'margin-top:4px' }, '覚醒の形（合う課題で気づいたとき、1回目はこの形で目覚めます）'),
           h('div', { class: 'row', style: 'gap:3px;flex-wrap:wrap' }, h('button', { class: 'btn sm' + (!st.form ? ' on' : ''), onclick: () => { st.form = null; draw(); } }, 'おまかせ'), ...forms.map((f) => h('button', { class: 'btn sm' + (st.form === f.k ? ' on' : ''), 'data-form': f.k, onclick: () => { st.form = f.k; draw(); } }, f.trait))),
           h('div', { class: 'note' }, fsel ? `${fsel.name}：特性「${fsel.trait}」（${fsel.as.join('・')}）。目覚めると${fsel.abs.join('・')}がまとめて上がります。` : 'おまかせなら、育ち方と接し方で形が決まります。'),
           h('div', { class: 'h', style: 'margin-top:4px' }, '性格（選ばなければ「ふつう」）'),

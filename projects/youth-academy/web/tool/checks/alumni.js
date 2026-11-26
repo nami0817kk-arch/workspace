@@ -13,7 +13,7 @@ module.exports = (YA, ok) => {
     w.alumni = [];
     for (let y = 1; y <= 20; y++) {
       w.year = y;
-      // 毎年12人が卒業：プロ3人・大学5人・社会人4人（力は 10〜15.5）
+      // 毎年11〜12人が卒業：プロ3人・大学5人・社会人4人（力は 10〜15.5）
       if (y <= 12) for (let i = 0; i < 12; i++) {
         const [pos, main] = POS[(i + y) % POS.length];
         const st = i < 3 ? 'pro' : i < 8 ? 'univ' : 'amateur';

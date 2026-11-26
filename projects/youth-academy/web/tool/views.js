@@ -48,6 +48,7 @@ const html = read('shell.html')
   .replace('/*__PERSONA__*/', () => read('persona.js'))
   .replace('/*__COND2__*/', () => read('cond2.js'))
   .replace('/*__STARS2__*/', () => read('stars2.js'))
+  .replace('/*__KADAI__*/', () => read('kadai.js'))
   .replace('/*__TEAM2__*/', () => read('team2.js'))
   .replace('/*__RECORDS__*/', () => read('records.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
@@ -140,7 +141,7 @@ async function clearEvents() {
   // 最初の説明（決定128）：数枚で、飛ばせる
   ok(!!d.querySelector('.sheet.intro') && txt().includes('はじめに 1/') && !!btn('飛ばす'), '最初の説明が出る');
   btn('次へ').click();
-  ok(txt().includes('★注目の子を選ぶ'), '説明を次へ進められる');
+  ok(txt().includes('全員を見て、課題を出す'), '説明を次へ進められる');
   btn('飛ばす').click();
   ok(!d.querySelector('.sheet.intro') && A.w.introSeen, '説明を飛ばせる');
   ok(!!d.querySelector('.tut.coach') && /左が今週やること/.test(d.querySelector('.tut.coach').textContent), '初めての画面でコーチの一言');
@@ -152,7 +153,7 @@ async function clearEvents() {
   btn('この1年を始める').click();
   ok(!d.querySelector('.sheet') && A.w.rules.length === 1 && !A.w.yearIntro, '目標と約束事を決めて始める');
   // 始めたらすぐ練習を組める（最初のセレクションはない）。入団の暦はホームに案内が出る
-  ok(!A.w.firstSel && Object.values(A.w.players).filter((p) => p.grade === 1).length === 12, '始めた時点で高1が12人いる');
+  ok(!A.w.firstSel && Object.values(A.w.players).filter((p) => p.grade === 1).length === 11, '始めた時点で高1が11人いる');
   ok(!!btn('スカウトに出る'), '4月はホームにスカウトに出る案内がある');
   btn('スカウトに出る').click();
   ok(A.tab === 'club' && A.ct === 'scout' && txt().includes('スカウトに出る') && txt().includes('内部昇格') && txt().includes('セレクション'), 'スカウトの画面に暦と行き先が出る');
@@ -294,14 +295,38 @@ async function clearEvents() {
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
   ok(txt().includes('自信'), '面談の反応');
-  // ★の子と過ごす（2026-11-16）：★の子の進路の画面に6つの働きかけ。押すと本人の一言と結果が出て、週の回数が減る
+  // 課題を出す（2026-11-26）：コーチの報告の一番上に手がかり欄。10種類の札 → 中身 → 確かめて出す
   {
     const sp = A.w.players[A.pSel];
-    sp.star = true; sp.inj = 0; sp.fat = 10;
+    sp.inj = 0; sp.fat = 10; sp.kd = null; sp.kEnd = null; sp.star = false;
+    w.YA._ui.render();
+    ptab('コーチの報告');
+    const kb = d.querySelector('#main .kadaibox');
+    ok(!!kb && ['手がかり', 'コーチの見立て', '本人の言葉', '試合の場面', '？'].every((t) => kb.textContent.includes(t)) && !!btn('課題を出す', kb), '詳しい画面（コーチの報告の一番上）に手がかり欄と「課題を出す」');
+    { const mc = d.getElementById('main').cloneNode(true); mc.querySelectorAll('.stars').forEach((x) => x.remove()); ok(!/★|覚醒の鍵|鍵のヒント/.test(mc.textContent), '選手の詳しい画面に★（伸びしろの星を除く）・覚醒の鍵・鍵のヒントの言葉が無い ' + (/.{0,20}★.{0,10}/.exec(mc.textContent) || [''])[0]); }
+    btn('課題を出す', kb).click();
+    let sh = [...d.querySelectorAll('.sheet')].pop();
+    const cards = sh ? [...sh.querySelectorAll('.kcard')] : [];
+    ok(cards.length === 10 && cards.every((c) => /\d+〜\d+週/.test(c.textContent)), '課題を出す画面に10種類の札（説明と期間） ' + cards.length);
+    const pc = cards.find((b) => !b.disabled && /封印|役割|舞台|競わせる|組ませる|武器/.test(b.textContent));
+    pc.click();
+    sh = [...d.querySelectorAll('.sheet')].pop();
+    const kopts = sh ? [...sh.querySelectorAll('.kopt')] : [];
+    ok(kopts.length >= 2, '中身を選べる ' + kopts.length);
+    kopts[0].click();
+    sh = [...d.querySelectorAll('.sheet')].pop();
+    ok(sh && /課題「.+」を出しますか/.test(sh.textContent), '確かめてから出す ' + (sh && sh.textContent.slice(0, 60)));
+    btn('課題を出す', sh).click();
+    ok(sp.kd && sp.star && errors.length === 0 && !d.querySelector('.sheet'), '課題が出る ' + errors.slice(0, 2).join('|'));
+    ptab('コーチの報告');
+    const kb2 = d.querySelector('#main .kadaibox');
+    console.log(`  課題の画面：札${cards.length}・中身${kopts.length}・出した課題「${w.YA.kadaiLabel(A.w, sp.kd.t, sp.kd.c)}」・手がかり欄「${kb2 ? kb2.textContent.slice(0, 40) : ''}…」`);
+    ok(kb2 && /\d+\/\d+週/.test(kb2.textContent) && !!btn('やめる', kb2) && /課題：/.test(kb2.textContent), '課題中は進み具合（N/M週・様子）と「やめる」');
+    ok(!/合って|外れ/.test(kb2.textContent), '合っているかは画面に出さない');
     A.w.saUsed = null;
     w.YA._ui.render();
     ptab('育成');
-    ok(['★の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', '覚醒の手がかりを話し合う', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる', '自主練のメニューを一緒に作る', '休ませて話を聞く', '家族と話す', '試合前に声をかける', '別の位置を試させる', '本を薦める'].every((x) => txt().includes(x)), '★の子の働きかけが12並ぶ');
+    ok(['課題中の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', 'じっくり本音を聞く', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる', '自主練のメニューを一緒に作る', '休ませて話を聞く', '家族と話す', '試合前に声をかける', '別の位置を試させる', '本を薦める'].every((x) => txt().includes(x)), '課題中の子の働きかけが12並ぶ');
     btn('ご飯に連れて行く').click();
     ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('信頼+8') && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
     const mb = [...d.querySelectorAll('#main button')].find((b) => b.textContent.startsWith('ご飯に連れて行く'));
@@ -315,6 +340,9 @@ async function clearEvents() {
     const pick = (v) => { fs.value = v; fs.dispatchEvent(new w.Event('change')); };
     pick('GK');
     ok([...d.querySelectorAll('.plist.scroll .pitem')].every((b) => /GK/.test(b.textContent)), 'GKで絞ると GK だけ');
+    pick('star');
+    ok([...d.querySelectorAll('.plist.scroll .pitem')].length >= 1 && [...d.querySelectorAll('.plist.scroll .pitem')].every((b) => !!b.querySelector('.kchip')), '「課題中」で絞ると課題中の子だけ（課題の名前の札）');
+    ok([...fs.options].some((o) => /課題中/.test(o.textContent)) && ![...fs.options].some((o) => /★/.test(o.textContent)), '絞り込みは「★」でなく「課題中」');
     pick('inj');
     pick('all');
     ok(d.querySelectorAll('.plist.scroll .pitem').length === Object.keys(A.w.players).length, '全員に戻る');
@@ -793,23 +821,26 @@ async function clearEvents() {
         const keepW = A.w, keepTab = A.tab;
         const tw = w.YA.newWorld(11);
         tw.introSeen = true;
-        for (const p of Object.values(tw.players)) p.star = false;
-        tw.week = 4; tw.phase = 'after'; tw.matchDone = true; tw.events = [];
+        // ★の締め切りはなくなったので、11月の内部昇格（27週が締め切り）で見る
+        tw.week = 27; tw.phase = 'after'; tw.matchDone = true; tw.events = [];
         const L = w.YA.todoList(tw);
-        ok(L.some((x) => x.id === 'star' && x.hard && x.left === 0), '4週目で★が未定なら、締め切りのやり残しになる');
+        ok(L.some((x) => x.id === 'int' && x.hard && x.left === 0) && !L.some((x) => x.id === 'star'), '締め切りの週の内部昇格は、締め切りのやり残しになる（★の締め切りはない）');
         A.w = tw; A.tab = 'home'; w.YA._ui.render();
         const card = d.querySelector('.todo');
-        ok(card && card.textContent.includes('高1の★注目を決める') && card.textContent.includes('今週まで'), 'ホームにやり残しの欄が出る');
+        ok(card && card.textContent.includes('内部昇格を決める') && card.textContent.includes('今週まで') && !/★/.test(card.textContent), 'ホームにやり残しの欄が出る');
         ok(!!d.querySelector('#rail .tdot'), 'やり残しのあるタブに印が付く');
+        const band = d.querySelector('.kband');
+        console.log('  ホームの帯：' + (band ? band.textContent : '(なし)'));
+        ok(band && band.textContent.includes('課題の5人') && band.textContent.includes('課題を出せる枠があと5つ'), 'ホームに「課題の5人」の帯（空き枠の数）');
         btn('次の週へ').click();
         const sh = [...d.querySelectorAll('.sheet')].pop();
-        ok(sh && sh.textContent.includes('この週で締め切られるもの') && sh.textContent.includes('★は付けられなくなり') && tw.week === 4, '締め切りの週は「次の週へ」の前に一度止まる');
+        ok(sh && sh.textContent.includes('この週で締め切られるもの') && sh.textContent.includes('内部昇格は決められなくなり') && tw.week === 27, '締め切りの週は「次の週へ」の前に一度止まる');
         btn('戻って決める', sh).click();
-        ok(A.tab === 'players' && A.pSel === w.YA.starPick(tw, 1)[0].id && !d.querySelector('.sheet'), '「戻って決める」でその画面へ');
+        ok(A.tab === 'club' && A.ct === 'int' && !d.querySelector('.sheet'), '「戻って決める」でその画面へ');
         A.tab = 'home'; w.YA._ui.render();
         btn('次の週へ').click();
         btn('このまま進む', [...d.querySelectorAll('.sheet')].pop()).click();
-        ok(tw.week === 5 || tw.phase !== 'after', '「このまま進む」で週が進む');
+        ok(tw.week === 28 || tw.phase !== 'after', '「このまま進む」で週が進む');
         d.querySelectorAll('.sheet').forEach((s) => s.remove());
         tw.week = 27; tw.phase = 'after';
         ok(w.YA.todoDue(tw).some((x) => x.id === 'int'), '11月の最後の週は、内部昇格が締め切りのやり残しになる');
@@ -854,10 +885,10 @@ async function clearEvents() {
         if (!w.YA.MENUS[tw.plan.days[0].menu] || !(w.YA.MENUS[tw.plan.days[0].menu].fat > 0)) tw.plan.days[0].menu = Object.keys(w.YA.MENUS).find((k) => w.YA.MENUS[k].fat > 0);
         for (let k = 35; k < 40 && w.YA.todoList(tw).length; k++) tw.week = k;
         const SL = w.YA.todoSoft(tw).map((x) => x.id);
-        ok(!w.YA.todoList(tw).length && ['talkw', 'staract', 'plan'].every((k) => SL.includes(k)) && !SL.includes('scoutw'), '期限ものがない週も、今週やれること（面談・★の子と過ごす・練習の見直し。スカウトは下の一言と二重にしない）が出る ' + SL.join(','));
+        ok(!w.YA.todoList(tw).length && ['talkw', 'staract', 'plan'].every((k) => SL.includes(k)) && !SL.includes('scoutw'), '期限ものがない週も、今週やれること（面談・課題中の子と過ごす・練習の見直し。スカウトは下の一言と二重にしない）が出る ' + SL.join(','));
         A.w = tw; A.tab = 'home'; w.YA._ui.render();
         const card2 = d.querySelector('.todo');
-        ok(card2 && d.querySelector('.home-mid').textContent.split('スカウトに出る').length === 2 && card2.textContent.includes('★の子と過ごす') && card2.textContent.includes('練習を見直す') && !d.querySelector('#rail .tdot'), 'ホームに今週やれることが出る（左の帯の赤い点は期限ものだけ）');
+        ok(card2 && d.querySelector('.home-mid').textContent.split('スカウトに出る').length === 2 && card2.textContent.includes('課題中の子と過ごす') && card2.textContent.includes('練習を見直す') && !d.querySelector('#rail .tdot'), 'ホームに今週やれることが出る（左の帯の赤い点は期限ものだけ）');
         btn('練習を見直す', card2).click();
         ok(A.tab === 'train' && A.trt === 'plan', '今週やれることを押すとその画面へ');
         for (let k = 5; k < 27 && !w.YA.matchOf(tw); k++) tw.week = k;
@@ -989,7 +1020,7 @@ async function clearEvents() {
     ok(txt().includes('総合力') && txt().includes('別の子と比べる'), '2人の比較が出る');
     if (btn('閉じる')) btn('閉じる').click();
     rail('ほか');
-    btn('遊び方', d.querySelector('#main .tabs')).click(); ok(txt().includes('用語集') && txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '遊び方に用語集');
+    btn('遊び方', d.querySelector('#main .tabs')).click(); ok(txt().includes('用語集') && txt().includes('手がかり') && !txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '遊び方に用語集');
     // ---------- ガイド（2026-11-19「各操作や画面のガイドを充実させて」） ----------
     {
       const Y = w.YA;

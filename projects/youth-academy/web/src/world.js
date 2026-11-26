@@ -1,4 +1,4 @@
-// 育成の中身：36人（高1〜高3）・1週の流れ・練習・成長・怪我・出来事・卒業と入学。
+// 育成の中身：33人（高1〜高3。2026-11-26 に1学年12人→11人）・1週の流れ・練習・成長・怪我・出来事・卒業と入学。
 // 見せ方には依存しない（試合の engine.js と同じ作り）。状態 w は JSON にそのまま保存できる。
 (function () {
   'use strict';
@@ -15,6 +15,9 @@
     return { month: MONTHS[m], nth: week - first + 1 };
   };
   YA.WEEKS = WEEKS;
+  // 保存の形の版（2026-11-26 課題の仕組みに作り替えて 3→4。古い保存は読み込まず新しく始める）
+  YA.SAVE_V = 4;
+  YA.isOldSave = (sw) => !!(sw && sw.players && sw.lineupA && sw.v >= 3 && sw.v < YA.SAVE_V);
   // 週の呼び方を画面どこでも「7月第1週」にそろえる（2026-11-21：お知らせや最近のことは「11週」と出ていた）
   YA.wkName = (week) => { if (!week) return ''; const c = YA.calendar(week); return `${c.month}第${c.nth}週`; };
   YA.ywName = (y, week) => `${y}年目 ${YA.wkName(week)}`;
@@ -204,10 +207,12 @@
     }
   }
 
-  // 1学年12人（GK1・DF4・MF4・FW3）
+  // 1学年11人（GK1・DF4・MF3・FW3。2026-11-26 に12人から）
+  YA.GRADE_N = 11;
+  YA.ROSTER = 33;
   function genGrade(rng, w, grade, used) {
     const NEARP = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], DM: ['CM', 'CB'], CM: ['DM', 'LM'], AM: ['SS', 'RM'], LW: ['LM', 'SS'], RW: ['RM', 'SS'], ST: ['SS', 'LW'] };
-    const base15 = ['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST'];
+    const base15 = ['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'AM', 'LW', 'RW', 'ST'];
     const poss = base15.map((q) => (q !== 'GK' && rng.chance(0.3) ? NEARP[q][rng.int(0, 1)] : q));
     for (const pos of poss) {
       const id = 'p' + ++w.nextId;
@@ -227,7 +232,7 @@
     numbers(w);
     autoTeams(w, true);
     w.plan = defaultPlan();
-    w.v = 3;
+    w.v = YA.SAVE_V;
     w.coach = opts.coach ? Object.assign(YA.newCoach(), opts.coach) : YA.newCoach();
     w.coachName = opts.coachName || '監督';
     w.tut = { on: opts.tutorial !== false };
@@ -244,7 +249,7 @@
     YA.relations(w);
     YA.yearStart(w);
     YA.autoPlan(w);
-    w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
+    w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の33人を預かります。まずは練習を組んで、週を進めましょう。' });
     return w;
   };
 
@@ -254,7 +259,7 @@
   YA.defaultPlan = defaultPlan;
 
   // ---------- チーム（A・B）の自動選出 ----------
-  const SQUAD = { GK: 2, DF: 7, MF: 7, FW: 4 }; // Aの登録20
+  const SQUAD = { GK: 2, DF: 7, MF: 6, FW: 5 }; // Aの登録20（1学年11人＝MF3・FW3 にしたので、Bにも MF が残るように）
   YA.YOUNG_A_BONUS = 0.3; // 年度替わりのおまかせの選び直しで、高1に足す力（能力の平均で）
   function healthy(p) {
     return p.inj <= 0 && !(p.away > 0) && !(p.suspend > 0);
@@ -893,7 +898,7 @@
       pick: (w, r) => {
         // Aの出場（minsA）で見る（2026-11-17 直し：Bの試合の出場も数えていた）。「能力」は年の半ばまで様子を見る
         const weak = (p) => p.grade >= 2 && YA.ovr(p) < 9 && (p.minsA || 0) < 150 && w.week >= 14;
-        const c = Object.values(w.players).filter((p) => (p.unrest >= 4 || (p.conf < 25 && (p.minsA || 0) < 120) || p.inj >= 8 || weak(p) || (ST(p, '目指すもの', '家族思い') && r() < 0.03)) && Object.keys(w.players).length > 32);
+        const c = Object.values(w.players).filter((p) => (p.unrest >= 4 || (p.conf < 25 && (p.minsA || 0) < 120) || p.inj >= 8 || weak(p) || (ST(p, '目指すもの', '家族思い') && r() < 0.03)) && Object.keys(w.players).length > YA.ROSTER - 4);
         if (!c.length) return null;
         // 長い怪我の子がいれば半分はその子（前は怪我による退団がほとんど起きなかった）
         const hurt = c.filter((q) => q.inj >= 8);
@@ -1056,7 +1061,7 @@
       delete p._leave;
       removePlayer(w, p.id);
       leave = pname(p) + ' はチームを去った。空いた枠は、途中加入で埋まった';
-      newcomer(w, r, 1); // 途中加入は高1だけ（同じ学年で埋めると、卒業生が12人を超えていた）
+      newcomer(w, r, 1); // 途中加入は高1だけ（同じ学年で埋めると、卒業生が11人を超えていた）
     }
     return { line, small: leave ? '' : small, leave };
   };
@@ -1354,7 +1359,7 @@
     return grad;
   };
 
-  // 3月：高3が卒業して名鑑へ。高2→高3、高1→高2。新しい高1が12人入る
+  // 3月：高3が卒業して名鑑へ。高2→高3、高1→高2。新しい高1が11人入る
   YA.graduate = function (w) {
     const rng = YA.rngOf(w.seed * 71 + w.year * 12345);
     const out = [];

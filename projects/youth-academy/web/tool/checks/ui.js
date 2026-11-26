@@ -73,7 +73,7 @@ module.exports = (YA, ok) => {
   {
     const u = src('ui.js');
     ok(!/chip pers', title:/.test(u) && /k === 'tip'/.test(u), 'ui: 性格の札は title ではなく押すと説明（tip）');
-    ok(!/title: d\.about/.test(src('staracts.js')), 'ui: ★の働きかけの説明は本文に出す');
+    ok(!/title: d\.about/.test(src('staracts.js')), 'ui: 課題中の子への働きかけの説明は本文に出す');
     ok(!/title: d \? '' : leanHint/.test(src('lineage.js')), 'ui: 図鑑の手がかりは title にしない（本文に出ている）');
     ok(!/chip trait', title: YA\.futureRange/.test(src('views.js')), 'ui: 伸びしろの水準名は title にしない');
   }

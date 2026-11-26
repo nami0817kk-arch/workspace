@@ -331,7 +331,7 @@
     const fresh = all.filter((x) => recent.indexOf(x.k) < 0);
     const cands = fresh.length ? fresh : all;
     if (!cands.length) return;
-    // ★の子の続き物を先に（2026-11-15「★以外のイベントが多発する」）。★以外の子で始まるのは YA.NONSTAR_KEEP の割合だけ
+    // 課題中の子の続き物を先に（2026-11-15「★以外のイベントが多発する」）。ほかの子で始まるのは YA.NONSTAR_KEEP の割合だけ
     const stars = cands.filter((x) => x.p.star);
     const pick = stars.length && r() < 0.8 ? stars[r.int(0, stars.length - 1)] : cands[r.int(0, cands.length - 1)];
     if (!pick.p.star && Object.values(w.players).some((q) => q.star) && r() > (YA.NONSTAR_KEEP != null ? YA.NONSTAR_KEEP : 1)) return;
@@ -406,8 +406,7 @@
         conf(p, -3);
         if (out) out.small = (out.small ? out.small + '・' : '') + '前と同じ言葉は、響きにくかった（自信 −3）';
       }
-      // ★でない子も、よくある出来事は記憶に残す（★の子は memory.js が残す）
-      if (!p.star && YA.memAdd) YA.memAdd(w, p, e.id, o.kind, quoteOf(o.label), /「/.test(o.label) ? { sp: true } : null);
+      // よくある出来事の記憶は memory.js が全員に残す（2026-11-26 まで★以外の子はここで残していた）
       if (YA.trustLv(p) >= 3 && YA.hash(p.id + w.week) % 3 === 0) YA.bgReveal(w, p);
     }
     return out;

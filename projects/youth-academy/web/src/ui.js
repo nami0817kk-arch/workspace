@@ -196,9 +196,11 @@
     const key = YA.slotKey(app.slot);
     const sw = store.get(key, null);
     // 保存がなければ「新しく始める」画面（指導者の作成）から
-    app.w = sw && sw.v >= 3 && sw.players && sw.lineupA ? sw : null;
+    app.w = sw && sw.v >= YA.SAVE_V && sw.players && sw.lineupA ? sw : null;
+    // 前の版（★と覚醒の鍵の仕組み）の保存は読み込まず、新しく始める（2026-11-26。新しく始める画面で一言出す）
+    app.oldSave = !app.w && YA.isOldSave(sw);
     // 保存はあるのに読めない（壊れている・形が違う）ときは、黙って新しく始めない。選ばせる（views3 の newgame が出す）
-    app.loadErr = !app.w && (sw != null || store.broken[key]) ? { slot: app.slot } : null;
+    app.loadErr = !app.w && !app.oldSave && (sw != null || store.broken[key]) ? { slot: app.slot } : null;
     if (app.w) {
       if (!app.w.tut) app.w.tut = { on: false };
       [app.w.lineupA, app.w.lineupB].forEach((l) => l.forEach((sl, i) => YA.fixSlotRole(sl, i)));

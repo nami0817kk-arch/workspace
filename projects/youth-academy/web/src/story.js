@@ -1,4 +1,4 @@
-// 2段目その3（決定136〜138）：進路面談（★の子だけ）・節目の場面4つ・口調10通り。
+// 2段目その3（決定136〜138）：進路面談（課題中の子だけ。前は★の子）・節目の場面4つ・口調10通り。
 // 出来事（forced）の仕組みに乗せる：進路面談は 'path'、節目の場面は 'scene'（入学式・夏合宿・大会の決勝前・卒業式）。
 (function () {
   'use strict';
@@ -98,7 +98,7 @@
     return pick.replace(/\{c\}/g, clubShort(w)).replace(/\{n\}/g, sur(p));
   };
 
-  // ---------- 進路面談（決定136）：★の子だけ。トップに上がらない子と、3年の秋に面談する ----------
+  // ---------- 進路面談（決定136）：課題中の子だけ。トップに上がらない子と、3年の秋に面談する ----------
   const PATH_LABEL = {
     abroad: '海外のクラブへ売り込む（通れば評判が上がる。外れたら大学へ）',
     pro: '他のプロのクラブへ売り込む（練習参加を取りつける。通るのは6割ほど）',
@@ -136,7 +136,7 @@
     }));
   };
   YA.EVENTS.push({ id: 'path', name: '進路面談', weight: 0, pick: () => null, text: () => '', opts: [] });
-  YA.EVENT_ABOUT.path = '★の子との進路の面談です。コーチのおすすめに沿うと信頼が上がり、大学なら遅咲きで化けることもあります。選んだ道は卒業の進路に反映されます。';
+  YA.EVENT_ABOUT.path = '課題に取り組んでいる高3との進路の面談です。コーチのおすすめに沿うと信頼が上がり、大学なら遅咲きで化けることもあります。選んだ道は卒業の進路に反映されます。';
 
   // ---------- 節目の場面4つ（決定137）：入学式・夏合宿・大会の決勝前・卒業式。選択肢は「進む」でもよい（飛ばせる）----------
   YA.EVENTS.push({ id: 'scene', name: '節目の場面', weight: 0, pick: () => null, text: () => '', opts: [] });
@@ -156,7 +156,7 @@
     }
     if (e.sc === 'camp') {
       const n = all.filter((p) => p.star).length;
-      return `夏合宿の夜。昼の疲れで静まった宿舎の食堂に、全員が集まった。` + (n ? `★の子たちの目が変わってきた。（合宿のあいだ、★の子の覚醒の鍵が見えやすくなっている）` : '');
+      return `夏合宿の夜。昼の疲れで静まった宿舎の食堂に、全員が集まった。` + (n ? `課題に取り組む子たちの目が変わってきた。（合宿のあいだ、手がかりが見えやすくなっている）` : '');
     }
     if (e.sc === 'cup') {
       const c = w.cup && w.cup[e.cup];
@@ -165,7 +165,7 @@
       return `${YA.CUP_NAME[e.cup]}、決勝の前。ここまで勝ち上がってきた。 ${rows.join(' ／ ')}。ロッカーでみんなが、こちらの言葉を待っている。`;
     }
     const grads = all.filter((p) => p.grade === 3).sort((a, b) => (b.star ? 1 : 0) - (a.star ? 1 : 0) || YA.ovr(b) - YA.ovr(a));
-    const shown = grads.slice(0, 4).map((p) => YA.sayLine({ name: p.name + (p.star ? '★' : '') }, YA.say(w, p, 'thanks'))).join(' ／ ');
+    const shown = grads.slice(0, 4).map((p) => YA.sayLine({ name: p.name }, YA.say(w, p, 'thanks'))).join(' ／ ');
     return `卒業式。${grads.length}人がグラウンドに並び、順に挨拶をした。 ${shown}`;
   }
   const run = (line, fn, after) => ({ label: null, kind: null, run: (w, p, r) => { const s = fn ? fn(w) : ''; const s2 = after ? after(w) : ''; return { line: line + (s2 ? ' ' + s2 : ''), small: s || '' }; } });
@@ -179,7 +179,7 @@
       o('何も言わず、見守る', '拍手の中、静かに式が終わった。'),
     ];
     if (e.sc === 'camp') return [
-      o('★の子と、夜に一人ずつ話す', '一人ずつ、夜風の中で話した。', (ww) => { for (const p of Object.values(ww.players)) if (p.star) YA.hintUp(ww, p, 0.6, '合宿の夜の話'); return '★の子の鍵のヒントが進んだかもしれない'; }),
+      o('課題中の子と、夜に一人ずつ話す', '一人ずつ、夜風の中で話した。', (ww) => { for (const p of Object.values(ww.players)) if (p.star) YA.hintUp(ww, p, 0.6, '合宿の夜の話'); return '課題中の子の手がかりが見えたかもしれない'; }),
       o('全員で車座になって、この半年を話す', '笑い声が広がった。', (ww) => { bump(Object.values(ww.players), 'conf', 2); return '全員の自信 +2'; }),
       o('早く寝かせる', 'その夜は、全員がぐっすり眠った。', (ww) => { bump(Object.values(ww.players), 'fat', -8); return '全員の疲れ −8'; }),
     ];
@@ -189,7 +189,7 @@
       o('何も言わず、送り出す', '無言のまま、全員がピッチへ向かった。'),
     ];
     return [
-      o('一人ひとりに声をかける', '一人ひとりと握手をして、送り出した。', (ww) => { let n = 0; for (const p of Object.values(ww.players)) if (p.grade === 3 && p.star) { YA.addTr(ww, p, 1, '卒業式の声かけ'); n++; } return n ? `★の卒業生 ${n}人の信頼 +1` : ''; }),
+      o('一人ひとりに声をかける', '一人ひとりと握手をして、送り出した。', (ww) => { let n = 0; for (const p of Object.values(ww.players)) if (p.grade === 3 && p.star) { YA.addTr(ww, p, 1, '卒業式の声かけ'); n++; } return n ? `課題中の卒業生 ${n}人の信頼 +1` : ''; }),
       o('みんなの前で、3年生に感謝を伝える', '拍手が、しばらく鳴りやまなかった。', (ww) => { YA.addRep(ww, 1); return '評判 +1'; }),
       o('見送る', '桜の下を、卒業生が歩いていった。'),
     ];
@@ -205,7 +205,7 @@
       const p = w.players[e.pid];
       if (!p) return;
       def.opts = YA.pathOptions(p);
-      def.text = (q) => `${q.num}番 ${q.name}★（高3・総合力${rate(q)}）が、卒業後の進路の面談に来た。コーチの見立て：${PATH_HINT[YA.pathCands(q)[0]] || ''}「どの道に進みたいか、監督の考えも聞かせてください」`;
+      def.text = (q) => `${q.num}番 ${q.name}（高3・総合力${rate(q)}）が、卒業後の進路の面談に来た。コーチの見立て：${PATH_HINT[YA.pathCands(q)[0]] || ''}「どの道に進みたいか、監督の考えも聞かせてください」`;
     }
   }
   const view0 = YA.eventView;
@@ -357,7 +357,7 @@
       p.scoutNote = { lo: e.lo, hi: e.hi, now, kind, hunch: e.hunch ? { text: e.hunch.text, true: e.hunch.true } : null };
       if (kind === 'hit') hit++; else if (kind === 'over') over++; else under++;
       if (kind !== 'hit' || e.hunch) {
-        const hn = e.hunch ? `「${e.hunch.text}」という見立ては${e.hunch.true ? '当たっていた' : '外れた'}（伸びしろ★${st}）。` : '';
+        const hn = e.hunch ? `「${e.hunch.text}」という見立ては${e.hunch.true ? '当たっていた' : '外れた'}（伸びしろ ${st}/5）。` : '';
         lines.push({ imp: kind !== 'hit', t: `${p.name}：見立ては総合力${e.lo}〜${e.hi}、本当は${now}（${kind === 'over' ? '幅の上のほう＝当たり' : kind === 'under' ? '幅の下のほう＝外れ' : '見立てどおり'}）。${hn}` });
       }
     }
@@ -383,28 +383,26 @@
     return nt0.apply(this, arguments);
   };
   const lt0 = YA.alumniTick;
-  // ★の子は、卒業してからも便りで追える（育てた子の「その後」を毎年見せる）
+  // 課題を出したことのある子は、卒業してからも便りで追える（覚醒した子か、絆の深い子）（育てた子の「その後」を毎年見せる）
   const aeStar0 = YA.alumniEntry;
   YA.alumniEntry = function (w, p) {
     const a = aeStar0.apply(this, arguments);
-    if (p.star) a.star = true;
+    if (p.star || p.kEver) a.star = true;
     return a;
   };
   YA.alumniTick = function (w) {
     const r = lt0.apply(this, arguments);
     for (const a of w.alumni || []) {
-      if (!a.star || a.year >= w.year || a.retired) continue;
+      if (!a.star || !(a.form || (a.bond != null && a.bond >= 4)) || a.year >= w.year || a.retired) continue;
       const tail = a.status === 'pro' ? `${a.club}（${a.league}）で通算${YA.statLine(a, a.pos === 'GK')}` : a.status === 'univ' ? `${a.club}で四年間のプレー中` : `${a.club}で続けている`;
-      YA.noteTier(w, 2, `卒業生の${a.name}★（${a.year}年目卒）：${tail}`);
+      YA.noteTier(w, 2, `卒業生の${a.name}（${a.year}年目卒）：${tail}`);
     }
     const n = ((w.letters || {})[w.year] || []).length;
     if (n > 0) nt0(w, 2, `今年の卒業生の便りが${n}件届いています（記録 → 便り）`);
     return r;
   };
-  // 憧れの卒業生と話す：★の子の覚醒の鍵のひとつ（高1〜高2の子に。オフに卒業生が顔を出す）
-  YA.KEY_DEF.alum = { sys: '人', ok: (p) => p.grade <= 2, need: 1, vague: '憧れの先輩に会えば、何かが変わりそうだ', clear: () => 'オフに顔を出した卒業生と話す' };
   YA.EVENTS.push({ id: 'visit', name: '卒業生が顔を出した', weight: 0, pick: () => null, text: () => '', opts: [] });
-  YA.EVENT_ABOUT.visit = '卒業した先輩が練習場に顔を出しました。★の子と話してもらうと、「憧れの卒業生と話す」の鍵や信頼が進みます。';
+  YA.EVENT_ABOUT.visit = '卒業した先輩が練習場に顔を出しました。課題中の子と話してもらうと、信頼が上がり、手がかりが見えることがあります。';
   const STAT = { pro: 'プロ', univ: '大学', amateur: '社会人' };
   YA.visitor = function (w) {
     // 途中で退団した子（status 'left'）は卒業生ではないので、顔を出す候補に入れない（2026-11-17）
@@ -423,10 +421,10 @@
     const run = (label, line, fn) => ({ label, kind: null, run: (ww, p, r) => { said(ww); return { line, small: fn ? fn(ww) : '' }; } });
     def.opts = [
       run('練習に混ざってもらう', '久しぶりに本気のボール回しをして、グラウンドが沸いた。', (ww) => { const l = Object.values(ww.players).filter((p) => p.team === 'A'); for (const p of l) p.conf = clamp((p.conf || 0) + 3, 0, 100); return 'Aの自信 +3'; }),
-      run(star.length ? '★の子と、じっくり話してもらう' : a && a.status === 'pro' ? '後輩たちに、プロの話をしてもらう' : a && a.status === 'univ' ? '後輩たちに、大学のサッカーの話をしてもらう' : '後輩たちに、卒業してからの話をしてもらう', star.length ? '憧れの先輩の言葉を、後輩たちは真剣に聞いた。' : '質問が止まらず、予定の時間を超えた。', (ww) => {
+      run(star.length ? '課題中の子と、じっくり話してもらう' : a && a.status === 'pro' ? '後輩たちに、プロの話をしてもらう' : a && a.status === 'univ' ? '後輩たちに、大学のサッカーの話をしてもらう' : '後輩たちに、卒業してからの話をしてもらう', star.length ? '憧れの先輩の言葉を、後輩たちは真剣に聞いた。' : '質問が止まらず、予定の時間を超えた。', (ww) => {
         if (!star.length) { for (const p of Object.values(ww.players)) p.conf = clamp((p.conf || 0) + 1, 0, 100); return '全員の自信 +1'; }
-        for (const p of star) { YA.keyProgress(ww, p, 'alum', 1); YA.addTr(ww, p, 1, '憧れの卒業生と話した'); YA.hintUp(ww, p, 0.5, '卒業生の話'); }
-        return `★の子${star.length}人の信頼 +1・鍵が進んだ`;
+        for (const p of star) { YA.addTr(ww, p, 1, '憧れの卒業生と話した'); YA.hintUp(ww, p, 0.5, '卒業生の話'); }
+        return `課題中の子${star.length}人の信頼 +1`;
       }),
       run('お礼を言って、見送る', '「また来ます」と手を振って、帰っていった。'),
     ];

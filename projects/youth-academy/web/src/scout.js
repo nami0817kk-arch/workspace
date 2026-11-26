@@ -217,7 +217,7 @@
     if (!c || c.status !== 'open') return { ok: false, msg: 'すでに決まっています' };
     if (!inWindow(w, c.kind)) return { ok: false, msg: WHEN[c.kind][1] };
     if (c.next) return { ok: false, msg: `${c.p.name}は来年度の候補です。声をかけられるのは4月からです` };
-    if (held(w) >= 12) return { ok: false, msg: '新入生の枠（12人）がいっぱいです' };
+    if (held(w) >= (YA.GRADE_N || 11)) return { ok: false, msg: `新入生の枠（${YA.GRADE_N || 11}人）がいっぱいです` };
     if (c.foreign) {
       const reg = Object.values(w.players).filter((q) => YA.isForeign(q)).length + S.cands.filter((x) => x.foreign && (x.status === 'signed' || x.status === 'offered')).length;
       if (reg >= 5) return { ok: false, msg: '外国籍の選手の登録は5人までです' };
@@ -274,7 +274,7 @@
   // 入団（3月）：決まった子を学年1の選手にする。足りない分は一般入団で埋める
   YA.intake = function (w, rng, used) {
     const S = w.scouting || YA.newScouting();
-    const signed = S.cands.filter((c) => c.status === 'signed').slice(0, 12);
+    const signed = S.cands.filter((c) => c.status === 'signed').slice(0, YA.GRADE_N || 11);
     const names = new Set(used);
     for (const a of w.alumni || []) names.add(a.name); // 卒業生と同じ名前の子を入れない
     let n = 0;
@@ -306,17 +306,17 @@
     // 一般入団（見ていない子）。ポジションが偏らないよう足りない所を補う
     const have = { GK: 0, DF: 0, MF: 0, FW: 0 };
     for (const p of Object.values(w.players)) if (p.grade === 1) have[p.pos]++;
-    const want = { GK: 1, DF: 4, MF: 4, FW: 3 };
+    const want = { GK: 1, DF: 4, MF: 3, FW: 3 };
     // GKが1人もいないと困るので、決まった子を1人外してでも一般入団のGKを入れる
-    if (have.GK === 0 && n >= 12) {
+    if (have.GK === 0 && n >= (YA.GRADE_N || 11)) {
       const last = Object.values(w.players).filter((p) => p.grade === 1 && p.pos !== 'GK').pop();
       if (last) { delete w.players[last.id]; n--; have[last.pos]--; }
     }
     for (const pos of ['GK', 'DF', 'MF', 'FW']) {
-      while (have[pos] < want[pos] && n < 12) {
+      while (have[pos] < want[pos] && n < (YA.GRADE_N || 11)) {
         const id = 'p' + ++w.nextId;
         const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2), -2, 2);
-        const G15 = { GK: ['GK'], DF: ['CB', 'CB', 'LB', 'RB'], MF: ['DM', 'CM', 'CM', 'AM'], FW: ['LW', 'RW', 'ST'] }[pos];
+        const G15 = { GK: ['GK'], DF: ['CB', 'CB', 'LB', 'RB'], MF: ['DM', 'CM', 'AM'], FW: ['LW', 'RW', 'ST'] }[pos];
         const p = YA.genPlayer(rng, id, 1, G15[rng.int(0, G15.length - 1)], q, names);
         p.hist = [{ y: w.year, w: 40, t: '一般入団' }];
         p.route = '一般入団';
@@ -922,7 +922,7 @@
     if (w.week === 35) YA.closeSelection(w);
     // 38週：卒業する上位の子から、進路の相談が届く
     if (w.week === 38) {
-      // ★の子は全員、★以外は上位1人まで（2026-11-15「★以外のイベントが多発する」）
+      // 課題中の子は全員、ほかは上位1人まで（2026-11-15「★以外のイベントが多発する」）
       const g3 = Object.values(w.players).filter((p) => p.grade === 3 && YA.ovr(p) >= 10.8).sort((a, b) => YA.ovr(b) - YA.ovr(a));
       const sr = g3.filter((p) => p.star).concat(g3.filter((p) => !p.star).slice(0, 1)).slice(0, 4);
       w.forced = (w.forced || []).concat(sr.map((p) => ({ id: 'career', pid: p.id, week: w.week, year: w.year })));

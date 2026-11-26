@@ -166,7 +166,7 @@ module.exports.measure = measure;
 
 if (require.main === module) {
   const path = require('path');
-  for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop']) require(path.join(__dirname, '../../src/' + f + '.js'));
+  for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'stars2', 'kadai']) require(path.join(__dirname, '../../src/' + f + '.js'));
   const YA = globalThis.YA;
   const n = +process.argv[2] || 8;
   const seeds = Array.from({ length: n }, (_, i) => i + 1);

@@ -1,5 +1,5 @@
-// 1段目「芯」（決定85・101〜110・113）：★注目の上限、覚醒の鍵とヒント、覚醒の形と特性、★の子ごとの信頼5段階、節目の会話。
-// 覚醒は★の子だけが、隠れた鍵2〜3個を満たして起こす（年1〜2人の運任せはやめた）。見せ方に依存しない。
+// 1段目「芯」（決定85・101〜110・113）：覚醒の形と特性、課題中の子ごとの信頼5段階、節目の会話。
+// 2026-11-26 ★注目と覚醒の鍵をやめ、課題（kadai.js）に置き換えた。p.star は「いま課題に取り組んでいる」の意味。見せ方に依存しない。
 (function () {
   'use strict';
   const YA = (globalThis.YA = globalThis.YA || {});
@@ -8,44 +8,6 @@
   const fam = (p) => p.name.split(' ')[0];
   const ST = (p, g, v) => p.pers && p.pers[g] === v;
   const abs = (w) => w.year * 100 + w.week;
-
-  // ---------- ★注目（決定85。決定150で「入団時に決める」へ）：各学年4人まで ----------
-  // ★は新入生の入団から4週のうちに決める（そのあとは付け替えられない）。初年度も同じで、高1だけ（決定：上級生には付けない）
-  YA.STAR_MAX = 4;
-  YA.STAR_WEEKS = 4;
-  YA.starGrades = (w) => (w.week <= YA.STAR_WEEKS ? [1] : []);
-  YA.starOpen = (w, p) => YA.starGrades(w).includes(p.grade);
-  YA.STAR_CLOSED = '★は高1にだけ、入団から4週のうちに付けます。高2・高3には付けられません。次の新入生が入ったら、また選べます';
-  YA.starsIn = (w, grade) => Object.values(w.players).filter((p) => p.star && p.grade === grade);
-  YA.setStar = function (w, p, on) {
-    if (!YA.starOpen(w, p)) return { ok: false, msg: YA.STAR_CLOSED };
-    if (!on) {
-      p.star = false;
-      return { ok: true, msg: `${p.name}の★を外しました（鍵の進み具合と信頼は残ります）` };
-    }
-    if (p.star) return { ok: true, msg: '' };
-    if (YA.starsIn(w, p.grade).length >= YA.STAR_MAX) return { ok: false, msg: `★は各学年${YA.STAR_MAX}人までです。高${p.grade}のだれかの★を外してください` };
-    p.star = true;
-    YA.keysOf(w, p);
-    if (p.tr == null) p.tr = 50;
-    if (!p.ms || !p.ms.star) milestone(w, p, 'star');
-    return { ok: true, msg: `${p.name}に★を付けました。面談や試合で、覚醒の鍵のヒントが少しずつ見えてきます` };
-  };
-  // おまかせ進行・最初の4週の勧め：伸びしろの星が高い子から、空いている枠に★を付ける
-  YA.starPick = (w, grade) => Object.values(w.players).filter((p) => p.grade === grade && !p.star && !(p.aw && !(p.keys || []).length)).sort((a, b) => (w.year === 1 ? (b.fast ? 1 : 0) - (a.fast ? 1 : 0) : 0) || YA.coachStars(w, b) - YA.coachStars(w, a) || (b.fast ? 1 : 0) - (a.fast ? 1 : 0) || YA.rating(b) - YA.rating(a));
-  YA.autoStars = function (w) {
-    for (const g of YA.starGrades(w)) {
-      let n = YA.starsIn(w, g).length;
-      for (const p of YA.starPick(w, g)) {
-        if (n >= YA.STAR_MAX) break;
-        p.star = true;
-        YA.keysOf(w, p);
-        if (p.tr == null) p.tr = 50;
-        if (!p.ms) p.ms = { star: abs(w) };
-        n++;
-      }
-    }
-  };
 
   // ---------- 伸びしろの星と幅（決定91）----------
   // 一覧：コーチの見立ての星1〜5。見る目が低いと1つ外れることがある（同じ子・同じ年なら同じ外れ方）
@@ -56,7 +18,7 @@
     const miss = clamp(0.42 - eye * 0.018 - (p.grade - 1) * 0.08 - (p.star ? 0.1 : 0), 0.03, 0.5);
     return clamp(s + (r.chance(miss) ? (r.chance(0.5) ? 1 : -1) : 0), 1, 5);
   };
-  // 詳細：将来の総合力の幅と水準名。見る目・学年・★で見た長さ（careOf）で狭まる。見抜く目（課金）は w.sharpEye
+  // 詳細：将来の総合力の幅と水準名。見る目・学年・課題で見た長さ（careOf）で狭まる。見抜く目（課金）は w.sharpEye
   YA.futureRange = function (w, p) {
     const list = p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD;
     const room = Math.max(0, p.pot - YA.abSum(p)) / list.length;
@@ -74,7 +36,7 @@
     return { lo, hi, text: `将来 ${lo}〜${hi}（${nm(lo) === nm(hi) ? nm(lo) : nm(lo) + '〜' + nm(hi)}）` };
   };
 
-  // ---------- 練習の伸びの見せ方（決定90）：★の子は「パス 11→12」、ほかは矢印。コーチの一言を添える ----------
+  // ---------- 練習の伸びの見せ方（決定90）：課題中の子は「パス 11→12」、ほかは矢印。コーチの一言を添える ----------
   const train0 = YA.runTraining;
   YA.runTraining = function (w) {
     const gains = train0(w);
@@ -87,7 +49,7 @@
       else others.push({ id: p.id, n: g.reduce((s, [, v]) => s + v, 0), abs: g.map(([a]) => a) });
     }
     others.sort((a, b) => b.n - a.n);
-    // コーチの一言：いちばん伸びた子（★を優先）の、いちばん伸びた能力
+    // コーチの一言：いちばん伸びた子（課題中の子を優先）の、いちばん伸びた能力
     const pickC = star.length ? star.map((x) => ({ id: x.id, a: x.items[0][0], n: x.items.length })).sort((a, b) => b.n - a.n)[0] : others[0] && { id: others[0].id, a: others[0].abs[0], n: others[0].n };
     let coach = '';
     if (pickC && w.players[pickC.id]) {
@@ -196,15 +158,15 @@
 
   // ---------- 教え方（決定128）----------
   YA.INTRO = [
-    ['ユースの指導者になった', '高1〜高3の36人を預かり、3年かけて育てて送り出します。勝つことと、育てること。その両方を任されています。'],
-    ['★注目の子を選ぶ', '★は高1に4人まで、入団から4週のうちに付けます。★の子だけが「覚醒の鍵」を持っています。3年かけて鍵のヒントを見つけ、満たすと覚醒します。'],
+    ['ユースの指導者になった', '高1〜高3の33人を預かり、3年かけて育てて送り出します。勝つことと、育てること。その両方を任されています。'],
+    ['全員を見て、課題を出す', '一人ひとりに、化けるための「合う課題」が隠れています。コーチの見立て・本人の言葉・試合の場面の手がかりから見抜いて、課題を出します（同時に5人まで）。合っていれば、苦しんだ末に試合の一場面で気づいて覚醒します。'],
     ['毎週やること', '練習の画面を確かめて「この週で行く」。試合の週は布陣と戦い方を決めてキックオフ。出来事が起きたら、言葉をかけて選びます。'],
     ['系譜を伸ばす', '卒業した子がプロや代表で活躍すると、あなたの系譜が伸びます。大きな移籍では連帯貢献金も入ります。'],
   ];
   // 画面を初めて開いたときだけ、アシスタントコーチが1〜2行で教える。二度目からは出ない
   YA.COACH_TIPS = {
     home: '左が今週やることです。困ったら右の「今週気にかけたい子」から見てください。',
-    players: '★を付けた子は、詳しい画面に覚醒の鍵が出ます。最初は「？」ですが、面談で少しずつ見えてきます。',
+    players: '選手を押すと、コーチの報告の一番上に手がかりが出ます。手がかりから合う課題を考えて「課題を出す」。',
     train: '7マスを押すとメニューが替わります。疲れの高い子は右下で休ませられます。決まったら「この週で行く」。',
     match: '試合の前は相手の分析を見てから、並びと戦い方を。試合中は「止める」で交代と指示ができます。',
     club: '予算・スタッフ・スカウトなど、クラブのことはここです。最初はクラブとコーチが決めてくれます。',
@@ -226,20 +188,9 @@
     const key = YA.coachKey(tab);
     if (w.coachSeen[key]) return null;
     let t = tab === 'more' ? YA.COACH_TIPS_MORE[key.slice(5)] || YA.COACH_TIPS.more : YA.COACH_TIPS[tab];
-    if (tab === 'players') { const r = YA.starRecommend(w); if (r) t += ' ' + r; }
     return t;
   };
-  // 最初の4週：鍵の短い子（見た目では分からない）に★を勧める
-  YA.starRecommend = function (w) {
-    if (!w || w.week > YA.STAR_WEEKS) return null;
-    if (YA.starsIn(w, 1).length >= YA.STAR_MAX) return null;
-    const n = YA.starPick(w, 1)[0];
-    if (!n) return null;
-    const why = n.fast ? 'は、何かきっかけがあれば早く化けそうです' : 'は伸びしろが大きそうです';
-    return `高1には、入団から${YA.STAR_WEEKS}週のうちに★を決めます。${n.name}${why}（${YA.starsIn(w, 1).length}/${YA.STAR_MAX}）。`;
-  };
-
-  // ---------- 信頼（決定110）：★の子ごとに5段階 ----------
+  // ---------- 信頼（決定110）：課題を出した子ごとに5段階（課題が終わっても値は残る）----------
   YA.TRUST_NAME = ['', '心を閉ざす', 'よそよそしい', 'ふつう', '信じている', '深く信頼'];
   YA.trustLv = (p) => 1 + Math.min(4, Math.floor(clamp(p.tr == null ? 50 : p.tr, 0, 100) / 20));
   YA.addTr = function (w, p, d, why) {
@@ -250,134 +201,15 @@
     if (lv1 !== lv0 && p.star) YA.noteTier(w, 2, `${p.num}番 ${p.name}の信頼が「${YA.TRUST_NAME[lv1]}」（${lv1}/5）に${lv1 > lv0 ? '上がった' : '下がった'}${why ? '（' + why + '）' : ''}`, p.id);
   };
 
-  // ---------- 覚醒の鍵（決定102・106・107）----------
-  // sys は5つの系統（試合・育て方・人・心・外）。need は回数、due は期限（通しの年×100＋週）。h はヒントの段（0＝？／1＝ぼんやり／2＝はっきり）
-  const GROUP = (p) => p.pos;
-  const KEYS = {
-    bigGoal: { sys: '試合', ok: (p) => GROUP(p) === 'FW' || GROUP(p) === 'MF', need: 1, vague: '大舞台で何かをつかみそうだ', clear: (k) => '大会（夏・冬）の試合で得点する', due: 'g2' },
-    bigClean: { sys: '試合', ok: (p) => GROUP(p) === 'GK' || GROUP(p) === 'DF', need: 1, vague: '大舞台で守り切ることが、きっかけになりそうだ', clear: () => '大会（夏・冬）の試合で、出場して無失点に抑える', due: 'g2' },
-    goals: { sys: '試合', ok: (p) => GROUP(p) === 'FW' || p.main === 'AM' || p.main === 'SS', need: 5, vague: 'ゴールを重ねるほど、何かが変わりそうだ', clear: (k) => `Aの試合で${k.need}点取る` },
-    clean: { sys: '試合', ok: (p) => GROUP(p) === 'GK' || GROUP(p) === 'DF', need: 4, vague: '失点しない試合を重ねると、自信になりそうだ', clear: (k) => `Aの試合に出て、無失点を${k.need}回` },
-    shine: { sys: '試合', ok: () => true, need: 3, vague: '試合で目立つ活躍が続くと、殻を破りそうだ', clear: (k) => `Aの試合で採点7.5以上を${k.need}回` },
-    convert: { sys: '育て方', ok: (p) => p.pos !== 'GK', need: 8, vague: '今の場所とは違う所で、新しい自分に出会いそうだ', clear: (k) => `登録（${YA.POS_NAME15 ? YA.POS_NAME15[k.from] || k.from : k.from}）と違うポジションで、Aに${k.need}試合出る` },
-    starter: { sys: '育て方', ok: () => true, need: 10, vague: '試合に出続けることで、何かがつながりそうだ', clear: (k) => `Aで${k.need}試合先発する` },
-    senpai: { sys: '人', ok: () => true, need: 6, vague: '慕っている先輩の背中から、何かを学びそうだ', clear: (k, w) => `${k.withName || '先輩'}（高3）と同じAの試合に${k.need}回出る`, due: 'y' },
-    captain: { sys: '人', ok: (p) => p.grade >= 2, need: 8, vague: '人の上に立つことで、ひと皮むけそうだ', clear: (k) => `キャプテンか副キャプテンを${k.need}週任せる` },
-    trust: { sys: '人', ok: () => true, need: 1, vague: '監督との関係が、鍵を握っていそうだ', clear: () => '監督への信頼が「深く信頼」（5/5）になる' },
-    conf: { sys: '心', ok: () => true, need: 4, vague: '自信を持ち続けられれば、化けそうだ', clear: (k) => `自信${YA.CONF_KEY}以上を${k.need}週続ける` },
-    wall: { sys: '心', ok: () => true, need: 1, vague: '一度つまずいて、それを越えることが大事そうだ', clear: () => '壁（伸び悩み）に当たり、それを越える' },
-    // 初年度の高1の早咲き（fast）だけが持つ鍵。AでもBでも進む
-    bstart: { sys: '育て方', ok: (p) => !!p._earlyRoll, need: 8, vague: '試合の経験を積めば、何かがつながりそうだ', clear: (k) => `AかBの試合で${k.need}試合先発する` },
-    bshine: { sys: '試合', ok: (p) => !!p._earlyRoll, need: 3, vague: '下の試合でも、目立つ活躍が続けば殻を破りそうだ', clear: (k) => `AかBの試合で採点6.5以上を${k.need}回` },
-    top: { sys: '外', ok: (p) => p.grade >= 2, need: 1, vague: '上の世界を肌で知ることが、刺激になりそうだ', clear: () => 'トップチームの練習に参加する', due: 'g3' },
-    away: { sys: '外', ok: () => true, need: 3, vague: '知らない相手、知らない土地での経験が効きそうだ', clear: (k) => `大会でAに${k.need}試合出る（夏・冬の大会）` },
-  };
-  YA.KEY_DEF = KEYS;
-  const SYS = ['試合', '育て方', '人', '心', '外'];
-  // 覚醒の回数（決定103）：多くは1回・何人かは2回・まれに3回。本人も監督も知らない
+  // 覚醒の回数（決定103。2026-11-26 から1〜2回）：本人も監督も知らない
   function awakeTimes(r) {
-    const x = r();
-    return x < 0.7 ? 1 : x < 0.95 ? 2 : 3;
+    return r() < 0.72 ? 1 : 2;
   }
-  // 期限：g2＝高2の冬まで、g3＝高3の冬まで、y＝今年度の終わり（先輩の卒業）まで
-  function dueOf(w, p, d) {
-    if (!d) return null;
-    const endOf = (grade) => (w.year + Math.max(0, grade - p.grade)) * 100 + YA.WEEKS;
-    if (d === 'g2') return p.grade <= 2 ? endOf(2) : null;
-    if (d === 'g3') return endOf(3);
-    return w.year * 100 + YA.WEEKS;
-  }
-  function makeKey(w, p, r, id, mult) {
-    const d = KEYS[id];
-    const k = { id, sys: d.sys, need: Math.max(1, Math.round(d.need * mult)), have: 0, h: 0, at: abs(w) };
-    if (id === 'convert') k.from = p.main;
-    if (id === 'senpai') {
-      const s = Object.values(w.players).filter((q) => q.grade === 3 && q.id !== p.id && q.pos === p.pos).sort((a, b) => YA.rating(b) - YA.rating(a))[0];
-      if (!s) return null;
-      k.with = s.id;
-      k.withName = s.name;
-    }
-    const due = dueOf(w, p, d.due);
-    if (d.due && due == null) return null;
-    if (due != null) k.due = due;
-    return k;
-  }
-  function rollKeys(w, p, r, n, mult, avoid) {
-    const out = [];
-    const sysUsed = new Set();
-    for (let tries = 0; out.length < n && tries < 40; tries++) {
-      const ids = Object.keys(KEYS).filter((id) => KEYS[id].ok(p) && !(avoid || []).includes(id) && !out.some((k) => k.id === id) && !sysUsed.has(KEYS[id].sys));
-      if (!ids.length) break;
-      const k = makeKey(w, p, r, r.pick(ids), mult);
-      if (!k) continue;
-      out.push(k);
-      sysUsed.add(k.sys);
-    }
-    return out;
-  }
-  // ★を付けたときに初めて鍵が決まる（同じ子なら同じ鍵）。鍵の短い子（fast）は2個・軽い
-  // 鍵の重さ（2026-11-15「もう少し覚醒させたい」で軽くした）：3個になる割合と、必要な回数の倍率
-  YA.KEY3 = 0.3;
-  YA.KEY_MULT = 0.85;
-  YA.CONF_KEY = 65;
-  YA.FIRST_FAST = 4;
-  YA.EARLY_KEYS = ['bstart', 'bshine'];
-  YA.EARLY_MULT = 0.4;
-  YA.keysOf = function (w, p) {
-    if (p.keys) return p.keys;
-    const r = YA.rngOf((w.seed | 0) * 13 + YA.hash(p.id) * 7 + 5);
-    if (p.awN == null) p.awN = awakeTimes(r);
+  YA.awakeTimesOf = function (w, p) {
+    if (p.awN == null) p.awN = awakeTimes(YA.rngOf((w.seed | 0) * 13 + YA.hash(p.id) * 7 + 5));
     p.awDone = p.awDone || 0;
-    const n = p.fast ? 2 : r.chance(YA.KEY3) ? 3 : 2;
-    // 初年度の高1の fast は、高1でも満たせる鍵（Aの試合に出なくてよいもの）から軽く選ぶ
-    const early = p.fast && w.year === 1 && p.grade === 1;
-    const avoid = early ? Object.keys(KEYS).filter((id) => !YA.EARLY_KEYS.includes(id)) : undefined;
-    if (early) p._earlyRoll = true;
-    p.keys = rollKeys(w, p, r, n, early ? YA.EARLY_MULT : p.fast ? YA.KEY_MULT * 0.5 : YA.KEY_MULT, avoid);
-    delete p._earlyRoll;
-    return p.keys;
+    return p.awN;
   };
-  YA.keyText = function (w, p, k) {
-    const d = KEYS[k.id];
-    if (!d) return '？';
-    // 期限：今年度の終わり／N年後の冬。過ぎた鍵（年度をまたいで、まだ切り替わる前）は「期限切れ」（2026-11-16 画面の点検で「-1年後の冬」と出ていた）
-    const dy = k.due ? Math.floor(k.due / 100) - w.year : 0;
-    const due = !k.due ? '' : dy < 0 || k.due < w.year * 100 + w.week ? '（期限切れ）' : `（期限：${dy === 0 ? '今年度の終わり' : `${dy}年後の冬`}まで）`;
-    if (k.done) return '✓ ' + d.clear(k, w);
-    if (k.h >= 2) return d.clear(k, w) + (d.need > 1 || k.need > 1 ? `　${k.have}/${k.need}` : '') + due;
-    if (k.h >= 1) return d.vague + (k.due ? '（急いだほうがよさそうだ）' : '');
-    return '？（' + k.sys + 'に関わる何か）';
-  };
-  // ヒントを1段進める。信頼が低いと本音を話さず進みにくい（決定110）。見る目で早まる
-  function hintUp(w, p, chance, why) {
-    const ks = (p.keys || []).filter((k) => !k.done && k.h < 2);
-    if (!ks.length) return false;
-    const lv = YA.trustLv(p);
-    const eye = w.coach ? w.coach.eye / 10 : 1;
-    const c = chance * (lv <= 2 ? 0.45 : lv >= 4 ? 1.35 : 1) * (0.8 + 0.2 * eye);
-    const r = YA.rngOf((w.seed | 0) + abs(w) * 3 + YA.hash(p.id + why));
-    if (!r.chance(c)) return false;
-    const k = ks.sort((a, b) => b.have / b.need - a.have / a.need || a.h - b.h)[0];
-    k.h++;
-    if (k.h === 2) milestone(w, p, 'hint', { key: k.id });
-    else YA.noteTier(w, 2, `${p.num}番 ${p.name}：覚醒の鍵のヒント「${KEYS[k.id].vague}」（${why}）`, p.id);
-    return true;
-  }
-  YA.hintUp = hintUp;
-  function progress(w, p, id, x) {
-    for (const k of p.keys || []) {
-      if (k.done || k.id !== id) continue;
-      k.have = Math.min(k.need, k.have + x);
-      if (k.h === 0) k.h = 1; // 動きがあれば、ぼんやり見える
-      if (k.have >= k.need) {
-        k.done = abs(w);
-        p.hist.unshift({ y: w.year, w: w.week, t: '覚醒の鍵を1つ満たした：' + KEYS[id].clear(k, w) });
-        YA.noteTier(w, 1, `${p.num}番 ${p.name}が覚醒の鍵を1つ満たした（${KEYS[id].clear(k, w)}）`, p.id);
-        k.h = 2;
-      }
-    }
-  }
-  YA.keyProgress = progress;
 
   // ---------- 上位の特性（金）：効いた試合の数を数え、条件がそろえば金に変わる ----------
   // 2026-11-23：前は効いた回数を数えていて、GK のセーブの特性などは1試合で6回に届き、1試合目で金に変わっていた。1試合で何回効いても1と数える
@@ -409,54 +241,20 @@
     for (const p of seen) YA.goldCheck(w, p);
   };
 
-  // ---------- 試合のあと：鍵の進み・信頼 ----------
+  // ---------- 試合のあと：信頼・初出場（課題の気づきは kadai.js）----------
   const applyMatch0 = YA.applyMatch;
   YA.applyMatch = function (w, m, which, opp, scheduled) {
     applyMatch0(w, m, which, opp, scheduled);
     YA.traitUse(w, m);
-    if (which === 'B') {
-      const tb = m.home;
-      const sb = new Set(tb.lineup.map((s) => s.pid));
-      for (const id of Object.keys(tb.players)) {
-        const p = w.players[id], st = tb.players[id].st;
-        if (!p || !p.keys || !st || !(st.minutes > 0)) continue;
-        if (sb.has(id)) progress(w, p, 'bstart', 1);
-        if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
-      }
-      return;
-    }
     if (which !== 'A' || !scheduled) return;
     const team = m.home;
-    // 新春フェスティバル・練習試合（1〜3月の試合）は鍵を進めない（大一番でもない）
-    const friendly = opp && /フェスティバル|練習試合/.test(opp.kindLabel || '');
-    const big = opp && opp.kindLabel && !/^リーグ/.test(opp.kindLabel) && !friendly;
-    const ga = m.score.away;
-    const startIds = new Set(team.lineup.map((s) => s.pid));
-    const played = new Set(Object.keys(team.players).filter((id) => team.players[id].st && team.players[id].st.minutes > 0));
-    for (const id of played) {
+    for (const id of Object.keys(team.players)) {
       const p = w.players[id];
-      if (!p) continue;
-      p._weekMinsA = (p._weekMinsA || 0) + team.players[id].st.minutes;
-      // 初出場の節目（★の子だけ）
+      const st = team.players[id].st;
+      if (!p || !st || !(st.minutes > 0)) continue;
+      p._weekMinsA = (p._weekMinsA || 0) + st.minutes;
+      // 初出場の節目（課題中の子）
       if (p.star && !(p.ms && p.ms.debut)) milestone(w, p, 'debut');
-      if (!p.keys || friendly) continue;
-      const st = p.st;
-      if (big && st.goals > 0) progress(w, p, 'bigGoal', 1);
-      if (big && ga === 0 && st.minutes >= 60) progress(w, p, 'bigClean', 1);
-      if (st.goals > 0) progress(w, p, 'goals', st.goals);
-      if (ga === 0 && st.minutes >= 60) progress(w, p, 'clean', 1);
-      if (st.rating >= 7.5) progress(w, p, 'shine', 1);
-      if (startIds.has(id)) progress(w, p, 'starter', 1);
-      if (startIds.has(id)) progress(w, p, 'bstart', 1);
-      if (st.rating >= 6.5) progress(w, p, 'bshine', 1);
-      if (big) progress(w, p, 'away', 1);
-      const k = (p.keys || []).find((x) => x.id === 'convert' && !x.done);
-      const slot = team.startSlot && team.startSlot[id];
-      if (k && slot && slot !== k.from) progress(w, p, 'convert', 1);
-      const ks = (p.keys || []).find((x) => x.id === 'senpai' && !x.done);
-      if (ks && played.has(ks.with)) progress(w, p, 'senpai', 1);
-      // 試合での気づき（決定106）：活躍した試合ではヒントが進みやすい
-      if (p.star && st.rating >= 7) hintUp(w, p, 0.3, '試合での気づき');
     }
   };
 
@@ -469,11 +267,7 @@
     let rr = null;
     if (p && o && o.kind && !o.run && YA.react) rr = YA.react(p, o.kind);
     const res = resolve0(w, e, idx);
-    if (p && w.players[p.id]) {
-      if (rr) YA.addTr(w, p, rr.c >= 4 || rr.f >= 1 ? 6 : rr.c < 0 || rr.f < 0 ? -7 : 2);
-      if (e.id === 'top' && idx === 0) progress(w, p, 'top', 1);
-      if (p.star && e.id !== 'ms' && e.id !== 'awake') hintUp(w, p, 0.25, '話の中で');
-    }
+    if (p && w.players[p.id] && rr) YA.addTr(w, p, rr.c >= 4 || rr.f >= 1 ? 6 : rr.c < 0 || rr.f < 0 ? -7 : 2);
     return res;
   };
   const talk0 = YA.talk;
@@ -482,62 +276,27 @@
     const t = YA.TALKS.find((x) => x.k === k);
     const rr = p && t && YA.react ? YA.react(p, t.kind) : null;
     const res = talk0(w, pid, k);
-    if (res.ok && p) {
-      if (rr) YA.addTr(w, p, rr.c >= 4 || rr.f >= 1 ? 7 : rr.c < 0 || rr.f < 0 ? -8 : 3);
-      if (p.star && hintUp(w, p, 0.55, '面談で')) res.extra = (res.extra ? res.extra + '　' : '') + '覚醒の鍵のヒントが見えた';
-    }
+    if (res.ok && p && rr) YA.addTr(w, p, rr.c >= 4 || rr.f >= 1 ? 7 : rr.c < 0 || rr.f < 0 ? -8 : 3);
     return res;
   };
 
-  // ---------- 毎週：鍵の進み・期限・覚醒（club.js の awakeWeek を置き換える）----------
+  // ---------- 毎週：信頼・壁の節目・課題（club.js の awakeWeek を置き換える）----------
   YA.awakeWeek = function (w) {
-    if (w.autoStar) YA.autoStars(w);
-    const capIds = new Set([w.captain, w.vice].filter(Boolean));
     for (const p of Object.values(w.players)) {
-      if (p.star) YA.addCare(w, p, 1);
-      if (p.star && p.tr == null) p.tr = 50;
-      if (!p.keys) continue;
-      // 壁の始まりと終わり
+      YA.awakeTimesOf(w, p);
+      if (!p.star) { p._weekMinsA = 0; continue; }
+      YA.addCare(w, p, 1);
+      if (p.tr == null) p.tr = 50;
+      // 壁の始まり（課題中の子は節目の会話）
       const wall = p.state && p.state.k === 'wall' && p.state.w > 0;
-      // 壁の鍵を持つ子は、いずれ一度つまずく（決定102「壁を越える」）
-      if (!wall && !p._inWall && p.star && (p.keys || []).some((k) => k.id === 'wall' && !k.done) && !(p.state && p.state.w > 0) && YA.rngOf((w.seed | 0) + abs(w) * 7 + YA.hash(p.id))() < 0.04) {
-        p.state = { k: 'wall', w: 5 };
-        YA.noteTier(w, 2, `${p.num}番 ${p.name}が壁に当たっている（しばらく伸びにくい）`, p.id);
-      }
-      const wall2 = p.state && p.state.k === 'wall' && p.state.w > 0;
-      if (wall2 && !p._inWall) {
-        p._inWall = true;
-        if (p.star) milestone(w, p, 'wall');
-      } else if (!wall2 && p._inWall) {
-        p._inWall = false;
-        if (p.conf >= 45) progress(w, p, 'wall', 1);
-      }
-      p._confRun = p.conf >= YA.CONF_KEY ? (p._confRun || 0) + 1 : 0;
-      for (const k of p.keys) if (k.id === 'conf' && !k.done) { k.have = Math.min(k.need, p._confRun); if (p._confRun) k.h = Math.max(k.h, 1); if (k.have >= k.need) progress(w, p, 'conf', 0); }
-      if (capIds.has(p.id)) progress(w, p, 'captain', 1);
-      if (YA.trustLv(p) >= 5) progress(w, p, 'trust', 1);
+      if (wall && !p._inWall) { p._inWall = true; milestone(w, p, 'wall'); } else if (!wall && p._inWall) p._inWall = false;
       // 不満が溜まったまま放っておくと、信頼が少しずつ下がる
-      if (p.star && p.unrest >= 3) YA.addTr(w, p, -1.5);
+      if (p.unrest >= 3) YA.addTr(w, p, -1.5);
       // Aで使い続けると、少しずつ信頼が積み上がる
-      else if (p.star && (p._weekMinsA || 0) > 0) YA.addTr(w, p, 1.2);
+      else if ((p._weekMinsA || 0) > 0) YA.addTr(w, p, 1.2);
       p._weekMinsA = 0;
-      // コーチの報告（決定106）
-      if (p.star) hintUp(w, p, 0.035, 'コーチの報告');
-      // 期限切れの鍵は、別の鍵に替わって遠回りになる（決定107）
-      for (let i = 0; i < p.keys.length; i++) {
-        const k = p.keys[i];
-        const gone = k.id === 'senpai' && !w.players[k.with];
-        if (k.done || !((k.due && abs(w) > k.due) || gone)) continue;
-        const r = YA.rngOf((w.seed | 0) + abs(w) + YA.hash(p.id) + i);
-        const nk = rollKeys(w, p, r, 1, 1.4, p.keys.map((x) => x.id))[0];
-        if (!nk) { k.due = null; continue; }
-        nk.h = 1;
-        p.keys[i] = nk;
-        YA.noteTier(w, 1, `${p.num}番 ${p.name}：覚醒の鍵の期限が過ぎた。道は閉じていないが、別の形で遠回りになりそうだ（新しいヒント「${KEYS[nk.id].vague}」）`, p.id);
-      }
-      // 鍵が全部そろったら覚醒（★の子だけ）
-      if (p.star && p.keys.length && p.keys.every((k) => k.done) && !(p.inj > 0) && !(p.away > 0)) YA.awaken(w, p);
     }
+    if (YA.kadaiWeek) YA.kadaiWeek(w);
     return null;
   };
 
@@ -603,28 +362,26 @@
     p.awDone = n;
     p.awHist = (p.awHist || []).concat([{ k: f.k, y: w.year, w: w.week }]);
     p.aw = { k: f.k, form: f.name, trait: f.trait, as: f.as.slice() };
-    p.awake = { y: w.year, w: w.week, from, to: YA.rating(p), why: 'star', form: f.name, trait: f.trait, n };
+    p.awake = { y: w.year, w: w.week, from, to: YA.rating(p), why: 'kadai', form: f.name, trait: f.trait, n };
     p.state = { k: 'peak', w: 12 };
     p.conf = clamp(p.conf + 15, 0, 100);
     p.hist.unshift({ y: w.year, w: w.week, t: `覚醒した：${f.name}（特性「${f.trait}」・総合力 ${from}→${p.awake.to}）` });
     w.awakeN = { y: w.year, n: (w.awakeN && w.awakeN.y === w.year ? w.awakeN.n : 0) + 1 };
     YA.dexAdd(w, p, f);
-    // 次の覚醒が残っている子には、次の鍵が現れる
-    p.keys = n < (p.awN || 1) ? rollKeys(w, p, r, 2, 1.3, (p.keys || []).map((k) => k.id)) : [];
     YA.addTr(w, p, 10);
     w.forced = (w.forced || []).concat([{ id: 'awake', pid: p.id, week: w.week, year: w.year }]);
     return p;
   };
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
-  YA.EVENT_ABOUT.awake = '★の子が、覚醒の鍵をすべて満たしました。形に合った能力がまとめて上がり、覚醒でしか手に入らない特性が付きます。';
+  YA.EVENT_ABOUT.awake = '課題に取り組んでいた子が、試合の中で気づきました。形に合った能力がまとめて上がり、覚醒でしか手に入らない特性が付きます。';
   const ev = YA.EVENTS.find((e) => e.id === 'awake');
   if (ev) ev.text = (p) => {
     const a = p.awake || {};
-    return `${p.name}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した――${a.form || ''}。${a.from === a.to ? `総合力 ${a.to}（数字は変わらないが、特性の効きが増す）` : `総合力 ${a.from}→${a.to}`}。覚醒の特性「${a.trait || ''}」が付いた。${(p.keys || []).length ? 'まだ先がありそうだ。新しい鍵の気配がする' : ''}`;
+    return `${p.name}（高${p.grade}・${YA.POS_NAME15 ? YA.POS_NAME15[p.main] || p.main : p.main}）が覚醒した――${a.form || ''}。${a.from === a.to ? `総合力 ${a.to}（数字は変わらないが、特性の効きが増す）` : `総合力 ${a.from}→${a.to}`}。覚醒の特性「${a.trait || ''}」が付いた。${(p.awDone || 0) < (p.awN || 1) ? 'まだ先がありそうだ' : ''}`;
   };
 
-  // ---------- 節目の会話（決定109）：★の子に、3年間の節目ごとに来る ----------
-  // ★の子の、この一年の伸び（年度はじめの総合力 p.o0 から）
+  // ---------- 節目の会話（決定109）：課題中の子に、節目ごとに来る ----------
+  // 課題中の子の、この一年の伸び（年度はじめの総合力 p.o0 から）
   const termGrow = (p) => {
     if (p.o0 == null) return 'ここまで頑張ってきた';
     const a = YA.rate(p.o0);
@@ -633,9 +390,9 @@
   };
   const LINES = {
     star: [
-      (p) => `${p.name}を呼んで、これから特に見ていくと伝えた。「えっ、自分ですか……がんばります」`,
-      (p) => `${p.name}に、これから目をかけていくと伝えた。「はい。期待に応えます」まっすぐこちらを見た`,
-      (p) => `${p.name}に声をかけた。「……なんで俺なんすか」照れくさそうに目をそらした`,
+      (p) => `${p.name}を呼んで、初めての課題を伝えた。「えっ、自分ですか……がんばります」`,
+      (p) => `${p.name}に、課題を出した。「はい。やってみます」まっすぐこちらを見た`,
+      (p) => `${p.name}に課題を伝えた。「……なんで俺なんすか」照れくさそうに目をそらした`,
     ],
     debut: [
       (p) => `${p.name}がAの試合に初めて出た。試合のあと、まだ息を弾ませている。「やっと、ここまで来ました」`,
@@ -646,10 +403,6 @@
       (p) => `${p.name}が伸び悩んでいる。練習のあと、一人で残っていた。「最近、何をやってもうまくいかなくて」`,
       (p) => `${p.name}の表情が硬い。「前はできていたことが、できなくなった気がします」`,
       (p) => `${p.name}が珍しく弱音を吐いた。「自分、ここまでなのかなって」`,
-    ],
-    hint: [
-      (p, w, x) => `${p.name}と話していて、はっきり見えた。この子が化けるには――「${KEYS[x.key].clear((p.keys || []).find((k) => k.id === x.key) || { need: KEYS[x.key].need }, w)}」`,
-      (p, w, x) => `コーチが言った。「${fam(p)}は、${KEYS[x.key].clear((p.keys || []).find((k) => k.id === x.key) || { need: KEYS[x.key].need }, w)}――それが、きっかけになりそうです」`,
     ],
     term: [
       (p, w) => `${p.name}と、この一年を振り返った。総合力は${termGrow(p)}。「来年は、もっと上を目指します」`,
@@ -662,7 +415,7 @@
       (p) => `卒業式の前の日。${p.name}は泣かないと決めていたらしいが、最後の練習の礼で声が詰まった。`,
     ],
   };
-  const NAMES = { star: '★注目：最初の話', debut: '節目：初めての出場', wall: '節目：壁', hint: '節目：鍵が見えた', term: '節目：この一年', grad: '節目：卒業式' };
+  const NAMES = { star: '課題：最初の話', debut: '節目：初めての出場', wall: '節目：壁', term: '節目：この一年', grad: '節目：卒業式' };
   function milestone(w, p, kind, x) {
     p.ms = p.ms || {};
     if (kind !== 'hint' && kind !== 'term' && p.ms[kind]) return;
@@ -675,12 +428,11 @@
     star: [msOpt('「三年間で、必ず化けさせる」と約束する', 'push', 3), msOpt('「焦らず、一緒にやっていこう」と伝える', 'warm', 2), msOpt('「まだ何も決まっていない。結果で見せろ」と突き放す', 'firm')],
     debut: [msOpt('「よくやった」と肩をたたく', 'warm'), msOpt('「ここからが本番だ」と次を求める', 'push'), msOpt('良かった所と課題を一つずつ伝える', 'firm')],
     wall: [msOpt('「必ず越えられる」と信じて待つ', 'warm'), msOpt('一緒に原因を探し、練習を組み直す', 'push'), msOpt('「誰でも通る道だ」とあえて厳しくする', 'firm')],
-    hint: [msOpt('本人に「ここが鍵だ」と伝える', 'push', 2), msOpt('伝えずに、そうなる場を作ってやる', 'wait')],
     term: [msOpt('「この調子で行こう」と次の一年を任せる', 'push', 1), msOpt('伸びを一緒に喜ぶ', 'warm', 1), msOpt('「まだまだ足りない」とあえて締める', 'firm')],
     grad: [msOpt('「お前は、ここからだ」と送り出す', 'push'), msOpt('「三年間、ありがとう」と握手する', 'warm'), msOpt('黙ってうなずく', 'wait')],
   };
   YA.EVENTS.push({ id: 'ms', name: '節目の会話', weight: 0, pick: () => null, text: () => '', opts: MS_OPTS.debut });
-  YA.EVENT_ABOUT.ms = '★の子との節目の会話です。どう返すかで、その子の信頼（5段階）が動きます。信頼が高いほど、覚醒の鍵のヒントが早く見えます。';
+  YA.EVENT_ABOUT.ms = '課題に取り組んでいる子との節目の会話です。どう返すかで、その子の信頼（5段階）が動きます。信頼が高いほど本音を話し、手がかりが早く見えます。';
   // 節目の会話は種類ごとに選択肢が違うので、eventView / resolveEvent の前に差し替える
   const view0 = YA.eventView;
   YA.eventView = function (w, e) {
@@ -700,12 +452,11 @@
       const def = YA.EVENTS.find((x) => x.id === 'ms');
       def.opts = MS_OPTS[e.ms] || MS_OPTS.debut;
       def.name = NAMES[e.ms] || '節目の会話';
-      if (e.ms === 'hint' && idx === 0) { const p = w.players[e.pid]; if (p) for (const k of p.keys || []) if (k.id === e.key && !k.done) k.told = true; }
     }
     return res1(w, e, idx);
   };
-  // 卒業式の前の週（39週）に、★の高3と最後の会話。高1・高2の「この一年」は35〜38週に散らす
-  //（2026-11-17 直し：前は39週に★の子全員の会話がまとめて来て、1週に8件ほど重なっていた）
+  // 卒業式の前の週（39週）に、課題中の高3と最後の会話。高1・高2の「この一年」は35〜38週に散らす
+  //（2026-11-17 直し：前は39週に★の子（いまの課題中の子）全員の会話がまとめて来て、1週に8件ほど重なっていた）
   YA.TERM_WEEKS = [35, 36, 37, 38];
   YA.termWeekOf = (w, p) => YA.TERM_WEEKS[YA.hash(String(p.id) + w.year) % YA.TERM_WEEKS.length];
   YA.gradTalks = function (w) {
@@ -737,22 +488,10 @@
     return aw0(w);
   };
 
-  // 最初の36人に、鍵の短い子を1〜2人混ぜておく（決定113。見た目では分からない）
-  const nw0 = YA.newWorld;
-  YA.newWorld = function (seed, opts) {
-    const w = nw0(seed, opts);
-    const r = YA.rngOf((seed | 0) * 29 + 3);
-    // 初年度に★を付けられるのは高1だけなので、早く化けそうな子（fast）は高1に3人置く（2026-11-15「一年目に2人くらい」）
-    const c = Object.values(w.players).filter((p) => p.grade === 1);
-    const n = YA.FIRST_FAST;
-    for (let i = 0; i < n && c.length; i++) c.splice(r.int(0, c.length - 1), 1)[0].fast = true;
-    return w;
-  };
-
-  // おまかせ進行では、★を自動で付ける（暦の判断と同じ扱い）
+  // おまかせ進行では、コーチのおすすめどおりに課題を出す（暦の判断と同じ扱い）
   const autoScout0 = YA.autoScout;
   if (autoScout0) YA.autoScout = function (w) {
-    YA.autoStars(w);
+    if (YA.autoKadai) YA.autoKadai(w);
     return autoScout0(w);
   };
   YA.EXTRA_SIM_IMPORTANT = ['ms'];

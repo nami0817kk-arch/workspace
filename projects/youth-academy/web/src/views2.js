@@ -38,13 +38,13 @@
       // 1. 更新
       h('div', { class: 'card', style: 'padding:8px 10px;border:2px solid ' + (refuse ? '#d0d6e2' : '#1f6feb') },
         h('div', { class: 'row' }, h('b', { class: 'grow', style: 'font-size:14px' }, `① ${w.clubName}で続ける（3年）`), !refuse ? h('span', { class: 'chip trait' }, 'おすすめ') : null),
-        h('div', { class: 'note' }, 'いまの36人・スタッフ・施設・予算をそのまま引き継ぎます。'),
+        h('div', { class: 'note' }, 'いまの33人・スタッフ・施設・予算をそのまま引き継ぎます。'),
         refuse
           ? h('div', { class: 'note', style: 'color:#c0392b;font-weight:700;margin-top:4px' }, `クラブが更新を断っています（${why}）。②の誘いから選んでください。`)
           : h('button', { class: 'btn pri', style: 'width:100%;padding:10px;margin-top:5px;font-size:14px', onclick: () => { YA.renewContract(w); save(); rerender(); } }, `${w.clubName}と更新する`)),
       // 2. 移る
       h('div', { class: 'h', style: 'margin-top:4px' }, `② ほかのクラブへ移る${refuse ? '（いずれかを選んでください）' : ''}`),
-      h('div', { class: 'note' }, '移ると、選手36人・スタッフ・施設は新しいクラブのものになります。指導者の評判・卒業生の名鑑・実績は持っていけます。'),
+      h('div', { class: 'note' }, '移ると、選手33人・スタッフ・施設は新しいクラブのものになります。指導者の評判・卒業生の名鑑・実績は持っていけます。'),
       ...w.pendingContract.offers.map((o, i) => h('div', { class: 'card', style: 'padding:7px 10px;display:flex;align-items:center;gap:8px;' + (refuse && i === rec ? 'border:2px solid #1f6feb' : '') },
         h('div', { class: 'grow', style: 'min-width:0' }, h('b', {}, o.name), h('div', { class: 'note' }, `${YA.TIER_NAME[o.tier]}・予算およそ${YA.yen(o.budget)}${o.note ? '・' + o.note : ''}`)),
         refuse && i === rec ? h('span', { class: 'chip trait' }, 'おすすめ') : null,
@@ -304,7 +304,7 @@
     const say = (r) => { msg.replaceChildren(h('div', {}, r.msg)); if (r.ok) { save(); rerender(); } };
     const b = YA.budget(w);
     const heldN = (k) => S.cands.filter((c) => (c.status === 'signed' || c.status === 'offered') && (!k || c.kind === k)).length;
-    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `来年の高1 ${heldN()}/12人`), h('span', { class: 'chip gray' }, `内部昇格 ${heldN('int')}/8`), h('span', { class: 'chip gray' }, `スカウト ${heldN('scout')}/3`), h('span', { class: 'chip gray' }, `セレクション ${heldN('sel')}/3`), h('span', { class: 'chip gray' }, `スカウト経費 ${YA.yen(w.club.spent.scout || 0)}／${YA.yen(b.scout)}`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'note', style: 'flex-basis:100%' }, '決めた子は来年の高1です。足りない分は一般入団で埋まります（合わせて12人まで）')));
+    body.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `来年の高1 ${heldN()}/${YA.GRADE_N || 11}人`), h('span', { class: 'chip gray' }, `内部昇格 ${heldN('int')}/8`), h('span', { class: 'chip gray' }, `スカウト ${heldN('scout')}/3`), h('span', { class: 'chip gray' }, `セレクション ${heldN('sel')}/3`), h('span', { class: 'chip gray' }, `スカウト経費 ${YA.yen(w.club.spent.scout || 0)}／${YA.yen(b.scout)}`), h('span', { class: 'chip gray' }, `見る目 ${Math.round(YA.eyeLevel(w))}`), h('span', { class: 'note', style: 'flex-basis:100%' }, '決めた子は来年の高1です。足りない分は一般入団で埋まります（合わせて12人まで）')));
     body.append(h('div', { style: 'display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px' }, SEASON.map(([k, n, when, st]) => {
       const now = st(w);
       return h('button', { class: 'card', style: 'padding:5px 8px;margin:0;text-align:left;cursor:pointer;font:inherit;' + (k === kind ? 'outline:2px solid var(--blue);' : '') + (now === '受付中' ? 'background:#eaf2ff;border-color:#9fc0f0' : ''), onclick: () => { U().app.ct = k; rerender(); } }, h('div', { class: 'row' }, h('b', { class: 'grow' }, n), h('span', { class: 'chip ' + (now === '受付中' ? 'trait' : 'gray') }, now)), h('div', { class: 'note' }, when));
@@ -492,7 +492,7 @@
       body.append(h('div', { class: 'note' }, 'タップすると、その後の年表が見られます。追う・連絡する・試合を観に行くもここから。'));
       body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, al.map((a) => {
         const top = YA.alumniHighlight(a);
-        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '★') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
+        return h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: () => (YA.alumniModal ? YA.alumniModal(w, a) : alumniCareer(a)) }, a.fav ? h('b', { style: 'color:#e6a800' }, '◎') : null, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos),
           h('div', { class: 'grow', style: 'text-align:left;min-width:0' }, h('b', {}, a.name), h('div', { class: 'note' }, (a.status === 'left' ? '退団' : `${a.year}年卒・${a.age}歳`) + (a.club ? `・${a.club}` : '') + (a.league && a.status !== 'left' ? `（${a.league}）` : '') + (a.retired ? '・引退' : '')), YA.alumniTagline && YA.alumniTagline(a) ? h('div', { class: 'tagline', style: 'font-size:11.5px;color:var(--ink)' }, YA.alumniTagline(a)) : null),
           (a.status === 'pro' || a.status === 'univ') && a.apps > 0 ? h('span', { class: 'sub', style: 'font-size:11.5px;white-space:nowrap' }, `通算${YA.statLine(a, a.pos === 'GK')}`) : null, // 卒業したばかりで0試合の子には出さない
           (a.titles || []).length ? h('span', { class: 'chip trait' }, `タイトル${a.titles.length}`) : null,
@@ -522,7 +522,7 @@
     } else {
       body.append(h('div', { class: 'h' }, '設定'));
       body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (ui.autoStop ? ' on' : ''), onclick: () => { ui.autoStop = !ui.autoStop; U().store.set('autoStop', ui.autoStop); rerender(); } }, ui.autoStop ? 'ON' : 'OFF')));
-      body.append(h('div', { class: 'h', style: 'margin-top:12px' }, '最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい世界が始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => YA.confirmBox('本当に最初からやり直しますか', () => { ui.w = YA.newWorld((Date.now() % 90000) + 7); ui.view = 'pre'; ui.pSel = null; ui.tab = 'home'; save(); rerender(); }, { yes: 'やり直す', danger: true, note: '36人も成績も消えて、元に戻せません。' }) }, '最初からやり直す'));
+      body.append(h('div', { class: 'h', style: 'margin-top:12px' }, '最初からやり直す'), h('div', { class: 'note' }, '33人も成績も消えて、新しい世界が始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => YA.confirmBox('本当に最初からやり直しますか', () => { ui.w = YA.newWorld((Date.now() % 90000) + 7); ui.view = 'pre'; ui.pSel = null; ui.tab = 'home'; save(); rerender(); }, { yes: 'やり直す', danger: true, note: '33人も成績も消えて、元に戻せません。' }) }, '最初からやり直す'));
     }
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' }, tabs, body));
   }

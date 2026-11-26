@@ -1,4 +1,4 @@
-// 記憶（決定153〜155）：★の子との大事な場面で何を選んだかを、その子ごとに残す（p.mem）。
+// 記憶（決定153〜155）：大事な場面で何を選んだかを、その子ごとに残す（p.mem）。2026-11-26 から全員に残す（★に限らない）。
 // 残した記憶は、あとの場面が引用する：年度末・卒業式の言葉、卒業後の便り、殿堂入りの言葉。
 // 選び方は覚醒の形の出やすさ（育て方の傾き）と、卒業後の絆（a.bond）に効く。
 // 絆の深い卒業生は「人」として返ってくる：引退後にコーチとして戻る・中学生を紹介する・次の人生へ付いてくる。
@@ -9,7 +9,7 @@
   const sur = (n) => String(n).split(' ')[0];
 
   // ---------- 記憶を残す ----------
-  YA.MEM_NAME = { scout: 'スカウトの見立て', star: '★を付けた日', debut: '初めての出場', wall: '壁', hint: '鍵が見えた', term: '年度末', grad: '卒業式', awake: '覚醒', path: '進路面談', ref: '紹介で来た',
+  YA.MEM_NAME = { scout: 'スカウトの見立て', star: '初めての課題', kadai: '課題', kgive: '課題をあきらめた', debut: '初めての出場', wall: '壁', hint: '手がかり', term: '年度末', grad: '卒業式', awake: '覚醒', path: '進路面談', ref: '紹介で来た',
     unrest: '出番の不満', lowconf: '自信をなくした', injury: '怪我', quit: '辞めたいと言った', hot: '絶好調', rival: '張り合い', rivalry: '先発争い', family: '家庭の事情', homesick: 'ホームシック', parent: '保護者の相談', tired: '疲れ', yplan: '育成計画', mentorset: '師匠' };
   const MEM_EVENTS = new Set(['unrest', 'lowconf', 'injury', 'quit', 'hot', 'rival', 'rivalry', 'family', 'homesick', 'parent', 'tired']);
   const quoteOf = (label) => {
@@ -31,7 +31,7 @@
     let rr = null;
     try { const d0 = YA.EVENTS.find((x) => x.id === e.id); const o0 = d0 && d0.opts && d0.opts[idx]; if (p && o0 && o0.kind && !o0.run && YA.react) rr = YA.react(p, o0.kind).c < 0; } catch (er) { rr = null; }
     const out = res0.apply(this, arguments);
-    if (!p || !(p.star || p.mem)) return out;
+    if (!p) return out;
     const def = YA.EVENTS.find((x) => x.id === e.id);
     const o = def && def.opts && def.opts[idx];
     if (!o) return out;
@@ -45,16 +45,6 @@
   YA.awaken = function (w, p) {
     const r = aw0.apply(this, arguments);
     YA.memAdd(w, p, 'awake', null, (p.aw && p.aw.form) || '');
-    return r;
-  };
-  // ★を付けたとき、スカウトの見立てがあれば出会いとして残す
-  const ss0 = YA.setStar;
-  YA.setStar = function (w, p, on) {
-    const r = ss0.apply(this, arguments);
-    if (r && r.ok !== false && on && p.star && !YA.memOf(p, 'scout').length && p.scoutNote && p.scoutNote.hunch) {
-      p.mem = p.mem || [];
-      p.mem.unshift({ y: w.year, w: w.week, g: p.grade, k: 'scout', c: null, q: p.scoutNote.hunch.text, ok: p.scoutNote.hunch.true });
-    }
     return r;
   };
 
@@ -227,10 +217,10 @@
     const s = sayMem(p, m);
     return `${sn}と、この一年を振り返った。${g}${s ? `「${nest(s)}」` : `${YA.MEM_NAME[m.k]}のことを、本人もよく覚えていた。`}`;
   };
-  // 卒業式の場面の挨拶：★の子は記憶から
+  // 卒業式の場面の挨拶：課題を出したことのある子は記憶から
   const say0 = YA.say;
   YA.say = function (w, p, scene) {
-    if (scene === 'thanks' && p && p.star && p.mem) {
+    if (scene === 'thanks' && p && (p.star || p.kEver) && p.mem) {
       const m = YA.definingMem(p);
       const s = m && sayMem(p, m);
       if (s) return nest(s);
@@ -268,7 +258,7 @@
   };
 
   // ---------- 便り：その年に起きたことと、記憶から書く（数字の一行をやめる）----------
-  const HEAD_RE = /^卒業生の(.+)★（(\d+)年目卒）：/;
+  const HEAD_RE = /^卒業生の(.+?)（(\d+)年目卒）：/;
   YA.letterOf = function (w, a) {
     const ss = a.seasons || [];
     const s = ss[ss.length - 1];
@@ -328,7 +318,7 @@
       const m = HEAD_RE.exec(text);
       if (m) {
         const a = (w.alumni || []).find((x) => x.name === m[1] && String(x.year) === m[2]);
-        if (a && a.mem) return nt0.call(this, w, tier, `卒業生の${a.name}★（${a.year}年目卒）より：「${YA.letterOf(w, a)}」`, pid);
+        if (a && a.mem) return nt0.call(this, w, tier, `卒業生の${a.name}（${a.year}年目卒）より：「${YA.letterOf(w, a)}」`, pid);
       }
     }
     return nt0.apply(this, arguments);
@@ -361,8 +351,8 @@
   YA.EVENTS.push({ id: 'obret', name: '卒業生が戻ってきた', weight: 0, pick: () => null, text: () => '', opts: [] });
   YA.EVENTS.push({ id: 'ref', name: '卒業生からの紹介', weight: 0, pick: () => null, text: () => '', opts: [] });
   YA.EVENT_ABOUT = YA.EVENT_ABOUT || {};
-  YA.EVENT_ABOUT.obret = '現役を終えた★の卒業生が、コーチとして戻りたいと言ってきました。迎えると、その役のコーチと入れ替わり、毎月★の子に自分の経験を話します（鍵のヒントが進む）。';
-  YA.EVENT_ABOUT.ref = '★の卒業生が、地元の中学生を紹介してくれました。会いに行くと、スカウトの候補に「よく見えている」状態で入ります。';
+  YA.EVENT_ABOUT.obret = '現役を終えた教え子（課題を出したことのある卒業生）が、コーチとして戻りたいと言ってきました。迎えると、その役のコーチと入れ替わり、毎月、課題中の子に自分の経験を話します（手がかりが見えることがある）。';
+  YA.EVENT_ABOUT.ref = '教え子の卒業生が、地元の中学生を紹介してくれました。会いに行くと、スカウトの候補に「よく見えている」状態で入ります。';
   const PHYS_FORMS = new Set(['flash', 'engine', 'sky', 'fighter', 'wing']);
   YA.obRoleOf = function (a) {
     if (a.pos === 'GK') return 'GKコーチ';
@@ -402,13 +392,13 @@
       const role = YA.obRoleOf(a);
       const cur = w.club.staff.find((x) => x.role === role);
       const m = YA.definingMem(a);
-      def.text = () => `${a.year}年目に送り出した${a.name}${a.star ? '★' : ''}が、${a.retired ? '現役を終えて' : a.coachPath ? '指導者の勉強を続けて' : '大学を出て'}訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
+      def.text = () => `${a.year}年目に送り出した${a.name}が、${a.retired ? '現役を終えて' : a.coachPath ? '指導者の勉強を続けて' : '大学を出て'}訪ねてきた。「${m ? YA.recallMem(a, m) + '　' : ''}今度は、自分が教える側をやらせてもらえませんか」（${role}・腕前${YA.obAbOf(a)}／いまの${role}は${cur ? cur.name + '・腕前' + cur.ab : 'いない'}）`;
       def.opts = [
-        run(`${role}として迎える`, (ww) => { YA.obJoin(ww, a); return { line: `${sur(a.name)}が、グラウンドに戻ってきた。`, small: `${role}が${a.name}に替わった。毎月、★の子に自分の経験を話す` }; }),
+        run(`${role}として迎える`, (ww) => { YA.obJoin(ww, a); return { line: `${sur(a.name)}が、グラウンドに戻ってきた。`, small: `${role}が${a.name}に替わった。毎月、課題中の子に自分の経験を話す` }; }),
         run('今は枠がないと伝える', (ww) => { a.obAsked = ww.year; a.bond = Math.max(0, (a.bond || 3) - 1); return { line: '「そうですよね。また顔を出します」と笑って帰っていった。', small: '' }; }),
       ];
     } else {
-      def.text = () => `卒業生の${a.name}★（${a.club}）から電話があった。「地元に、ちょっと見てほしい中学生がいるんです。昔の自分みたいな子で」`;
+      def.text = () => `卒業生の${a.name}（${a.club}）から電話があった。「地元に、ちょっと見てほしい中学生がいるんです。昔の自分みたいな子で」`;
       def.opts = [
         run('会いに行く（スカウトの候補に入る）', (ww) => { const c = YA.refCand(ww, a); return { line: c ? `${c.p.name}（${c.p.pos}）に会った。${sur(a.name)}の言うとおり、目が違った。` : '今回は都合が合わなかった。', small: c ? 'スカウトの候補に入った（よく見えている）' : '' }; }),
         run('今年は見送ると伝える', () => ({ line: '「分かりました。また、いい子がいたら連絡します」', small: '' })),
@@ -460,7 +450,7 @@
     for (const a of w.alumni || []) if (a.retired && !was.has(a) && a.retY == null) a.retY = w.year;
     return r;
   };
-  // 毎週：OBコーチが★の子に話す（月1回）・戻りたい卒業生（3週）・紹介（10週）
+  // 毎週：OBコーチが課題中の子に話す（月1回）・戻りたい卒業生（3週）・紹介（10週）
   const fw = (w, ev) => { w.forced = (w.forced || []).concat([Object.assign({ pid: null, x: null, week: w.week, year: w.year }, ev)]); };
   const rw0 = YA.rivalWeek;
   YA.rivalWeek = function (w) {
@@ -476,7 +466,6 @@
         const same = stars.filter((p) => p.pos === s.pos);
         const p = (same.length ? same : stars)[YA.hash(s.name + key) % (same.length || stars.length)];
         YA.hintUp(w, p, 0.35, `${s.role}の${s.name}の話`);
-        YA.keyProgress(w, p, 'alum', 1);
         p.hist.unshift({ y: w.year, w: w.week, t: `${s.role}の${s.name}（卒業生）が、自分の経験を話してくれた` });
       }
     }

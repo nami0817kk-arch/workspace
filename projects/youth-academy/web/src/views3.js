@@ -23,6 +23,7 @@
     const input = h('input', { type: 'text', maxlength: 12, placeholder: '名前（空なら「監督」）', value: f.name, style: 'width:100%;padding:7px 9px;border:1px solid #b9c7de;border-radius:8px;font:inherit;font-weight:700' });
     input.addEventListener('input', () => (f.name = input.value));
     input.addEventListener('pointerdown', (e) => e.stopPropagation());
+    if (app.oldSave) left.append(h('div', { class: 'note oldsave', style: 'color:#8a5a00;background:#fff8e1;border-radius:6px;padding:4px 8px;margin-bottom:4px' }, '前の版のセーブは、育て方の仕組み（★と覚醒の鍵→課題）を作り替えたため読み込めません。新しく始めてください。'));
     left.append(h('div', { class: 'h', style: 'font-size:15px' }, '指導者を作る'), h('div', { class: 'note', style: 'margin:6px 0 2px' }, '名前'), input);
     left.append(h('div', { class: 'note', style: 'margin:8px 0 3px' }, '経歴（最初の能力・資格・評判が変わります）'));
     for (const c of YA.CAREERS) left.append(h('button', { class: 'rolecard' + (f.career === c.k ? ' on' : ''), onclick: () => { f.career = c.k; rerender(); } }, h('div', { class: 'grow' }, h('b', {}, c.name), h('div', {}, h('span', { class: 'd' }, c.note)))));
@@ -34,11 +35,11 @@
     right.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('span', { class: 'grow' }, '解任'), h('button', { class: 'btn sm' + (f.noFire ? ' on' : ''), onclick: () => { f.noFire = !f.noFire; rerender(); } }, f.noFire ? '解任なし' : '解任あり')), h('div', { class: 'note' }, '「解任なし」でも、評価が悪いと予算と信頼度は下がります。'));
     const ppl = YA.legacyPeople(U().store);
     if (ppl.length) {
-      right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '前の人生の教え子'), h('div', { class: 'note' }, '絆の深かった★の卒業生が、コーチとして付いてきてくれます。1人だけ連れていけます（同じ役のコーチと入れ替わり、毎月★の子に自分の経験を話します）。'));
+      right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '前の人生の教え子'), h('div', { class: 'note' }, '絆の深かった教え子の卒業生が、コーチとして付いてきてくれます。1人だけ連れていけます（同じ役のコーチと入れ替わり、毎月、課題中の子に自分の経験を話します）。'));
       for (const q of ppl) {
         const on = f.legacy === q.name;
         const m = YA.definingMem ? YA.definingMem(q) : null;
-        right.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:3px' }, h('div', { class: 'grow' }, h('b', {}, `${q.name}★（${q.from || ''} ${q.year}年目卒・${YA.obRoleOf(q)}）`), h('div', { class: 'note' }, m && YA.recallMem ? `「${YA.recallMem(q, m)}」` : `${q.club || ''}`)),
+        right.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px;margin-top:3px' }, h('div', { class: 'grow' }, h('b', {}, `${q.name}（${q.from || ''} ${q.year}年目卒・${YA.obRoleOf(q)}）`), h('div', { class: 'note' }, m && YA.recallMem ? `「${YA.recallMem(q, m)}」` : `${q.club || ''}`)),
           h('button', { class: 'btn sm' + (on ? ' on' : ''), onclick: () => { f.legacy = on ? null : q.name; rerender(); } }, on ? '連れていく' : '連れていかない')));
       }
     }
@@ -56,7 +57,7 @@
     const store = U().store;
     const key = YA.slotKey(app.slot || 0);
     const bak = store.get(key + '_bak', null);
-    const bakOk = bak && bak.v >= 3 && bak.players && bak.lineupA;
+    const bakOk = bak && bak.v >= YA.SAVE_V && bak.players && bak.lineupA;
     const box = h('div', { class: 'card', style: 'margin:auto;max-width:520px;padding:16px;display:flex;flex-direction:column;gap:8px' });
     box.append(h('div', { class: 'h', style: 'font-size:16px' }, 'セーブを読めませんでした'), h('div', { class: 'note', style: 'color:var(--ink)' }, `枠${(app.slot || 0) + 1}のセーブが壊れているか、読めない形でした。年度はじめの控えに戻すか、新しく始めるかを選んでください。書き出したセーブがあれば、新しく始めたあと設定の「復元する」で戻せます。`));
     box.append(h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap' },
@@ -158,7 +159,7 @@
       h('button', { class: 'btn sm', onclick: importBox }, '復元する（貼り付け）'),
       store.get(YA.slotKey(app.slot) + '_bak', null) ? h('button', { class: 'btn sm', onclick: () => confirmBox('年度はじめの控えに戻しますか（いまの進み具合は消えます。' + ORIG_NOTE + '）', () => { app.w = store.get(YA.slotKey(app.slot) + '_bak', null); YA.saveWorld(true); rerender(); }, { yes: '控えに戻す', danger: true }) }, '控え（年度はじめ）に戻す') : null));
     if (YA.devOn()) testBlock(body);
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '36人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }, { yes: 'やり直す', danger: true, note: '36人も成績も消えて、元に戻せません。' }) }, '最初からやり直す'));
+    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'この枠を最初からやり直す'), h('div', { class: 'note' }, '33人も成績も消えて、新しい指導者から始まります。'), h('button', { class: 'btn', style: 'margin-top:5px;color:#b02020', onclick: () => confirmBox('本当に最初からやり直しますか', () => { app.w = null; app.ng = null; store.set(YA.slotKey(app.slot), null); rerender(); }, { yes: 'やり直す', danger: true, note: '33人も成績も消えて、元に戻せません。' }) }, '最初からやり直す'));
   };
   // 控えに戻す・復元で、予約したオリジナル選手がどうなるか
   const ORIG_NOTE = '予約したオリジナル選手も戻ります（使ったチケットは戻りません）';
@@ -281,7 +282,7 @@
     box.append(h('div', { class: 'h', style: 'font-size:16px' }, `指導者人生のまとめ（${s.years}年）`));
     box.append(h('div', { class: 'note' }, (app.w.coachName || '指導者') + 'さんの歩み'));
     const lg = YA.legacyBank(U().store, app.w);
-    box.append(h('div', { class: 'insight' }, lg.length ? `次の人生に付いてきてくれる教え子：${lg.join('・')}（新しく始めるときに1人選べます）` : '次の人生に付いてきてくれる教え子は、いません（絆の深い★の卒業生が付いてきます）'));
+    box.append(h('div', { class: 'insight' }, lg.length ? `次の人生に付いてきてくれる教え子：${lg.join('・')}（新しく始めるときに1人選べます）` : '次の人生に付いてきてくれる教え子は、いません（絆の深い教え子の卒業生が付いてきます）'));
     box.append(h('div', { class: 'insight' }, `プロ入りした卒業生 ${s.pros}人／代表経験者 ${s.nats}人／連帯貢献金 ${YA.yen(s.solid)}`));
     if (s.best.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '育てた主な子'), ...s.best.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${a.name}（${a.pos}・総合力${YA.rate(a.ovr)}・${a.club || ''}）`)));
     if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));
@@ -381,7 +382,8 @@
     app.slot = i;
     U().store.set('slot', i);
     const w = U().store.get(YA.slotKey(i), null);
-    app.w = w && w.v >= 3 ? w : null;
+    app.w = w && w.v >= YA.SAVE_V ? w : null;
+    app.oldSave = !app.w && YA.isOldSave(w);
     app.ng = null;
     app.tab = 'home';
     app.view = 'pre';

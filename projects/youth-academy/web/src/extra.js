@@ -311,7 +311,7 @@
     if (w.yearIntro) return '最初に、クラブの目標とチームの約束事を決めます。難しい目標は評価が高く出ますが、信頼度が低いと変えられません。';
     const ph = w.phase;
     if (ph === 'plan') return w.week === 1
-      ? '① 今週の練習を確かめます。「練習」タブで月〜金のメニューとチームの重点を決めます（「おまかせ」でも大丈夫）。決まったら「この週で行く」。「選手」タブで★注目の子も選びましょう。'
+      ? '① 今週の練習を確かめます。「練習」タブで月〜金のメニューとチームの重点を決めます（「おまかせ」でも大丈夫）。決まったら「この週で行く」。「選手」タブで手がかりを見て、課題を出す子も選びましょう。'
       : '練習を組んで、週を進めましょう。「選手」タブで面談（月1回まで）もできます。';
     if (ph === 'event') return '② 出来事が起きました。選手に言葉をかけて、どう対応するかを選びます。同じ言葉でも、性格で反応が変わります。';
     if (ph === 'match') return '③ 試合です。「試合へ」で布陣・役割・戦い方を決めてキックオフ。試合中は「止める」で交代・指示・声かけができます。見ずに結果だけ見ることもできます。';
@@ -323,6 +323,7 @@
   YA.slotKey = (i) => (i === 0 ? 'world' : 'world' + i);
   YA.slotSummary = function (w) {
     if (!w || !w.players) return null;
+    if (YA.isOldSave(w)) return `${w.clubName}（前の版のセーブ・読み込めません）`;
     return `${w.clubName}（${YA.ywName(w.year, w.week)}）／${w.club ? YA.TIER_NAME[w.club.tier] : ''} ${w.rec ? w.rec.w + '勝' + w.rec.d + '分' + w.rec.l + '敗' : ''}`;
   };
   YA.exportWorld = (w) => JSON.stringify({ app: 'youth-academy', v: w.v, world: w });
@@ -334,7 +335,8 @@
       return { ok: false, msg: '読み取れませんでした（コピーした文字が欠けているかもしれません）' };
     }
     const w = o && o.app === 'youth-academy' ? o.world : null;
-    if (!w || !w.players || !w.lineupA || !(w.v >= 3)) return { ok: false, msg: 'このアプリのセーブデータではありません' };
+    if (YA.isOldSave(w)) return { ok: false, msg: '前の版のセーブです。育て方の仕組みを作り替えたため、読み込めません' };
+    if (!w || !w.players || !w.lineupA || !(w.v >= YA.SAVE_V)) return { ok: false, msg: 'このアプリのセーブデータではありません' };
     return { ok: true, world: w };
   };
 
