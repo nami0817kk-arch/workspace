@@ -15,6 +15,7 @@ import 'models.dart';
 import 'models_static.dart';
 import 'people_data.dart';
 import 'trade_data.dart';
+import 'traits_data.dart';
 
 export '../l10n/l10n.dart';
 export 'data.dart';
@@ -26,6 +27,7 @@ export 'models.dart';
 export 'models_static.dart';
 export 'people_data.dart';
 export 'trade_data.dart';
+export 'traits_data.dart';
 
 part 'game_turn.dart';
 part 'game_actions.dart';
@@ -43,6 +45,7 @@ part 'game_trade.dart';
 part 'game_corp.dart';
 part 'game_life.dart';
 part 'game_pres.dart';
+part 'game_traits.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -322,6 +325,11 @@ class Game {
 
   /// 税・設備・ブランド・技術・IT・特許・社長の私生活など（1.1.0+30。game_life.dart）
   LifeState life = LifeState();
+
+  /// 社員の特性（1.1.0+33。game_traits.dart）: 別の乱数の並びの種（0 なら予測の種から作る）・図鑑に載った特性・今年危機だった月の数
+  int trSeed = 0;
+  Set<String> trFound = {};
+  int trCrisisM = 0;
   List<Biz> biz = [];
   List<Person> staff = [], cands = [], kids = [];
 
@@ -468,7 +476,9 @@ class Game {
     final name = nm();
     final age = ri(24, 48);
     final ab = <String, int>{'tou': base(), 'kai': base(), 'ei': base(), 'zai': base()};
-    final trait = pick(STRAITS).id;
+    var trait = pick(STRAITS).id;
+    // 「天才肌」はまれ（1.1.0+33。引き直しは別の乱数の並びで。ゲームの乱数の並びはずらさない）
+    if (extras) trait = trMain(trait);
     final amb = ri(10, 95);
     final loy = ri(20, 90).toDouble();
     final p = Person(id: id, name: name, age: age, ab: ab, trait: trait, amb: amb, loy: loy);
@@ -487,6 +497,8 @@ class Game {
     p.ambKnown = false;
     // 経歴・細かい能力・人柄・暮らし（1.1.0+27。試作との一致を見る遊びでは付けない）
     if (extras) flesh(p, qq: qq);
+    // 残りの特性（1〜3個）と、はじめに見える1つ（1.1.0+33。別の乱数の並びで引く）
+    if (extras) trRoll(p);
     return p;
   }
 
@@ -787,6 +799,8 @@ class Game {
         if (p.trait == 'oneman') m *= 1.25;
         if (p.trait == 'charm') m *= 1.1;
         if (hasT('oneman')) m *= .85;
+        // 新しい特性（1.1.0+33。game_traits.dart）
+        m *= trPowF(b, p);
         return m;
       }
     }
@@ -805,7 +819,7 @@ class Game {
   double crewMult(Biz b) {
     final p = mgrOf(b);
     final tou = p != null ? p.ab['tou']! : pres.ab['tou']!;
-    return (.8 + tou / 250) * (b.model == 'fc' ? 3 : 1) * (culture == 'sports' ? 1.25 : 1) * (culture == 'sports' && hasT('oneman') ? 1.1 : 1);
+    return (.8 + tou / 250) * (b.model == 'fc' ? 3 : 1) * (culture == 'sports' ? 1.25 : 1) * (culture == 'sports' && hasT('oneman') ? 1.1 : 1) * trCrewF(b);
   }
 
   double crewEff(Biz b) {
@@ -815,7 +829,8 @@ class Game {
         (.8 + tou / 250) *
         (b.model == 'fc' ? 3 : 1) *
         (culture == 'sports' ? 1.25 : 1) *
-        (culture == 'sports' && hasT('oneman') ? 1.1 : 1);
+        (culture == 'sports' && hasT('oneman') ? 1.1 : 1) *
+        trCrewF(b);
   }
 
   double usedPow(Biz b) {
@@ -931,6 +946,7 @@ class Game {
         mg += (p.ab['tou']! - 50) / 2000;
         if (p.trait == 'frugal') mg += .02;
         if (p.trait == 'grit') mg += .01;
+        mg += trMg(b, p, ind);
       } else {
         mg += (pres.ab['tou']! - 50) / 2000;
       }
@@ -1007,7 +1023,7 @@ class Game {
     final it = loanInterest();
     // 本社の経費。1.1.0+26 から、事業1つごとの決まった額を小さくし、売上の1.5%（大きな会社ほど本社も大きい）を足す
     final h0 = unitsOn
-        ? ((biz.length * 2e4 + 3.3e4) * nom() + biz.fold(0.0, (a, b) => a + math.max(0.0, b.rev)) * .015) * (holding ? 1.5 : 1)
+        ? ((biz.length * 2e4 + 3.3e4) * nom() + biz.fold(0.0, (a, b) => a + math.max(0.0, b.rev)) * .015) * (holding ? 1.5 : 1) * trHqF()
         : (biz.length * 1e5 + 3.3e4) * nom() * (holding ? 1.5 : 1);
     final p = own + sp - salaries() - it - h0;
     pre = p;
@@ -1081,6 +1097,9 @@ class Game {
         'ar': ar,
         'trade': trade.toJson(),
         'life': life.toJson(),
+        'trs': trSeed,
+        if (trFound.isNotEmpty) 'trf': trFound.toList(),
+        if (trCrisisM > 0) 'trc': trCrisisM,
         'reg': reg,
         'wiLast': wiLast,
         'expLast': expLast,
@@ -1186,6 +1205,9 @@ class Game {
       ..ar = d('ar')
       ..trade = TradeState.fromJson((j['trade'] as Map?)?.cast<String, dynamic>())
       ..life = LifeState.fromJson((j['life'] as Map?)?.cast<String, dynamic>())
+      ..trSeed = i('trs')
+      ..trFound = {for (final e in (j['trf'] as List? ?? [])) e as String}
+      ..trCrisisM = i('trc')
       ..wiLast = md('wiLast') ?? {}
       ..expLast = md('expLast') ?? {}
       ..listed = j['listed'] == true
@@ -1286,6 +1308,8 @@ class Game {
       s.flesh(p);
       p.salary = sal;
     }
+    // 特性は 1.1.0+33 から2〜4個。それより前のセーブの人（特性1つ）には、今の1つを残して残りを足す
+    s.trMigrate();
     s.calcAll();
     // 古いセーブには最大値がないので、残っている推移から埋める
     for (final h in s.hist) {

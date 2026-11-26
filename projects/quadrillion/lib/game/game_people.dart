@@ -230,7 +230,8 @@ extension GamePeople on Game {
 
   // ===== 注意 =====
   /// 引き抜かれそうか（挑戦好きでやる気が下がっている・給料が相場より低い）
-  bool poachRisk(Person p) => p.real && ((p.amb > 60 && p.loy < 60) || (underpaid(p) && p.loy < 70));
+  bool poachRisk(Person p) =>
+      p.real && !p.has('devoted') && ((p.amb > 60 && p.loy < 60) || (underpaid(p) && p.loy < (p.has('money') ? 85 : 70)) || (p.has('money') && p.loy < 45));
 
   /// 給料が相場より低くて不満のもとになっているか（相棒は株を持っているので、給料の低さでは不満を持たない）
   bool underpaid(Person p) => p.real && !p.partner && payRatio(p) < payLowRatio;
@@ -242,7 +243,7 @@ extension GamePeople on Game {
   bool unhappy(Person p) => p.loy < 50 || underpaid(p);
 
   /// 海外に赴任させると断りがちか（学校に通う子どもがいる・親の介護をしている）
-  bool refusesPosting(Person p) => p.real && (p.care || p.kidsAge.any((a) => a >= 6 && a <= 15));
+  bool refusesPosting(Person p) => p.real && (p.care || p.kidsAge.any((a) => a >= 6 && a <= 15) || (p.has('family') && (p.married || p.kidsAge.isNotEmpty)));
 
   /// 休んでいる・研修や留学で外にいるか（責任者として働けない）
   bool isAway(Person p) => p.away > 0;
@@ -252,7 +253,7 @@ extension GamePeople on Game {
   ({int grad, int mid, int poach, double q}) hireMarket() {
     final n = normOf();
     final rp = coRep(), un = unempOf();
-    var qq = (rp - 40) / 50 + (un - 4) / 12 + net * .1 + (culture == 'merit' ? .3 : 0) + (hasT('noble') ? -.5 : 0);
+    var qq = (rp - 40) / 50 + (un - 4) / 12 + net * .1 + (culture == 'merit' ? .3 : 0) + (hasT('noble') ? -.5 : 0) + (anyTr('charm') ? .15 : 0);
     // 伸びている業種（ネットと未来の分類が波に乗っている時）は人が集まる
     if (techBoom > 1.05 && biz.any((b) => techCats.contains(indm[b.ind]!.cat))) qq += .2;
     // 景気が良いと人が取り合いになり、質が下がる
@@ -326,6 +327,9 @@ extension GamePeople on Game {
       p.salary = jsRound(mktPay(p)).toDouble();
       out.add(p);
     }
+    // 顔が広い人がいると、知り合いのつてで中途の候補が1人増える（1.1.0+33。別の乱数の並びで作る）
+    final extra = trWideCand(m.q);
+    if (extra != null) out.insert(math.min(out.length, m.grad + m.mid), extra);
     return out.take(9).toList();
   }
 
@@ -368,8 +372,10 @@ extension GamePeople on Game {
           p.awayWhy = null;
           if (why != null && why.startsWith('course:')) {
             final g = int.tryParse(why.substring(7)) ?? 0;
+            // 教え上手がいると、研修の効きが倍になる（1.1.0+33）
+            final tf = trTeachF(p);
             for (final k in SK_GROUPS[clampI(g, 0, SK_GROUPS.length - 1)].$2) {
-              p.sk![k] = math.min(99, p.sk![k]! + ri(3, 6));
+              p.sk![k] = math.min(99, p.sk![k]! + ri(3, 6) * tf);
             }
             N(M('{0}が研修から戻りました。{1}が伸びました', [Nm(p.name), D(SK_GROUPS[clampI(g, 0, SK_GROUPS.length - 1)].$1)]), 'good');
           } else if (why == 'abroad') {
@@ -393,8 +399,10 @@ extension GamePeople on Game {
       if (culture == 'sports') load += .12;
       if (hasT('stamina')) load += .08;
       if (p.trait == 'stamina') load -= .2;
-      p.health = clampD(p.health + (.55 - load) * (1.6 - p.str / 100) * 5 - (p.age > 55 ? .3 : 0), 0, 100);
-      if (p.health < healthBreak && rnd() < .3) {
+      // 楽天家は健康が落ちにくく、心配性は落ちやすい。打たれ弱い人は燃え尽きやすい（1.1.0+33）
+      final dh = (.55 - load) * (1.6 - p.str / 100) * 5;
+      p.health = clampD(p.health + (dh < 0 ? dh * trHealthF(p) : dh) - (p.age > 55 ? .3 : 0), 0, 100);
+      if (p.health < healthBreak + (p.has('fragile') ? 8 : 0) && rnd() < .3) {
         if (p.amb > 70 && rnd() < .35) {
           fire(p, 'quit');
           N(M('{0}が燃え尽きて会社を辞めました', [Nm(p.name)]), 'bad');
@@ -403,12 +411,14 @@ extension GamePeople on Game {
         p.away = ri(2, 5);
         p.awayWhy = 'sick';
         N(M('{0}が体を壊して休みに入りました（{1}か月）。そのあいだ責任者の仕事はできません', [Nm(p.name), p.away]), 'bad');
+        trOnSick(p, N);
         continue;
       }
       // 給料が相場より低いとやる気が下がる。高ければ少し上がる（相棒は株を持っているので下がらない）
       final pr = p.partner ? 1.0 : payRatio(p);
       if (pr < payLowRatio) {
-        p.loy -= (payLowRatio - pr) * 6;
+        // 会社が好きな人は、相場より低くても気にしない。お金で動く人は強く気にする（1.1.0+33）
+        p.loy -= (payLowRatio - pr) * 6 * (p.has('devoted') ? .2 : (p.has('money') ? 1.6 : 1));
       } else if (pr > 1.1) {
         p.loy = math.min(99, p.loy + .2);
       }
@@ -419,7 +429,8 @@ extension GamePeople on Game {
       if (p.married && p.age < 45 && p.kidsAge.length < 3 && rnd() < .1 / 12) {
         p.kidsAge.insert(0, 0);
         final leave = clampD((year - 1995) / 40, 0, .5) + ((NORM_GROUP[home] ?? 'em') == 'eu' ? .2 : 0);
-        if (rnd() < leave) {
+        // 家族第一の人は、子が生まれると必ず休む（1.1.0+33）
+        if (rnd() < (p.has('family') ? 1 : leave)) {
           p.away = ri(1, 3);
           p.awayWhy = 'baby';
           N(M('{0}に子どもが生まれ、育児の休みに入りました（{1}か月）', [Nm(p.name), p.away]));
@@ -448,6 +459,8 @@ extension GamePeople on Game {
       if (!p.partner && !events.any((e) => e.poach == p.id)) {
         var pq = n.hop / 12 * (p.loy >= 60 ? .5 : 1 + (60 - p.loy) / 30) * (pr < payLowRatio ? 1.8 : 1);
         if (p.tenure < 6) pq *= .3;
+        // 特性で辞めやすさが変わる（会社が好き・安定志向・面倒見のいい先輩・聞き上手など。1.1.0+33）
+        pq *= trQuitF(p, pr);
         if (rnd() < pq) {
           fire(p, 'quit');
           N(M('{0}が転職のため会社を辞めました', [Nm(p.name)]), 'bad');
@@ -484,7 +497,8 @@ extension GamePeople on Game {
             ? 1.2
             : culture == 'family'
             ? .8
-            : 1);
+            : 1) *
+        trGrowF(p);
     for (final k in skKeys) {
       if (rnd() < .5) sk[k] = math.min(99, sk[k]! + (g * rnd() * 2).round());
     }
@@ -539,7 +553,9 @@ extension GamePeople on Game {
     final up = m / p.salary - 1;
     final add = m - p.salary;
     p.salary = jsRound(m).toDouble();
-    p.loy = math.min(99, p.loy + clampD(up * 60, 3, 20));
+    // お金で動く人は昇給で大きく燃える（1.1.0+33）
+    p.loy = math.min(99, p.loy + clampD(up * 60, 3, 20) * (p.has('money') ? 2 : 1));
+    if (p.has('money')) trSee(p, 'money');
     return M('{0}の給料を相場まで上げました（毎月 {1} 増える）。やる気が上がりました', [Nm(p.name), Y(add)]);
   }
 
@@ -562,6 +578,9 @@ extension GamePeople on Game {
       }
       p.w = math.max(0, p.w - 4);
       if (p.loy < 70) p.loy += 2;
+      // 話を聞くと、隠れた特性が1つ分かることがある（1.1.0+33）
+      final ts = trTalk(p);
+      if (ts != null) parts.add(ts);
       if (payRatio(p) < payLowRatio) {
         parts.add(M('「給料が相場より低いと感じています（相場は月{0}）」', [Y(mktPay(p))]));
       } else if (p.health < healthWarn) {

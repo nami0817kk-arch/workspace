@@ -23,7 +23,9 @@ String? _json;
 /// 1980年に会社員を5年してから始め、12年回した会社（特許・ITの段・結婚・業界団体の役職をそろえる）
 Game _mid() {
   if (_json == null) {
-    final g = Game.newGame(SetupConfig(mode: 'world', year: 1980, traits: const ['charm', 'careful'], start: 'work', workYears: 5, workCat: 'food'), rng: ParkMiller(7));
+    // 1.1.0+33（社員の特性）で部下の出入りが変わり、種7の自動プレイは11年目に倒れて「お金」の画面が出なくなった。
+    // 種7〜14を今と前で回すと、倒れるのは今が2回・前が0回（16の種で測ると、特性の効き目を全部切っても2回倒れ、筋のばらつき）。12年続く種13で見る
+    final g = Game.newGame(SetupConfig(mode: 'world', year: 1980, traits: const ['charm', 'careful'], start: 'work', workYears: 5, workCat: 'food'), rng: ParkMiller(13));
     for (var m = 0; m < 144 && g.over == null; m++) {
       botMonth(g, units: true, focus: true);
     }

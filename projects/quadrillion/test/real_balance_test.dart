@@ -137,7 +137,13 @@ void main() {
     // 1.1.0+29（段4）から、宿敵と CPU の会社も同じ決まりで店を増やし、上場すれば宿敵に株を買われ、大口の客を失うこともある。
     // 同じ打ち方でも乱数の並びで6回中2〜5回倒れる（直前の2回の測りで2回と5回）ので、段2の線「借りないで必ず倒れることは無い」に戻した
     // 1.1.0+30（段6）から、上手な打ち方（赤字の店を閉める・沈む業種から移る・蓄えを持つ）では、倒れるのは6回中3回まで
-    expect(none.where((r) => r.broke).length, lessThanOrEqualTo(3), reason: lines);
+    // 1.1.0+33（社員の特性）から、部下の出入りで乱数の筋が変わる。48の種で測ると、借りないで倒れるのは前が16回・今が20回（3割〜4割）で、
+    // 6回だと線の上下に乗りやすい（この6本では前3回・今3〜4回）。線の割合（半分まで）は変えずに、種を12に増やして6回までで見る
+    final none12 = [...none, for (final seed in [77, 88, 99, 110, 121, 132]) play('none', seed)];
+    final more = none12.skip(none.length).map((r) => r.toString()).join('\n');
+    // ignore: avoid_print
+    print(more);
+    expect(none12.where((r) => r.broke).length, lessThanOrEqualTo(6), reason: '$lines\n$more');
     // 借りると速く大きくなれることがある（どこかの種で、借りた会社の時価の最高が、借りない会社の最後の時価を超える）
     expect([...maxRuns, ...some].any((r) => r.peakCap > noneOf(r.seed).cap), isTrue, reason: lines);
     // 借金は利益の何倍かで上限が決まる（現金に連動しない）。借りまくっても、利益の十数倍を大きく超えない

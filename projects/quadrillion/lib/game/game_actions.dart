@@ -591,6 +591,8 @@ extension GameActions on Game {
     // 任せていた責任者が辞めたあとに新しい人を置いたときも、任せ直すまでは自分で動かす
     final was = delegated(b);
     if (id != null && id != b.mgr) presXp('tou', 1);
+    // 責任者にした人・外された人の受け止め方（特性で変わる。1.1.0+33）
+    if (id != b.mgr) trOnPlace(b, b.mgr, id);
     b.mgr = id;
     if (id == null || !was) {
       b.deleg = false;
@@ -612,7 +614,8 @@ extension GameActions on Game {
       final pay = p.salary * severanceMonths();
       cash -= pay;
       fire(p, 'fired');
-      final hit = normOf().life * 8;
+      // 仲裁役がいると、ほかの部下の動揺は半分で収まる（1.1.0+33）
+      final hit = normOf().life * 8 * (anyTr('mediate') ? .5 : 1);
       for (final o in staff) {
         o.loy -= hit;
       }
@@ -642,7 +645,7 @@ extension GameActions on Game {
       p.age = ri(22, 27);
       add('kai', 20);
       add('ei', -10);
-      p.trait = pick(const ['tech', 'genius', 'careful']);
+      p.setMain(pick(const ['tech', 'genius', 'careful']));
     } else if (pl == 'club') {
       p.age = ri(22, 23);
       for (final k in abKeys) {
@@ -650,18 +653,18 @@ extension GameActions on Game {
       }
       p.loy = ri(75, 95).toDouble();
       p.amb = ri(10, 60);
-      p.trait = pick(STRAITS).id;
+      p.setMain(pick(STRAITS).id);
     } else if (pl == 'baito') {
       p.age = ri(24, 31);
       add('ei', 15);
       add('tou', 10);
-      p.trait = pick(const ['grit', 'stamina', 'charm']);
+      p.setMain(pick(const ['grit', 'stamina', 'charm']));
     } else if (pl == 'meet') {
       p.age = ri(30, 45);
       add('zai', 20);
       p.amb = ri(60, 95);
       p.loy = ri(20, 60).toDouble();
-      p.trait = pick(const ['gambler', 'careful', 'charm', 'liar']);
+      p.setMain(pick(const ['gambler', 'careful', 'charm', 'liar']));
       p.money = ri(2, 5) * 1e7 * nom();
     } else {
       p.age = ri(20, 35);
@@ -669,7 +672,7 @@ extension GameActions on Game {
       for (final k in abKeys) {
         add(k, sw + ri(-8, 8));
       }
-      p.trait = pick(const ['genius', 'liar', 'gambler', 'oneman', 'tech']);
+      p.setMain(pick(const ['genius', 'liar', 'gambler', 'oneman', 'tech']));
     }
     if (p.trait == 'tech' && pl != 'lab') {
       add('kai', 25);
@@ -678,6 +681,7 @@ extension GameActions on Game {
     if (p.trait == 'grit' && pl != 'baito') add('zai', -15);
     p.salary = jsRound(3e6 * nom() / 12);
     p.place = pl;
+    trFix(p);
     return p;
   }
 
@@ -1394,6 +1398,9 @@ extension GameActions on Game {
     var p = .55 + (pres.ab['zai']! - 50) / 200;
     if (hasT('charm')) p += .15;
     if (hasT('gambler')) p += .2;
+    // 二枚舌・人たらしの部下は株の攻防と交渉に強い（1.1.0+33）
+    if (anyTr('liar')) p += .03;
+    if (anyTr('charm')) p += .02;
     if (c.rival != null) {
       p -= c.rival!.type == 'state'
           ? .35

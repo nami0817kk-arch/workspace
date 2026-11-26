@@ -96,7 +96,45 @@ class Person {
   String name;
   int age;
   Map<String, int> ab;
-  String trait;
+
+  /// 特性（1.1.0+33 から2〜4個。いちばん上は今までの10種の1つで、[trait] で読む。残りは traits_data.dart の新しい60種）
+  List<String> traits;
+
+  /// いちばん上の特性（今までの10種の1つ。古いセーブの1つの特性）
+  String get trait => traits.isEmpty ? 'grit' : traits.first;
+
+  /// 特性を1つだけにする（試しの遊びで、決まった特性の人を作るため）
+  set trait(String v) {
+    traits = [v];
+    tseen.removeWhere((x) => x != v);
+  }
+
+  /// いちばん上の特性だけ取り替える（ほかの特性は残す）
+  void setMain(String v) {
+    if (traits.isEmpty) {
+      traits = [v];
+      return;
+    }
+    final was = traits.first;
+    traits = [v, ...traits.skip(1).where((x) => x != v)];
+    final i = tseen.indexOf(was);
+    if (i >= 0) tseen[i] = v;
+  }
+
+  /// その特性を持つか
+  bool has(String id) => traits.contains(id);
+
+  /// 見えている特性（[trait] は [traitKnown] でも見える）
+  List<String> tseen;
+
+  /// 入っている派閥の頭の id（いなければ null）
+  int? fac;
+
+  /// 叱られたり外されたりして根に持っている（「根に持つ」の人。やる気が戻らない）
+  bool grudge;
+
+  /// 続けて責任者をしている月
+  int headM;
   int amb;
   double loy;
   int tenure;
@@ -169,7 +207,12 @@ class Person {
     required this.name,
     required this.age,
     required this.ab,
-    required this.trait,
+    required String trait,
+    List<String>? more,
+    List<String>? tseen,
+    this.fac,
+    this.grudge = false,
+    this.headM = 0,
     required this.amb,
     required this.loy,
     this.tenure = 0,
@@ -208,7 +251,9 @@ class Person {
     List<String>? known,
     this.src,
     this.left,
-  })  : off = off ?? {},
+  })  : traits = [trait, ...?more],
+        tseen = tseen ?? [],
+        off = off ?? {},
         jobs = jobs ?? [],
         lic = lic ?? [],
         kidsAge = kidsAge ?? [],
@@ -252,6 +297,11 @@ class Person {
         if (src != null) 'src': src,
         if (left != null) 'left': left,
         'trait': trait,
+        if (traits.length > 1) 'traits': traits,
+        if (tseen.isNotEmpty) 'ts': tseen,
+        if (fac != null) 'fac': fac,
+        if (grudge) 'gru': true,
+        if (headM > 0) 'hm': headM,
         'amb': amb,
         'loy': loy,
         'tenure': tenure,
@@ -307,7 +357,13 @@ class Person {
         name: j['name'] as String,
         age: _i(j['age']),
         ab: _abFrom(j['ab']),
-        trait: j['trait'] as String,
+        // 1.1.0+33 から特性は2〜4個（traits）。古いセーブは1つ（trait）だけで、読み込んだあと Game が残りを足す
+        trait: _sl(j['traits']).firstOrNull ?? j['trait'] as String,
+        more: _sl(j['traits']).skip(1).toList(),
+        tseen: _sl(j['ts']),
+        fac: _in(j['fac']),
+        grudge: j['gru'] == true,
+        headM: _i(j['hm']),
         amb: _i(j['amb']),
         loy: _d(j['loy']),
         tenure: _i(j['tenure']),

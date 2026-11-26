@@ -201,6 +201,8 @@ extension GameTurn on Game {
         if (p.trait == 'genius') eff *= .5 + rnd() * 1.6;
         if (p.trait == 'gambler' && rnd() < .2) eff = 0;
         if (p.trait == 'frugal') eff *= .8;
+        // 新しい特性（1.1.0+33。せっかち・締め切り直前に強い。乱数は別の並び）
+        eff *= trReinvF(b, p);
         b.power += gain * eff * .6;
         b.crew = crewOf(b) + gain * eff * .8;
         if (p.amb > 75 && b.share < .15 && b.price != 'cut' && p.trait != 'charm' && rnd() < .08 && !full) {
@@ -258,6 +260,7 @@ extension GameTurn on Game {
       p.tenure++;
       if (p.tenure == 12 && !p.traitKnown) {
         p.traitKnown = true;
+        trSee(p, p.trait);
         final t = STRAITS.firstWhere((x) => x.id == p.trait);
         N(M('{0}の特性が分かりました：「{1}」（{2}／{3}）', [Nm(p.name), D(t.nJa), D(t.gJa), D(t.bJa)]));
       }
@@ -307,6 +310,8 @@ extension GameTurn on Game {
     }
     // 名前のある部下の1か月（健康・家族・給料への不満・転職。1.1.0+27）
     monthPeople(N);
+    // 社員の特性の1か月（見えてくる・やる気・出来事・経験で付く/消える。1.1.0+33）
+    trMonth(N);
     // 部下の引退（経歴を持つ人は、国と時代の定年から。相棒は定年が無い）
     if (q == 12) {
       final ra = retireAge();
@@ -646,10 +651,13 @@ extension GameTurn on Game {
           .toList();
       if (tgt.isNotEmpty && rnd() < .027) {
         final p = pick(tgt);
-        final e = evPoach(c, p);
-        e.poach = p.id;
-        tieRec(c, 'h', M('部下の{0}を引き抜かれかけた', [Nm(p.name)]));
-        events.add(e);
+        // 「会社が好き」の人は誘いを断ってくる（1.1.0+33）
+        if (!trDodgePoach(p)) {
+          final e = evPoach(c, p);
+          e.poach = p.id;
+          tieRec(c, 'h', M('部下の{0}を引き抜かれかけた', [Nm(p.name)]));
+          events.add(e);
+        }
       }
       // 代替わり
       if (c.presAge > 72 && rnd() < .05) {
@@ -788,7 +796,8 @@ extension GameTurn on Game {
                     ? 1.5
                     : culture == 'steady'
                         ? .5
-                        : 1)) {
+                        : 1) *
+                trScandalF()) {
       final b = pick(biz);
       final liar = staff.where((p) => p.trait == 'liar').firstOrNull;
       final what = pick(const ['品質の偽装', '帳簿のごまかし', '長時間労働', '顧客情報の流出']);
@@ -1009,7 +1018,8 @@ extension GameTurn on Game {
 
   /// 部下が会社を去る。[why] は社外に残すときの理由（quit 辞めた / poached 引き抜かれた / fired 解雇 / retired 引退）
   void fire(Person p, [String why = 'quit']) {
-    if (extras && staff.contains(p)) toAlumni(p, why);
+    final was = staff.contains(p);
+    if (extras && was) toAlumni(p, why);
     if (p.partner && p.stake != 0) {
       sh.pt = math.max(0, sh.pt - p.stake);
       if (listed) {
@@ -1028,6 +1038,8 @@ extension GameTurn on Game {
       }
     }
     if (succ == p.id) succ = null;
+    // ムードメーカーが辞めると士気が下がり、派閥の頭が辞めると派閥の人がついて出る（1.1.0+33）
+    if (was) trOnLeave(p, why);
   }
 
   void finishPipe(Biz b, Pipe x, void Function(String, [String]) N) {
@@ -1051,8 +1063,8 @@ extension GameTurn on Game {
     }
     final p = staffById(b.mgr);
     final kai = p != null ? p.ab['kai']! : pres.ab['kai']!;
-    final hit = .08 + (culture == 'free' ? .08 : 0) + kai / 1000 + (hasT('genius') ? .08 : 0) + (hasT('tech') ? .05 : 0) + uniBonus(b);
-    final miss = math.max(.08, .3 - kai / 500);
+    final hit = .08 + (culture == 'free' ? .08 : 0) + kai / 1000 + (hasT('genius') ? .08 : 0) + (hasT('tech') ? .05 : 0) + uniBonus(b) + trHitAdd(b);
+    final miss = math.max(.08, .3 - kai / 500) + trMissAdd(b);
     final r = rnd();
     double m;
     String msg;

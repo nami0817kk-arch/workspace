@@ -363,7 +363,7 @@ extension GameTrade on Game {
       if (!p.real || p.away > 0) continue;
       final ex = .5 + .5 * math.min(1, (trade.exp[p.id] ?? 0) / 36);
       final mgr = b.mgr == p.id;
-      final w = mgr ? (refusesPosting(p) ? .3 : 1.0) : .45;
+      final w = (mgr ? (refusesPosting(p) ? .3 : 1.0) : .45) * trHelpF(p);
       final v = langHelp(p, c) * ex * w;
       if (v > best) {
         best = v;
@@ -741,7 +741,8 @@ extension GameTrade on Game {
       if (!p.real) continue;
       final abroad = (p.away > 0 && p.awayWhy == 'abroad') ||
           (p.away == 0 && !refusesPosting(p) && biz.any((b) => b.mgr == p.id && ctryOf(b).any((c) => c != home)));
-      if (abroad) trade.exp[p.id] = (trade.exp[p.id] ?? 0) + 1;
+      // どこでも溶け込む人は、3倍の早さで現地に慣れる（1.1.0+33）
+      if (abroad) trade.exp[p.id] = (trade.exp[p.id] ?? 0) + (p.has('blend') ? 3 : 1);
     }
     trade.trap = trap;
     trade.wht = wht;

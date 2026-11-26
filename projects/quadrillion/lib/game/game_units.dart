@@ -573,11 +573,11 @@ extension GameUnits on Game {
           final p = staffById(b.mgr);
           final kai = p != null ? p.ab['kai']! : pres.ab['kai']!;
           final r = rnd();
-          final hp = .12 + kai / 1000 + (hasT('genius') ? .06 : 0);
+          final hp = .12 + kai / 1000 + (hasT('genius') ? .06 : 0) + trHitAdd(b);
           if (r < hp) {
             mul = 3 + rnd() * 3;
             hit = M('大当たり！「{0}」の新しい作品が大ヒットしました', [name]);
-          } else if (r < hp + .3) {
+          } else if (r < hp + .3 + trMissAdd(b)) {
             mul = .3;
             hit = M('「{0}」の新しい作品は外れました', [name]);
           } else {
@@ -610,6 +610,8 @@ extension GameUnits on Game {
     final k = kindB(b);
     if (k == 'license') {
       b.lic = ri(10, 30);
+      // 根回し上手がいると、役所の許可が早く下りる（1.1.0+33）
+      if (trBlockF() < 1) b.lic = math.max(4, (b.lic * trBlockF()).round());
       return;
     }
     final n = math.max(1, (capex * .95 / unitCapexAvg(b)).round());
