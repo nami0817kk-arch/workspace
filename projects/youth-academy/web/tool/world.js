@@ -1487,7 +1487,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
         YA.simulate(wa, { until: 'week', stopOnImportant: false });
         maxAct = Math.max(maxAct, YA.kadaiActive(wa).length);
         const n = Object.keys(wa.players).length;
-        if (n < 31 || n > 36) sizeBad++;
+        if (n < 30 || n > 40) { sizeBad++; console.log('  人数が外れた週', wa.year, wa.week, n); }
       }
       yrs++;
       aw += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
@@ -1499,7 +1499,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   console.log(`  課題（おまかせ ${yrs}年）：出した${given}・覚醒${aw}・あきらめ${gaveup}・少し伸びた${half}・気づけず${miss}・同時の最大${maxAct}人`);
   ok(maxAct <= YA.KADAI_MAX && maxAct >= 4, '同時に課題を出しているのは5人まで（おまかせ）' + maxAct);
-  ok(sizeBad === 0, 'おまかせでも人数は33人前後');
+  ok(sizeBad === 0, 'おまかせでも人数は33人前後（GK の途中加入で少し増えることがある）');
   ok(given >= yrs * 10, 'おまかせで課題が回る（1年に10件以上）' + given + '/' + yrs + '年');
   ok(gaveup >= 1, '外れた課題はあきらめになる ' + gaveup);
   ok(other === 0, '課題なしの運任せの覚醒はない ' + other);

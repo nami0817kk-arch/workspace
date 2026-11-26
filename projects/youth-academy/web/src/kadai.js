@@ -254,7 +254,7 @@
     swapPlaces(w, p, q);
     return `（${q.name}と入れ替えて${to}へ）`;
   }
-  YA.kadaiGive = function (w, p, t, c) {
+  YA.kadaiGive = function (w, p, t, c, o) {
     const why = YA.kadaiWhy(w, p, t);
     if (why) return { ok: false, msg: why };
     YA.kadaiEnsure(w, p);
@@ -276,7 +276,8 @@
     if (t === 'convert' && YA.startConvert && p.apt && p.apt[c] != null) YA.startConvert(w, p, c);
     p.hist.unshift({ y: w.year, w: w.week, t: `課題：${YA.kadaiLabel(w, t, c)}` });
     if (YA.memAdd) YA.memAdd(w, p, 'kadai', null, YA.kadaiLabel(w, t, c));
-    if (!p.ms || !p.ms.star) { if (YA.milestone) YA.milestone(w, p, 'star'); }
+    // 初めての課題は最初の話（節目の会話）。おまかせで出したときは会話を挟まない（おまかせが止まらないように）
+    if (!p.ms || !p.ms.star) { if (o && o.auto) { p.ms = p.ms || {}; p.ms.star = w.year * 100 + w.week; } else if (YA.milestone) YA.milestone(w, p, 'star'); }
     return { ok: true, msg: `${p.name}に課題「${YA.kadaiLabel(w, t, c)}」を出しました（${len}週）${extra}` };
   };
   function endKadai(w, p, res) {
@@ -365,7 +366,7 @@
   };
 
   // ---------- 気づきの判定（1か所。段3で「選手の目」の場面に差し替える）----------
-  YA.KADAI_SPARK = 0.42;
+  YA.KADAI_SPARK = 0.28;
   YA.kadaiSpark = function (w, p, ctx) {
     const k = p.kd;
     if (!k || k.fit !== 'yes') return false;
@@ -550,7 +551,7 @@
       if (left <= 0) break;
       const rec = YA.kadaiRec(w, p);
       if (!rec) continue;
-      const r = YA.kadaiGive(w, p, rec.t, rec.c);
+      const r = YA.kadaiGive(w, p, rec.t, rec.c, { auto: true });
       if (r.ok) { left--; n++; }
     }
     return n;
