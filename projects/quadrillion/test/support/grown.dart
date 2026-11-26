@@ -73,7 +73,8 @@ void _shape(Game g, int bizTarget) {
   // 分社（責任者のいる事業を2つまで）
   final plain = g.subs().where((c) => c.loc == null).length;
   if (g.holding && plain < 2 && g.biz.length >= 8 && g.turn % 12 == 6) {
-    final b = (g.biz.where((b) => b.mgr != null).toList()..ssort((a, b) => a.rev.compareTo(b.rev))).firstOrNull;
+    // 1.1.0+37 から、相棒は本社に残す（相棒が責任者の事業は分社できない）
+    final b = (g.biz.where((b) => b.mgr != null && g.staffById(b.mgr)?.partner != true).toList()..ssort((a, b) => a.rev.compareTo(b.rev))).firstOrNull;
     if (b != null) {
       g.spinOff(b);
       return;

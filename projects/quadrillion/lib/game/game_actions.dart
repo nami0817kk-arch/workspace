@@ -10,15 +10,8 @@ extension GameActions on Game {
     final nt = needT('start');
     if (nt != null) return nt;
     if (biz.any((b) => b.ind == id)) return M('すでにその業種にいます');
-    // 株を過半持つ子会社がいる業種は、自社では始めない（1.1.0+36。game_names.dart）
-    final sb = subBlock(id);
-    if (sb != null) return sb;
-    final lm = licMissing(id);
-    if (lm != null) return lm;
-    if (bankCtl > 0 && biz.isNotEmpty) return M('銀行が経営に口を出している間は、新しい事業を始められません');
-    if (noncomp != null && turn < noncomp!.until && noncomp!.inds.contains(id) && !noncomp!.broken) {
-      return M('会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）');
-    }
+    final nb0 = newIndBlock(id);
+    if (nb0 != null) return nb0;
     final free = biz.isEmpty && !everBiz;
     cfAdd('capex', -c);
     capSpend(c, profileOf(ind).life);
@@ -37,6 +30,23 @@ extension GameActions on Game {
     if (free) chron('first_biz', M('{0}「{1}」を始めた', [M(serial > 0 ? '新しい会社で' : '最初の事業として'), I(id)]));
     calcAll();
     return M('「{0}」を{1}で始めました（元手 {2}）', [I(id), D(MODELN.ja[model ?? 'direct']!), Y(c)]);
+  }
+
+  /// 新しい業種に入れない理由（入れるなら null）。始める・業態を変える・部下の提案で同じ決まりを見る（1.1.0+37）
+  /// - 株を過半持つ子会社がいる業種は、自社では始めない（1.1.0+36。game_names.dart）
+  /// - 資格が要る業種は、資格を持つ人がいるか
+  /// - 銀行が経営に口を出している間は、新しい事業を始められない
+  /// - 会社を売ったときの「同じ業種に入らない約束」
+  String? newIndBlock(String id) {
+    final sb = subBlock(id);
+    if (sb != null) return sb;
+    final lm = licMissing(id);
+    if (lm != null) return lm;
+    if (bankCtl > 0 && biz.isNotEmpty) return M('銀行が経営に口を出している間は、新しい事業を始められません');
+    if (noncomp != null && turn < noncomp!.until && noncomp!.inds.contains(id) && !noncomp!.broken) {
+      return M('会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）');
+    }
+    return null;
   }
 
   double invBase(Biz b) => math.max(capexOf(indm[b.ind]!), b.rev * 3);
@@ -398,7 +408,10 @@ extension GameActions on Game {
     for (final b in list) {
       if (free.isEmpty) break;
       final key = indm[b.ind]!.key;
-      final p = (free.toList()..ssort((x, y) => y.ab[key]!.compareTo(x.ab[key]!))).first;
+      // 海外だけの事業には、赴任を断る人を当てない（1.1.0+37）
+      final ok = free.where((x) => !postingNo(b, x)).toList();
+      if (ok.isEmpty) continue;
+      final p = (ok..ssort((x, y) => y.ab[key]!.compareTo(x.ab[key]!))).first;
       final before = mgrMult(b);
       b.mgr = p.id;
       final after = mgrMult(b);
@@ -409,6 +422,9 @@ extension GameActions on Game {
     }
     return out;
   }
+
+  /// その人を、この事業の責任者に置けないか（始めた国に出ていない海外だけの事業で、家族の事情で赴任を断る人。1.1.0+37）
+  bool postingNo(Biz b, Person p) => !ctryOf(b).contains(home) && refusesPosting(p);
 
   /// [managerPlan] のとおりに責任者を置く（手は使わない。1人ずつ選ぶ欄で置くのと同じ）
   String placeManagers() {
@@ -525,8 +541,8 @@ extension GameActions on Game {
   String pivot(Biz b, String id) {
     final to = indm[id]!;
     if (biz.any((x) => x.ind == id)) return M('すでにその業種にいます');
-    // 子会社のいる業種へは移らない（始めるときと同じ決まり。1.1.0+36）
-    final sb = subBlock(id);
+    // 始めるときと同じ決まり（子会社のいる業種・資格・銀行の口出し・売ったときの約束。1.1.0+36・+37）
+    final sb = newIndBlock(id);
     if (sb != null) return sb;
     final c = capexOf(to);
     if (cash < c) return M('元手が足りません');
@@ -537,7 +553,8 @@ extension GameActions on Game {
     final from = b.ind;
     final keep = b.power * .5 * (mkt(to) > 0 ? math.min(1, mkt(to) / math.max(mkt(indm[b.ind]!), 1)) : 1) + c * newPow;
     b.crew = crewOf(b) * .5;
-    b.pipe = [];
+    // 前の業態の仕掛かりは、取り下げと同じく半分戻る（1.1.0+37。前は黙って消えていた）
+    final back = pipeBack(b);
     b.ind = id;
     b.power = keep;
     // 店などは新しい業態のものに置き直す（客の数から見積もる。1.1.0+26）
@@ -556,8 +573,20 @@ extension GameActions on Game {
     b.attack = 0;
     b.prevRev = 0;
     calcAll();
-    return M('「{0}」を「{1}」に業態転換しました。客と人の半分を引き継ぎます', [I(from), I(id)]);
+    return withBack(M('「{0}」を「{1}」に業態転換しました。客と人の半分を引き継ぎます', [I(from), I(id)]), back);
   }
+
+  /// 事業を手放す・業態を変えるときの、途中の仕掛かり（店・商品・海外の準備）の扱い（1.1.0+37）。
+  /// 取り下げと同じく、払った額の半分が戻る（作りかけの物は半値で引き取ってもらう）。戻った額を返す
+  double pipeBack(Biz b) {
+    final v = b.pipe.fold(0.0, (s, x) => s + x.cost) * .5;
+    b.pipe = [];
+    if (v > 0) cfAdd('grow', v);
+    return v;
+  }
+
+  /// 手の結果の文に、仕掛かりが戻った分を足す（戻らなければ元の文のまま）
+  String withBack(String m, double v) => v > 0 ? Cat([m, M('途中の仕掛かりは半分の{0}が戻りました', [Y(v)])], ja: '。', en: '. ') : m;
 
   List<Synergy> knownSynFor(String id) {
     final own = <String>{for (final b in biz) b.ind};
@@ -572,10 +601,11 @@ extension GameActions on Game {
     useT('sell');
     // 人たらしは情に流されて切るのに手間取る（時間が倍）
     if (hasT('charm')) useT('sell');
+    final back = pipeBack(b);
     biz.remove(b);
     presXp('zai', 2);
     calcAll();
-    return M('「{0}」を{1}で売りました', [I(b.ind), Y(v)]);
+    return withBack(M('「{0}」を{1}で売りました', [I(b.ind), Y(v)]), back);
   }
 
   String hire(Person p) {
@@ -594,12 +624,28 @@ extension GameActions on Game {
 
   /// 責任者を決める（手は使わない）
   void setManager(Biz b, int? id) {
+    // 海外だけの事業へは、家族の事情で赴任を断る人を置けない（1.1.0+37。異動の画面と同じ決まり）
+    if (id != null && id != b.mgr) {
+      final np = staffById(id);
+      if (np != null && postingNo(b, np)) return;
+    }
     // 責任者を外したら、任せるのもやめる（人を替えただけなら、任せたまま引き継ぐ）。
     // 任せていた責任者が辞めたあとに新しい人を置いたときも、任せ直すまでは自分で動かす
     final was = delegated(b);
     if (id != null && id != b.mgr) presXp('tou', 1);
     // 責任者にした人・外された人の受け止め方（特性で変わる。1.1.0+33）
     if (id != b.mgr) trOnPlace(b, b.mgr, id);
+    // 1人が責任者になれる事業は1つ。ほかの事業の責任者だった人を置いたら、前の事業からは外す
+    // （1.1.0+37。異動で1人が全事業の責任者になれた。異動は降格ではないので、外された人の受け止め方は見ない）
+    if (id != null) {
+      for (final x in biz) {
+        if (x != b && x.mgr == id) {
+          x.mgr = null;
+          x.deleg = false;
+          x.did = null;
+        }
+      }
+    }
     b.mgr = id;
     if (id == null || !was) {
       b.deleg = false;
@@ -897,6 +943,8 @@ extension GameActions on Game {
   String spinOff(Biz b, {String? name}) {
     final p = staffById(b.mgr);
     if (p == null) return M('先に責任者を置いてください。その人が子会社の社長になります');
+    // 相棒は本社に残す（現地法人と同じ。1.1.0+37。前は相棒の持ち株が持ち主なしで残った）
+    if (p.partner) return M('相棒は本社に残します。ほかの部下を責任者に置いてから分社してください');
     final n = name?.trim();
     if (n != null) {
       final e = coNameErr(n);
@@ -915,27 +963,43 @@ extension GameActions on Game {
     c.rel = 30;
     c.culture = _cultOfTrait(p.trait);
     c.fromStaff = p.trait;
+    // 後継ぎに決めていた人が子会社の社長になったら、後継ぎは決め直す（現地法人と同じ。1.1.0+37）
+    if (succ == p.id) succ = null;
     staff.remove(p);
+    final back = pipeBack(b);
     biz.remove(b);
     calcAll();
-    return M('「{0}」を分社し、{1}を作りました。社長は{2}。これからは{2}が自分の判断で動かします', [I(ind.id), Nm(c.name), Nm(p.name)]);
+    return withBack(M('「{0}」を分社し、{1}を作りました。社長は{2}。これからは{2}が自分の判断で動かします', [I(ind.id), Nm(c.name), Nm(p.name)]), back);
   }
 
-  String releaseBiz(Biz b) {
+  /// 事業を責任者に渡して独立させる。[name] は新しい会社の名前（null なら今までどおり仕組みが付ける。1.1.0+37）
+  String releaseBiz(Biz b, {String? name}) {
     final p = staffById(b.mgr);
     if (p == null) return M('先に責任者を置いてください。その人に事業を渡します');
+    final n = name?.trim();
+    if (n != null) {
+      final e = coNameErr(n);
+      if (e != null) return e;
+    }
     final nt = spendT('release');
     if (nt != null) return nt;
     final ind = indm[b.ind]!;
-    final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 60);
+    // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない）
+    final c = mkCo(tierOf(b), ind.cat, name: n, presName: p.name, fam: 60);
     c.presAge = p.age.toDouble();
     c.biz.add(CoBiz(ind: b.ind, power: b.power));
     c.stakePlayer = 10;
     c.rel = 60;
     c.g = .01;
-    fire(p);
+    // よその会社の社長になった人は、社外の一覧（呼び戻せる人）には入れない（1.1.0+37）
+    fire(p, 'indep');
+    final back = pipeBack(b);
     biz.remove(b);
     calcAll();
+    if (back > 0) {
+      return withBack(
+          M('「{0}」を{1}に渡し、独立させました。{2}の株を10%持ちます。{1}は恩を忘れないでしょう', [I(ind.id), Nm(p.name), Nm(c.name)]), back);
+    }
     return M('「{0}」を{1}に渡し、独立させました。{2}の株を10%持ちます。{1}は恩を忘れないでしょう', [I(ind.id), Nm(p.name), Nm(c.name)]);
   }
 
@@ -966,25 +1030,42 @@ extension GameActions on Game {
     return M('持株会社になりました。社長が直接見られる事業の上限がなくなります。本社の経費は5割増えます');
   }
 
-  String splitCompany(String cat) {
+  /// 会社を2つに割る。[name] は新しい会社の名前（null なら今までどおり仕組みが付ける。1.1.0+37）
+  String splitCompany(String cat, {String? name}) {
     final bs = biz.where((b) => indm[b.ind]!.cat == cat).toList();
     if (bs.isEmpty) return M('その分類の事業がありません');
     if (bs.length == biz.length) return M('全部を切り離すことはできません');
     if (!listed) return M('上場してからです');
+    final n = name?.trim();
+    if (n != null) {
+      final e = coNameErr(n);
+      if (e != null) return e;
+    }
     final nt = spendT('split');
     if (nt != null) return nt;
-    final c = mkCo(bs.map(tierOf).reduce(math.max), cat, fam: 0);
+    // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない）
+    final c = mkCo(bs.map(tierOf).reduce(math.max), cat, name: n, fam: 0);
     c.biz = bs.map((b) => CoBiz(ind: b.ind, power: b.power * 1.1)).toList();
     c.stakePlayer = jsRound(sh.own);
+    // 過半を持つなら子会社（1.1.0+37。前は外の会社として、値下げ合戦や CPU の買収の的になった）
+    if (pctOf(c) > 50) c.parent = 'player';
     c.listed = true;
     c.g = .008;
     c.rel = 20;
     c.culture = culture;
+    var back = 0.0;
+    for (final b in bs) {
+      back += pipeBack(b);
+    }
     biz = biz.where((b) => !bs.contains(b)).toList();
     for (final b in biz) {
       b.power *= 1.1;
     }
     calcAll();
+    if (back > 0) {
+      return withBack(
+          M('「{0}」の事業を{1}として切り離し、別に上場させました。あなたは新しい会社の株を{2}持ちます。身軽になって、両方の評価が上がりました', [D(CATN.ja[cat]!), Nm(c.name), pct(pctOf(c))]), back);
+    }
     return M('「{0}」の事業を{1}として切り離し、別に上場させました。あなたは新しい会社の株を{2}持ちます。身軽になって、両方の評価が上がりました', [D(CATN.ja[cat]!), Nm(c.name), pct(pctOf(c))]);
   }
 
@@ -1111,14 +1192,22 @@ extension GameActions on Game {
 
   double salePrice(bool nc) => cap * (nc ? 1.3 : 1.05) * sh.own / 100;
 
-  String sellCompany(Company c, bool nc) {
+  /// 会社を丸ごと売る。[newName] は新しく立ち上げる会社の名前（null なら名前なし。前の会社は今の名前のまま残る。1.1.0+37）
+  String sellCompany(Company c, bool nc, {String? newName}) {
     final nt = needT('sellco');
     if (nt != null) return nt;
     if (biz.isEmpty) return M('売る事業がありません');
+    final nn = newName?.trim();
+    if (nn != null) {
+      final e = myNameErr(nn, selling: true);
+      if (e != null) return e;
+    }
     useT('sellco');
     finCut();
     final price = salePrice(nc);
-    final old = mkCo(0, 'link', name: '${Game.famOf(pres.name)}グループ', presName: nm(), fam: 0);
+    // 前の会社は、自社の名前があればその名前のまま残る（1.1.0+37。無ければ今までどおり「〇〇グループ」）
+    final oldName = myCo.isNotEmpty ? myCo : '${Game.famOf(pres.name)}グループ';
+    final old = mkCo(0, 'link', name: oldName, presName: nm(), fam: 0);
     old.biz = biz.map((b) => CoBiz(ind: b.ind, power: b.power)).toList();
     old.rel = nc ? 20 : -20;
     old.g = .006;
@@ -1149,6 +1238,11 @@ extension GameActions on Game {
     vcDeadline = 0;
     tie = null;
     deals = [];
+    // 上場の準備と、途中の買収の話は前の会社のもの（1.1.0+37。前は新しい会社に残った）
+    corp.ipo = null;
+    corp.deals.clear();
+    corp.clients.clear();
+    myCo = nn ?? '';
     holding = false;
     cooked = 0;
     everBiz = false;
@@ -1164,6 +1258,7 @@ extension GameActions on Game {
       if (nc) M('{0}年間は同じ業種に入らない約束です', [jsNum(jsRound((noncomp!.until - turn) / 12))]),
       if (keep.isNotEmpty) M('相棒の{0}がついてきてくれました', [J(keep.map((p) => Nm(p.name)))]),
       M('前の会社は「{0}」として残ります', [Nm(old.name)]),
+      if (myCo.isNotEmpty) M('新しい会社の名前は「{0}」です', [Nm(myCo)]),
     ], ja: '。', en: '. ');
   }
 
@@ -1385,11 +1480,22 @@ extension GameActions on Game {
   /// （1.0.0+18。引いていなかったので、あなた70%・宿敵30%の現地法人で「市場の株30%」と出て、さらに5%買えて合計が100%を超えた）
   double floatOf(Company c) => math.max(0, 100 - c.fam - c.stakePlayer - c.locRivPct);
 
+  /// 市場であと何%買えるか（3分の1まで。1.1.0+37）。
+  /// もう子会社（審査を通して過半を持った会社）なら、合併に向けて市場で買い増せる
+  double mktRoom(Company c) {
+    if (c.parent == 'player') return floatOf(c);
+    final r = GameCorp.blockPct - pctOf(c);
+    return r < .01 ? 0 : r;
+  }
+
   String buyStake(Company c, double x) {
+    // 市場で買えるのは3分の1まで。それより上は買い付けの申し入れ（TOB）で、上乗せ・当局の審査を通す（1.1.0+37。現実の3分の1ルール）
+    if (unitsOn && c.parent != 'player' && mktRoom(c) == 0) return M('市場で買えるのは株の3分の1までです。それより上は「買う話を始める」（TOB）で買います');
     final nt = needT('own');
     if (nt != null) return nt;
     x = math.min(x, floatOf(c));
     if (x <= 0) return M('市場に株が残っていません');
+    if (unitsOn) x = math.min(x, mktRoom(c));
     final cost = c.cap * x / 100 * 1.05;
     if (cash < cost) return M('お金が足りません');
     final before = pctOf(c);
@@ -1461,6 +1567,7 @@ extension GameActions on Game {
   void afterStake(Company c) {
     if (pctOf(c) > 50 && c.parent != 'player') {
       c.parent = 'player';
+      joinedGroup(c);
       rivalDefeated(c);
       log.add(LogEntry(M('{0}を子会社にしました', [Nm(c.name)]), 'big', year, q));
       chron('buy', M(c.rival != null ? '{0}（宿敵）の株を{1}握り、子会社にした' : '{0}の株を{1}握り、子会社にした', [Nm(c.name), pct(pctOf(c))]));
@@ -1481,8 +1588,19 @@ extension GameActions on Game {
   /// 現地法人は合併できない（その国の分を本社に戻す仕組みは持たない）
   bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4 && c.loc == null;
 
+  /// 合併すると、会社を売ったときの「同じ業種に入らない約束」を破る業種が入るか（入るなら理由。1.1.0+37）
+  String? mergeBlock(Company c) {
+    final nc = noncomp;
+    if (nc == null || nc.broken || turn >= nc.until) return null;
+    final hit = c.biz.where((b) => nc.inds.contains(b.ind)).firstOrNull;
+    if (hit == null) return null;
+    return M('{0}には「{1}」の事業があり、会社を売ったときの約束で、まだ自社には入れられません', [Nm(c.name), I(hit.ind)]);
+  }
+
   String merge(Company c, {bool viaSwap = false}) {
     if (!canMerge(c)) return M('合併の条件を満たしていません');
+    final mb = mergeBlock(c);
+    if (mb != null) return mb;
     // 株式交換から来たときは、時間はそちらで使った
     if (!viaSwap) {
       final nt = needT('merge');
@@ -1539,6 +1657,9 @@ extension GameActions on Game {
       sh.float += sh.riv[c.id]!;
       sh.riv.remove(c.id);
     }
+    joinedGroup(c);
+    // 大口の客だった会社を合併したら、その客はもう社内（次の月に新しい客を見る。1.1.0+37）
+    corp.clients.removeWhere((_, cl) => cl.co == c.id);
     presXp('zai', 4, big: true);
     presXp('tou', 2, big: true);
     calcAll();
@@ -1557,6 +1678,8 @@ extension GameActions on Game {
     if (c.parent == 'player' && pctOf(c) >= 66.7) return M('そのまま合併できます');
     if (c.cap > cap) return M('自分より大きな会社は、株式交換では買えません');
     if (sh.rivMax >= 33.4) return M('宿敵に株を33.4%以上握られていて、株式交換を止められます');
+    final mb = mergeBlock(c);
+    if (mb != null) return mb;
     if (unitsOn) return maStart(c, dd: false, target: 100, pay: 'swap');
     final nt = spendT('merge');
     if (nt != null) return nt;
@@ -1576,7 +1699,7 @@ extension GameActions on Game {
 
   List<RankRow> rankList() {
     final L = cos.where((c) => c.alive && c.parent != 'player').map((c) => RankRow(c.name, c.cap, c: c)).toList();
-    L.add(RankRow(M('あなたのグループ'), cap + wealth, me: true));
+    L.add(RankRow(myLabel(), cap + wealth, me: true));
     L.ssort((a, b) => b.cap.compareTo(a.cap));
     return L;
   }

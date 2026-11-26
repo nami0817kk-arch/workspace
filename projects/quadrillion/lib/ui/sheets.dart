@@ -287,10 +287,10 @@ void openPivot(GameController ctl, Biz b) {
         H2(tr('「{0}」の業態を変える', [from.name]), top: true),
         _note('${tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。')}${hNote(s, 'pivot')}'),
         for (final i in list)
-          // 子会社のいる業種は薄くして理由を出し、選べなくする（1.1.0+36）
+          // 子会社のいる業種・資格が無い・銀行の口出し・売ったときの約束は、薄くして理由を出し、選べなくする（1.1.0+36・+37）
           ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)),
-              key: ValueKey('pivot-${i.id}'), enabled: s.cash >= s.capexOf(i) && s.subBlock(i.id) == null, ap: hrS(s, 'pivot'), subs: [
-            s.subBlock(i.id) ??
+              key: ValueKey('pivot-${i.id}'), enabled: s.cash >= s.capexOf(i) && s.newIndBlock(i.id) == null, ap: hrS(s, 'pivot'), subs: [
+            s.newIndBlock(i.id) ??
                 tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
           ]),
         _cancel(ctl),
@@ -459,7 +459,11 @@ void openSplit(GameController ctl) {
         for (final cat in cats)
           Builder(builder: (_) {
             final bs = s.biz.where((b) => indm[b.ind]!.cat == cat).toList();
-            return ChoiceBtn(tr('{0}を切り離す', [CATN[cat]]), () => ctl.act(() => s.splitCompany(cat)),
+            // 新しい会社の名前を決めてから切り離す（1.1.0+37）
+            return ChoiceBtn(tr('{0}を切り離す', [CATN[cat]]), () {
+              if (ctl.noAp('split')) return;
+              openSplitName(ctl, cat);
+            },
                 key: ValueKey('split-$cat'),
                 // 全部の事業が同じ分類なら、切り離せない
                 enabled: bs.length < s.biz.length,
@@ -488,15 +492,11 @@ void openSell(GameController ctl) {
               const SizedBox(height: 4),
               Wrap(spacing: 6, runSpacing: 6, children: [
                 for (final nc in const [true, false])
-                  Btn(
-                      tr(nc ? '約束を付けて売る {0}' : '約束なしで売る {0}', [yen(s.salePrice(nc))]),
-                      () => actConfirmed(
-                          ctl,
-                          tr('会社を丸ごと売る'),
-                          '${tr('{0}に、今の会社を{1}で売ります。事業と部下は手放し、新しい会社をゼロから始めます。', [nmL(c.name), yen(s.salePrice(nc))])}${nc ? tr('何年かは同じ業種に入れません。') : ''}',
-                          tr('売る'),
-                          () => s.sellCompany(c, nc)),
-                      small: true),
+                  // 売ったあとに立ち上げる会社の名前を決める小窓が、確かめの小窓を兼ねる（1.1.0+37）
+                  Btn(tr(nc ? '約束を付けて売る {0}' : '約束なしで売る {0}', [yen(s.salePrice(nc))]), () {
+                    if (ctl.noAp('sellco')) return;
+                    openSellName(ctl, c, nc);
+                  }, small: true),
               ]),
             ]),
           ),
@@ -524,11 +524,19 @@ void openShape(GameController ctl, Biz b) {
         H2(tr('「{0}」の形を変える', [ind.name]), top: true),
         _note(p != null ? '${tr('責任者は{0}です。', [nmL(p.name)])}${hNote(s, 'spin')}' : tr('先に責任者を置いてください。その人が社長になります。')),
         // 名前を決めてから分社する（1.1.0+36）
+        // 相棒は本社に残すので、相棒が責任者の事業は分社できない（1.1.0+37。現地法人と同じ）
         ChoiceBtn(tr('分社する'), () {
           if (ctl.noAp('spin')) return;
           openSpinName(ctl, b);
-        }, enabled: p != null, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
-        ChoiceBtn(tr('渡して独立させる'), () => ctl.act(() => s.releaseBiz(b)), enabled: p != null, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
+        }, enabled: p != null && !p.partner, subs: [
+          tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く'),
+          if (p != null && p.partner) tr('相棒は本社に残します。ほかの部下を責任者に置いてから分社します'),
+        ]),
+        // 渡す会社の名前を決めてから独立させる（1.1.0+37）
+        ChoiceBtn(tr('渡して独立させる'), () {
+          if (ctl.noAp('release')) return;
+          openReleaseName(ctl, b);
+        }, enabled: p != null, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
         if (s.extras) ...[
           H3(tr('現地法人に分ける')),
           _note(s.localCountries(b).isEmpty
@@ -596,6 +604,56 @@ void openLocalName(GameController ctl, Biz b, String c, [int? presId]) {
       ));
 }
 
+/// 渡して独立させる会社の名前を決める（1.1.0+37。よその会社になるので、グループの冠は付けない案）
+void openReleaseName(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final p = s.staffById(b.mgr);
+  ctl.showSheet((_) => CoNameSheet(
+        key: const ValueKey('name-release'),
+        ctl: ctl,
+        title: tr('「{0}」を渡して独立させる', [ind.name]),
+        note: p != null ? tr('{0}が立ち上げる会社の名前を決めます。あなたはその会社の株を10%持ちます。', [nmL(p.name)]) : '',
+        initial: s.subNameIdea(ind.cat, group: false),
+        ok: tr('この名前で独立させる'),
+        apply: (n) => s.releaseBiz(b, name: n),
+      ));
+}
+
+/// 会社を割った新しい会社の名前を決める（1.1.0+37）
+void openSplitName(GameController ctl, String cat) {
+  final s = ctl.game!;
+  ctl.showSheet((_) => CoNameSheet(
+        key: const ValueKey('name-split'),
+        ctl: ctl,
+        title: tr('{0}を切り離す', [CATN[cat]]),
+        note: tr('切り離して別に上場させる会社の名前を決めます。元には戻せません。'),
+        initial: s.subNameIdea(cat),
+        ok: tr('この名前で切り離す'),
+        apply: (n) => s.splitCompany(cat, name: n),
+      ));
+}
+
+/// 会社を丸ごと売ったあとに立ち上げる、新しい会社の名前を決める（1.1.0+37。前の会社は今の名前のまま残る）
+void openSellName(GameController ctl, Company c, bool nc) {
+  final s = ctl.game!;
+  // 英語では文と文の間に空白を入れる
+  final sp = L.en ? ' ' : '';
+  final text = '${tr('{0}に、今の会社を{1}で売ります。事業と部下は手放し、新しい会社をゼロから始めます。', [nmL(c.name), yen(s.salePrice(nc))])}${nc ? '$sp${tr('何年かは同じ業種に入れません。')}' : ''}';
+  ctl.showSheet((_) => CoNameSheet(
+        key: const ValueKey('name-sell'),
+        ctl: ctl,
+        title: tr('会社を丸ごと売る'),
+        note: '$text$sp${s.myCo.isNotEmpty ? tr('前の会社は「{0}」の名前のまま残ります。新しい会社の名前を決めてください。', [nmL(s.myCo)]) : tr('新しい会社の名前を決めてください。')}',
+        initial: s.nextCoIdea(),
+        ok: tr('次へ'),
+        check: (n) => s.myNameErr(n, selling: true),
+        apply: (n) => s.sellCompany(c, nc, newName: n),
+        // 名前を決めたら、いつもの確かめの小窓を出してから売る
+        next: (n) => actConfirmed(ctl, tr('会社を丸ごと売る'), text, tr('売る'), () => s.sellCompany(c, nc, newName: n)),
+      ));
+}
+
 /// 子会社（株を過半持つ会社）の名前を変える
 void openRename(GameController ctl, Company c) {
   final s = ctl.game!;
@@ -618,8 +676,23 @@ class CoNameSheet extends StatefulWidget {
   final String title, note, initial, ok;
   final Company? self;
   final String Function(String name) apply;
+
+  /// 名前の確かめ方（null なら他社と同じ決まり [GameNames.coNameErr]。自社の名前は別の決まり。1.1.0+37）
+  final String? Function(String name)? check;
+
+  /// 決めた名前で手を打つ前に、もう一段（確かめの小窓など）挟むとき。null なら [apply] をそのまま打つ（1.1.0+37）
+  final void Function(String name)? next;
   const CoNameSheet(
-      {super.key, required this.ctl, required this.title, required this.note, required this.initial, required this.ok, required this.apply, this.self});
+      {super.key,
+      required this.ctl,
+      required this.title,
+      required this.note,
+      required this.initial,
+      required this.ok,
+      required this.apply,
+      this.self,
+      this.check,
+      this.next});
 
   @override
   State<CoNameSheet> createState() => CoNameSheetState();
@@ -649,12 +722,16 @@ class CoNameSheetState extends State<CoNameSheet> {
       widget.ctl.closeSheet();
       return;
     }
-    final e = s.coNameErr(n, self: self);
+    final e = widget.check != null ? widget.check!(n) : s.coNameErr(n, self: self);
     if (e != null) {
       setState(() => _err = e);
       return;
     }
     FocusManager.instance.primaryFocus?.unfocus();
+    if (widget.next != null) {
+      widget.next!(n);
+      return;
+    }
     widget.ctl.act(() => widget.apply(n));
   }
 
@@ -735,6 +812,10 @@ void openEnter(GameController ctl, Biz b) {
         for (final x in list)
           Builder(builder: (_) {
             final ms = s.entryModes(b, x.c);
+            // 出る準備中の国・現地法人が出ている国は、薄くして理由を出す（押しても出られない。1.1.0+37）
+            final busy = b.pipe.any((p) => p.k == 'enter' && p.c == x.c);
+            final loc = s.extras && s.hasLocal(x.c, b.ind);
+            final why = busy ? tr('出る準備中です') : loc ? tr('その国には現地法人が出ています') : null;
             return Panel(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -747,10 +828,11 @@ void openEnter(GameController ctl, Biz b) {
                   Wrap(spacing: 6, runSpacing: 6, children: [
                     for (final m in ms)
                       Btn('${ENTRYN[m]} ${yen(s.entryCost(b, x.c, m))}', () => ctl.act(() => s.enterCountry(b, x.c, m)),
-                          small: true, enabled: !(s.cash < s.entryCost(b, x.c, m) || !s.canT('enter'))),
+                          small: true, enabled: why == null && !(s.cash < s.entryCost(b, x.c, m) || !s.canT('enter'))),
                   ])
                 else
                   Muted(tr('今は入れません')),
+                if (why != null && ms.isNotEmpty) Muted(why, size: 12),
                 if (ms.length == 1 && ms[0] == 'jv') Muted(tr('規制で、地元の会社と組まないと入れません'), size: 12),
               ]),
             );
@@ -781,7 +863,7 @@ void showHelp(GameController ctl) {
     ('現地法人', '事業が海外に出ていれば、「分社・独立」からその国の分を現地法人（株100%の子会社）に分けられます。社長は部下から選ぶか現地で雇い、その人が自分の判断で動かします。現地法人は地元の会社なので、組んで出ていた国でも利益を半分にされず、中国に現地法人があればネットと金融も組まずに入れます。株の30%をその国の市場に上場させて大金を得ることもできますが、上場すると宿敵に株を狙われることがあります。'),
     ('臨時の会議', '乗っ取りの危機（宿敵の持ち分が20%・33.4%・50%に近づく）、大きな不祥事、資金が尽きかける、のときに臨時の会議が開かれます。相棒・部下・株主の代表（またはメインバンク）が別々の案を出すので、1つを選びます。案は手を使わずに実行されます。選ばれなかった部下と相棒は忠誠が下がります。'),
     ('取締役会', '毎年1月に取締役会が開かれ、1年の売上・利益・時価総額・順位を振り返ります。利益が前年の7割を切り、味方の株（あなた・相棒・味方の会社）が50%に届かないと、解任動議が出ます。改革を約束する・配当を払う・強気で押し切る、から選びます。解任されても後継ぎや部下が社長を継ぎ、会社は続きます。'),
-    ('飲み込む', '「株」で他社の株を買い、50%を超えると子会社、66.7%で合併できます。'),
+    ('飲み込む', '「株」で他社の株を買えます。市場で買えるのは3分の1まで。その先は買う話（TOB）で上乗せを払い、当局の審査を通ると子会社になります。66.7%で合併できます。'),
     ('株式交換', '上場すると、自分より小さい会社を、現金の代わりに自社の株を渡して丸ごと買えます。大きくなる近道ですが、あなたの持ち株が薄まり、乗っ取られやすくなります。'),
     ('時代', 'バブル、ネット、スマホ、AI。時代の波は史実に近い順で来ますが、時期と深さは毎回ずれます。沈む業種からは早めに手を引きましょう。社長は年をとるので、後継ぎも決めておきます。'),
   ];

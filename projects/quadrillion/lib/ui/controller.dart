@@ -28,6 +28,9 @@ String slotMetaKey(int slot) => 'quad-meta-$slot';
 class SlotInfo {
   final int slot, year, q, rank;
   final String name, mode, diff;
+
+  /// 自社の名前（無ければ空。1.1.0+37）
+  final String co;
   final double cap;
   final bool ended;
   const SlotInfo(
@@ -37,17 +40,28 @@ class SlotInfo {
       required this.name,
       required this.cap,
       required this.rank,
+      this.co = '',
       this.mode = 'world',
       this.diff = 'normal',
       this.ended = false});
-  factory SlotInfo.of(int slot, Game g) =>
-      SlotInfo(slot: slot, year: g.year, q: g.q, name: g.pres.name, cap: g.cap, rank: g.rank > 0 ? g.rank : g.rankList().indexWhere((x) => x.me) + 1, mode: g.mode, diff: g.diff, ended: g.ended);
-  Map<String, dynamic> toJson() => {'year': year, 'q': q, 'name': name, 'cap': cap, 'rank': rank, 'mode': mode, 'diff': diff, 'ended': ended};
+  factory SlotInfo.of(int slot, Game g) => SlotInfo(
+      slot: slot,
+      year: g.year,
+      q: g.q,
+      name: g.pres.name,
+      co: g.myCo,
+      cap: g.cap,
+      rank: g.rank > 0 ? g.rank : g.rankList().indexWhere((x) => x.me) + 1,
+      mode: g.mode,
+      diff: g.diff,
+      ended: g.ended);
+  Map<String, dynamic> toJson() => {'year': year, 'q': q, 'name': name, 'co': co, 'cap': cap, 'rank': rank, 'mode': mode, 'diff': diff, 'ended': ended};
   factory SlotInfo.fromJson(int slot, Map<String, dynamic> j) => SlotInfo(
       slot: slot,
       year: (j['year'] as num).round(),
       q: (j['q'] as num? ?? 1).round(),
       name: (j['name'] as String?) ?? '',
+      co: (j['co'] as String?) ?? '',
       cap: (j['cap'] as num? ?? 0).toDouble(),
       rank: (j['rank'] as num? ?? 0).round(),
       mode: (j['mode'] as String?) ?? 'world',
@@ -375,7 +389,30 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     shown.clear();
   }
 
-  SetupConfig setup = SetupConfig();
+  late SetupConfig setup = _freshSetup();
+
+  /// 始める画面の名前の案（1.1.0+37）。社長の名前は始める国の名前の表から、自社の名前は作り物の冠＋「商会」。
+  /// ゲームの乱数は引かない（案のための乱数は別に作る）
+  SetupConfig _freshSetup() {
+    final st = SetupConfig();
+    final r = newRandom();
+    st.name = GameNames.presNameIdea(r, st.home);
+    st.co = GameNames.myNameIdea(r);
+    nameIdea = st.name;
+    return st;
+  }
+
+  /// 社長の名前の今の案（書き換えていなければ、始める国を替えたときに案も替える）
+  String? nameIdea;
+
+  /// 始める国を替える（社長の名前を書き換えていなければ、その国の名前の案にする）
+  void setHome(String c) {
+    setup.home = c;
+    if (setup.name == nameIdea) {
+      setup.name = GameNames.presNameIdea(newRandom(), c);
+      nameIdea = setup.name;
+    }
+  }
 
   /// 開いている小窓（null なら閉じている）
   WidgetBuilder? sheet;
@@ -681,6 +718,11 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     clearSave();
     game = null;
     setup.traits = [];
+    // 名前は新しい案にする（前の遊びの名前を、そのまま次の会社に使わない。1.1.0+37）
+    final r = newRandom();
+    setup.name = GameNames.presNameIdea(r, setup.home);
+    setup.co = GameNames.myNameIdea(r);
+    nameIdea = setup.name;
     sheet = null;
     notifyListeners();
   }

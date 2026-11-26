@@ -162,6 +162,8 @@ void main() {
       final n = g.biz.where((b) => indm[b.ind]!.cat == cat).length;
       final all = g.biz.length;
       await p.press(p.inSheet(find.byKey(ValueKey('split-$cat'))), '切り離す');
+      // 1.1.0+37 から、新しい会社の名前を決めてから切り離す（案のまま決める）
+      await p.press(p.inSheet(find.byKey(const ValueKey('co-name-ok'))), 'この名前で切り離す');
       await p.drain();
       expect(g.biz.length, all - n);
       expect(p.found, isEmpty, reason: p.found.join('\n'));

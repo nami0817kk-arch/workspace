@@ -239,6 +239,12 @@ void _pickMode(GameController ctl) {
 List<Widget> finView(GameController ctl) {
   final s = ctl.game!;
   final out = <Widget>[];
+  // 自社の名前があれば、どの会社の決算書かを上に出す（1.1.0+37）
+  if (s.myCo.isNotEmpty) {
+    out.add(Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: Text(tr('{0}の決算書', [nmL(s.myCo)]), key: const ValueKey('fs-co'), style: ts(size: 14, bold: true), maxLines: 1, overflow: TextOverflow.ellipsis)));
+  }
   // 表の札と期間の札は1つの行に流す（iPhone の横の画面で、札だけで高さを取らないように）
   out.add(Padding(
     padding: const EdgeInsets.only(top: 2),

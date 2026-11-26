@@ -32,7 +32,7 @@ List<Person> peopleOf(Game s, String seg, {String src = 'all', String sort = 'ab
   final l = switch (seg) {
     'mgr' => s.staff.where(isMgr).toList(),
     'cand' => s.cands.where((p) => src == 'all' || (p.src ?? 'mid') == src).toList(),
-    'out' => [...s.alumni, ?s.meet],
+    'out' => [...s.alumniShown(), ?s.meet],
     _ => s.staff.where((p) => !isMgr(p)).toList(),
   };
   double key(Person p) => switch (sort) {
@@ -223,7 +223,7 @@ int _segCount(Game s, String seg) => switch (seg) {
   'exec' => s.staff.where((p) => !s.biz.any((b) => b.mgr == p.id)).length + 1,
   'mgr' => s.staff.where((p) => s.biz.any((b) => b.mgr == p.id)).length,
   'cand' => s.cands.length,
-  _ => s.alumni.length + (s.meet != null ? 1 : 0),
+  _ => s.alumniShown().length + (s.meet != null ? 1 : 0),
 };
 
 extension on Game {
@@ -695,8 +695,7 @@ void openTransfer(GameController ctl, Person p) {
         for (final b in s.biz)
           Builder(
             builder: (_) {
-              final abroad = !s.ctryOf(b).contains(s.home);
-              final no = abroad && s.refusesPosting(p);
+              final no = s.postingNo(b, p);
               final cur = s.staffById(b.mgr);
               return ChoiceBtn(
                 tr('「{0}」の責任者にする', [indm[b.ind]!.name]),
@@ -714,6 +713,8 @@ void openTransfer(GameController ctl, Person p) {
                 subs: [
                   if (cur != null && cur != p) tr('今の責任者: {0}', [nmL(cur.name)]),
                   if (no) tr('海外への赴任を断られます（家族の事情）'),
+                  // 責任者を兼ねることはできない（1.1.0+37）
+                  if (!no && now != null && b != now) tr('「{0}」の責任者からは外れます', [indm[now.ind]!.name]),
                 ],
               );
             },

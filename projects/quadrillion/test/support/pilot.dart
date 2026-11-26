@@ -725,7 +725,8 @@ class Pilot {
 
   /// 責任者を選ぶ欄で、空いている部下を置く
   Future<void> manager(Biz b) async {
-    final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id)).firstOrNull;
+    // 海外だけの事業に、赴任を断る人は出ない（1.1.0+37）
+    final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id) && !s.postingNo(b, x)).firstOrNull;
     if (free == null || b.mgr != null) return;
     where = '責任者を置く';
     final g = await _card(b, 'grow');
@@ -770,7 +771,8 @@ class Pilot {
 
   /// 分社する
   Future<void> spin(Biz b) async {
-    if (s.ap < 1 || b.mgr == null) return;
+    // 相棒は本社に残すので、相棒が責任者の事業は分社しない（1.1.0+37）
+    if (s.ap < 1 || b.mgr == null || s.staffById(b.mgr)?.partner == true) return;
     where = '分社';
     if (!await _bizBtn(b, 'shape', tr('分社・独立'))) return;
     final n = s.subs().length;
@@ -1346,7 +1348,7 @@ class Pilot {
       if (s.biz.contains(top)) await build(top);
     }
     if (s.biz.length >= 4 && s.subs().isEmpty && m % 12 == 8) {
-      final b = s.biz.where((b) => b.mgr != null).firstOrNull;
+      final b = s.biz.where((b) => b.mgr != null && s.staffById(b.mgr)?.partner != true).firstOrNull;
       if (b != null) await spin(b);
     }
   }

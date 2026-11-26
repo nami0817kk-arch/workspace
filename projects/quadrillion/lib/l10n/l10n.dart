@@ -206,6 +206,9 @@ List<MapEntry<String, String>> _sufs() {
     for (final e in CO_FSUF.entries) MapEntry(e.value, CO_SUF_EN[e.key]!.$2),
     const MapEntry('グループ', 'Group'),
     const MapEntry('ホールディングス', 'Holdings'),
+    // 自社の名前の案（冠＋商会。1.1.0+37）
+    // （「物産」の Trading と重ならないよう、読みのまま）
+    const MapEntry('商会', 'Shokai'),
   ];
   l.sort((a, b) => b.key.length - a.key.length);
   return l;

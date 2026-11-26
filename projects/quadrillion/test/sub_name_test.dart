@@ -77,7 +77,8 @@ void main() {
       final b = _managed(s);
       final ind = b.ind;
       final m = s.spinOff(b, name: '  みなと商会  ');
-      expect(msgKey(m), startsWith('「{0}」を分社し'));
+      // 1.1.0+37 から、途中の仕掛かりが半分戻ったときは、その文が後ろに付く（文の頭で見る）
+      expect(txIn(m, 'ja'), startsWith('「${indm[ind]!.name}」を分社し'));
       final c = s.subOn(ind)!;
       expect(c.name, 'みなと商会', reason: '前後の空白は落とす');
       expect(c.parent, 'player');
@@ -213,7 +214,8 @@ void main() {
       expect(tx(m), '子会社「みなと商会」がこの業種にいます。広げるなら子会社に任せます');
       expect(s.biz.any((x) => x.ind == ind), isFalse);
       L.lang = 'en';
-      expect(_cjk.hasMatch(tx(m).replaceAll('みなと商会', '')), isFalse, reason: tx(m));
+      // 1.1.0+37 から「商会」に英語の読み（Shokai）がある。自分で付けた名前の読めない頭（みなと）は残るので、名前の読みごと外して見る
+      expect(_cjk.hasMatch(tx(m).replaceAll(romanize('みなと商会'), '')), isFalse, reason: tx(m));
       L.lang = 'ja';
       // 一覧：「始められる」には入らず、全部の一覧には出る（薄く出す）
       expect(newBizList(s, filter: 'can').any((i) => i.id == ind), isFalse);

@@ -788,7 +788,8 @@ List<Widget> worldTab(GameController ctl, double width) {
             const SizedBox(width: 3),
             Text(tr(l.$2), style: ts(size: 11, color: Pal.mute)),
           ]),
-        Text(tr('★ 自社が出ている国'), style: ts(size: 11, color: Pal.mute)),
+        // 自社の名前があれば、その名前で（1.1.0+37）
+        Text(s.myCo.isNotEmpty ? tr('★ {0}が出ている国', [nmL(s.myCo)]) : tr('★ 自社が出ている国'), style: ts(size: 11, color: Pal.mute)),
         if (s.unitsOn)
           Row(mainAxisSize: MainAxisSize.min, children: [
             Container(width: 9, height: 9, decoration: BoxDecoration(color: Pal.down.withValues(alpha: .25), shape: BoxShape.circle, border: Border.all(color: Pal.down))),
