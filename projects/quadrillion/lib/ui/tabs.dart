@@ -1246,10 +1246,20 @@ List<Widget> presPanels(GameController ctl) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     // 社風を変える手は、見出しの右を押すと開く（1.1.0+31）
     Row(children: [
+      // 見出しは印つき。幅が狭いときは社風の札を次の行に回す（1.1.0+41）
       Expanded(
           child: Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: SectionHead(tr('社風'), Icons.diversity_3, tone: ScreenTone.people, trailing: Align(alignment: Alignment.centerLeft, child: Tag(cu.n, kind: TagKind.gold))))),
+              child: Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(color: ScreenTone.people.soft, borderRadius: BorderRadius.circular(6)),
+                  child: Icon(Icons.diversity_3, size: 14, color: ScreenTone.people.ink),
+                ),
+                Semantics(header: true, child: Text(tr('社風'), style: Ui.cardTitle())),
+                Tag(cu.n, kind: TagKind.gold),
+              ]))),
       if (s.cultLeft == 0) detailBtn(ctl, 'culture', label: tr('社風を変える')),
     ]),
     const SizedBox(height: 4),

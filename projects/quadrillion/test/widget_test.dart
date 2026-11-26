@@ -120,7 +120,8 @@ void main() {
         expect(tester.takeException(), isNull, reason: t);
       }
       // 下のタブを押して切り替えられる
-      await tester.tap(find.text('図鑑'));
+      // 1.1.0+41 から図鑑の見出しの帯にも「図鑑」が出るので、左の切り替えの中の字を押す
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('tab-zukan')), matching: find.text('図鑑')));
       await tester.pump();
       expect(ctl.tab, 'zukan');
       expect(find.textContaining('シナジー図鑑'), findsOneWidget);
