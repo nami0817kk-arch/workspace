@@ -148,7 +148,7 @@ canvas{-webkit-user-select:none;user-select:none}
 .chron{text-align:left;max-height:42vh;overflow:auto;margin:8px 0;padding-left:1.6em;font-size:13px;line-height:1.55}.chron small{color:var(--sub);margin-right:4px}.chrec{text-align:left;margin:6px 0}.chrec summary{cursor:pointer}.btn.fd{display:block;width:100%;text-align:left;margin:6px 0}.btn.fd small{display:block;margin-top:3px}
 
 #chtop,#chlog,#chtabs,#chpanel,#chmenu,.chchip,#chgo{display:none}
-body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #cmsg,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}
+body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}
 body.chr #chtop,body.chr #chlog,body.chr #chtabs{display:block}
 body.chr .chchip:not([hidden]),body.chr #chgo:not([hidden]){display:block}
 body.chr .stage{width:clamp(260px,calc(100dvh - 236px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),100%)}
@@ -164,7 +164,7 @@ body.chr.chopen #chpanel{display:block}
 .chchip{position:absolute;z-index:3;background:rgba(10,6,4,.72);color:#f3e6c8;border-radius:10px;padding:4px 9px;font-size:12px;border:1px solid transparent;font-family:inherit;text-align:left}
 #chchief{left:8px;top:8px;border-color:#ffd45a;cursor:pointer}#chchief b{color:#ffd45a;margin-right:4px}
 #chmile{right:8px;top:8px}#chmer{left:8px;bottom:10px;border-color:#b8925a}
-body.chr .zoom{flex-direction:column;bottom:56px;gap:4px}body.chr .zoom button{height:30px;padding:0 9px;font-size:13px;min-width:40px}body.chr .zoom #zdig{margin-right:0}
+body.chr #zdig{display:none!important}body.chr .zoom{flex-direction:column;bottom:56px;gap:4px}body.chr .zoom button{height:30px;padding:0 9px;font-size:13px;min-width:40px}body.chr .zoom #zdig{margin-right:0}
 body.chr .yubar{top:40px}
 #chgo{position:absolute;z-index:3;left:50%;bottom:10px;transform:translateX(-50%);background:#8b4f1d;color:#fff4dc;border:0;border-radius:16px;padding:8px 18px;font:inherit;font-weight:700;font-size:14px}
 #chlog{display:none}body.chr #chlog{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 2px;font-size:12.5px;color:var(--sub)}
@@ -213,7 +213,7 @@ body.chr #chmenu:not([hidden]){display:flex;flex-direction:column;gap:4px}#chmen
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v76</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v77</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1402,6 +1402,7 @@ function chWave(ev){var C=g.chron,died=[],grown=0;if(C.st&&(!C.fire||!C.nest))ch
  if(C.st&&!chChief())chSucceed(null);chIt=chInherit(died);
  var dn=died.slice(0,3).map(spName);died.forEach(function(m){killCr(m,'old');});
  var ne=C.st?chBreed():0,et=ne?'卵が'+ne+'つ生まれた。':'';
+ var gn=C.st?chGrowNest():0;if(gn)et+='巣穴が'+gn+'マス広がった。';
  var mk=C.st?chVillage():0;if(mk)et+='品を'+mk+'つ作った。';if(C.mer)et+='行商人が入口に来た。';
  var K=g.core,mx=coreMax();if(K.mhp<mx){K.hp+=mx-K.mhp;K.mhp=mx;}
  if(died.length)say(died.length+'匹が寿命を迎えた（'+dn.join('・')+(died.length>3?'ほか':'')+'）。'+(grown?grown+'匹が大人になった。':'')+et+chIt);
@@ -1505,16 +1506,26 @@ function chUI(){var on=!!(g&&g.chron&&g.chron.st);document.body.classList.toggle
  var C=g.chron,$=function(i){return document.getElementById(i);};
  $('chgw').textContent='第'+(C.gen||1)+'代 · 第'+g.wave+'波';
  $('chcd').textContent=g.en.length&&g.cd>80?'迎撃中':'次の波 '+Math.max(0,Math.ceil(g.cd))+'秒'+(speed==0?' ⏸':'');
- var rs='魂 <b>'+(g.soul||0)+'</b>　銀貨 <b>'+(C.silver||0)+'</b>　品 <b>'+(C.goods||0)+'</b>　掘る <b>'+Math.floor(g.dp||0)+'</b>　コア <b>'+Math.ceil(g.core.hp)+'</b>';if($('chres').innerHTML!=rs)$('chres').innerHTML=rs;
+ var rs='魂 <b>'+(g.soul||0)+'</b>　銀貨 <b>'+(C.silver||0)+'</b>　品 <b>'+(C.goods||0)+'</b>　コア <b>'+Math.ceil(g.core.hp)+'</b>';if($('chres').innerHTML!=rs)$('chres').innerHTML=rs;
  var a=C.alert||0,f=C.friend||0;$('chal').textContent='警戒 · '+ALN[chAlertSt()];$('chalv').textContent='段'+chAlertSt()+' / '+(ALT.length-1);$('chalb').style.width=chStageW(a,ALT)+'%';
  $('chfr').textContent='友好 · '+FRN[chFrSt()];$('chfrv').textContent='段'+chFrSt()+' / '+(FRT.length-1);$('chfrb').style.width=chStageW(f,FRT)+'%';
  var c=chChief(),cc=$('chchief');cc.hidden=!c;if(c){var ct='<b>族長</b>'+esc(spName(c))+' · 特性'+(c.tr||[]).length;if(cc.innerHTML!=ct)cc.innerHTML=ct;}
- var ml=$('chmile'),ew=C.ev&&C.evW>=g.wave?C.evW:(Math.floor(g.wave/10)+1)*10;ml.hidden=false;ml.textContent=C.evNow?'節目：'+EVN[C.evNow]:'節目まで'+Math.max(0,ew-g.wave)+'波'+(C.ev&&C.evW>=g.wave?'（'+EVN[C.ev]+'）':'');
+ var ml=$('chmile'),ew=C.ev&&C.evW>=g.wave?C.evW:(Math.floor(g.wave/10)+1)*10;ml.hidden=false;ml.textContent=C.evNow?'節目：'+EVN[C.evNow]:ew<=g.wave&&C.ev?'節目の波：'+EVN[C.ev]:'節目まで'+Math.max(1,ew-g.wave)+'波'+(C.ev&&C.evW>=g.wave?'（'+EVN[C.ev]+'）':'');
  $('chmer').hidden=!C.mer;
  var go=$('go'),cg=$('chgo');cg.hidden=go.hidden||go.disabled||(g.en.length>0&&go.textContent=='今すぐ迎える'&&g.cd>80);cg.textContent=go.textContent;
  var m=$('chmsg');if(m.textContent!==(g.msg||''))m.textContent=g.msg||'';
  [].forEach.call(document.querySelectorAll('#chlog button'),function(b){b.classList.toggle('on',b.getAttribute('data-chsp')=='sp'+speed);});
  if(CHTAB!='nest'){var p=$('chpanel'),ph=chPanelHTML();if(ph!==chPLast){chPLast=ph;var st=p.scrollTop;p.innerHTML=ph;p.scrollTop=st;}}}
+// ---------- 巣穴がひとりでに広がる（v77・年代記） ----------
+function chOpenN(){var n=0;for(var y=0;y<N;y++)for(var x=0;x<N;x++){var c=cellAt(0,x,y);if(c&&c.open)n++;}return n;}
+function chGrowNest(){var gs=chGobs().length,want=45+Math.round(gs*0.5),have=chOpenN(),K=g.core,n=0,lim=Math.min(14,Math.max(2,Math.ceil(gs/12)));
+ while(have<want&&n<lim){var best=null,bv=1e9;
+  for(var y=1;y<N-1;y++)for(var x=0;x<N;x++){var c=cellAt(0,x,y);if(!c||c.open||bedrock(0,x,y)||!touchesOpen(0,x,y))continue;
+   var on=0;[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]].forEach(function(d){var o=cellAt(0,x+d[0],y+d[1]);if(o&&o.open)on++;});
+   var v=man(K,{x:x,y:y})*1.0-on*1.6+hs(x,y,g.wave)*3;if(v<bv){bv=v;best=[x,y];}}
+  if(!best)break;openCell(0,best[0],best[1],false);have++;n++;}
+ if(n){TK.key='';for(var k=0;k<Math.floor(n/5);k++)chDeco(['straw','pot','bone','straw'][rnd(4)]);}
+ return n;}
 // ---------- 子は自動で生まれる（v71・年代記） ----------
 function chCap(){return 1e9;}
 var CH_CAP=500;
@@ -1536,7 +1547,7 @@ function chMile(){var C=g.chron,ev=C.evNow,ew=C.evW||g.wave;C.evNow=null;var gen
   tx=ev=='yu'?who+'伝承の勇者を退けた':ev=='clan'?who+'よその一族を退けた'+(C.cap?'（'+C.cap+'匹を迎えた）':''):who+'はやり病を生き延びた';
  C.cap=0;chLine(tx,ew);C.miles=(C.miles||0)+1;var gift=DIFF[g.diff||'normal'].dpg;
  if(C.reach<COREX){C.reach++;TK.key='';}g.dp+=gift;chTorch(2);
- banner('節目を越えた！',tx+' · 洞窟が広がった · 掘る力＋'+gift);sfx('grow');haptic('medium');say(tx+'。洞窟が広がり、掘れる所が増えた（掘る力＋'+gift+'）。');saveGame();}
+ banner('節目を越えた！',tx+' · 洞窟が広がった');sfx('grow');haptic('medium');say(tx+'。洞窟が広がり、巣穴を広げられる所が増えた。');saveGame();}
 // よその一族の戦士を捕まえる（薄い血）
 function chCapture(e){var a0=g.alt&&g.alt[0];var d=gobCand();if(!d.tr.length){var k=randTr();d.tr=[k];d.trl={};d.trl[k]=1;}d.nm=e.nm;d.house=String(e.nm).split('家の')[0];
  var m=mkCr(gobKey(d.sz,d.hd),landOf(e.f),e.f,e.x,e.y,3,{gob:d,hpk:sumK(),atkk:sumK()});if(!m)return;m.bw=g.wave;if(a0)m.home={f:a0.f,x:a0.x,y:a0.y};
@@ -1903,6 +1914,7 @@ function openCell(f,x,y,main){
  if(y==N-1&&f>0)openCell(f-1,x,0,false);
 }
 function digAt(f,x,y){
+ if(g.chron&&g.chron.st){say('巣穴は一族がひとりでに広げていく。');return false;}
  var c=cellAt(f,x,y);if(!c||c.open)return false;
  if(bedrock(f,x,y)){say('ここは固くて掘れません。');return false;}
  if(!touchesOpen(f,x,y)){say('掘れるのは、掘ってあるマスの隣の土だけです。');return false;}
@@ -2358,7 +2370,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v76 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v77 · ')+(g.chron?'年代記 · '+(g.chron.gen||1)+'代':'塔'+F+'階 · '+g.round+'周目')+' · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2367,7 +2379,7 @@ function ui(){
  alertBadge();
  document.getElementById('go').classList.toggle('pulse',g.tut===2);
  var blt=document.getElementById('blight');if(blt){var lok=lightOk();if(blt.disabled==lok)blt.disabled=!lok;var ltx=g.lightW===lightKey()?'光った':'コアの光';if(blt.textContent!=ltx)blt.textContent=ltx;}
- var tu=g.tut!=null&&TUT[g.tut],lh=!tu&&lpHint(),cm=document.getElementById('cmsg'),ct=tu?'ヒント：'+TUT[g.tut][0]+'（タップで閉じる）':lh?'ヒント：長押しでメニューが開く。通路＝祭壇・埋め戻す・集まれ・罠、ゴブリン＝進化・配合（タップで閉じる）':g.cline?'コア「'+g.cline+'」':'';cm.classList.toggle('tut',!!tu||lh);if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
+ var tu=g.tut!=null&&TUT[g.tut],lh=!tu&&!(g.chron&&g.chron.st)&&lpHint(),cm=document.getElementById('cmsg'),ct=tu?'ヒント：'+TUT[g.tut][0]+'（タップで閉じる）':lh?'ヒント：長押しでメニューが開く。通路＝祭壇・埋め戻す・集まれ・罠、ゴブリン＝進化・配合（タップで閉じる）':g.cline?'コア「'+g.cline+'」':'';cm.classList.toggle('tut',!!tu||lh);if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
  drawMinis();
  var nh=0,yin=false;for(i=0;i<g.cr.length;i++)if(g.cr[i].hero)nh++;for(i=0;i<g.en.length;i++)if(g.en[i].yu)yin=true;
  var bl=document.getElementById('blist'),blt='一覧'+(nh?' ★'+nh:'');if(bl.textContent!=blt)bl.textContent=blt;bl.classList.toggle('alert',yin);
@@ -2894,11 +2906,10 @@ function advice(){
 // 朝・昼・夕・夜（4分で一回り。見た目だけ）
 function phase(){var p=((g&&g.t)||0)%240/240;return p<0.1?'朝':p<0.55?'昼':p<0.65?'夕':'夜';}
 // 最初の数分のヒント
-var TUT=[['下の「コマンド」→「召喚する」で、はぐれゴブリンを3匹の中から選んで呼ぼう',function(){return g.cr.length>=3;}],
- ['右下の「⛏ 掘る」を押してから、道の隣の土をなぞって通路を広げよう。掘っても何も生まれない。冒険者の道を長く、迷わせる形に',function(){return (g.dug||0)>=3;}],
- ['準備ができたら「今すぐ迎える」。早く呼ぶほど、次に戻る掘る力が増える',function(){return g.wave>=1;}],
- ['冒険者を倒すと魂が手に入る。コアの体力が0になると負け',function(){return (g.kills||0)>=1;}],
- ['大人のゴブリンは波のはじめに組になって、自動で卵を産む（数は「コマンド」で見られる）。血が濃いと特性の段が上がり、2つの特性がそろうと上の技になる。説明はこれでおしまい',function(){return performance.now()-(g.tutT||0)>12000;}]];
+var TUT=[['下の「一族」を開いて「召喚する」から、はぐれゴブリンを呼ぼう',function(){return g.cr.length>=3;}],
+ ['巣穴は、一族が増えるほどひとりでに広がっていく。準備ができたら「今すぐ迎える」',function(){return g.wave>=1;}],
+ ['冒険者を倒すと魂が手に入る。コアを壊されると、一族の半分を失う',function(){return (g.kills||0)>=1;}],
+ ['大人は波のはじめに組になって卵を産む。増えるほど周りの国の警戒が強まる。「周りの国」と「交易」で付き合い方を選ぼう。説明はこれでおしまい',function(){return performance.now()-(g.tutT||0)>12000;}]];
 function tutDone(){var v=kvGet('tou-tut');return v=='1'||v=='2';}
 var LPH=null;
 function lpHint(){if(!g||g.title||g.tut!=null||g.chal||g.mode=='vs'||(g.wave||0)<1)return false;if(LPH==null)LPH=kvGet('tou-tut')||'';return LPH!='2';}
@@ -3086,6 +3097,7 @@ cv.addEventListener('pointerdown',function(ev){
  var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false,pan:!DIG,sx:ev.clientX,sy:ev.clientY,m:logicalOf(ev.clientX,ev.clientY)};
  clearTimeout(lpT);closePop();var lpF=g.view,lpX=ev.clientX,lpY=ev.clientY;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF||over)return;var ms=crAt(lpF,p[0],p[1]),c=cellAt(lpF,p[0],p[1]);
   if(ms.length){HL=ms.filter(function(o){return o.hero;})[0]||ms[0];say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');openPop(HL.hero?'hero':'mon',lpF,p[0],p[1],lpX,lpY,HL);}
+  else if(g.chron&&g.chron.st)return;
   else if(c&&!c.open&&!bedrock(lpF,p[0],p[1]))openPop('soil',lpF,p[0],p[1],lpX,lpY);
   else if(c&&c.open)openPop('path',lpF,p[0],p[1],lpX,lpY);
   else return;
