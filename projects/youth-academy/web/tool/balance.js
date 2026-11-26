@@ -4,7 +4,7 @@
 //   node tool/balance.js 10 20      … シード10個×20年（長い試し）
 'use strict';
 const path = require('path');
-for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'body', 'pos2', 'traits2', 'persona', 'cond2', 'stars2', 'kadai', 'team2', 'records']) require(path.join(__dirname, '../src/' + f + '.js'));
+for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'body', 'pos2', 'traits2', 'persona', 'cond2', 'stars2', 'kadai', 'kizuki', 'team2', 'records']) require(path.join(__dirname, '../src/' + f + '.js'));
 const YA = globalThis.YA;
 let fails = 0;
 const ok = (c, m) => {
@@ -14,8 +14,15 @@ const ok = (c, m) => {
   }
 };
 // 2026-11-17：育成・クラブの釣り合いの直し（42〜62）に合わせて、疲れ・怪我・退団の理由・接し方・卒業時の平均・基金・大会も見る
-const G = { fat: [], tired: 0, kinds: {}, injLong: 0, injAll: 0, matchInj: 0, maxKadai: 0, kadaiWeeks: 0 };
+const G = { fat: [], tired: 0, kinds: {}, injLong: 0, injAll: 0, matchInj: 0, maxKadai: 0, kadaiWeeks: 0, kzAt: {}, kzKind: {}, kzN: [], kzMiss: [] };
 {
+  // 気づきの場面（2026-11-27）：場所ごとの数・選んだ結果
+  const ks = YA.kizukiSettle;
+  YA.kizukiSettle = function (w, e, role) {
+    const r = ks.apply(this, arguments);
+    if (r.kind !== 'gone') { G.kzAt[e.at] = (G.kzAt[e.at] || 0) + 1; G.kzKind[r.kind] = (G.kzKind[r.kind] || 0) + 1; }
+    return r;
+  };
   const ew = YA.endWeek;
   YA.endWeek = function (w) {
     const ps = Object.values(w.players);
@@ -71,6 +78,8 @@ for (const r of runs) {
       cups: (st.w.trophies || []).slice(tr0).length, fund: st.w.fund || 0, total: st.w.club.total, injLong: st.w.inbox.filter((n) => n.year === y + 1 && /全治(\d+)週/.test(n.text) && +/全治(\d+)週/.exec(n.text)[1] >= 8).length,
       matchInj: st.w.inbox.filter((n) => n.year === y + 1 && /試合で怪我/.test(n.text)).length,
       awake: st.w.awakeN && st.w.awakeN.y === yy ? st.w.awakeN.n : 0, kgive: st.w.kadaiN && st.w.kadaiN.y === yy ? st.w.kadaiN.give || 0 : 0 });
+    // 合う課題の後半に来た気づきの場面の数（覚醒まで／最後まで選べなかった課題）
+    for (const p of Object.values(st.w.players)) for (const hh of p.kHist || []) if (hh.y === yy && hh.fit === 'yes') { if (hh.r === 'awake' || hh.r === 'miss') G.kzN.push(hh.n || 0); if (hh.r === 'miss') G.kzMiss.push(hh.n || 0); }
   }
   ok(st.w.alumni.length >= (YA.GRADE_N || 11) * Math.min(2, r.years), `卒業生が積み上がる seed${r.seed}（${st.w.alumni.length}人）`);
 }
@@ -127,6 +136,11 @@ ok(pro >= 1.2 && pro <= 4, `プロ級の割合が決定75の目安（11人中2�
   ok(G.kadaiWeeks > 100 && G.maxKadai <= YA.KADAI_MAX && G.maxKadai >= 4, `課題は同時に5人まで（最大${G.maxKadai}人）`);
   ok(awY >= 4 && awY <= 8.5, `覚醒はならして年5〜7人前後: ${awY.toFixed(2)}人/年`);
   ok(gvY > 0, `外れた課題はあきらめになる: ${gvY.toFixed(2)}件/年`);
+  const av = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  const kzY = Object.values(G.kzAt).reduce((a, b) => a + b, 0) / n;
+  console.log(`気づきの場面：${kzY.toFixed(1)}回/年（場所 ${JSON.stringify(G.kzAt)}・結果 ${JSON.stringify(G.kzKind)}）・合う課題の後半に 平均${av(G.kzN).toFixed(2)}回（覚醒まで含む・${G.kzN.length}件）／最後まで選べなかった課題では 平均${av(G.kzMiss).toFixed(2)}回（${G.kzMiss.length}件）`);
+  ok(kzY > 5 && (G.kzAt.match || 0) + (G.kzAt.matchB || 0) > 0 && G.kzAt.prac > 0 && G.kzAt.talk > 0, `気づきの場面が試合・練習・日常で来る: ${JSON.stringify(G.kzAt)}`);
+  ok(G.kzMiss.length < 3 || (av(G.kzMiss) >= 1.6 && av(G.kzMiss) <= 4.5), `合う課題の後半いっぱいで、場面は2〜4回ほど: ${av(G.kzMiss).toFixed(2)}`);
 }
 ok(share((m) => m.trustAfter >= 99 || m.trustAfter <= 1) <= 0.4, '信頼度が上限・下限に張り付いていない');
 // 60 評価：育成の目標は部と施設に合わせ、約束の目標はおまかせでも届くことがある（B に偏らない）

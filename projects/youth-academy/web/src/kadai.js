@@ -3,7 +3,7 @@
 // ・一人ひとりに「合う課題」（種類と中身）が隠れている（入団のときに、選手ごとの乱数で決まる。p.kf）
 // ・手がかりは3つ（コーチの見立て・本人の言葉・試合の場面。p.kc）。答えは画面に出さない
 // ・課題を出せるのは同時に5人まで（YA.KADAI_MAX）。課題中の子は p.star=true（信頼・働きかけ・日誌・節目の会話・進路面談がこの子たちに効く）
-// ・合っていれば、期間の後半に出場した試合で気づいて覚醒する（気づきの判定は YA.kadaiSpark の1か所。段3で「選手の目」の場面に差し替える）
+// ・合っていれば、期間の後半に来る「気づきの場面」（試合・練習・日常。kizuki.js）で正しい手を選ぶと覚醒する（2026-11-27 段3。前は試合で確率で気づいていた）
 // ・外れはあきらめ（期間の1/3〜半分）、種類だけ合うと少し伸びる。終わった子に次の課題を出せるのは4週あけてから
 (function () {
   'use strict';
@@ -283,7 +283,7 @@
   function endKadai(w, p, res) {
     const k = p.kd;
     if (!k) return;
-    p.kHist = (p.kHist || []).concat([{ t: k.t, c: k.c, y: w.year, w: w.week, r: res }]).slice(-8);
+    p.kHist = (p.kHist || []).concat([{ t: k.t, c: k.c, y: w.year, w: w.week, r: res, fit: k.fit, n: k.sc || 0 }]).slice(-8); // n＝来た気づきの場面の数
     if (k.t === 'convert' && p.convert && p.convert.pos === k.c && res !== 'awake') p.convert = null;
     p.kd = null;
     p.star = false;
@@ -365,15 +365,20 @@
     return { t, c };
   };
 
-  // ---------- 気づきの判定（1か所。段3で「選手の目」の場面に差し替える）----------
-  YA.KADAI_SPARK = 0.28;
-  YA.kadaiSpark = function (w, p, ctx) {
-    const k = p.kd;
-    if (!k || k.fit !== 'yes') return false;
-    if (wk(w) - k.w0 < k.len / 2) return false;
-    if (!(ctx.mins >= 20) || p.inj > 0) return false;
-    const r = YA.rngOf((w.seed | 0) * 5 + wk(w) * 13 + YA.hash(p.id + 'sp' + ctx.which));
-    return r.chance(clamp(YA.KADAI_SPARK + ((ctx.rating || 6.3) - 6.5) * 0.15, 0.2, 0.8));
+  // ---------- 気づき（2026-11-27 段3）：課題の後半に来る「気づきの場面」で選ぶ（kizuki.js）----------
+  // おまかせ進行のときに、場面で正しい手を選ぶ確率（前は後半に出た試合1つで気づく確率だった）
+  YA.KADAI_SPARK = 0.16; // 合う課題の後半に場面が2〜3回来て、覚醒はならして年6〜7人（tool/balance.js）
+  // 正しい手を選んだが課題が合っていなかったとき：まだの手がかりを1つ見せる（出そろっていれば、本当はどうしたいかを打ち明ける）
+  YA.kadaiClueUp = function (w, p) {
+    YA.kadaiEnsure(w, p);
+    if (!p.kc) return null;
+    if (!p.kc.self) return revealSelf(w, p);
+    if (!p.kc.match) return revealScene(w, p);
+    const f = p.kf;
+    const t = DEF(f.t).want(w, p, f.c);
+    if (p.kc.more.indexOf(t) >= 0) return null;
+    p.kc.more.push(t);
+    return t;
   };
 
   // 覚醒のときの課題ごとの伸び
@@ -400,7 +405,7 @@
     else if (t === 'body') { up(p, '強さ', 3); up(p, 'スタミナ', 3); up(p, 'バランス', 2); out.push('強さ・スタミナ・バランスが大きく上がった'); }
     return out.join('');
   }
-  function sparkAwaken(w, p) {
+  function sparkAwaken(w, p, where) {
     const k = p.kd;
     const nm = YA.kadaiLabel(w, k.t, k.c);
     p._kPref = DEF(k.t).form;
@@ -410,14 +415,14 @@
     p._kPref = null;
     if (p.awake) p.awake.kadai = nm;
     w.kadaiN = { y: w.year, n: (w.kadaiN && w.kadaiN.y === w.year ? w.kadaiN.n : 0) + 1, give: w.kadaiN && w.kadaiN.y === w.year ? w.kadaiN.give || 0 : 0 };
-    YA.noteTier(w, 1, `${p.num}番 ${p.name}が試合の中で気づいた――課題「${nm}」が実を結んだ。${got}`, p.id);
+    YA.noteTier(w, 1, `${p.num}番 ${p.name}が${where || '試合の中で'}気づいた――課題「${nm}」が実を結んだ。${got}`, p.id);
     // 次の覚醒が残っていれば、次の合う課題が決まる（手がかりも新しく）
     p.kf = rollFit(w, p, (p.kf ? p.kf.g : 0) + 1, [k.t]);
     if ((p.awDone || 0) >= (p.awN || 1)) p.kf.done = true;
     freshClues(w, p);
   }
 
-  YA.kadaiAwakenNow = sparkAwaken; // 点検用（気づいたときの処理）
+  YA.kadaiAwakenNow = sparkAwaken; // 気づいたときの処理（kizuki.js の場面で正しい手を選んだとき）
 
   // ---------- 試合のあと ----------
   function unseal(p) {
@@ -459,7 +464,6 @@
       if (!p || !st || !(st.minutes > 0)) continue;
       YA.kadaiEnsure(w, p);
       played.push(p);
-      if (p.kd && YA.kadaiSpark(w, p, { which, mins: st.minutes, rating: st.rating })) sparkAwaken(w, p);
     }
     // 試合の場面の手がかり（1試合に1人まで）
     const r = YA.rngOf((w.seed | 0) * 3 + wk(w) * 17 + (which === 'B' ? 5 : 0));
@@ -511,8 +515,8 @@
         if (YA.memAdd) YA.memAdd(w, p, 'kgive', null, t);
         continue;
       }
-      // 期間の終わり
-      if (e >= k.len) {
+      // 期間の終わり（気づきの場面がまだ残っていれば、その場面のあと）
+      if (e >= k.len && !(YA.kizukiPending && YA.kizukiPending(w, p))) {
         const nm = YA.kadaiLabel(w, k.t, k.c);
         if (k.fit === 'half') {
           const ns = (YA.POS_ABS15[p.main] || []).slice().sort((a, b) => A(p, a) - A(p, b)).slice(0, 2);
@@ -522,7 +526,7 @@
           YA.noteTier(w, 2, `${p.num}番 ${p.name}の課題「${nm}」が終わった。${ns.join('・')}が少し伸びたが、化けるところまではいかなかった。何かが少し違ったのかもしれない`, p.id);
         } else {
           endKadai(w, p, 'miss');
-          YA.noteTier(w, 2, `${p.num}番 ${p.name}の課題「${nm}」の期間が終わった。試合で気づく場面がないまま終わった（同じ課題を、${YA.KADAI_GAP}週あけてもう一度出せる）`, p.id);
+          YA.noteTier(w, 2, `${p.num}番 ${p.name}の課題「${nm}」の期間が終わった。気づく場面で正しい手を選べないまま終わった（同じ課題を、${YA.KADAI_GAP}週あけてもう一度出せる）`, p.id);
         }
       }
     }
@@ -581,7 +585,7 @@
       box.append(h('div', { class: 'row', style: 'gap:6px;margin-top:5px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:5px' },
         h('b', {}, '課題：' + st.name), h('span', { class: 'chip gray' }, `${st.e}/${st.len}週`), h('span', { class: 'chip ' + (st.half ? 'pers' : 'gray') }, st.word), h('span', { class: 'grow' }),
         h('button', { class: 'btn sm', onclick: () => YA.confirmBox(`${p.name}の課題をやめますか（信頼が少し下がります）`, () => { const r = YA.kadaiStop(w, p); U().app.starMsg = r.msg; YA.saveWorld(); rerender(); }, { yes: 'やめる', danger: true }) }, 'やめる')));
-      box.append(h('div', { class: 'note' }, st.half ? '期間の後半です。試合に出すと、どこかの場面で気づくかもしれません。' : '前半は苦しむ時期です。自信と試合の評価が少し落ちます。'));
+      box.append(h('div', { class: 'note' }, st.half ? '期間の後半です。試合・練習・日常のどこかで、気づきの場面が来ます。正しい見え方を選べれば、化けるかもしれません。' : '前半は苦しむ時期です。自信と試合の評価が少し落ちます。後半に入ると、気づきの場面が来ます。'));
     } else {
       const why = YA.kadaiWhy(w, p);
       const rec = !why ? YA.kadaiRec(w, p) : null;

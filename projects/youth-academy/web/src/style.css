@@ -317,3 +317,43 @@ button.pitem{min-height:34px}
 @media (max-width:760px){.home-left{min-width:200px!important;width:30%!important}.home-right{width:168px!important}.ovcols{grid-template-columns:1fr}}
 /* 小さい iPhone（横667px）で試合の上の帯が約800px あり、「自動停止」「止める」が画面の外に出ていた（2026-11-23） */
 @media (max-width:760px){.topbar{gap:4px}.scoreboard{gap:5px;padding:2px 8px}.scoreboard .tn{max-width:40px}.clock{min-width:42px;padding:3px 6px}.speeds button{min-width:28px;padding:0 5px;font-size:11px}.speeds button:first-child{display:none}.auto-lbl{display:none}}
+/* 気づきの場面「選手の目」（2026-11-27 段3。試作 選手の目_試作.html の見た目）：時間を止めた上から見た図と、右に顔・心の声・選択肢 */
+.kzbox{flex:1;align-self:stretch;display:flex;flex-direction:column;gap:6px;min-height:0;background:#14284b;color:#fff;border-radius:12px;padding:0 0 6px;overflow:hidden;position:relative;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+.kzbar{flex:none;height:32px;display:flex;align-items:center;gap:10px;padding:0 12px;font-weight:800;font-size:13px;background:#0f1f3b;white-space:nowrap;overflow:hidden}
+.kzbar .kztn{max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.kzbar .kzsc{background:#fff;color:#14284b;border-radius:6px;padding:1px 9px}
+.kzbar .kzmin{color:#f5c518}
+.kzbar .kzstop{margin-left:auto;background:#f5c518;color:#14284b;font-size:12px;padding:3px 10px;border-radius:5px;overflow:hidden;text-overflow:ellipsis}
+.kzmain{flex:1;min-height:0;display:flex;gap:8px;padding:0 8px}
+.kzpitch{flex:1;min-width:0;min-height:0;border-radius:6px;overflow:hidden;display:flex;background:#38834a}
+.kzpitch svg{width:100%;height:100%;display:block}
+.kzpitch .kznm{font-size:12px;font-weight:900;fill:#fff;stroke:#000;stroke-width:3px;paint-order:stroke}
+.kzpitch .kzme{fill:#f5c518}
+.kzpitch .kzlt{font-size:14px;font-weight:900;fill:#14284b}
+.kzpitch .kzx{font-size:22px;font-weight:900;fill:#ff6b6b;stroke:#000;stroke-width:2px;paint-order:stroke}
+.kzpitch .kzpin{cursor:pointer}
+.kzside{width:300px;flex:none;min-height:0;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+.kzwho{display:flex;gap:9px;align-items:center;background:#1e3a6b;border-radius:8px;padding:6px}
+.kzwho img{border-radius:8px;border:2px solid #f5c518;flex:none}
+.kzwho b{font-size:13px}.kzwho small{display:block;font-size:11px;color:#bcd;margin-top:2px;line-height:1.35}
+.kzthink{background:#fff;color:#16233b;border-radius:10px;padding:7px 10px;font-weight:800;font-size:13px;position:relative;line-height:1.45}
+.kzthink:before{content:"";position:absolute;left:24px;top:-8px;border:8px solid transparent;border-top:0;border-bottom-color:#fff}
+.kzhint{font-size:11.5px;color:#cfe;background:rgba(255,255,255,.08);border-radius:6px;padding:5px 8px;line-height:1.5}
+.kzopt{display:flex;align-items:center;gap:8px;background:#fff;color:#16233b;border:0;border-radius:7px;padding:6px 9px;font:inherit;font-weight:800;font-size:12.5px;text-align:left;cursor:pointer;min-height:34px;flex:none}
+.kzopt i{font-style:normal;width:22px;height:22px;border-radius:50%;background:#f5c518;display:grid;place-items:center;font-size:12px;flex:none}
+.kzopt:active{background:#fff6cc}
+.kzopt.lock{background:#5b6a85;color:#dde}.kzopt.lock i{background:#8a94a8;color:#fff}
+.kzlockmsg{position:absolute;left:16px;bottom:12px;max-width:min(460px,60%);background:#d63a3a;color:#fff;font-size:12px;font-weight:800;padding:6px 10px;border-radius:6px;z-index:2;line-height:1.45}
+.kzlockmsg[hidden]{display:none}
+.kzres{flex:1;min-height:0;background:#1e3a6b;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:7px;overflow-y:auto}
+.kzrtop{display:flex;align-items:center;gap:10px}
+.kzrtop img{border-radius:8px;border:3px solid #f5c518;flex:none}
+.kzres h2{margin:0;font-size:22px;color:#f5c518;letter-spacing:.04em}.kzres h2.grey{color:#cfd6e2}
+.kzres p{margin:0;font-size:12.5px;line-height:1.55;font-weight:700}
+.kzres .kzsay{background:#fff;color:#16233b;border-radius:8px;padding:6px 10px;font-weight:800;font-size:13px}
+.kzres .kztag{color:#cfd6e2;font-size:12px}.kzres .kztag.gold{color:#f5c518}
+.kzres .kznote{color:#9fb3d1;font-size:11px;font-weight:600}
+.kzres .kzgo{margin-top:auto;align-self:flex-end;background:#f5c518;color:#14284b;border:0;border-radius:6px;padding:7px 16px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;min-height:36px}
+.kzawake .kzpitch{box-shadow:inset 0 0 0 3px #f5c518}
+.h.kzhead.gold{color:#b8860b}
+@media (max-width:760px){.kzside{width:250px}}

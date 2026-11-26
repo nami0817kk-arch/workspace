@@ -49,6 +49,7 @@ const html = read('shell.html')
   .replace('/*__COND2__*/', () => read('cond2.js'))
   .replace('/*__STARS2__*/', () => read('stars2.js'))
   .replace('/*__KADAI__*/', () => read('kadai.js'))
+  .replace('/*__KIZUKI__*/', () => read('kizuki.js'))
   .replace('/*__TEAM2__*/', () => read('team2.js'))
   .replace('/*__RECORDS__*/', () => read('records.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
@@ -111,6 +112,9 @@ async function clearEvents() {
   let n = 0;
   while (d.querySelector('.sheet') && n++ < 10) {
     const s = d.querySelector('.sheet');
+    // 気づきの場面（選手の目）：最初の選択肢 → 次へ／再開
+    const kz = s.querySelector('.kzopt:not(.lock)');
+    if (kz) { kz.click(); const go = s.querySelector('.kzgo'); if (go) go.click(); await sleep(10); continue; }
     const opts = [...s.querySelectorAll('button.btn')].filter((b) => !/次へ|閉じる|卒業|新しい年度/.test(b.textContent));
     const next = btn('次へ', s) || btn('閉じる', s) || btn('新しい年度へ', s);
     if (next) next.click();
@@ -323,6 +327,67 @@ async function clearEvents() {
     console.log(`  課題の画面：札${cards.length}・中身${kopts.length}・出した課題「${w.YA.kadaiLabel(A.w, sp.kd.t, sp.kd.c)}」・手がかり欄「${kb2 ? kb2.textContent.slice(0, 40) : ''}…」`);
     ok(kb2 && /\d+\/\d+週/.test(kb2.textContent) && !!btn('やめる', kb2) && /課題：/.test(kb2.textContent), '課題中は進み具合（N/M週・様子）と「やめる」');
     ok(!/合って|外れ/.test(kb2.textContent), '合っているかは画面に出さない');
+    // 気づきの場面（2026-11-27 段3）：選手の目（練習の紅白戦）・鍵の手は押せず理由が赤い札で出る・正しい手で「見えた。」→ 覚醒の窓。日常の会話は出来事の窓
+    {
+      const Y = w.YA;
+      const W = A.w;
+      let nKz = 0;
+      const K = (c, m) => { nKz++; ok(c, '気づきの画面：' + m); };
+      const kid = Object.values(W.players).find((p) => p.pos !== 'GK' && p.id !== sp.id && !p.kd && !p.awake);
+      kid.kd = { t: 'eye', c: null, w0: W.year * 40 + W.week - 8, len: 12, fit: 'yes' }; kid.star = true; W.kzW = null;
+      const e = Y.kizukiMake(W, kid, 'prac');
+      W.kzNow = [e];
+      A.tab = 'home'; A.holdPrompts = false;
+      Y._ui.render();
+      const box = d.querySelector('.sheet .kzbox');
+      K(!!box && !!box.querySelector('svg.kzsvg') && box.querySelectorAll('.kzpin').length >= 3 && box.querySelectorAll('.kzopt:not(.lock)').length === 3 && !!box.querySelector('.kzopt.lock'), '試合のあとの列に場面があると、ホームで選手の目が出る（図・光る3つ・鍵の手）');
+      K(/紅白戦/.test(box.textContent) && box.textContent.includes(kid.name) && /時間が止まった/.test(box.textContent) && !!box.querySelector('img.face') && !/undefined|NaN|\{\w\}/.test(box.textContent), '紅白戦・名前・心の声・今の顔の絵が出る');
+      K(!box.querySelector('[class*=timer]') && !/秒/.test(box.querySelector('.kzbar').textContent), '時間の制限はない');
+      const lockB = box.querySelector('.kzopt.lock');
+      lockB.click();
+      const lm = box.querySelector('.kzlockmsg');
+      K(lm && !lm.hidden && /課題/.test(lm.textContent) && kid.kd && !box.querySelector('.kzres'), '鍵の手は選べず、押すと理由が赤い札で出る ' + (lm && lm.textContent));
+      K(!lockB.disabled || !!lockB.dataset.why, '鍵の手のボタンにも理由がある');
+      const okKey = box._view.opts.find((o) => o.role === 'ok').key;
+      box.querySelector(`.kzopt[data-k="${okKey}"]`).click();
+      K(box.querySelector('.kzres h2') && box.querySelector('.kzres h2').textContent === '見えた。' && kid.awake && !kid.kd, '正しい手を選ぶと「見えた。」で覚醒する');
+      box.querySelector('.kzgo').click();
+      const aw = d.querySelector('.sheet');
+      K(aw && /覚醒/.test(aw.textContent) && aw.textContent.includes(kid.aw.trait), '続けて今の覚醒の窓が出る');
+      await clearEvents();
+      // 日常の会話
+      const kid2 = Object.values(W.players).find((p) => p.pos !== 'GK' && !p.kd && !p.awake && p.id !== kid.id && p.id !== sp.id);
+      kid2.kd = { t: 'captain', c: null, w0: W.year * 40 + W.week - 8, len: 12, fit: 'half' }; kid2.star = true; W.kzW = null;
+      const e2 = Y.kizukiMake(W, kid2, 'talk');
+      W.kzNow = [e2];
+      Y._ui.render();
+      const ev = d.querySelector('.sheet .evbox');
+      const tv = Y.kizukiTalkView(W, e2);
+      K(ev && /気づき/.test(ev.textContent) && /日常：(寮|帰り道|ロッカー)で/.test(ev.textContent) && tv.opts.every((o) => ev.textContent.includes(o.text)), '日常の会話は出来事の窓（左に人と台詞・右に3つの言葉）');
+      const okT = tv.opts.find((o) => o.role === 'ok').text;
+      [...ev.querySelectorAll('button')].find((b) => b.textContent.includes(okT)).click();
+      K(/何かが違う/.test(d.querySelector('.sheet').textContent) && kid2.kd && kid2.kd.ng, '合わない課題で正しい言葉 → 何かが違う（手がかり+1）');
+      await clearEvents();
+      // 試合の途中の場面（画面で見る A の試合）：「▶ 再開」で戻る。選んだ中身は試合のあとに反映
+      kid2.kd.ng = false; kid2.kd.fit = 'yes'; W.kzW = null;
+      const m = { min: 63, minLabel: () => '63', score: { home: 1, away: 1 }, away: { short: '相手' }, home: { onPitch: new Set([kid2.id]), players: { [kid2.id]: {} } } };
+      const e3 = Y.kizukiLiveScene(W, m, { pid: kid2.id, min: 63 });
+      let picked = null, resumed = false;
+      const close = Y._v.modal((c) => Y.kizukiScreen(W, e3, { live: true, onPick: (role) => { picked = role; return Y.kizukiDescribe(W, e3, role); }, onDone: () => { resumed = true; } }));
+      const lb = d.querySelector('.sheet .kzbox');
+      K(/後半18分/.test(lb.textContent) && /1 - 1/.test(lb.textContent), '試合の途中の場面は、時間と点が出る');
+      const k3 = lb._view.opts.find((o) => o.role === 'ok').key;
+      lb.querySelector(`.kzopt[data-k="${k3}"]`).click();
+      K(picked === 'ok' && kid2.kd && !kid2.awake && /再開/.test(lb.textContent) && /試合のあと/.test(lb.textContent), '試合の途中で選んでも、その場では反映しない（「▶ 再開」・試合のあとに反映）');
+      lb.querySelector('.kzgo').click();
+      close();
+      K(resumed, '「▶ 再開」で試合へ戻る');
+      kid.star = false; kid2.kd = null; kid2.star = false; W.kzNow = []; W.forced = [];
+      console.log(`  気づきの画面：点検 ${nKz}件`);
+      ok(nKz >= 12 && errors.length === 0, '気づきの画面の点検が全部走った ' + nKz + ' ' + errors.slice(0, 2).join('|'));
+      A.tab = 'players'; A.pSel = sp.id; A._pSeen = sp.id; A.pOpen = true; A.pTab = 'rep';
+      Y._ui.render();
+    }
     A.w.saUsed = null;
     w.YA._ui.render();
     ptab('育成');
