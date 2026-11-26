@@ -223,7 +223,8 @@ void main() {
         expect(tester.takeException(), isNull, reason: t);
         _noJapanese(tester, 'タブ $t');
       }
-      await tester.tap(find.text('Codex'));
+      // 1.1.0+41 から画面の見出しの帯にも画面の名前が出るので、左の切り替えの中の字を押す
+      await tester.tap(find.descendant(of: find.byKey(const ValueKey('tab-zukan')), matching: find.text('Codex')));
       await tester.pump();
       expect(ctl.tab, 'zukan');
     });
@@ -351,7 +352,8 @@ void main() {
       await tester.pump();
       expect(L.lang, 'en');
       expect(ctl.prefs!.getString('lang'), 'en');
-      expect(find.text('Town'), findsOneWidget);
+      // 1.1.0+41 から街の見出しの帯にも「Town」が出るので、左の切り替えの中を見る
+      expect(find.descendant(of: find.byKey(const ValueKey('tab-town')), matching: find.text('Town')), findsOneWidget);
       // 端末が日本語でも、選んだ言語が優先される
       final back = GameController(prefs: ctl.prefs, lang: 'ja');
       expect(back, isNotNull);
@@ -364,7 +366,7 @@ void main() {
       await tester.pump();
       expect(L.lang, 'ja');
       expect(ctl.prefs!.getString('lang'), 'ja');
-      expect(find.text('街'), findsOneWidget);
+      expect(find.descendant(of: find.byKey(const ValueKey('tab-town')), matching: find.text('街')), findsOneWidget);
     });
 
     testWidgets('選んでいなければ端末の言語に従う（日本語以外は英語）', (tester) async {
