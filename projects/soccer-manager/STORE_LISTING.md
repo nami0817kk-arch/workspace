@@ -678,7 +678,7 @@ iPad ぶんが要るのは、アプリが iPad でも動く設定になってい
 | `03_office.png` | オーナー室 > オーナーの仕事（試合日のイベント） | サポーターと株主、2つの期待 / Keep fans and shareholders on side |
 | `04_facilities.png` | クラブ > 施設 | 施設を建てて、クラブを大きくする / Build up the club |
 | `05_transfer.png` | 移籍 > SD の案（冬の窓） | 補強の候補を、買うか見送るか / Sign him, or pass |
-| `06_league.png` | リーグ > 順位・日程 | 3部から、1部の頂点へ / From the third tier to the top |
+| `06_league.png` | リーグ > 順位表 | 3部から、1部の頂点へ / From the third tier to the top |
 | `07_staff.png` | クラブ > スタッフ（雇った状態で撮る） | コーチもスカウトも、選んで雇う / Hire coaches and scouts |
 | `08_community.png` | クラブ > ファンと街 | 街とファンを味方につける / Win over the town and the fans |
 
@@ -834,9 +834,9 @@ App Preview は「アプリが動いている様子」であることを求め�
         ストアから届いた購入を受け取れるように残してある（承認待ちや、落ちて
         届き損ねたぶん）。**1.2.0 がストアに出るのと同時に、3つとも「販売をやめる」**
         （2026-11-26 決定。配信中の 1.1.3 に買うボタンがあるので、先にやめない）
-- [ ] 1.2.0 の公開に合わせて `legal/privacy.html`・`legal/support.html`・`marketing/landing/index.html` の広告と課金の
-      説明を書き換えた（動画広告・資金パック・サポーターの記述を消し、3か月ごとの
-      全画面広告と「広告を消す」にする。公開中の 1.1.3 に合わせてあるので先に変えない）
+- [x] `legal/privacy.html`・`legal/support.html`・`marketing/landing/index.html` の広告と課金の
+      説明を、1.1.x と 1.2.0 の両方に合う書き方にした（2026-11-26。先に出しておけるので、
+      公開の日に書き換える必要はない。1.1.x が配信から消えてしばらくしたら 1.1.x の記述を外す）
 - [ ] 「購入の復元」導線が動くことを確認した（審査要件）
       ※ 復元で戻るのは非消費型の「広告を消す」のみ
 - [ ] 年齢制限レーティングのアンケートに回答した

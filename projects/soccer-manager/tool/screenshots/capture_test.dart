@@ -140,7 +140,7 @@ const _shots = <_Shot>[
   (
     name: '06_league',
     menu: ('リーグ', 'League'),
-    tab: ('順位・日程', 'Table & fixtures'),
+    tab: ('順位表', 'Table'),
     caption: ('3部から、1部の頂点へ', 'From the third tier to the top'),
     shade: (0xFF12324D, 0xFF1D5B7A),
   ),
