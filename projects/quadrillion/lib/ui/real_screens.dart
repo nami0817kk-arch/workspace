@@ -219,9 +219,34 @@ Widget leftRail(GameController ctl) => Container(
 // ===== 右の帯（今月やること・社長の予定） =====
 List<Widget> sideItems(GameController ctl, {bool sheet = false}) {
   final s = ctl.game!;
-  final todo = todoCard(ctl);
+  // 右の帯と小窓では、ひとことを「…」で切らずに最後まで出す（1.1.0+40）
+  final todo = todoCard(ctl, full: true);
   final meet = s.hMeet();
   return [
+    // 右の帯の頭に「たたむ」（小窓には出さない）
+    if (!sheet)
+      Semantics(
+        button: true,
+        label: tr('右の帯をたたむ'),
+        excludeSemantics: true,
+        onTap: ctl.toggleSide,
+        child: InkWell(
+          key: const ValueKey('side-fold'),
+          borderRadius: BorderRadius.circular(Ui.rBtn),
+          onTap: ctl.toggleSide,
+          child: Container(
+            height: minTap,
+            padding: const EdgeInsets.only(left: 4),
+            child: Row(children: [
+              const Icon(Icons.checklist, size: 15, color: Pal.goldtx),
+              const SizedBox(width: 4),
+              Expanded(child: Text(tr('今月 {0}件', [todoCount(s)]), maxLines: 1, style: ts(size: 12, bold: true, color: Pal.goldtx))),
+              Text(tr('たたむ'), style: ts(size: 11, color: Pal.mute)),
+              const Icon(Icons.keyboard_double_arrow_right, size: 18, color: Pal.mute),
+            ]),
+          ),
+        ),
+      ),
     ?todo,
     Panel(
       key: const ValueKey('side-plan'),
@@ -251,6 +276,57 @@ List<Widget> sideItems(GameController ctl, {bool sheet = false}) {
       ]),
     ),
   ];
+}
+
+/// たたんだ右の帯の幅（1.1.0+40）
+const sideFoldW = 48.0;
+
+/// たたんだ右の帯：「今月やること」の件数と、社長の残りの時間だけ。全体を押すと開く
+Widget sideFoldedBar(GameController ctl) {
+  final s = ctl.game!;
+  final n = todoCount(s);
+  return Semantics(
+    button: true,
+    label: tr('今月やること {0}件・押すと右の帯を開く', [n]),
+    excludeSemantics: true,
+    onTap: ctl.toggleSide,
+    child: InkWell(
+      key: const ValueKey('side-unfold'),
+      onTap: ctl.toggleSide,
+      child: Column(children: [
+        const SizedBox(height: 10),
+        const Icon(Icons.keyboard_double_arrow_left, size: 20, color: Pal.mute),
+        const SizedBox(height: 10),
+        Stack(clipBehavior: Clip.none, children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(10)),
+            child: const Icon(Icons.checklist, size: 20, color: Pal.goldtx),
+          ),
+          if (n > 0)
+            Positioned(
+              right: -6,
+              top: -6,
+              child: Container(
+                key: const ValueKey('side-count'),
+                constraints: const BoxConstraints(minWidth: 18),
+                height: 18,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(color: Pal.down, borderRadius: BorderRadius.circular(9), border: Border.all(color: Pal.panel, width: 1.5)),
+                child: Text('$n', textScaler: TextScaler.noScaling, style: ts(size: 10.5, bold: true, color: Pal.panel, height: 1)),
+              ),
+            ),
+        ]),
+        const SizedBox(height: 4),
+        FittedBox(fit: BoxFit.scaleDown, child: Text(tr('今月'), maxLines: 1, style: ts(size: 10.5, color: Pal.goldtx, bold: true))),
+        const SizedBox(height: 12),
+        const Icon(Icons.schedule, size: 18, color: Pal.goldtx),
+        FittedBox(fit: BoxFit.scaleDown, child: Text(tr('残り{0}h', [jsRound(s.hNormalLeft())]), maxLines: 1, style: ts(size: 10.5, color: Pal.mute))),
+      ]),
+    ),
+  );
 }
 
 Widget _planRow(String k, double h, Color c) => Padding(

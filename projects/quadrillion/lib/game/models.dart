@@ -549,6 +549,10 @@ class Biz {
   /// 直近13か月の売上（古い順。前年比に使う）
   List<double> rh;
 
+  /// 直近13か月の利益とシェア（古い順。1.1.0+40。事業の画面の推移のグラフと、前の月との増減に使う。仕組みの数字には使わない）。
+  /// 古いセーブには無いので、[rh] より短いことがある（終わりをそろえて見る）
+  List<double> ph, sph;
+
   Biz({
     required this.id,
     required this.ind,
@@ -588,8 +592,12 @@ class Biz {
     this.lq = 50,
     this.vac = 0,
     List<double>? rh,
+    List<double>? ph,
+    List<double>? sph,
   })  : pipe = pipe ?? [],
         rh = rh ?? [],
+        ph = ph ?? [],
+        sph = sph ?? [],
         sites = sites ?? {},
         young = young ?? [],
         hubs = hubs ?? [],
@@ -634,6 +642,8 @@ class Biz {
         'lq': lq,
         'vac': vac,
         'rh': rh,
+        if (ph.isNotEmpty) 'ph': ph,
+        if (sph.isNotEmpty) 'sph': sph,
       };
 
   factory Biz.fromJson(Map<String, dynamic> j) => Biz(
@@ -675,6 +685,8 @@ class Biz {
         lq: _d(j['lq'], 50),
         vac: _d(j['vac']),
         rh: (j['rh'] as List? ?? []).map((e) => _d(e)).toList(),
+        ph: (j['ph'] as List? ?? []).map((e) => _d(e)).toList(),
+        sph: (j['sph'] as List? ?? []).map((e) => _d(e)).toList(),
       );
 }
 

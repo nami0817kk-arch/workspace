@@ -83,6 +83,20 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 選んだ言語を残す鍵
   static const langKey = 'lang';
 
+  /// 右の帯（今月やること・社長の予定）をたたんでいるかを残す鍵（1.1.0+40）
+  static const sideFoldKey = 'sideFolded';
+
+  /// 右の帯をたたんで、件数だけの細い帯にしているか（端末に残る。どの枠の会社でも同じ）
+  bool get sideFolded => prefs?.getBool(sideFoldKey) ?? _sideFolded;
+  bool _sideFolded = false;
+
+  void toggleSide() {
+    final v = !sideFolded;
+    _sideFolded = v;
+    prefs?.setBool(sideFoldKey, v);
+    notifyListeners();
+  }
+
   /// 端末の言語が日本語なら 'ja'、それ以外は 'en'
   static String systemLang() {
     try {
