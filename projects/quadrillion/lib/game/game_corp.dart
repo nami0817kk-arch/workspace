@@ -373,6 +373,9 @@ extension GameCorp on Game {
     c.cash += need;
     c.cap = v + need;
     finOf(c).distress = 0;
+    // 親が立て直しに入るので、子会社は借りて店などを増やすのをやめる（守りの経営）。
+    // そうしないと、入れたお金の蓄えを店を開くのに使い、借金を増やして数か月でまた尽きた（30年の自動プレイで、同じ子会社を十数回助けていた）
+    finOf(c).appetite = 0;
     c.rel += 5;
     calcAll();
     return p.loan > 0
@@ -420,7 +423,7 @@ extension GameCorp on Game {
               M('{0}を入れて助ける', [Y(need)]),
               p.loan > 0
                   ? M('増資で入れ、持ち株は{0}に増える。うち{1}は銀行から借りる', [pct(st2), Y(p.loan)])
-                  : M('増資で入れ、持ち株は{0}に増える。借金はグループの数に入ったまま', [pct(st2)]),
+                  : M('増資で入れ、持ち株は{0}に増える。子会社は借りて広げるのをやめ、守りに入る', [pct(st2)]),
               () => helpSub(c)),
       ]),
       'subBroke',

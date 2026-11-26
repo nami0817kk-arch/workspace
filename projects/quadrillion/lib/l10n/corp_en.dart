@@ -16,7 +16,7 @@ const Map<String, String> corpEn = {
       'It goes bankrupt and your stake worth {0} is booked as an extraordinary loss. Reputation, brand and staff loyalty dip a little',
   '{0}を入れて助ける': 'Rescue it with {0}',
   '増資で入れ、持ち株は{0}に増える。うち{1}は銀行から借りる': 'Paid in as new shares; your stake rises to {0}. {1} of it is borrowed from the bank',
-  '増資で入れ、持ち株は{0}に増える。借金はグループの数に入ったまま': "Paid in as new shares; your stake rises to {0}. Its debt stays in your group figures",
+  '増資で入れ、持ち株は{0}に増える。子会社は借りて広げるのをやめ、守りに入る': "Paid in as new shares; your stake rises to {0}. It stops borrowing to expand and plays safe",
   '{0}はもう子会社ではありません': '{0} is no longer your subsidiary',
   'お金が足りず、{0}を助けられませんでした': "You didn't have the money to rescue {0}",
   '{0}に{1}を入れて助けました（うち{2}は銀行から借りました）。持ち株は{3}になりました': 'You rescued {0} with {1} ({2} of it borrowed). Your stake is now {3}',
