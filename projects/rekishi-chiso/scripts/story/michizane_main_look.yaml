@@ -1,0 +1,437 @@
+# 物語型の本編の見た目と絵の割り当て：菅原道真の最期（scripts/michizane-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（11/30 19:00 公開予定）。kondo_main_look.yaml を写した。絵は Gemini（写実の油彩、昼の光）。血・遺体は描かない。平安（900年ごろ）の束帯・寝殿造。
+# 絵は Gemini /u/2（11-26 ユーザーが切り替えを許可）。プロンプトは scratchpad/michizane/michizane_prompts.py。M25 は右下の署名を消した。
+script: scripts/michizane-story.yaml
+out: michizane_story_main
+art_dir: out/story/michizane/main
+main_art_dir: out/story/michizane/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 学問の神様は、なぜ祟り神と恐れられたのか
+    now: 930年
+    dates:
+      3: 903年
+      5: 923年
+      7: null
+  1:
+    label: 第1章 右大臣の左遷
+    now: 901年正月
+    dates:
+      17: 901年正月30日
+      19: null
+      20: 901年正月27日
+      22: null
+  2:
+    label: 第2章 門を出ずに過ごした2年
+    now: 901年
+    dates:
+      31: 901年9月10日
+      35: null
+      40: 903年2月
+  3:
+    label: 第3章 59歳の死と動かなくなった車
+    now: 903年2月25日
+    dates:
+      45: null
+      51: 906年
+      52: null
+  4:
+    label: 第4章 時平の死から、2人の皇太子
+    now: 909年4月4日
+    dates:
+      54: 913年
+      56: 923年3月21日
+      59: 923年4月20日
+      62: 923年
+      63: 925年6月
+      64: null
+  5:
+    label: 第5章 清涼殿の雷
+    now: 930年6月26日
+    dates:
+      74: 930年9月22日
+      75: 930年9月29日
+      77: null
+  6:
+    label: 第6章 地獄の醍醐天皇と北野の託宣
+    now: 941年
+    dates:
+      85: 942年7月12日
+      87: 947年
+      91: null
+  7:
+    label: 第7章 太政大臣と青い紙の詩
+    now: 986年
+    dates:
+      95: 987年
+      97: 993年
+      102: null
+  8:
+    label: まとめ なぜ祟り神と恐れられたのか
+    now: null
+    dates: {}
+no_tag_from: 111
+references:
+- 『日本紀略』『扶桑略記』『政事要略』『公卿補任』『大鏡』『北野天神縁起』『歴代編年集成』『天満宮託宣記』『九条殿遺誡』『本朝文粋』（『大日本史料』第1編・第2編）・『国史大系』第6巻・『群書類従』巻131『菅家後集』（国立国会図書館デジタルコレクション）
+- 熊本大学に出された『菅家後集』の研究の論文・太宰府天満宮・北野天満宮・観光庁 多言語解説・共同通信（2026）
+credits: {}
+ai:
+  M01:
+    scene: 菅原道真（AIの想像図）
+    pan: v
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  M02:
+    scene: 清涼殿に落ちる雷
+    pan: h
+    crops: *id001
+  M03:
+    scene: 西へ送られる道真
+    pan: h
+    crops: *id001
+  M04:
+    scene: 内裏の門の前に座る宇多法皇
+    pan: h
+    crops: *id001
+  M06:
+    scene: 京の屋敷の梅と道真
+    pan: v
+    crops: *id001
+  M07:
+    scene: 摂津で涙を流す役人
+    pan: h
+    crops: *id001
+  M08:
+    scene: 大宰府の荒れた南館
+    pan: h
+    crops: *id001
+  M09:
+    scene: 都府楼と観世音寺の眺め
+    pan: h
+    crops: *id001
+  M10:
+    scene: 灯の下で御衣を拝む道真
+    pan: h
+    crops: *id001
+  M11:
+    scene: 幼い子2人と道真
+    pan: h
+    crops: *id001
+  M14:
+    scene: 止まった車と牛
+    pan: h
+    crops: *id001
+  M15:
+    scene: 安楽寺の小さなお堂
+    pan: h
+    crops: *id001
+  M16:
+    scene: 病の床の時平と祈る僧
+    pan: h
+    crops: *id001
+  M17:
+    scene: 泥沼へ駆け込む馬
+    pan: h
+    crops: *id001
+  M18:
+    scene: 宮中で泣き悲しむ人々
+    pan: h
+    crops: *id001
+  M19:
+    scene: 巻物を焼く火鉢
+    pan: h
+    crops: *id001
+  M20:
+    scene: 雷の落ちた清涼殿の中
+    pan: h
+    crops: *id001
+  M21:
+    scene: 出家した醍醐天皇
+    pan: h
+    crops: *id001
+  M22:
+    scene: 雲の上の太政威徳天と僧
+    pan: h
+    crops: *id001
+  M23:
+    scene: 地獄の4人
+    pan: h
+    crops: *id001
+  M24:
+    scene: 神がかりの女
+    pan: h
+    crops: *id001
+  M25:
+    scene: 北野の社殿と松林
+    pan: h
+    crops: *id001
+  M26:
+    scene: 江戸の寺子屋
+    pan: h
+    crops: *id001
+  IEND:
+    scene: 大宰府の春の野と梅（右半分に余白、終了画面）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:M01 wide
+- 1 ai:M02 wide
+- 2 ai:M20 wide
+- 3 ai:M08 wide
+- 4 ai:M18 wide
+- 5 ai:M18 left
+- 6 ai:M19 wide
+- 7 ai:M08 left
+- 8 ai:M03 wide
+- 9 ai:M01 left
+- 10 ai:M04 right
+- 11 ai:M01 right
+- 12 ai:M03 right
+- 13 ai:M04 wide
+- 14 ai:M04 left
+- 15 ai:M04 wide
+- 16 ai:M04 right
+- 17 ai:M04 left
+- 18 ai:M04 wide
+- 19 ai:M11 wide
+- 20 ai:M03 left
+- 21 ai:M07 wide
+- 22 ai:M06 wide
+- 23 ai:M01 left
+- 24 ai:M09 wide
+- 25 ai:M08 wide
+- 26 ai:M08 right
+- 27 ai:M10 left
+- 28 ai:M09 wide
+- 29 ai:M09 left
+- 30 ai:M15 left
+- 31 ai:M10 wide
+- 32 ai:M01 right
+- 33 ai:M10 right
+- 34 ai:M02 left
+- 35 ai:M11 left
+- 36 ai:M11 wide
+- 37 ai:M15 left
+- 38 ai:M08 left
+- 39 ai:M10 wide
+- 40 ai:M06 left
+- 41 ai:M08 wide
+- 42 ai:M08 right
+- 43 ai:M10 left
+- 44 ai:M10 wide
+- 45 ai:M14 wide
+- 46 ai:M14 left
+- 47 ai:M14 right
+- 48 ai:M14 wide
+- 49 ai:M15 wide
+- 50 ai:M15 right
+- 51 ai:M03 right
+- 52 ai:M16 wide
+- 53 ai:M16 left
+- 54 ai:M17 wide
+- 55 ai:M17 right
+- 56 ai:M16 wide
+- 57 ai:M18 left
+- 58 ai:M01 left
+- 59 ai:M19 wide
+- 60 ai:M19 left
+- 61 ai:M18 right
+- 62 ai:M18 wide
+- 63 ai:M16 left
+- 64 ai:M02 wide
+- 65 ai:M02 right
+- 66 ai:M20 wide
+- 67 ai:M20 left
+- 68 ai:M20 right
+- 69 ai:M02 left
+- 70 ai:M20 wide
+- 71 ai:M20 left
+- 72 ai:M18 left
+- 73 ai:M21 wide
+- 74 ai:M18 right
+- 75 ai:M21 right
+- 76 ai:M02 left
+- 77 ai:M23 right
+- 78 ai:M22 wide
+- 79 ai:M01 right
+- 80 ai:M23 wide
+- 81 ai:M21 left
+- 82 ai:M23 right
+- 83 ai:M23 wide
+- 84 ai:M04 wide
+- 85 ai:M24 wide
+- 86 ai:M22 left
+- 87 ai:M25 right
+- 88 ai:M22 wide
+- 89 ai:M25 wide
+- 90 ai:M25 left
+- 91 ai:M22 right
+- 92 ai:M25 right
+- 93 ai:M25 wide
+- 94 ai:M26 wide
+- 95 ai:M25 left
+- 96 ai:M25 right
+- 97 ai:M25 left
+- 98 ai:M15 left
+- 99 ai:M15 right
+- 100 ai:M01 right
+- 101 ai:M25 wide
+- 102 ai:M01 left
+- 103 ai:M03 wide
+- 104 ai:M10 wide
+- 105 ai:M18 wide
+- 106 ai:M19 wide
+- 107 ai:M23 wide
+- 108 ai:M08 wide
+- 109 ai:M26 wide
+- 110 ai:M15 wide
+- 111 ai:M06 wide
+- 112 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 15
+  to: 15
+  label: 史料
+  text: 法皇　草座を陣頭に敷き／終日御庭に
+  source: 『扶桑略記』延喜元年正月25日
+- type: quote
+  from: 20
+  to: 20
+  label: 史料
+  text: 山城・摂津等の国　食馬を給うなかれ
+  source: 太政官符 昌泰4年正月27日（『政事要略』）
+- type: quote
+  from: 28
+  to: 28
+  label: 史料
+  text: 都府楼は纔かに瓦の色を看る／観音寺は只鐘の声を聴く
+  source: 『菅家後集』不出門
+- type: quote
+  from: 32
+  to: 32
+  label: 史料
+  text: 恩賜の御衣　今此に在り／捧持して毎日余香を拝す
+  source: 『菅家後集』九月十日
+- type: quote
+  from: 57
+  to: 57
+  label: 史料
+  text: 世を挙げて云う／菅帥の霊魂　宿忿の為す所なり
+  source: 『日本紀略』延喜23年3月21日
+- type: quote
+  from: 71
+  to: 71
+  label: 史料
+  text: 吾　心中に三宝に帰依し／殊に懼るる所なし
+  source: 『九条殿遺誡』（藤原忠平の言葉）
+- type: quote
+  from: 79
+  to: 79
+  label: 史料
+  text: 我は是れ上人の本国の昔の相府なり／日本太政威徳天
+  source: 『道賢上人冥途記』（『扶桑略記』天慶4年）
+- type: quote
+  from: 83
+  to: 83
+  label: 史料
+  text: 賢臣　辜なきに　誤りて流す／其の罪三なり
+  source: 『道賢上人冥途記』（『扶桑略記』）
+- type: quote
+  from: 99
+  to: 99
+  label: 史料
+  text: 但だ羞ず　存没　左遷の名
+  source: 『天満宮託宣記』正暦4年
+figures:
+- from: 8
+  to: 8
+  spec:
+    type: map
+    title: 京都から大宰府へ
+    bounds:
+    - 129.8
+    - 136.4
+    - 32.9
+    - 35.6
+    reveal: true
+    places:
+    - - 京都
+      - 135.77
+      - 35.01
+    - - 摂津
+      - 135.5
+      - 34.7
+    - - 大宰府
+      - 130.53
+      - 33.52
+- from: 25
+  to: 25
+  spec:
+    type: map
+    title: 大宰府
+    bounds:
+    - 129.8
+    - 136.4
+    - 32.9
+    - 35.6
+    reveal: true
+    places:
+    - - 大宰府
+      - 130.53
+      - 33.52
+- from: 89
+  to: 89
+  spec:
+    type: map
+    title: 北野と大宰府
+    bounds:
+    - 129.8
+    - 136.4
+    - 32.9
+    - 35.6
+    reveal: true
+    places:
+    - - 大宰府
+      - 130.53
+      - 33.52
+    - - 北野
+      - 135.73
+      - 35.03
+stills:
+- line: 0
+  note: 冒頭
+- line: 15
+  note: 陣の前の法皇
+- line: 18
+  note: 記録の違いの表
+- line: 28
+  note: 不出門
+- line: 57
+  note: 宿忿
+- line: 66
+  note: 清涼殿の雷
+- line: 83
+  note: 冥途記
+- line: 99
+  note: 青い紙の詩
+- end: true
+  note: 終了画面

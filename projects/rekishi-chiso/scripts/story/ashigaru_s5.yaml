@@ -1,0 +1,147 @@
+# 物語完結型ショート 戦国の足軽 s5（2026-11-26）。本編 scripts/ashigaru-if-story.yaml（11/29 12:00 公開予定、https://youtu.be/fkDkwAO82lY）から。11/30 18:30 に予約。
+# 形式は sekimap_s1〜s5・joguo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 戦国の足軽if_facts_20261122.yaml）だけ。
+# 絵：本編の AI 絵（out/story/ashigaru_if/main/）の切り出しだけ。新しい絵は作らない。人の売り買いの場面の絵は無い（本編の決まり。引き揚げる軍勢の遠景・港・札まで）。
+# 切り口：禁制の値段（本編 第7章、ashigaruif-61・62・63・57）。秀吉の1587年の覚え（ashigaruif-59）は、60秒に収めるため外した。
+# hook＝村の安全は、いくらで買えたか（答えはこのショートの中：上の村 3貫200文・中 2貫200文・下 1貫200文、筆の代 200文）。
+# tease＝徳川幕府が人の売り買いを禁じた最初の法は、いつか（答えは本編 第7章：1616年、ashigaruif-68）。
+# 計算：1貫＝1,000文。3貫200文＝3,200文・2貫200文＝2,200文・1貫200文＝1,200文（本編の値と同じ）。円には直さない（本編と同じ）。
+# 理解テスト：①戦国の村や寺と、軍勢の乱暴を禁じる札「禁制」 ②1573年 越前の西福寺・1590年 秀吉の掟 ③村や寺は、お礼や決まった銭を払って禁制を手に入れた ④それでも連れ去られた人は身代金で取り戻し、人が売り買いされることもあった
+title: "禁制の値段｜戦国の村が買った安全"
+yt_title: "戦国の村は「安全」を銭で買った　乱暴を禁じる札・禁制の値段は、上の村で永楽銭3貫200文　1590年の秀吉の掟"
+description: |-
+  戦国の村や寺は、攻めて来る軍勢から、禁制という札を手に入れました。軍勢の乱暴を禁じると約束する札です。1573年、織田信長が越前を攻めたとき、敦賀の西福寺は秀吉を通じて禁制を求め、返事は「お礼を持って来れば、すぐに渡す」でした。
+  1590年、豊臣秀吉が石田三成に出した掟では、禁制の値段が村の格で決まっていました。上の村は永楽銭3貫200文、中の村は2貫200文、下の村は1貫200文。ほかに筆の代が200文。それでも、連れ去られた人は、村が身代金を払って取り戻さなければなりませんでした。1566年、上杉謙信が常陸の小田城を落としたときには、人が20銭や30銭で売り買いされた、と記録にあります。
+  本編では、足軽の集め方・持ち物・食べ物・傷と手柄まで、『雑兵物語』とほかの記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#禁制"
+- "#豊臣秀吉"
+- "#戦国時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/ashigaru_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ashigaru_story_s5
+header:
+  tag: "禁制（戦国時代）"
+  title: "村の安全は、《いくら》？"
+now:
+- {at: "攻めて来る軍勢から", text: "戦国時代　村と寺", point: 1}
+- {at: "1573年", text: "1573年　敦賀", point: 1}
+- {at: "1590年", text: "1590年　秀吉の掟", point: 2}
+- {at: "1566年", text: "1566年　小田城", point: 0}
+- {at: "徳川幕府が", text: "江戸時代", point: 2}
+timeline:
+- {label: "1566"}
+- {label: "1573"}
+- {label: "1590"}
+cards:
+  - type: table
+    title: 禁制の値段（1590年の掟）
+    from: 上の村は
+    until: それでも
+    items:
+      - {at: "上の村は", text: "上の村　永楽銭3貫200文"}
+      - {at: "中の村は", text: "中の村　2貫200文"}
+      - {at: "下の村は", text: "下の村　1貫200文"}
+    text_y: 0.70
+shots:
+  G02_1:
+    kind: "ai"
+    file: "ashigaru_if/main/G02.jpg"
+    focus: [0.3, 0.45]
+    move: "in"
+    must: "G02"
+  G02_2:
+    kind: "ai"
+    file: "ashigaru_if/main/G02.jpg"
+    focus: [0.6, 0.6]
+    move: "left"
+    must: "G02"
+  A10_3:
+    kind: "ai"
+    file: "ashigaru_if/main/A10.jpg"
+    focus: [0.6, 0.55]
+    move: "right"
+    must: "A10"
+  A08_4:
+    kind: "ai"
+    file: "ashigaru_if/main/A08.jpg"
+    focus: [0.45, 0.55]
+    move: "left"
+    must: "A08"
+  A09_5:
+    kind: "ai"
+    file: "ashigaru_if/main/A09.jpg"
+    focus: [0.4, 0.6]
+    move: "right"
+    must: "A09"
+  G01_6:
+    kind: "ai"
+    file: "ashigaru_if/main/G01.jpg"
+    focus: [0.5, 0.6]
+    move: "left"
+    must: "G01"
+  G01_7:
+    kind: "ai"
+    file: "ashigaru_if/main/G01.jpg"
+    focus: [0.2, 0.4]
+    move: "right"
+    must: "G01"
+  A05_9:
+    kind: "ai"
+    file: "ashigaru_if/main/A05.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "A05"
+lines:
+  # fact: ashigaruif-61, ashigaruif-62
+- 語り: "攻めて来る軍勢から、村の安全を買う。その札には、値段の決まりがあった。"
+  shot: G02_1
+  tone: 強調
+  pause: 0.12
+  # fact: ashigaruif-61
+- 語り: "札の名は、禁制。軍勢の乱暴を禁じると、約束する札だ。戦国の村や寺が、自分から求めた。"
+  shot: G02_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-61
+- 語り: "1573年、織田信長が越前を攻めたとき、敦賀の西福寺は、秀吉を通じて、禁制を求めた。返事は、お礼を持って来れば、すぐに渡す。"
+  shot: A10_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-62
+- 語り: "1590年、豊臣秀吉が石田三成に出した掟では、値段は、村の格で決まっていた。"
+  shot: A08_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-62
+- 語り: "上の村は、永楽銭3貫200文。中の村は、2貫200文。下の村は、1貫200文。ほかに、筆の代が200文。"
+  shot: A09_5
+  tone: 重い
+  pause: 0.12
+  # fact: ashigaruif-63
+- 語り: "それでも、連れ去られた人は、村が身代金を払って、取り戻さなければならなかった。"
+  shot: G01_6
+  tone: 重い
+  pause: 0.12
+  # fact: ashigaruif-57
+- 語り: "1566年、上杉謙信が常陸の小田城を落としたときには、人が、20銭や30銭で、売り買いされた、と記録にある。"
+  shot: G01_7
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第7章（ashigaruif-68：1616年）
+- 語り: "では、徳川幕府が、人の売り買いを禁じた最初の法は、いつだったのか。"
+  shot: A05_9
+  tone: 疑問
+  pause: 0.15

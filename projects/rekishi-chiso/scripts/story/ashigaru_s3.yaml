@@ -1,0 +1,157 @@
+# 物語完結型ショート 戦国の足軽 s3（2026-11-26）。本編 scripts/ashigaru-if-story.yaml（11/29 12:00 公開予定、https://youtu.be/fkDkwAO82lY）から。11/30 13:30 に予約。
+# 形式は sekimap_s1〜s5・joguo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 戦国の足軽if_facts_20261122.yaml）だけ。
+# 絵：本編の AI 絵（out/story/ashigaru_if/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：北条家の動員の決まり「雨なら来なくてよい」と、良い者を隠す村・竹槍で侍になった百姓（本編 第2章、ashigaruif-31・37・33）。
+# hook＝北条家は、村の男をどう集めたか（答えはこのショートの中：15歳から70歳を根こそぎ、雨なら来なくてよい、20日間）。
+# tease＝武田信玄の軍役の書状で、いちばん多い武器は何か（答えは本編 第2章：長柄の鑓31本、鉄砲は1挺、ashigaruif-29）。
+# 理解テスト：①戦国の北条家の、村の男を集める決まり ②危ないとき（1587年7月の決まりほか）、北条の領国の村で ③15〜70歳の男を根こそぎ集め、雨なら来なくてよい、良い者を隠せば首を斬る。それでも村は良い者を残した ④竹槍1本で侍の首を取り、侍になった百姓もいた
+title: "雨なら来なくてよい｜北条家の足軽集め"
+yt_title: "「雨なら来なくてよい」　戦国の北条家が村の男を根こそぎ集めた決まりと、それでも良い者を隠した村"
+description: |-
+  戦国の北条家には、村の男を集める決まりがありました。危ないときには、15歳から70歳までの男は身分を問わず出る。弓でも鑓でも鉄砲でも持って来い。良い者を村に隠したら、村の有力者の首を斬る。人数と武具を改める日が雨なら、来なくてよい。とどまるのは20日間。
+  ところが、1587年7月の北条家の決まりには、良い者を村に残して、荷運びの人夫と変わらない者を差し出す村がある、と書かれています。一方で『北条五代記』には、竹槍1本で夜討ちに加わって侍の首を取り、侍に取り立てられた百姓の話が残ります。
+  本編では、足軽が何を持たされ、何を食べ、何で傷を負ったかまで、『雑兵物語』とほかの記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#北条氏"
+- "#足軽"
+- "#戦国時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/ashigaru_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ashigaru_story_s3
+header:
+  tag: "北条家の動員（戦国時代）"
+  title: "村の男を、《どう》集めた？"
+now:
+- {at: "人数と武具を", text: "戦国時代　北条家の決まり", point: 2}
+- {at: "1587年7月", text: "1587年　北条家の決まり", point: 2}
+- {at: "1571年の秋", text: "1571年　岩井の百姓", point: 1}
+- {at: "集められた足軽が", text: "戦国時代　城の蔵", point: 2}
+- {at: "1562年", text: "1562年　武田信玄", point: 0}
+timeline:
+- {label: "1562"}
+- {label: "1571"}
+- {label: "1587"}
+cards:
+  - type: table
+    title: 北条家の動員の決まり
+    from: 危ないときは
+    until: ところが
+    items:
+      - {at: "15歳から70歳", text: "15〜70歳の男を根こそぎ"}
+      - {at: "とどまるのは", text: "とどまるのは20日間"}
+      - {at: "良い者を", text: "良い者を隠せば首を斬る"}
+    text_y: 0.70
+shots:
+  B05_1:
+    kind: "ai"
+    file: "ashigaru_if/main/B05.jpg"
+    focus: [0.55, 0.6]
+    move: "in"
+    must: "B05"
+  B01_2:
+    kind: "ai"
+    file: "ashigaru_if/main/B01.jpg"
+    focus: [0.4, 0.55]
+    move: "left"
+    must: "B01"
+  B01_3:
+    kind: "ai"
+    file: "ashigaru_if/main/B01.jpg"
+    focus: [0.75, 0.55]
+    move: "right"
+    must: "B01"
+  B05_4:
+    kind: "ai"
+    file: "ashigaru_if/main/B05.jpg"
+    focus: [0.3, 0.55]
+    move: "left"
+    must: "B05"
+  A09_5:
+    kind: "ai"
+    file: "ashigaru_if/main/A09.jpg"
+    focus: [0.45, 0.65]
+    move: "right"
+    must: "A09"
+  F02_6:
+    kind: "ai"
+    file: "ashigaru_if/main/F02.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "F02"
+  F01_7:
+    kind: "ai"
+    file: "ashigaru_if/main/F01.jpg"
+    focus: [0.6, 0.55]
+    move: "right"
+    must: "F01"
+  B04_8:
+    kind: "ai"
+    file: "ashigaru_if/main/B04.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "B04"
+  B03_9:
+    kind: "ai"
+    file: "ashigaru_if/main/B03.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "B03"
+lines:
+  # fact: ashigaruif-31
+- 語り: "人数と武具を改める日が、雨なら、来なくてよい。戦国の北条家の、村の男を集める決まりには、こんな一文がある。"
+  shot: B05_1
+  tone: 強調
+  pause: 0.12
+  # fact: ashigaruif-31
+- 語り: "危ないときは、根こそぎだ。15歳から70歳までの男は、身分を問わず出る。"
+  shot: B01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-31
+- 語り: "弓でも、鑓でも、鉄砲でも、持って来い。とどまるのは、20日間。"
+  shot: B01_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-31
+- 語り: "良い者を村に隠したら、村の有力者の首を斬る。"
+  shot: B05_4
+  tone: 重い
+  pause: 0.12
+  # fact: ashigaruif-31
+- 語り: "ところが、1587年7月の北条家の決まりは、良い者を村に残し、荷運びの人夫と変わらない者を出す村がある、と書く。"
+  shot: A09_5
+  tone: 疑問
+  pause: 0.12
+  # fact: ashigaruif-37
+- 語り: "手柄で、侍になった百姓もいる。北条五代記によると、1571年の秋。岩井の百姓が、竹槍1本で夜討ちに加わり、侍の首を取った。"
+  shot: F02_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-37
+- 語り: "北条氏政は、この百姓を侍にして、岩井兵庫助と名乗らせた、という。"
+  shot: F01_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-33
+- 語り: "集められた足軽が着たのは、ふつう、城の蔵に置かれた、御貸具足という、簡単な具足だった。"
+  shot: B04_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第2章（ashigaruif-29：長柄の鑓31本、鉄砲は1挺）
+- 語り: "では、1562年、武田信玄の軍役の書状で、いちばん多い武器は、何だったのか。"
+  shot: B03_9
+  tone: 疑問
+  pause: 0.15

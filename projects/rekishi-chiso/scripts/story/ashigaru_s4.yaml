@@ -1,0 +1,144 @@
+# 物語完結型ショート 戦国の足軽 s4（2026-11-26）。本編 scripts/ashigaru-if-story.yaml（11/29 12:00 公開予定、https://youtu.be/fkDkwAO82lY）から。11/30 16:30 に予約。
+# 形式は sekimap_s1〜s5・joguo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 戦国の足軽if_facts_20261122.yaml）だけ。
+# 絵：本編の AI 絵（out/story/ashigaru_if/main/）の切り出しだけ。新しい絵は作らない。首・傷の絵は無い（本編の決まり）。
+# 切り口：手柄の数え方。首の代わりに鼻を持ち帰った草履取りの嘉助、合言葉を忘れた侍、泗川の首の数の2通り（本編 第6章、ashigaruif-19・44・20・42・45）。
+# hook＝首の代わりの鼻は、なぜだめだったか（答えはこのショートの中：ひげが無く、男か女か分からないから）。
+# tease＝馬の口取りは、なぜ「むやみに死ぬな」と言ったか（答えは本編 第6章：ただ死ねば扶持が無駄になる、ashigaruif-15）。
+# 計算（数え直した）：38,717−30,817＝7,900。
+# 理解テスト：①雑兵物語の草履取りの嘉助と、戦国の手柄の数え方 ②戦国時代の戦場（1575年 長篠・1598年 泗川） ③嘉助は首の代わりに鼻を持ち帰り、叱られて捨てた ④首の数は2通り残り、感状には多い方、実際は少ない方
+title: "首の代わりに鼻｜足軽の手柄の数え方"
+yt_title: "首の代わりに「鼻」を持ち帰った草履取り　戦国の手柄はどう数えたか　泗川の首の数は2通り、差は7,900"
+description: |-
+  『雑兵物語』の草履取りの嘉助は、取った首の代わりに、鼻だけを持ち帰りました。すると旦那に叱られます。鼻だけでは、ひげが無い。男の首か女の首かも分からない。嘉助は、その鼻を捨てました。戦国時代も、手柄は首を持ち帰って首実検で確かめるのが原則でした。
+  合い印をなくし合言葉も忘れた侍が、味方に敵と間違われて討たれた話もあります。1575年の長篠の戦いでは、鉄砲で多くの武将が倒れ、誰の手柄か分からなくなりました。1598年の泗川の戦いの首の数は、島津家の文書に3万8,717と3万817の2通り残り、手柄をほめる書状には多いほうが、実際の数は少ないほうでした。
+  本編では、足軽の集め方・持ち物・食べ物・傷と手当てまで、『雑兵物語』とほかの記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#雑兵物語"
+- "#首実検"
+- "#戦国時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/ashigaru_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ashigaru_story_s4
+header:
+  tag: "雑兵物語（戦国の手柄）"
+  title: "首の代わりの鼻は、《なぜ》だめ？"
+now:
+- {at: "草履取りの嘉助は", text: "戦国時代　陣中", point: 0}
+- {at: "1575年", text: "1575年　長篠の戦い", point: 0}
+- {at: "1598年", text: "1598年　泗川の戦い", point: 1}
+timeline:
+- {label: "1575"}
+- {label: "1598"}
+cards:
+  - type: table
+    title: 泗川の戦いの首の数（島津家の文書）
+    from: 島津家の文書に
+    until: 馬の口取りは
+    items:
+      - {at: "3万8,717と", text: "多いほう　3万8,717"}
+      - {at: "3万817の", text: "少ないほう　3万817"}
+      - {at: "差は", text: "差　7,900"}
+    text_y: 0.70
+shots:
+  F01_1:
+    kind: "ai"
+    file: "ashigaru_if/main/F01.jpg"
+    focus: [0.3, 0.55]
+    move: "in"
+    must: "F01"
+  F01_2:
+    kind: "ai"
+    file: "ashigaru_if/main/F01.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "F01"
+  F02_3:
+    kind: "ai"
+    file: "ashigaru_if/main/F02.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "F02"
+  F02_4:
+    kind: "ai"
+    file: "ashigaru_if/main/F02.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "F02"
+  C02_5:
+    kind: "ai"
+    file: "ashigaru_if/main/C02.jpg"
+    focus: [0.6, 0.55]
+    move: "right"
+    must: "C02"
+  E03_6:
+    kind: "ai"
+    file: "ashigaru_if/main/E03.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "E03"
+  A05_7:
+    kind: "ai"
+    file: "ashigaru_if/main/A05.jpg"
+    focus: [0.55, 0.6]
+    move: "right"
+    must: "A05"
+  C04_8:
+    kind: "ai"
+    file: "ashigaru_if/main/C04.jpg"
+    focus: [0.6, 0.55]
+    move: "in"
+    must: "C04"
+lines:
+  # fact: ashigaruif-19
+- 語り: "草履取りの嘉助は、取った首の代わりに、鼻だけを持ち帰った。旦那は、それを叱った。"
+  shot: F01_1
+  tone: 強調
+  pause: 0.12
+  # fact: ashigaruif-19, ashigaruif-44
+- 語り: "雑兵物語に出てくる話だ。戦国時代も、手柄は、首を持ち帰って、首実検で確かめるのが原則だった。"
+  shot: F01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-19
+- 語り: "鼻だけでは、ひげが無い。男か女かも、分からない。嘉助は、その鼻を捨てた。"
+  shot: F02_3
+  tone: 重い
+  pause: 0.12
+  # fact: ashigaruif-20
+- 語り: "合い印をなくし、合言葉も忘れた侍が、味方に敵と間違われて、討たれた話もある。"
+  shot: F02_4
+  tone: 重い
+  pause: 0.12
+  # fact: ashigaruif-42
+- 語り: "1575年の長篠の戦いでは、鉄砲で多くの武将が倒れた。誰の手柄か、分からない。"
+  shot: C02_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: ashigaruif-45
+- 語り: "1598年、朝鮮での泗川の戦い。討ち取った首の数は、島津家の文書に、3万8,717と、3万817の、2通り残る。"
+  shot: E03_6
+  tone: 疑問
+  pause: 0.12
+  # fact: ashigaruif-45（38,717−30,817＝7,900）
+- 語り: "手柄をほめる書状には、多いほう。実際の数は、少ないほうだった。差は、7,900だ。"
+  shot: A05_7
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第6章（ashigaruif-15：ただ死ねば、今までもらった扶持が無駄になる）
+- 語り: "では、なぜ馬の口取りは、むやみに死ぬな、と言ったのか。"
+  shot: C04_8
+  tone: 疑問
+  pause: 0.15
