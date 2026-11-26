@@ -691,20 +691,25 @@ List<Widget> segView(GameController ctl) {
         Row(mainAxisSize: MainAxisSize.min, key: const ValueKey('seg-best'), children: [
           const Icon(Icons.star, size: 16, color: Pal.gold),
           const SizedBox(width: 3),
-          Text(tr('稼ぎ頭：{0}（利益 {1}・事業の利益の{2}%）', [segName(best.r), yen(best.profit), totalPro > 0 ? pctD(best.profit / totalPro * 100) : '―']),
-              style: ts(size: 12.5, bold: true, color: Pal.goldtx)),
+          Flexible(
+              child: Text(tr('稼ぎ頭：{0}（利益 {1}・事業の利益の{2}%）', [segName(best.r), yen(best.profit), totalPro > 0 ? pctD(best.profit / totalPro * 100) : '―']),
+                  maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, bold: true, color: Pal.goldtx))),
         ]),
         if (worst.profit < 0)
           Row(mainAxisSize: MainAxisSize.min, key: const ValueKey('seg-worst'), children: [
             const Icon(Icons.trending_down, size: 16, color: Pal.down),
             const SizedBox(width: 3),
-            Text(tr('足を引っ張る：{0}（赤字 {1}）', [segName(worst.r), yen(worst.profit)]), style: ts(size: 12.5, bold: true, color: Pal.down)),
+            Flexible(
+                child: Text(tr('足を引っ張る：{0}（赤字 {1}）', [segName(worst.r), yen(worst.profit)]),
+                    maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, bold: true, color: Pal.down))),
           ])
         else
           Row(mainAxisSize: MainAxisSize.min, key: const ValueKey('seg-low'), children: [
             const Icon(Icons.trending_flat, size: 16, color: Pal.mute),
             const SizedBox(width: 3),
-            Text(tr('赤字の事業はありません。利益がいちばん少ないのは{0}（{1}）', [segName(worst.r), yen(worst.profit)]), style: ts(size: 12.5, color: Pal.mute)),
+            Flexible(
+                child: Text(tr('赤字の事業はありません。利益がいちばん少ないのは{0}（{1}）', [segName(worst.r), yen(worst.profit)]),
+                    maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, color: Pal.mute))),
           ]),
       ]),
       const SizedBox(height: 4),

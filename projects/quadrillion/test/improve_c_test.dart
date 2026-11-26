@@ -278,6 +278,27 @@ void main() {
             });
             expect(tester.takeException(), isNull, reason: '$t $lang $size');
           }
+          // 決算書の3つの表と、事業ごとの損益（1.1.0+34）の「i」も数える
+          ctl.setTab('money');
+          for (final v in const ['pl', 'bs', 'cf', 'seg']) {
+            if (v == 'seg') {
+              ctl.setMoney('seg');
+            } else {
+              ctl.setMoney('fs');
+              ctl.setFs(tab: v, mode: 'year');
+            }
+            await tester.pump();
+            await _sweep(tester, () async {
+              for (final e in find.byType(Info).evaluate()) {
+                final w = e.widget as Info;
+                final r = tester.getRect(find.byWidget(w));
+                expect(r.width, greaterThanOrEqualTo(minTap - .01), reason: '$v ${w.terms}');
+                expect(r.height, greaterThanOrEqualTo(minTap - .01), reason: '$v ${w.terms}');
+                seen.addAll(w.terms);
+              }
+            });
+            expect(tester.takeException(), isNull, reason: 'money $v $lang $size');
+          }
           // 右の帯（社長の予定）の「i」も数える（1.1.0+25）。帯は「今月やること」の下にあるので、下まで送る
           await tester.drag(find.byKey(const ValueKey('side')), const Offset(0, -800));
           await tester.pump();

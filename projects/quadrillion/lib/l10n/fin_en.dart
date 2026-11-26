@@ -167,11 +167,11 @@ const Map<String, String> finEn = {
       'Sales YoY scales the previous year to the same number of months. On narrow screens, tap a row for the cost details.',
   // 用語の説明
   '損益計算書@@term': 'Income statement',
-  '1年（1月〜12月）または1か月で、いくら売って、何にいくら使い、いくら儲かったかの表です。売上から原価を引いたのが粗利、そこから経費を引いたのが営業利益、利息などを足し引きしたのが経常利益、税を引いた残りが当期純利益です。':
+  '1年（1月〜12月）か1か月で、いくら売り、いくら使い、いくら儲かったかの表です。売上から原価を引くと粗利、経費を引くと営業利益、利息などを足し引きすると経常利益、税を引いた残りが当期純利益です。':
       'What you sold, what you spent and what you earned over a year (January to December) or a month. Sales minus cost of sales is gross profit; minus expenses is operating profit; after interest and other items it is ordinary profit; what is left after tax is net profit.',
   '貸借対照表@@term': 'Balance sheet',
-  'その年の終わりに、会社が何を持っていて（資産）、いくら借りていて（負債）、残りがいくらか（純資産）の表です。資産は、いつも負債と純資産の合計と同じになります。持っている株・子会社の株・土地は今の値段（時価）で、設備は払った額から減価償却を引いた額で載せます。子会社の株には、買ったときののれんも入っています。':
-      'What the company owns (assets), what it owes (liabilities) and what is left (equity) at the end of the period. Assets always equal liabilities plus equity. Shares, subsidiaries and land are shown at today\'s market value; equipment at cost less depreciation. Subsidiaries include goodwill paid when buying them.',
+  'その年の終わりに持っているもの（資産）・借りているもの（負債）・残り（純資産）の表です。資産はいつも負債と純資産の合計と同じです。株と土地は時価、設備は減価償却のあとの額で載せます。':
+      'What the company owns (assets), owes (liabilities) and has left (equity) at the end of the period. Assets always equal liabilities plus equity. Shares and land are at market value; equipment is net of depreciation.',
   'キャッシュフロー計算書@@term': 'Cash flow statement',
   '現金がどこから入り、どこへ出ていったかの表です。本業の稼ぎ（営業）、店・工場や株への支払い（投資）、借りる・返す・増資・配当（財務）の3つに分けます。利益が出ていても、現金が減ることがあります。':
       'Where cash came from and where it went, split into operating (the business itself), investing (sites, plants, shares) and financing (borrowing, repaying, new shares, dividends). Cash can fall even when you make a profit.',
