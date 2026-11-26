@@ -357,12 +357,16 @@ extension GameTurn on Game {
     }
     calcAll();
     final p0 = pre;
+    // 子会社の利益の持ち分（subP）は決算上の数で、現金にはならない。現金に入るのは下の配当だけ。
+    // 1.1.0+34 までは、持ち分の利益を毎月現金に入れたうえで、その4割を配当としてもう一度入れていた（1.1.0+35 で直した）
+    final ownP = p0 - subP;
     // 税金は国と年の法人税率で、今年の利益の積み上げにかける（赤字の月は今年払った分から戻る。1.1.0+25）
-    final tax = monthTax(p0);
+    // （子会社の利益には子会社が税を払う。親が受け取る配当には税をかけない。1.1.0+35）
+    final tax = monthTax(ownP);
     // 決算書：損益の内訳を写し、本業の入りから利息と税を分ける（1.1.0+34。記録だけ）
     finPl(p0);
     books.add('tax', tax);
-    cfAdd('op', p0 - tax);
+    cfAdd('op', ownP - tax);
     books.move('op', 'tax', -tax);
     books.move('op', 'intr', -interest);
     // 売掛金：代金をもらうまでの月が長い業種は、売上が伸びた分だけ現金が遅れて入る（1.1.0+26）
@@ -371,8 +375,12 @@ extension GameTurn on Game {
     cfAdd('ar', -(ar1 - ar));
     ar = ar1;
     lastTax = tax;
+    // 子会社の配当（利益の4割を株主みんなに払う。子会社の現金から出る。1.1.0+35）
     for (final c in subs()) {
-      if (c.profit > 0) cfAdd('div', c.profit * .4 * pctOf(c) / 100);
+      final d = subPayout(c);
+      if (d <= 0) continue;
+      c.cash -= d;
+      cfAdd('div', d * pctOf(c) / 100);
     }
     if (scandal > 0) scandal--;
     // 借金の元本を返す・不況の貸しはがし・足りない分の手当て（1.1.0+25）
@@ -1528,7 +1536,7 @@ extension GameTurn on Game {
             ]));
       }
     }
-    final burn = math.max(0.0, -pre);
+    final burn = math.max(0.0, -cashPre());
     if (biz.isNotEmpty && cash < burn * 3 + 1e6 && rnd() < .15 && !events.any((e) => e.rivfund)) {
       final c = cos.where((x) => x.alive && x.rival != null && x.parent != 'player' && x.cash > cap * .3).firstOrNull;
       if (c != null) {

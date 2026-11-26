@@ -20,7 +20,8 @@ void main() {
     final out = StringBuffer();
     for (final seed in seeds) {
       for (final how in hows) {
-        out.writeln(play(how == 'abroad' ? 'none' : how, seed, old: old, abroad: how == 'abroad').toString());
+        // 'subs' は少し借りて、買った会社を子会社のまま持ち続ける打ち方（1.1.0+35）
+        out.writeln(play(how == 'abroad' || how == 'subs' ? (how == 'subs' ? 'some' : 'none') : how, seed, old: old, abroad: how == 'abroad', keepSubs: how == 'subs').toString());
         File(f!).writeAsStringSync(out.toString());
       }
     }

@@ -24,24 +24,28 @@ class Run {
   int reborn = 0;
   double cap = 0, peakDebtX = 0, maxDebt = 0, peakCap = 0;
   int peakRank = 999;
+
+  /// 最後の順位と、持った子会社の数の最大（1.1.0+35 の測り）
+  int rank = 0, maxSubs = 0;
   Run(this.how, this.seed);
 
   /// 倒れずに30年を終えた（民事再生もしていない）
   bool get alive => !broke && reborn == 0;
   @override
   String toString() =>
-      '$how seed$seed: ${broke ? '倒産 ${months ~/ 12}年目' : reborn > 0 ? '再生 $reborn年目・30年続いた' : '30年生存'}${bank ? '・銀行の管理' : ''} 時価${yen(cap)} 時価の最高${yen(peakCap)} 最高$peakRank位 借金最大${yen(maxDebt)}(利益の${peakDebtX.toStringAsFixed(1)}倍) つなぎ$bridges回 貸しはがし$calls回';
+      '$how seed$seed: ${broke ? '倒産 ${months ~/ 12}年目' : reborn > 0 ? '再生 $reborn年目・30年続いた' : '30年生存'}${bank ? '・銀行の管理' : ''} 時価${yen(cap)} 時価の最高${yen(peakCap)} 最高$peakRank位 借金最大${yen(maxDebt)}(利益の${peakDebtX.toStringAsFixed(1)}倍) つなぎ$bridges回 貸しはがし$calls回 最後$rank位 子会社最大$maxSubs';
 }
 
-Run play(String how, int seed, {int years = 30, int start = 1980, String home = 'jp', bool old = false, bool abroad = false}) {
-  final r = Run(abroad ? 'abroad' : how, seed);
+Run play(String how, int seed, {int years = 30, int start = 1980, String home = 'jp', bool old = false, bool abroad = false, bool keepSubs = false}) {
+  final r = Run(abroad ? 'abroad' : keepSubs ? 'subs' : how, seed);
   final g = Game.newGame(SetupConfig(mode: 'world', year: start, traits: const ['charm', 'careful'], home: home), rng: ParkMiller(seed));
   for (var m = 0; m < years * 12; m++) {
     if (old) {
       botMonth(g, units: true, borrow: how, focus: true);
     } else {
-      proMonth(g, borrow: how, abroad: abroad);
+      proMonth(g, borrow: how, abroad: abroad, keepSubs: keepSubs);
     }
+    r.maxSubs = math.max(r.maxSubs, g.subs().length);
     if (g.won != null) {
       g.mode = 'endless';
       g.won = null;
@@ -65,6 +69,7 @@ Run play(String how, int seed, {int years = 30, int start = 1980, String home = 
   }
   r.cap = g.cap;
   r.peakRank = g.peakRank;
+  r.rank = g.rank;
   return r;
 }
 

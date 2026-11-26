@@ -373,7 +373,9 @@ class Game {
   String culture = 'merit';
   String? cultNext;
   int cultLeft = 0;
-  double pre = 0, interest = 0, hq = 0, subP = 0, rev = 0, cap = 1, g = 0, lastTax = 0;
+  /// [pre] は月の利益（利息のあと・税の前）で、子会社の利益の持ち分 [subP] を含む（株価と決算書の数）。
+  /// [subR] は子会社の売上の持ち分（[rev] に含む）。どちらも現金にはならず、現金に入るのは子会社の配当だけ（1.1.0+35。[cashPre]）
+  double pre = 0, interest = 0, hq = 0, subP = 0, subR = 0, rev = 0, cap = 1, g = 0, lastTax = 0;
   double wealth = 0, land = 0;
   bool holding = false;
   int cooked = 0, dirty = 0, rep = 0, rest = 0, gen = 1, serial = 0;
@@ -1048,13 +1050,15 @@ class Game {
     interest = it;
     hq = h0;
     subP = sp;
-    rev = biz.fold(0.0, (s, b) => s + b.rev) + sb.fold(0.0, (s, c) => s + c.rev * pctOf(c) / 100);
+    subR = sb.fold(0.0, (s, c) => s + c.rev * pctOf(c) / 100);
+    rev = biz.fold(0.0, (s, b) => s + b.rev) + subR;
     final h = hist;
     final gg = h.length >= 13 && h[h.length - 13].rev > 0 ? h[h.length - 1].rev / h[h.length - 13].rev - 1 : 0.0;
     final stakes = cos.where((c) => c.alive && c.parent != 'player').fold(0.0, (s, c) => s + pctOf(c) / 100 * c.cap);
     final assets = biz.fold(0.0, (s, b) => s + b.rev * .4) + sb.fold(0.0, (s, c) => s + c.rev * .3 * pctOf(c) / 100);
     final ts = rev > 0 ? biz.fold(0.0, (s, b) => s + (techCats.contains(indm[b.ind]!.cat) ? b.rev : 0)) / rev : 0.0;
-    var cp = math.max(0, p * .9 * 12) * per(gg) * (1 + .6 * ts) * (listed ? 1 : .6) + assets + cash - debt - bond + stakes + land;
+    // 借金（debt）は社債を含む。1.1.0+34 までは、ここでさらに社債（bond）を引いていて、社債の分を2回引いていた（1.1.0+35 で直した）
+    var cp = math.max(0, p * .9 * 12) * per(gg) * (1 + .6 * ts) * (listed ? 1 : .6) + assets + cash - debt + stakes + land;
     if (scandal > 0) cp *= .8;
     if (cooked > 0) cp *= 1.3;
     // 上場している会社は、うわさ・決算の上ぶれ下ぶれ・減損でも動く（1.1.0+29）
