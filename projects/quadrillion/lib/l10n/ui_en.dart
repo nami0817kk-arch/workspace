@@ -206,8 +206,8 @@ const Map<String, String> uiEn = {
   '「株」の画面で、持ち株を売る、非上場に戻す、会社を丸ごと売る、ができます。売ったお金はあなたの財産になり、半分を元手にもう一度起業します。勝ち負けは、今の会社の時価総額とあなたの財産の合計で測ります。倒した宿敵は、一族や元の社員が新しい会社を作って戻ってきます。':
       'In Shares you can sell your stake, take the company private or sell it outright. Proceeds become your wealth, and half funds a new start-up. Score = current company value + your wealth. Defeated rivals come back through family or former staff.',
   '組む・会社の形': 'Deals & Structure',
-  '「株」の画面で、他社と販売の提携・共同開発・製造を任せる、で組めます。相手から話が来ることもあります。裏切って客を奪うこともできますが、評判が落ちます。事業ごとに業界団体にも入れます。会社が大きくなったら、持株会社、分社、子会社の上場、事業を部下に渡して独立させる、会社を2つに割る、ができます。分社した子会社の社長は自分の判断で動きます。':
-      "In Shares you can form sales alliances, joint development or outsourcing deals; others may approach you too. You can betray a partner to steal customers, at a cost to your reputation. Each business can join its trade association. As you grow you can form a holding company, spin off, list subsidiaries, hand businesses to staff or split the company. Spun-off CEOs act on their own.",
+  '「株」の画面で、他社と販売の提携・共同開発・製造を任せる、で組めます。相手から話が来ることもあります。裏切って客を奪うこともできますが、評判が落ちます。事業ごとに業界団体にも入れます。会社が大きくなったら、持株会社、分社、子会社の上場、事業を部下に渡して独立させる、会社を2つに割る、ができます。分社した子会社の社長は自分の判断で動きます。子会社の名前は作るときに決め、あとから「株」の画面で変えられます。株を過半持つ子会社がいる業種は、自社では始めず子会社に任せます。':
+      "In Shares you can form sales alliances, joint development or outsourcing deals; others may approach you too. You can betray a partner to steal customers, at a cost to your reputation. Each business can join its trade association. As you grow you can form a holding company, spin off, list subsidiaries, hand businesses to staff or split the company. Spun-off CEOs act on their own. You name a subsidiary when you create it and can rename it later in Shares. If a subsidiary you own more than half of is in an industry, you leave that industry to it rather than starting it yourself.",
   'お金の縛り': 'Strings Attached',
   '投資家からお金を集めると「3年以内に上場」が条件になります。社債は5年後に全額返します。取引先の出資を受けると、その取引先と同じ業種に入ったとき取引を切られます。資金が尽きかけると、宿敵が出資を持ちかけてきます。':
       'Investor money comes with a deal: go public within 3 years. Bonds are repaid in full after 5 years. Take money from a business partner and they cut you off if you enter their industries. When you run low on cash, rivals offer to invest.',
@@ -728,4 +728,20 @@ const Map<String, String> uiEn = {
   '社風を変える': 'Change culture',
   '仕入れ先を変える': 'Change suppliers',
   '上の一覧から人を選んでください。': 'Pick someone from the list above.',
+  // ===== 子会社の名前（1.1.0+36） =====
+  '「{0}」を分社する': 'Spin off {0}',
+  '子会社の名前を決めます。社長は{0}です。名前はあとから「株」の画面で変えられます。': 'Name the new subsidiary. {0} will be its CEO. You can rename it later in Shares.',
+  '現地法人の名前を決めます。社長は{0}です。名前はあとから「株」の画面で変えられます。': 'Name the local subsidiary. {0} will be its CEO. You can rename it later in Shares.',
+  '現地法人の名前を決めます。社長は現地で雇います。名前はあとから「株」の画面で変えられます。': 'Name the local subsidiary. Its CEO will be hired locally. You can rename it later in Shares.',
+  'この名前で分社する': 'Spin off with this name',
+  'この名前で作る': 'Create with this name',
+  '{0}の名前を変える': 'Rename {0}',
+  '手は使いません。これまでの記録には、そのときの名前のまま残ります。': 'Uses no actions. Past records keep the name used at the time.',
+  'この名前にする': 'Use this name',
+  '会社の名前': 'Company name',
+  '名前を消す': 'Clear the name',
+  '全角{0}字（半角{1}字）まで。ほかの会社と同じ名前は使えません。': "Up to {1} letters. You can't use another company's name.",
+  '案に戻す': 'Back to suggestion',
+  '元の名前に戻す': 'Back to current name',
+  '名前を変える': 'Rename',
 };

@@ -47,6 +47,7 @@ part 'game_life.dart';
 part 'game_pres.dart';
 part 'game_traits.dart';
 part 'game_fin.dart';
+part 'game_names.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;

@@ -135,7 +135,7 @@ void main() {
       // lib/game の日本語の文字列は、仕組みの判定に使うものを除いて英語の表に載っていること
       const notShown = {'バブル景気|バブル崩壊', '・', '。', 'グループ', 'ネクスト'};
       final missing = <String>[];
-      for (final f in ['game', 'game_turn', 'game_actions', 'game_view', 'game_story', 'game_local', 'game_mid', 'game_units', 'ind_profile', 'game_corp', 'game_traits', 'traits_data']) {
+      for (final f in ['game', 'game_turn', 'game_actions', 'game_view', 'game_story', 'game_local', 'game_mid', 'game_units', 'ind_profile', 'game_corp', 'game_traits', 'traits_data', 'game_names']) {
         final src = File('lib/game/$f.dart').readAsStringSync();
         for (final m in RegExp(r"'((?:[^'\\\n]|\\.)*)'").allMatches(src)) {
           final k = m.group(1)!;

@@ -110,7 +110,8 @@ void _shape(Game g, int bizTarget) {
   }
   // 事業を増やす（いつもの自動プレイは12で止まるので、その先を足す）
   if (g.biz.length >= 12 && g.biz.length < bizTarget) {
-    final cand = g.liveInds().where((i) => !g.biz.any((b) => b.ind == i.id) && g.licMissing(i.id) == null && g.capexOf(i) < g.cash * .5).toList()
+    // 1.1.0+36 から、株を過半持つ子会社のいる業種は自社では始められない
+    final cand = g.liveInds().where((i) => !g.biz.any((b) => b.ind == i.id) && g.subOn(i.id) == null && g.licMissing(i.id) == null && g.capexOf(i) < g.cash * .5).toList()
       ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
     if (cand.isNotEmpty) g.startBiz(cand.first.id);
   }

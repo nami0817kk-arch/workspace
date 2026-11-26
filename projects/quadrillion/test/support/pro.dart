@@ -235,7 +235,8 @@ Industry? _bestInd(Game s, double budget) {
     return i.mg * i.size * eraF(i, y + 8) * sink;
   }
 
-  final l = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.licMissing(i.id) == null && s.capexOf(i) <= budget && score(i) > 0).toList()
+  // 1.1.0+36 から、株を過半持つ子会社のいる業種は自社では始められない
+  final l = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.subOn(i.id) == null && s.licMissing(i.id) == null && s.capexOf(i) <= budget && score(i) > 0).toList()
     ..ssort((a, b) => score(b).compareTo(score(a)));
   return l.firstOrNull;
 }

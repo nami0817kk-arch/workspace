@@ -428,7 +428,8 @@ List<Industry> newBizList(Game s, {String filter = 'all', String sort = 'cost', 
       .where((i) => !s.biz.any((b) => b.ind == i.id))
       .where((i) => switch (filter) {
             'all' => true,
-            'can' => s.capexOf(i) <= s.cash,
+            // 子会社のいる業種は始められないので「始められる」には入れない（1.1.0+36）
+            'can' => s.capexOf(i) <= s.cash && s.subOn(i.id) == null,
             'new' => y - i.b < 10,
             _ => i.cat == filter,
           })
@@ -596,12 +597,17 @@ List<Widget> _newBizSection(GameController ctl) {
     final c = s.capexOf(i);
     final age = y - i.b;
     final ks = s.knownSynFor(i.id);
+    // 株を過半持つ子会社がいる業種は、薄くして理由を出し、「始める」を押せなくする（1.1.0+36）
+    final block = s.subBlock(i.id);
     out.add(Container(
       padding: const EdgeInsets.symmetric(vertical: 3),
       decoration: Ui.rowLine,
       child: LayoutBuilder(builder: (context, box) {
         final narrow = narrowBizList(box.maxWidth);
-        return Row(children: [
+        return Opacity(
+            key: ValueKey('newbiz-row-${i.id}'),
+            opacity: block != null ? .45 : 1,
+            child: Row(children: [
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Wrap(key: ValueKey('newbiz-${i.id}'), spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -617,6 +623,7 @@ List<Widget> _newBizSection(GameController ctl) {
             ]),
             Muted(s.unitsOn ? tr('{0}・利益率{1}・{2}', [profileOf(i).kindName, _pct0(i.mg), ABN[i.key]]) : tr('利益率{0}・{1}', [_pct0(i.mg), ABN[i.key]]), size: 11.5),
             if (narrow) Muted(tr('市場（国内・月） {0}', [yen(s.mkt(i) / 3)]), key: ValueKey('newbiz-mkt-${i.id}'), size: 11.5),
+            if (block != null) Text(tx(block), key: ValueKey('newbiz-block-${i.id}'), style: ts(size: 12, bold: true, color: Pal.ink, height: 1.35)),
           ]),
         ),
         SizedBox(width: _colW, child: Text(yen(c), textAlign: TextAlign.right, style: ts(size: 13))),
@@ -629,8 +636,8 @@ List<Widget> _newBizSection(GameController ctl) {
                 child: Btn(tr('始める'), () {
                   if (ctl.noAp('start')) return;
                   s.modelsFor(i.id).length > 1 ? openModel(ctl, i.id) : ctl.act(() => s.startBiz(i.id));
-                }, small: true, enabled: s.cash >= c, ap: hr(s, 'start'), apBelow: true, dim: !s.canT('start')))),
-      ]);
+                }, small: true, enabled: s.cash >= c && block == null, ap: hr(s, 'start'), apBelow: true, dim: !s.canT('start')))),
+      ]));
       }),
     ));
   }
@@ -1748,6 +1755,8 @@ Widget _coCard(GameController ctl, Company c) {
             ctl.act(() => s.localBuyback(c));
           }
         }, small: true, shrink: true, dim: s.cash < s.localBuybackCost(c)),
+      // 株を過半持つ会社（分社・現地法人・買収した会社）は名前を変えられる。手は使わない（1.1.0+36）
+      if (s.canRename(c)) Btn(tr('名前を変える'), () => openRename(ctl, c), key: ValueKey('co-rename-${c.id}'), small: true, shrink: true, more: true),
       // 子会社でない会社の株は、今までどおりその場で売れる
       if (own > 0 && !mine) Btn(tr('全部売る（{0}）', [yen(c.cap * own / 100 * .95)]), () => ctl.act(() => s.sellStake(c)), small: true, shrink: true),
     ]),

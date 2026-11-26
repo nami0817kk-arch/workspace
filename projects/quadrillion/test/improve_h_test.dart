@@ -167,8 +167,8 @@ void main() {
     });
 
     test('性格で打つ手が変わる：慎重な人は増やさない・博打打ちは大きく張る。腕が高いほど外さない', () {
-      Map<String, int> run(String trait, int ab, {int amb = 50}) {
-        final g = _grown(9);
+      Map<String, int> run(String trait, int ab, {int amb = 50, int seed = 9}) {
+        final g = _grown(seed);
         g.cash = 1e13;
         // 伸ばす手が打てる事業で見る（1.1.0+27 で育った会社の盤面が変わり、先頭の事業が客の数で頭打ちのことがある）
         final b = g.biz.firstWhere((b) => b.mgr != null && b.model != 'fc' && g.growOpt(b, 1e13) != null, orElse: () => g.biz.firstWhere((b) => b.mgr != null && b.model != 'fc'));
@@ -217,9 +217,23 @@ void main() {
       // 1.1.0+26 から、何店を開くかは責任者・物件・上限で決まり、「10店を張る」「1段小さく張る」は無くなった（博打打ちは開きたい数を10、ふつうの人は3で見立てる）
       final plain = run('grit', 70);
       expect(plain['build'] ?? 0, greaterThan(0), reason: 'ふつうの人も増やす: $plain');
-      final good = run('grit', 99), bad = run('grit', 10);
+      // 1.1.0+36 から、4つの乱数の種で10年ずつ見た合計で比べる。1つの種の10年（打つ手80ほど）では様子見の差が数回分しかなく、
+      // 子会社のいる業種を自社で始められなくなって育った会社の盤面が変わると、腕99が53回・腕10が51回と逆になった
+      Map<String, int> runs(String trait, int ab) {
+        final out = <String, int>{};
+        for (final seed in const [9, 10, 11, 12]) {
+          for (final e in run(trait, ab, seed: seed).entries) {
+            out[e.key] = (out[e.key] ?? 0) + e.value;
+          }
+        }
+        return out;
+      }
+
+      final good = runs('grit', 99), bad = runs('grit', 10);
       // 1.1.0+30 から、腕の高い人は手を打てる月が多く（打った手の合計が違う）、数ではなく割合で比べる
       double noneShare(Map<String, int> m) => (m['none'] ?? 0) / m.values.fold(1, (a, x) => a + x);
+      // ignore: avoid_print
+      print('様子見の割合 腕99 ${noneShare(good).toStringAsFixed(3)} $good / 腕10 ${noneShare(bad).toStringAsFixed(3)} $bad');
       expect(noneShare(good), lessThan(noneShare(bad)), reason: '腕が高いほど様子見が少ない: $good / $bad');
       final g = _grown();
       final b = g.biz.firstWhere((b) => b.mgr != null);

@@ -110,7 +110,8 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
   // 1.1.0+26 から、focus のときは、今の事業を伸ばせる（客が来ていて、責任者・物件・上限が足りている）あいだは新しい事業に手を広げない。
   // 伸ばせなければ手元の4割まで。focus でなければ今までどおり手元の8割まで広げる
   final canGrow = focus && s.unitsOn && s.biz.any((b) => s.growOpt(b, s.cash * .8) != null);
-  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.licMissing(i.id) == null && s.capexOf(i) < s.cash * (focus && s.unitsOn ? (canGrow ? 0 : .4) : .8)).toList()
+  // 1.1.0+36 から、株を過半持つ子会社のいる業種は自社では始められない
+  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.subOn(i.id) == null && s.licMissing(i.id) == null && s.capexOf(i) < s.cash * (focus && s.unitsOn ? (canGrow ? 0 : .4) : .8)).toList()
     ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
   if (cand.isNotEmpty && s.ap > 0 && s.biz.length < 12) s.startBiz(cand[0].id);
   // 事業を伸ばす手は月に3つまで（時間が残っていても。人の手で遊ぶ速さに近づける）
