@@ -12,7 +12,6 @@ import 'fin_screens.dart';
 import 'glossary.dart';
 import 'life_screens.dart';
 import 'look.dart';
-import 'painters.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -381,26 +380,6 @@ List<Widget> townTabL(GameController ctl, double width) {
   final wide = width >= 500;
   final cities = s.cityList(s.home);
   final city = ctl.townCity < cities.length ? ctl.townCity : 0;
-  // 横に広い街（高さの低い横向きの画面でも、絵だけで画面が埋まらないように）
-  final pic = Frame(
-    key: const ValueKey('town-picture'),
-    child: AspectRatio(
-        aspectRatio: 480 / 180,
-        child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: 480, city: city), size: Size.infinite)))),
-  );
-  // 都市圏の切り替え（自分の国の都市。1.1.0+26）
-  // 1行に並べ、入りきらない分は横に送る（折り返すと、街の絵の下が2段になっていた。1.1.0+31）
-  final cityChips = SingleChildScrollView(
-    key: const PageStorageKey('town-cities'),
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.only(top: 4),
-    child: Row(children: [
-      for (var i = 0; i < cities.length; i++) ...[
-        if (i > 0) const SizedBox(width: 6),
-        PickChip(L.en ? cities[i].en : cities[i].ja, key: ValueKey('town-city-$i'), on: city == i, onTap: () => ctl.setTownCity(i)),
-      ],
-    ]),
-  );
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
   final rival = topRival(s);
   const tone = ScreenTone.town;
@@ -489,15 +468,20 @@ List<Widget> townTabL(GameController ctl, double width) {
         MoreBtn(key: const ValueKey('more-town-news'), open: newsOpen, rest: recent.length - fresh, onTap: () => ctl.toggleShown('town-news')),
     ]),
   );
+  // 1.1.0+42 から街の絵を外した。上の段は左に要点のカードと目標、右に宿敵と景気。
+  // 下の段は左に都市ごとの自社の拠点（前は絵の看板でしか分からなかった）、右に今月のニュース
+  final sites = townSitesPanel(ctl, city);
   final out = <Widget>[band];
   if (wide) {
-    out.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [pic, if (cities.length > 1) cityChips, const SizedBox(height: 6), kpis, me])),
-      const SizedBox(width: 8),
-      Expanded(flex: 2, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [?foe, econ, news])),
-    ]));
+    Widget cols(List<Widget> l, List<Widget> r, {int lf = 1, int rf = 1}) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(flex: lf, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: l)),
+          const SizedBox(width: 8),
+          Expanded(flex: rf, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: r)),
+        ]);
+    out.add(cols([kpis, me], [?foe, econ], lf: 3, rf: 2));
+    out.add(sites == null ? news : cols([sites], [news]));
   } else {
-    out.addAll([pic, if (cities.length > 1) cityChips, const SizedBox(height: 6), kpis, me, ?foe, econ, news]);
+    out.addAll([kpis, me, ?sites, ?foe, econ, news]);
   }
   final vow = s.vow;
   if (vow != null) {
@@ -517,6 +501,83 @@ const townNewsFew = 4;
 Company? topRival(Game s) {
   final l = s.cos.where((c) => c.alive && c.rival != null && c.parent != 'player').toList()..ssort((a, b) => b.cap.compareTo(a.cap));
   return l.firstOrNull;
+}
+
+/// 街の画面に、一度に名前を出す事業の数（残りは「ほか○事業」）
+const townSitesMax = 4;
+
+/// 都市ごとの自社の拠点（1.1.0+42。前は街の絵の看板の数でしか分からなかった）。
+/// 上に都市の切り替え、下に選んだ都市にある事業ごとの店・工場などの数（都心・郊外）。
+/// 店などの数を使わない遊び（[GameUnits.unitsOn] が切れている）では出さない
+Widget? townSitesPanel(GameController ctl, int city) {
+  final s = ctl.game!;
+  if (!s.unitsOn) return null;
+  final cities = s.cityList(s.home);
+  final name = city < cities.length ? (L.en ? cities[city].en : cities[city].ja) : cm[s.home]!.city;
+  // 選んだ都市の都心・郊外にある数（育っている分を含む）。多い順
+  final rows = <(Biz, double, double)>[
+    for (final b in s.biz)
+      if (KIND_ZONED.contains(s.kindB(b))) (b, s.unitsAt(b, '${s.home}/$city/0'), s.unitsAt(b, '${s.home}/$city/1')),
+  ].where((r) => r.$2 + r.$3 > 0).toList()
+    ..ssort((a, b) => (b.$2 + b.$3).compareTo(a.$2 + a.$3));
+  String count(Biz b, double down, double sub) => [
+        if (down > 0) '${tr(ZONE_JA[0])} ${s.unitCount(b, down)}',
+        if (sub > 0) '${tr(ZONE_JA[1])} ${s.unitCount(b, sub)}',
+      ].join(tr('・'));
+  return Panel(
+    key: const ValueKey('town-sites'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      // 見出しの右に都市の切り替え（自分の国の都市。1.1.0+26）を同じ行に並べ、入りきらない分は横に送る
+      if (cities.length > 1)
+        Row(children: [
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(color: ScreenTone.town.soft, borderRadius: BorderRadius.circular(6)),
+            child: Icon(Icons.storefront, size: 14, color: ScreenTone.town.ink),
+          ),
+          const SizedBox(width: 6),
+          Semantics(header: true, child: Text(tr('自社の拠点'), maxLines: 1, style: Ui.cardTitle())),
+          const SizedBox(width: 8),
+          Expanded(
+            child: SingleChildScrollView(
+              key: const PageStorageKey('town-cities'),
+              scrollDirection: Axis.horizontal,
+              child: Row(children: [
+                for (var i = 0; i < cities.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 6),
+                  PickChip(L.en ? cities[i].en : cities[i].ja, key: ValueKey('town-city-$i'), on: city == i, onTap: () => ctl.setTownCity(i)),
+                ],
+              ]),
+            ),
+          ),
+        ])
+      else
+        SectionHead(tr('{0}にある自社の拠点', [name]), Icons.storefront, tone: ScreenTone.town),
+      const SizedBox(height: 2),
+      if (rows.isEmpty) Muted(tr('{0}には、まだ店や工場がありません', [name]), size: 12.5),
+      for (final r in rows.take(townSitesMax))
+        Padding(
+          key: ValueKey('town-site-${r.$1.id}'),
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            IndIcon(indm[r.$1.ind]!, size: 20),
+            const SizedBox(width: 6),
+            Expanded(flex: 2, child: Text(indm[r.$1.ind]!.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 12.5))),
+            const SizedBox(width: 6),
+            // 数は切らずに、入りきらなければ字を縮める（英語は「Downtown 12 stores, Suburbs 30 stores」と長い）
+            Flexible(
+                flex: 3,
+                child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(count(r.$1, r.$2, r.$3), maxLines: 1, softWrap: false, style: ts(size: 12.5, bold: true)))),
+          ]),
+        ),
+      if (rows.length > townSitesMax) Muted(tr('ほか{0}事業', [rows.length - townSitesMax]), size: 12),
+    ]),
+  );
 }
 
 /// 国の景気の欄（成長・物価・金利・為替・最低賃金・法人税・失業率）
