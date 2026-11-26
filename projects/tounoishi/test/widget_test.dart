@@ -670,8 +670,18 @@ void main() {
     expect(html, contains('<button data-cht="nest" class="on">巣</button><button data-cht="clan">一族</button><button data-cht="nat">周りの国</button><button data-cht="trade">交易</button><button data-cht="chron">年代記</button>'));
     expect(html, contains("document.getElementById('chpanel').addEventListener('click',cmdClick);"));
     // 年代記のときは前の画面の部品を出さない
-    expect(html, contains('body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #cmsg,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}'));
+    expect(html, contains('body.chr .wrap>h1,body.chr .bar,body.chr #tabs,body.chr .row,body.chr #msg,body.chr .nav,body.chr .mini{display:none!important}'));
     expect(html, contains("yuBar();if(typeof chUI=='function')chUI();"));
+  });
+
+  test('年代記では掘らない・巣穴がひとりでに広がる（0.7.58・試作 v77）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains("if(g.chron&&g.chron.st){say('巣穴は一族がひとりでに広げていく。');return false;}"));
+    expect(html, contains('else if(g.chron&&g.chron.st)return;'));
+    expect(html, contains('body.chr #zdig{display:none!important}'));
+    expect(html, contains('function chGrowNest(){var gs=chGobs().length,want=45+Math.round(gs*0.5),'));
+    expect(html, contains("var gn=C.st?chGrowNest():0;"));
+    expect(html, contains("['下の「一族」を開いて「召喚する」から、はぐれゴブリンを呼ぼう'"));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
