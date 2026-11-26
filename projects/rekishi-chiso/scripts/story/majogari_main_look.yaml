@@ -1,0 +1,430 @@
+# 物語型の本編の見た目と絵の割り当て：魔女狩り（scripts/majogari-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/1 19:00 公開予定）。michizane_main_look.yaml を写した。絵は Gemini（写実の油彩）。血・処刑・拷問・火刑は描かない。
+# プロンプトは scratchpad/main-majogari/majogari_prompts.py、この yaml は majogari_look.py で書き出す。
+script: scripts/majogari-story.yaml
+out: majogari_story_main
+art_dir: out/story/majogari/main
+main_art_dir: out/story/majogari/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 魔女を裁いたのは、本当に教会だったのか
+    now: 1612年
+    dates: {}
+  1:
+    label: 第1章 コルンの近くの道　ピンから始まった訴え
+    now: 1613年
+    dates:
+      8: 1612年3月18日
+      13: 1612年3月29日
+      14: 1612年3月30日
+      15: 1612年3月30日
+      17: 1612年4月2日
+      19: 1612年4月
+      22: null
+  2:
+    label: 第2章 ランカスター城　国王の判事と9歳の証人
+    now: 1612年8月17日
+    dates:
+      26: 1604年
+      27: 1597年
+      28: 1612年8月17日
+      30: 1612年8月18日
+  3:
+    label: 第3章 無罪の3人と、死刑の10人
+    now: 1612年8月19日
+    dates:
+      47: 1845年
+      48: 1612年
+      49: null
+  4:
+    label: 第4章 インスブルックからバンベルクへ
+    now: null
+    dates:
+      53: 1485年
+      55: 1486年
+      57: 1532年
+      58: null
+      59: 1626年
+      63: null
+      64: 1631年6月12日
+      65: 1631年
+      66: null
+  5:
+    label: 第5章 ログローニョと「魔女はいなかった」審問官
+    now: 1610年11月
+    dates:
+      73: 1611年
+      75: 1614年
+      76: null
+  6:
+    label: 第6章 900万人と4万人
+    now: 1784年
+    dates:
+      85: 1869年
+      86: null
+  7:
+    label: 第7章 名前を挙げられたジェネット　名誉回復と謝罪
+    now: 1634年2月
+    dates:
+      100: 1782年
+      101: 2008年8月27日
+      102: 2012年
+      104: null
+      106: 2022年3月8日
+      107: null
+      108: 2022年
+      109: null
+  8:
+    label: まとめ 魔女を裁いたのは、誰だったのか
+    now: null
+    dates: {}
+no_tag_from: 115
+references:
+- トマス・ポッツ『The Wonderfull Discoverie of Witches in the Countie of Lancaster』（1613、J. Crossley 翻刻 1845、Project Gutenberg）・1604年の魔術法・ジェームズ1世『Daemonologie』（1597）
+- カロリナ刑法典（1532）・クラーマー『魔女への鉄槌』・シュペー『Cautio Criminalis』（1631）・バンベルク市文書館（2012）・バイエルン歴史事典・R. Voltmer・W. Behringer（1998）・B. Levack・W. Monter・J. Martínez Rosa（2023）・L. A. Homza・M. Gaskill（2017）・English Heritage・Survey
+  of Scottish Witchcraft・AP（2008）・Holyrood（2022）・UK Parliament Petitions
+credits: {}
+ai:
+  W01:
+    scene: ランカスター城の法廷と2人の判事
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  W02:
+    scene: ペンドル・ヒルと荒れ地の村
+    pan: h
+    crops: *id001
+  W03:
+    scene: 田舎道の娘と行商人
+    pan: h
+    crops: *id001
+  W04:
+    scene: 道に倒れた行商人
+    pan: h
+    crops: *id001
+  W05:
+    scene: 宿の一室の行商人と息子
+    pan: h
+    crops: *id001
+  W06:
+    scene: 治安判事の取り調べ
+    pan: h
+    crops: *id001
+  W07:
+    scene: ランカスター城の門
+    pan: h
+    crops: *id001
+  W08:
+    scene: マルキン・タワーの集まり
+    pan: h
+    crops: *id001
+  W09:
+    scene: 記録を書く書記
+    pan: h
+    crops: *id001
+  W10:
+    scene: 城に着いた巡回裁判の判事
+    pan: h
+    crops: *id001
+  W12:
+    scene: 机の上に立つ9歳の証人
+    pan: h
+    crops: *id001
+  W13:
+    scene: 無罪になった3人
+    pan: h
+    crops: *id001
+  W15:
+    scene: ランカスターの町を見下ろす荒れ地
+    pan: h
+    crops: *id001
+  W16:
+    scene: 司教の町バンベルク
+    pan: h
+    crops: *id001
+  W17:
+    scene: 魔女委員会の役人たち
+    pan: h
+    crops: *id001
+  W18:
+    scene: 委員会を選ぶ村人
+    pan: h
+    crops: *id001
+  W20:
+    scene: ログローニョの広場
+    pan: h
+    crops: *id001
+  W21:
+    scene: 村で話を聞く審問官
+    pan: h
+    crops: *id001
+  W22:
+    scene: インスブルックの広間
+    pan: h
+    crops: *id001
+  W23:
+    scene: 写本を書く修道士
+    pan: h
+    crops: *id001
+  W24:
+    scene: 原稿を書くイエズス会の神父
+    pan: h
+    crops: *id001
+  W25:
+    scene: 計算する18世紀の法律家
+    pan: h
+    crops: *id001
+  W26:
+    scene: 1634年の少年と女
+    pan: h
+    crops: *id001
+  W27:
+    scene: グラールスの町
+    pan: h
+    crops: *id001
+  IEND:
+    scene: ペンドルの荒れ地（右半分に余白、終了画面）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:W01 wide
+- 1 ai:W15 wide
+- 2 ai:W12 wide
+- 3 ai:W03 wide
+- 4 ai:W01 right
+- 5 ai:W09 wide
+- 6 ai:W09 left
+- 7 ai:W09 right
+- 8 ai:W02 wide
+- 9 ai:W03 left
+- 10 ai:W03 right
+- 11 ai:W05 wide
+- 12 ai:W04 right
+- 13 ai:W05 right
+- 14 ai:W06 wide
+- 15 ai:W06 left
+- 16 ai:W08 right
+- 17 ai:W07 wide
+- 18 ai:W07 right
+- 19 ai:W08 wide
+- 20 ai:W08 left
+- 21 ai:W07 left
+- 22 ai:W10 wide
+- 23 ai:W10 left
+- 24 ai:W10 right
+- 25 ai:W01 wide
+- 26 ai:W01 wide
+- 27 ai:W01 right
+- 28 ai:W07 wide
+- 29 ai:W07 left
+- 30 ai:W01 left
+- 31 ai:W12 wide
+- 32 ai:W12 left
+- 33 ai:W12 right
+- 34 ai:W12 wide
+- 35 ai:W09 wide
+- 36 ai:W13 wide
+- 37 ai:W13 wide
+- 38 ai:W13 left
+- 39 ai:W13 right
+- 40 ai:W13 wide
+- 41 ai:W01 wide
+- 42 ai:W02 right
+- 43 ai:W01 left
+- 44 ai:W01 right
+- 45 ai:W15 wide
+- 46 ai:W09 left
+- 47 ai:W09 right
+- 48 ai:W15 left
+- 49 ai:W06 wide
+- 50 ai:W01 right
+- 51 ai:W16 wide
+- 52 ai:W16 left
+- 53 ai:W22 wide
+- 54 ai:W22 left
+- 55 ai:W23 wide
+- 56 ai:W23 left
+- 57 ai:W17 left
+- 58 ai:W17 wide
+- 59 ai:W16 right
+- 60 ai:W16 wide
+- 61 ai:W17 right
+- 62 ai:W17 wide
+- 63 ai:W16 left
+- 64 ai:W16 right
+- 65 ai:W24 wide
+- 66 ai:W18 wide
+- 67 ai:W18 left
+- 68 ai:W18 right
+- 69 ai:W20 wide
+- 70 ai:W20 left
+- 71 ai:W20 wide
+- 72 ai:W20 right
+- 73 ai:W21 wide
+- 74 ai:W21 left
+- 75 ai:W21 right
+- 76 ai:W20 left
+- 77 ai:W21 wide
+- 78 ai:W20 right
+- 79 ai:W22 wide
+- 80 ai:W25 wide
+- 81 ai:W25 left
+- 82 ai:W25 wide
+- 83 ai:W25 right
+- 84 ai:W25 left
+- 85 ai:W24 right
+- 86 ai:W16 wide
+- 87 ai:W17 left
+- 88 ai:W09 left
+- 89 ai:W25 wide
+- 90 ai:W01 wide
+- 91 ai:W13 left
+- 92 ai:W02 wide
+- 93 ai:W15 wide
+- 94 ai:W12 left
+- 95 ai:W26 wide
+- 96 ai:W26 left
+- 97 ai:W26 right
+- 98 ai:W12 right
+- 99 ai:W26 wide
+- 100 ai:W27 wide
+- 101 ai:W27 left
+- 102 ai:W17 left
+- 103 ai:W02 right
+- 104 ai:W16 wide
+- 105 ai:W17 wide
+- 106 ai:W15 right
+- 107 ai:W15 left
+- 108 ai:W02 left
+- 109 ai:W01 wide
+- 110 ai:W03 wide
+- 111 ai:W01 left
+- 112 ai:W18 wide
+- 113 ai:W21 wide
+- 114 ai:W23 wide
+- 115 ai:W02 wide
+- 116 ai:W26 wide
+- 117 ai:W03 right
+- 118 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 7
+  to: 7
+  label: 史料
+  text: 書記という立場ゆえ／この仕事を彼に課した
+  source: 判事アルサムとブロムリーの前書き（ポッツ 1613）
+- type: quote
+  from: 29
+  to: 29
+  label: 史料
+  text: 年老いたデムダイクは／裁判の前に城の中で死んだ
+  source: ポッツ『ランカシャーの魔女の驚くべき発見』1613
+- type: quote
+  from: 33
+  to: 33
+  label: 史料
+  text: 囚人を連れ出させ／少女を机の上に立たせた
+  source: ポッツ 1613（エリザベス・デバイスの審理）
+- type: quote
+  from: 44
+  to: 44
+  label: 史料
+  text: 死ぬまで首を吊られる
+  source: ブロムリーの判決文（ポッツ 1613）
+- type: quote
+  from: 56
+  to: 56
+  label: 史料
+  text: 審問官が裁かなくてもよい／死刑は世俗の裁判官が
+  source: クラーマー『魔女への鉄槌』第3部
+- type: quote
+  from: 74
+  to: 74
+  label: 史料
+  text: 語られ書かれはじめるまで／魔女も呪われた者もいなかった
+  source: サラサールの報告（J. Martínez Rosa 2023 による）
+- type: versus3
+  from: 88
+  to: 88
+  items:
+  - - フォイクト 1784年
+    - 944万人
+  - - レヴァック 2006年
+    - 約4万5千人
+  - - ベーリンガー 1998年
+    - 3万人以上
+  every: 1.6
+figures:
+- from: 8
+  to: 8
+  spec:
+    type: map
+    title: イングランド北部　ペンドルとランカスター
+    bounds:
+    - -4.0
+    - -1.0
+    - 53.3
+    - 55.0
+    reveal: true
+    places:
+    - - ペンドル
+      - -2.3
+      - 53.87
+    - - ランカスター
+      - -2.8
+      - 54.05
+- from: 59
+  to: 59
+  spec:
+    type: map
+    title: 魔女裁判の地
+    bounds:
+    - -10.0
+    - 16.0
+    - 36.0
+    - 56.0
+    reveal: true
+    places:
+    - - ランカスター
+      - -2.8
+      - 54.05
+    - - インスブルック
+      - 11.39
+      - 47.27
+    - - バンベルク
+      - 10.89
+      - 49.89
+stills:
+- line: 0
+  note: 冒頭
+- line: 16
+  note: 家の表
+- line: 33
+  note: 机の上の証人
+- line: 47
+  note: 処刑の日の違いの表
+- line: 74
+  note: サラサール
+- line: 88
+  note: 推計の違い
+- end: true
+  note: 終了画面
