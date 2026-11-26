@@ -1,6 +1,8 @@
 /// 動く状態（人・事業・会社など）。どれも JSON に出し入れできる。
 library;
 
+import '../l10n/l10n.dart';
+
 double _d(dynamic x, [double def = 0]) => x == null ? def : (x as num).toDouble();
 double? _dn(dynamic x) => x == null ? null : (x as num).toDouble();
 int _i(dynamic x, [int def = 0]) => x == null ? def : (x as num).round();
@@ -622,8 +624,26 @@ class Choice {
 }
 
 /// 選ぶ出来事（保存しない）
+/// 会議で話す1人（臨時の会議・経営会議の意見の対立・取締役会）。文は包んだ形（M）で持つ
+class Voice {
+  /// 話す人の呼び名（包んだ名前）と肩書き
+  final String who, role;
+
+  /// 発言
+  final String text;
+
+  /// partner（相棒）/ staff（部下）/ holder（株主の代表）/ bank（銀行）/ board（取締役）
+  final String kind;
+
+  /// 部下・相棒の名前（顔の丸に頭文字を出す）。株主の代表・銀行・取締役は null
+  final String? name;
+  const Voice({required this.who, required this.role, required this.text, required this.kind, this.name});
+}
+
 class GameEvent {
+  /// text は地の文（状況の説明）。会議なら発言は [voices] に人ごとに持つ
   final String title, text;
+  final List<Voice> voices;
   final List<Choice> choices;
   Company? who;
   String? face;
@@ -645,5 +665,9 @@ class GameEvent {
       this.subco,
       this.vc = false,
       this.rivfund = false,
-      this.em});
+      this.em,
+      this.voices = const []});
+
+  /// 地の文と発言をまとめた文（テストと英語の点検用）
+  String get fullText => voices.isEmpty ? text : Cat([text, for (final v in voices) M('{0}（{1}）：{2}', [v.who, v.role, v.text])], ja: '\n', en: '\n');
 }

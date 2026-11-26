@@ -276,9 +276,22 @@ class MainScreen extends StatelessWidget {
         Row(children: [
           Text(ym(s.year, s.q, sp: true), style: ts(size: 18, color: Pal.goldtx, bold: true)),
           const SizedBox(width: 8),
+          // 社長: 1行目に名前、2行目に年齢と代の札（幅320でも切れないよう、入らなければ字を縮める）
           Expanded(
-              child: Text(tr('{0}・{1}歳{2}', [nmL(s.pres.name), s.pres.age, s.gen > 1 ? tr('（{0}代目）', [s.gen]) : '']),
-                  textAlign: TextAlign.right, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, color: Pal.mute))),
+              child: Column(key: const ValueKey('pres-head'), crossAxisAlignment: CrossAxisAlignment.end, mainAxisSize: MainAxisSize.min, children: [
+            FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(nmL(s.pres.name), maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute, height: 1.25))),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(tr('{0}歳', [s.pres.age]), maxLines: 1, softWrap: false, style: ts(size: 12, color: Pal.mute, height: 1.25)),
+                if (s.gen > 1) ...[const SizedBox(width: 4), Tag(tr('{0}代目', [s.gen]))],
+              ]),
+            ),
+          ])),
           const SizedBox(width: 8),
           Semantics(label: tr('遊び方'), child: Btn(tr('？'), () => showHelp(ctl), small: true)),
           const SizedBox(width: 6),

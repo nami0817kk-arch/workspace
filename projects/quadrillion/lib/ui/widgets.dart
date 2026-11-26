@@ -101,22 +101,37 @@ class Muted extends StatelessWidget {
   Widget build(BuildContext context) => Text(tx(text), style: ts(size: size, color: Pal.mute));
 }
 
-/// 左に名前、右に値
+/// 左に名前、右に値。どちらも1行にする。
+/// 項目名は文の幅だけ取り（欄の7割まで。それより長ければ字を縮める）、値は残りの幅に右寄せで入れる（入らなければ字を縮める）
 class Kv extends StatelessWidget {
   final String k;
   final Object v;
   const Kv(this.k, this.v, {super.key});
+
+  /// 項目名が取ってよい幅の割合
+  static const labelShare = .7;
+
   @override
-  Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // 英語は見出しが長いので、見出しに幅を多く回す
-        Flexible(flex: L.en ? 3 : 2, fit: FlexFit.tight, child: Text(tx(k), style: ts(size: 13, color: Pal.mute))),
-        const SizedBox(width: 6),
-        Flexible(
-            flex: L.en ? 2 : 3,
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: v is Widget ? v as Widget : Text(v is String ? tx(v as String) : '$v', textAlign: TextAlign.right, style: ts(size: 13)))),
-      ]);
+  Widget build(BuildContext context) => LayoutBuilder(
+      builder: (context, c) => Row(children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: c.maxWidth * labelShare),
+              child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(tx(k), maxLines: 1, softWrap: false, style: ts(size: 13, color: Pal.mute))),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: v is Widget
+                            ? v as Widget
+                            : Text(v is String ? tx(v as String) : '$v', maxLines: 1, softWrap: false, textAlign: TextAlign.right, style: ts(size: 13))))),
+          ]));
 }
 
 /// 2列に並べる（試作の grid2）
@@ -174,6 +189,28 @@ class Face extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(color: hexColor(c), shape: BoxShape.circle),
       child: Text(n.isEmpty ? '?' : n.characters.first, style: ts(size: 14, bold: true, color: const Color(0xFF0D1426))),
+    );
+  }
+}
+
+/// 名前を持たない話し手（株主の代表・銀行・取締役）の丸。頭文字の代わりに役割の印を出す
+class RoleFace extends StatelessWidget {
+  /// holder（株主の代表）/ bank（銀行）/ board（取締役）
+  final String kind;
+  const RoleFace(this.kind, {super.key});
+  @override
+  Widget build(BuildContext context) {
+    final (icon, col) = switch (kind) {
+      'bank' => (Icons.account_balance, '#7ff0c8'),
+      'board' => (Icons.gavel, '#c9a0ff'),
+      _ => (Icons.pie_chart, '#9fb3ff'),
+    };
+    return Container(
+      width: 34,
+      height: 34,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: hexColor(col), shape: BoxShape.circle),
+      child: Icon(icon, size: 18, color: const Color(0xFF0D1426)),
     );
   }
 }

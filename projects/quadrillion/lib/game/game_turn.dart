@@ -38,7 +38,10 @@ extension GameTurn on Game {
         }
       }
     }
-    // 市場の大きさに合わせて力を伸び縮みさせる
+    // 市場の大きさに合わせて力を伸び縮みさせる。
+    // 業種ごとの倍率を先に決めてから、事業を1回だけなめて掛ける（業種200×会社1000の二重の回しを避ける）。
+    // 掛ける倍率・乱数を引く順番は前と同じ（新しく生まれた業種の事業は伸び縮みさせない）
+    final scale = <String, double>{};
     for (final ind in inds) {
       final mk0 = mkt(ind);
       final old = indM[ind.id] ?? 0;
@@ -68,20 +71,24 @@ extension GameTurn on Game {
           N(M('{0}（{1}）が「{2}」に乗り込みました', [Nm(gr.rival!.pres), Nm(gr.name), I(ind.id)]), 'bad');
         }
       } else if (mk0 > 0 && old > 0) {
-        final r = math.pow(mk0 / old, .95).toDouble();
-        for (final c in cos) {
-          for (final b in c.biz) {
-            if (b.ind == ind.id) b.power *= r;
-          }
-        }
-        for (final b in biz) {
-          if (b.ind == ind.id) {
-            b.power *= r;
-            if (b.crew != null && b.crew != 0) b.crew = b.crew! * r;
-          }
-        }
+        scale[ind.id] = math.pow(mk0 / old, .95).toDouble();
       }
       indM[ind.id] = mk0;
+    }
+    if (scale.isNotEmpty) {
+      for (final c in cos) {
+        for (final b in c.biz) {
+          final r = scale[b.ind];
+          if (r != null) b.power *= r;
+        }
+      }
+      for (final b in biz) {
+        final r = scale[b.ind];
+        if (r != null) {
+          b.power *= r;
+          if (b.crew != null && b.crew != 0) b.crew = b.crew! * r;
+        }
+      }
     }
     // CPU の動き（難しさで伸びと再投資を変える。ふつうは 1 をかけるだけなので試作と同じ）
     final dG = dif.g, dR = dif.r;
@@ -100,7 +107,8 @@ extension GameTurn on Game {
       c.cash = c.cash * .985 + c.profit * .25;
       c.presAge += 1 / 12;
       c.revHist.add(c.rev);
-      if (c.revHist.length > 24) c.revHist.removeAt(0);
+      // 使うのは12か月前の売上（calcAll の伸び）だけなので、12か月分だけ持つ（試作は24か月分。数字は同じで、保存が軽くなる）
+      if (c.revHist.length > 12) c.revHist.removeRange(0, c.revHist.length - 12);
     }
     // 若い天才は時々つまずく
     for (final c in cos) {
@@ -1132,7 +1140,25 @@ extension GameTurn on Game {
     if (restP.length >= 2 && restP[0].cost + restP[1].cost > cash * .6) {
       final a = restP[0], b = restP[1];
       final pa = staffById(a.by)!, pb = staffById(b.by)!;
-      events.add(GameEvent(title: M('経営会議：意見がぶつかった'), text: M('{0}は「{1}」、{2}は「{3}」と言って譲りません。両方やるお金はありません。', [Nm(pa.name), a.l, Nm(pb.name), b.l]), choices: [
+      Voice voice(Person p, Proposal o) {
+        final job = biz.where((x) => x.mgr == p.id).firstOrNull;
+        return Voice(
+            who: Nm(p.name),
+            role: p.partner
+                ? M('相棒@@role')
+                : job != null
+                    ? M('「{0}」の責任者', [I(job.ind)])
+                    : M('部下@@role'),
+            text: o.l,
+            kind: p.partner ? 'partner' : 'staff',
+            name: p.name);
+      }
+
+      events.add(GameEvent(
+          title: M('経営会議：意見がぶつかった'),
+          text: M('二人とも自分の案を譲りません。両方やるお金はありません。'),
+          voices: [voice(pa, a), voice(pb, b)],
+          choices: [
         Choice(M('{0}の案を通す', [Nm(pa.name)]), M('{0}の忠誠が大きく下がる', [Nm(pb.name)]), () {
           pb.loy -= 12;
           pb.rej = pb.rej + 1;
