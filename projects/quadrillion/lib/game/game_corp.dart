@@ -627,6 +627,8 @@ extension GameCorp on Game {
     if (staff.any((p) => p.lic.contains('lawyer'))) m -= 3;
     final acct = staff.fold(0, (a, p) => math.max(a, (p.sk?['acct'] ?? 0) + (p.sk?['law'] ?? 0)));
     m -= clampD((acct - 100) / 20, 0, 3);
+    // 締め切り直前に強い人がいると、準備が早く進む（1.1.0+33。いつもの下限24か月より短くなる）
+    if (anyTr('deadline')) return clampI(m.round() - 4, 20, 36);
     return clampI(m.round(), 24, 36);
   }
 
@@ -741,6 +743,8 @@ extension GameCorp on Game {
     var m = 2 + (c.biz.length > 2 ? 1 : 0) + (c.listed ? 0 : 1);
     if (staff.any((p) => p.lic.contains('cpa'))) m--;
     if (staff.any((p) => p.lic.contains('lawyer'))) m--;
+    // 締め切り直前に強い人・目利きがいると早い（1.1.0+33）
+    if (anyTr('deadline') || anyTr('eye')) m--;
     return math.max(1, m);
   }
 
@@ -767,7 +771,7 @@ extension GameCorp on Game {
   String offerMsg(Company c) => M('{0}に買い付けを申し入れました。相手の返事を待ちます（約1か月）', [Nm(c.name)]);
 
   /// 買う値段（足りない分の株×時価総額×（1＋上乗せ））
-  double dealPrice(Company c, MaDeal d) => c.cap * math.max(0, d.target - pctOf(c)) / 100 * (1 + d.prem);
+  double dealPrice(Company c, MaDeal d) => c.cap * math.max(0, d.target - pctOf(c)) / 100 * (1 + d.prem) * trDealPriceF();
 
   /// 相手が応じる見込み（今までの TOB の見込みに、上乗せの大きさを足す）
   double dealChance(Company c, MaDeal d) => clampD(tobChance(c, d.target) + (d.prem - .3) * 1.2 + (finOf(c).distress >= 3 ? .2 : 0), .03, .97);
@@ -832,7 +836,8 @@ extension GameCorp on Game {
           d.left = rv.$1;
           if (rv.$1 > 1) N(M('{0}の株主が応じました。合わせたシェアが大きいため、当局の審査に入ります（約{1}か月）', [Nm(c.name), rv.$1]));
         case 'review':
-          if (d.block > 0 && rnd() < d.block) {
+          // 根回し上手がいると、当局の審査で止められにくい（1.1.0+33）
+          if (d.block > 0 && rnd() < d.block * trBlockF()) {
             corp.deals.remove(d);
             N(M('独禁法の審査で、{0}の買収は止められました', [Nm(c.name)]), 'bad');
             chron('buy', M('{0}の買収は独禁法の審査で止められた', [Nm(c.name)]));
@@ -882,6 +887,11 @@ extension GameCorp on Game {
       }
     }
     final out = <Object?>[];
+    // 目利きがいると、調べなくても帳簿の嘘に気づいて手を打てる（1.1.0+33）
+    if (f.dd == 0 && anyTr('eye')) {
+      if (f.offDebt > 0 || f.suit > 0) out.add(M('目利きの部下が帳簿の嘘に気づき、隠れた借金と訴訟を前の持ち主に引き取らせました'));
+      f.dd = 1;
+    }
     if (f.dd == 0) {
       // 調べずに買った: 隠れた問題が、ここで表に出る
       if (f.offDebt > 0) {
@@ -958,7 +968,8 @@ extension GameCorp on Game {
         continue;
       }
       // 頼りすぎるほど、取引を切られたときの痛みが大きい（年に約5%の見込みで、次の入札や契約の見直しで切られる）
-      if (rnd() < .003) {
+      // 記憶力が抜群の人がいると、半分は客をつなぎ止める（1.1.0+33。乱数は別の並び）
+      if (rnd() < .003 && !trKeepClient(b, N)) {
         final lost = cl.share;
         // 切られた客の分のうち、半分ほどはほかの客で埋まる
         b.power *= 1 - lost * .5;

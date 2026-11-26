@@ -2004,7 +2004,7 @@ const chronMarks = 8;
 
 // --- 図鑑 ---
 /// 図鑑の切り替え（id・名前）
-const zukanViews = [('ind', '業種@@zukan'), ('syn', 'シナジー'), ('ach', '実績'), ('hist', '歴史')];
+const zukanViews = [('ind', '業種@@zukan'), ('syn', 'シナジー'), ('trait', '特性@@zukan'), ('ach', '実績'), ('hist', '歴史')];
 
 List<Widget> zukanTab(GameController ctl) {
   final view = zukanViews.any((v) => v.$1 == ctl.zukanView) ? ctl.zukanView : 'syn';
@@ -2014,8 +2014,42 @@ List<Widget> zukanTab(GameController ctl) {
       'ind' => zukanInds(ctl),
       'ach' => zukanAchs(ctl),
       'hist' => zukanHist(ctl),
+      'trait' => zukanTraits(ctl),
       _ => zukanSyns(ctl),
     },
+  ];
+}
+
+/// 図鑑の「特性」：社員の特性70種を分類ごとに。社員に見つけた特性は効き目が見え、まだのものは「？？？」（1.1.0+33）
+List<Widget> zukanTraits(GameController ctl) {
+  final s = ctl.game!;
+  final found = s.trFound;
+  return [
+    H2(tr('特性図鑑')),
+    Progress(tr('見つけた特性'), STAFF_TRAITS.where((t) => found.contains(t.id)).length, STAFF_TRAITS.length, key: const ValueKey('trait-progress')),
+    for (final c in STRAIT_CATS)
+      Panel(
+        key: ValueKey('ztrait-cat-${c.$1}'),
+        padding: const EdgeInsets.symmetric(horizontal: Ui.pad, vertical: 6),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Text(tr(c.$2), style: ts(size: 13, bold: true, color: Pal.goldtx)),
+          Pairs(min: cols2Min - 2 * Ui.pad - 2, [
+            for (final t in STAFF_TRAITS.where((t) => t.cat == c.$1))
+              Container(
+                key: ValueKey('ztrait-${found.contains(t.id) ? 'done' : 'todo'}-${t.id}'),
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                decoration: Ui.rowLine,
+                child: found.contains(t.id)
+                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(t.rare ? tr('{0}（まれ）', [t.n]) : t.n, style: ts(size: 13, bold: true)),
+                        if (t.g.isNotEmpty) colored('${tr('＋')}${t.g}', Pal.up, size: 12),
+                        if (t.b.isNotEmpty) colored('${tr('－')}${t.b}', Pal.down, size: 12),
+                      ])
+                    : Text(tr('？？？'), style: ts(size: 13, color: Pal.mute)),
+              ),
+          ]),
+        ]),
+      ),
   ];
 }
 

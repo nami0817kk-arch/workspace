@@ -451,7 +451,7 @@ extension GameLife on Game {
 
   int techBehind(Biz b) => lifeOn ? math.max(0, techCur(indm[b.ind]!) - (lf.techGen[b.id] ?? techCur(indm[b.ind]!))) : 0;
 
-  double techCost(Biz b) => math.max(unitTotal(b), 1) * unitCapexAvg(b) * .25 + capexOf(indm[b.ind]!) * .5;
+  double techCost(Biz b) => (math.max(unitTotal(b), 1) * unitCapexAvg(b) * .25 + capexOf(indm[b.ind]!) * .5) * (anyTr('novelty') ? .8 : 1);
 
   /// 新しい世代の技術に乗り換える
   String upgradeTech(Biz b) {
@@ -475,7 +475,7 @@ extension GameLife on Game {
   /// 当たり前になったのに入れていない段の数
   int itBehind() => lifeOn && biz.isNotEmpty ? math.max(0, itEras.where((e) => yr() >= e.$1 + 5).length - lf.it) : 0;
 
-  double itCost() => (2e7 * (1 + biz.length) + 0) * nom() + math.max(0.0, rev) * .6;
+  double itCost() => ((2e7 * (1 + biz.length) + 0) * nom() + math.max(0.0, rev) * .6) * (anyTr('novelty') ? .8 : 1);
 
   String adoptIT() {
     final a = itAvail();
@@ -513,6 +513,8 @@ extension GameLife on Game {
       dmg += unitsIn(b, c) * unitCapexAvg(b) * unitLoss * 1.5;
     }
     if (dmg <= 0) return;
+    // 危機に強い人がいると、立て直しが早く痛手が小さい（1.1.0+33）
+    if (anyTr('crisis')) dmg *= .5;
     final pay = lf.insured ? dmg * .2 : dmg;
     cash -= pay;
     N(M(lf.insured ? '店や工場の修理に{0}かかり、保険で8割が戻りました（自社の負担 {1}）' : '店や工場の修理に{0}かかりました。保険をかけていないので全部自社の負担です', [Y(dmg), Y(pay)]), lf.insured ? '' : 'bad');

@@ -281,8 +281,10 @@ Widget _personRow(GameController ctl, Person p, bool on) {
   final s = ctl.game!;
   final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
   final warns = personWarns(s, p);
+  final vis = s.trOn && p.real ? s.trVisible(p) : const <String>[];
   final sub = s.cands.contains(p)
-      ? tr('{0}・{1}／月', [tr(candSrcs.firstWhere((c) => c.$1 == (p.src ?? 'mid'), orElse: () => candSrcs[1]).$2), yen(p.salary)])
+      ? tr('{0}・{1}／月', [tr(candSrcs.firstWhere((c) => c.$1 == (p.src ?? 'mid'), orElse: () => candSrcs[1]).$2), yen(p.salary)]) +
+          (vis.isEmpty ? '' : tr('・{0}', [vis.map((id) => stm[id]!.n).join(tr('・'))]))
       : s.alumni.contains(p) || p == s.meet
       ? tr(_leftJa[p.left] ?? '知り合い')
       : p.away > 0
@@ -435,23 +437,26 @@ Widget personDetail(GameController ctl, Person p, String seg) {
       trait(tr('協調性'), 'coop', p.coop),
       trait(tr('気質'), 'amb', p.amb, hiJa: '挑戦好き', loJa: '慎重'),
     ]),
-    Padding(
-      padding: const EdgeInsets.only(top: 3),
-      child: Wrap(
-        spacing: 4,
-        runSpacing: 2,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(tr('特性'), style: ts(size: 12.5)),
-          if (p.traitKnown) ...[
-            Tag(t.n),
-            colored('${tr('＋')}${t.g}', Pal.up, size: 12),
-            colored('${tr('－')}${t.b}', Pal.down, size: 12),
-          ] else
-            Muted(tr('？（働かせると分かる）'), size: 12),
-        ],
+    if (s.trOn && p.real)
+      ...traitChips(ctl, p)
+    else
+      Padding(
+        padding: const EdgeInsets.only(top: 3),
+        child: Wrap(
+          spacing: 4,
+          runSpacing: 2,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(tr('特性'), style: ts(size: 12.5)),
+            if (p.traitKnown) ...[
+              Tag(t.n),
+              colored('${tr('＋')}${t.g}', Pal.up, size: 12),
+              colored('${tr('－')}${t.b}', Pal.down, size: 12),
+            ] else
+              Muted(tr('？（働かせると分かる）'), size: 12),
+          ],
+        ),
       ),
-    ),
   ]);
   final famKnown = s.knows(p, 'fam');
   final kids = p.kidsAge.isEmpty
@@ -512,6 +517,62 @@ Widget personDetail(GameController ctl, Person p, String seg) {
       );
     },
   );
+}
+
+/// 特性の札（1.1.0+33）。見えている特性は押すと効き目が開き、見えていないものは「？？？」。下に相性の文
+List<Widget> traitChips(GameController ctl, Person p, {bool compat = true}) {
+  final s = ctl.game!;
+  final open = [for (final id in p.traits) if (s.trSeen(p, id) && ctl.shown.contains('trait-${p.id}-$id')) id];
+  final lines = compat ? s.trCompat(p) : const <String>[];
+  return [
+    Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Wrap(
+        spacing: 4,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(tr('特性'), style: ts(size: 12.5)),
+          for (final (i, id) in p.traits.indexed)
+            if (s.trSeen(p, id))
+              PickChip(stm[id]!.n, key: ValueKey('ptrait-${p.id}-$id'), on: open.contains(id), onTap: () => ctl.toggleShown('trait-${p.id}-$id'))
+            else
+              Semantics(
+                label: tr('まだ分からない特性'),
+                child: Container(
+                  key: ValueKey('ptrait-${p.id}-hidden-$i'),
+                  height: 32,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(99)),
+                  child: Center(widthFactor: 1, child: Text(tr('？？？'), style: ts(size: 12.5, color: Pal.mute))),
+                ),
+              ),
+        ],
+      ),
+    ),
+    for (final id in open)
+      Padding(
+        key: ValueKey('ptrait-desc-${p.id}-$id'),
+        padding: const EdgeInsets.only(top: 4),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(8, 5, 8, 6),
+          decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(6)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                tr('{0}（{1}）', [stm[id]!.n, tr(STRAIT_CATS.firstWhere((c) => c.$1 == stm[id]!.cat).$2)]),
+                style: ts(size: 12.5, bold: true),
+              ),
+              if (stm[id]!.g.isNotEmpty) colored('${tr('＋')}${stm[id]!.g}', Pal.up, size: 12),
+              if (stm[id]!.b.isNotEmpty) colored('${tr('－')}${stm[id]!.b}', Pal.down, size: 12),
+            ],
+          ),
+        ),
+      ),
+    if (s.trHidden(p) > 0) Padding(padding: const EdgeInsets.only(top: 3), child: Muted(tr('「？？？」は、働く月日や話を聞くことで分かります'), size: 11.5)),
+    for (final l in lines) Padding(padding: const EdgeInsets.only(top: 2), child: Muted(tr('相性：{0}', [tx(l)]), size: 11.5)),
+  ];
 }
 
 String _awayJa(String? why) => switch (why) {
@@ -589,6 +650,7 @@ Widget _actions(GameController ctl, Person p, Biz? job, {required bool isCand, r
           small: true,
         ),
       Btn(tr('話を聞く'), () => ctl.act(() => s.talkTo(p)), key: ValueKey('p-talk-${p.id}'), small: true),
+      if (s.trOn && p.real) Btn(tr('叱る'), () => ctl.act(() => s.scold(p)), key: ValueKey('p-scold-${p.id}'), small: true, enabled: p.away == 0),
       Btn(
         tr(p.partner ? '相棒と別れる' : '解雇'),
         () => p.partner
