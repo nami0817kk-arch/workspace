@@ -545,9 +545,10 @@ extension GameReal on Game {
     final out = <({double inflow, double out, double cash})>[];
     var c = cash;
     final ls = [for (final l in loans) (amt: l.amt, left: l.left, rate: l.rate, bullet: l.bullet)];
-    final profitBeforeInt = pre + interest;
-    final inflow = math.max(0.0, rev) + subs().fold(0.0, (s, x) => s + math.max(0.0, x.profit) * .4 * pctOf(x) / 100);
-    final costs = math.max(0.0, rev - profitBeforeInt);
+    // 子会社の売上と利益の持ち分は現金にならない。入るのは配当だけ（1.1.0+35）
+    final profitBeforeInt = pre - subP + interest;
+    final inflow = math.max(0.0, rev - subR) + subDivs();
+    final costs = math.max(0.0, rev - subR - profitBeforeInt);
     final taxRate = corpTaxRate();
     for (var i = 0; i < n; i++) {
       var intr = 0.0, prin = 0.0;
@@ -568,7 +569,19 @@ extension GameReal on Game {
   }
 
   /// 払えなくなる線（毎月の決まった支払い：経費の半月分＋今月の返済）。残りがこれを下回る月に印を付ける
-  double dangerLine() => math.max(0.0, rev - pre - interest) * .5 + loanPrincipal();
+  double dangerLine() => math.max(0.0, rev - subR - (pre - subP) - interest) * .5 + loanPrincipal();
+
+  /// 子会社が今月払う配当の総額（株主みんなへ。利益の4割。1.1.0+35）
+  /// （子会社の手元の現金からは引かない。子会社は利益を自分の現金に積んで店などを増やす今までの動きのまま。
+  ///   配当の分まで子会社の現金から引くと、税と返済のあとに現金が足りなくなり、育った子会社が次々に払えなくなった）
+  double subPayout(Company c) => c.profit > 0 ? c.profit * .4 : 0.0;
+
+  /// 今月、子会社から受け取る配当（持ち分の分）
+  double subDivs() => subs().fold(0.0, (s, c) => s + subPayout(c) * pctOf(c) / 100);
+
+  /// 月の利益のうち現金になる分（自社の事業の利益＋子会社の配当。税の前）。
+  /// [pre] は子会社の利益の持ち分を含むが、それは決算上の数で現金にはならない（1.1.0+35）
+  double cashPre() => pre - subP + subDivs();
 
   // ===== 景気と出来事 =====
   /// 統計の大きな出来事を、時代の波（株価と景気の揺れ）にする。自分の国か、世界中に響くものだけ

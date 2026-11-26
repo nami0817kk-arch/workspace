@@ -7,7 +7,7 @@ part of 'game.dart';
 /// - 事業が出ている国のうち、始めた国以外の1か国の分を、株100%の子会社（現地法人）として分ける。手を1つ使う。お金はかからない。
 ///   分ける力は「その国の市場の大きさ ÷ 事業の届く市場の大きさ」の割合。事業の力と現場の人はその割合だけ減る。
 /// - 現地法人はその国の市場だけで戦う（売上 = 業種の市場 × その国の大きさ × 力 ÷（地元の奪い合い × その国の大きさ ＋ 力）÷ 3）。
-///   地域ごとの奪い合い（totals）には入れない。利益の4割が毎月配当として入る（分社した子会社と同じ）。
+///   地域ごとの奪い合い（totals）には入れない。利益の4割が毎月配当として入る（分社した子会社と同じ。現金に入るのは配当だけ）。
 /// - 社長は部下から選ぶ（相棒は本社に残す）か、現地で雇う（その国の名前・特性はくじ）。
 ///   社長の特性を持つので、分社した子会社と同じく独断の投資や反発がある（dealsMonthly）。
 /// - 地元の規制の緩み:
@@ -255,8 +255,8 @@ extension GameLocal on Game {
         return;
       }
     }
-    // 資金が尽きかける
-    final burn = -pre;
+    // 資金が尽きかける（子会社の利益の持ち分は現金にならないので、現金になる分で見る。1.1.0+35）
+    final burn = -cashPre();
     if (biz.isNotEmpty && burn > 0 && cash < burn * 3 && turn - (crisis['em:c'] ?? -99) >= 12) {
       crisis['em:c'] = turn;
       final ev = crisisMeeting('cash');
@@ -401,7 +401,7 @@ extension GameLocal on Game {
         f: () => M('静かに待つことにしました'),
       );
     } else {
-      final burn = math.max(0.0, -pre);
+      final burn = math.max(0.0, -cashPre());
       final want = math.max(burn * 6, 1e7 * n);
       o['loan'] = (
         l: M('銀行から借りる'),
@@ -500,7 +500,7 @@ extension GameLocal on Game {
     final why = switch (kind) {
       'takeover' => M('{0}（{1}）の持ち分が{2}になり、{3}%に近づいています', [Nm(foe!.presName), Nm(foe.name), pct(sh.riv[foe.id] ?? 0), jsNum(near)]),
       'scandal' => M('不祥事で信用が揺らぎ、株価も下がっています（あと{0}か月は響きます）', [scandal]),
-      _ => M('赤字が続き、手元の資金はあと{0}か月分ほどしかありません', [pre < 0 ? jsNum(math.min(99, (math.max(0.0, cash) / -pre).floorToDouble())) : 0]),
+      _ => M('赤字が続き、手元の資金はあと{0}か月分ほどしかありません', [cashPre() < 0 ? jsNum(math.min(99, (math.max(0.0, cash) / -cashPre()).floorToDouble())) : 0]),
     };
     final title = M('臨時の会議：{0}', [M(switch (kind) { 'takeover' => '乗っ取りの危機', 'scandal' => '大きな不祥事', _ => '資金が尽きかけている' })]);
     final staffIn = picks.where((x) => x.p != null).toList();

@@ -428,6 +428,8 @@ void main() {
         final b = g.biz.firstWhere((b) => b.mgr != null);
         b.mgr = null;
         b.deleg = false;
+        // （1.1.0+35 で育った会社の盤面が変わり、社長の腕がその事業の新しい部下より上のことがある。置いたほうが強くなるように、社長のその腕を下げておく）
+        g.pres.ab[indm[b.ind]!.key] = 5;
         g.staff.add(g.mkPerson(3)..ab = {for (final k in abKeys) k: 95});
         g.ensureFaces();
         g.calcAll();

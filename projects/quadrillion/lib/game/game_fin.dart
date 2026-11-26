@@ -201,8 +201,10 @@ double finGross(Map<String, double> v) => fv(v, 'rev') - fv(v, 'cogs');
 /// 営業利益
 double finOpInc(Map<String, double> v) => finGross(v) - finSga(v);
 
-/// 営業外の損益（子会社からの配当・使用料など−支払利息）
-double finNonOp(Map<String, double> v) => fv(v, 'c:div') + fv(v, 'c:nonop') - fv(v, 'intr');
+/// 営業外の損益（使用料など−支払利息）。
+/// 子会社の利益の持ち分は売上と費用（持ち分）で営業利益に入っているので、子会社からの配当は利益に足さない
+/// （足すと同じ利益を2回数える。配当は現金の入りで、子会社の株の値打ちが同じだけ減る。1.1.0+35）
+double finNonOp(Map<String, double> v) => fv(v, 'c:nonop') - fv(v, 'intr');
 
 /// 経常利益
 double finOrd(Map<String, double> v) => finOpInc(v) + finNonOp(v);
@@ -316,8 +318,9 @@ extension GameFin on Game {
     // 設備: 払った額で増え、それを除いた減りが減価償却（資産が無い仕組みのときは、払った額がそのまま償却になる）
     final dep = (b['eq'] ?? 0) - g('c:capex') - st['eq']!;
     // 土地・株: 払った・受け取った額と、借りて買った土地・のれんの減損で説明できない増減が評価差額
+    // （子会社の株は、利益の持ち分（現金にならない利益。'eqInc'）で増え、受け取った配当の分だけ減る。1.1.0+35）
     final revL = st['land']! - (b['land'] ?? 0) + g('c:land') - g('landNC');
-    final revI = inv1 - (b['inv'] ?? 0) + g('c:stock') + g('gwImp');
+    final revI = inv1 - (b['inv'] ?? 0) + g('c:stock') + g('gwImp') - g('eqInc') + g('c:div');
     // 借金: 借りた・返した額で説明できない減りが借金の減免
     final debtG = (b['debt'] ?? 0) + g('c:borrow') + g('c:repay') + g('landNC') - debt1;
     f.add('dep', dep);
@@ -364,6 +367,8 @@ extension GameFin on Game {
       'hq': hq,
       'subc': subsRev - subP,
       'intr': interest,
+      // 子会社の利益の持ち分（損益には入るが、現金にはならない。貸借対照表では子会社の株の値打ちの増え。1.1.0+35）
+      'eqInc': subP,
     };
     // 関税・輸送・現地の手間・設備の古びの修繕・IT など、上の区分に入らない事業の費用（売上−利益−上の区分の残り）
     final known = finPlKeys.where((k) => k != 'rev' && k != 'oth' && k != 'intr' && k != 'tax').fold(0.0, (s, k) => s + (v[k] ?? 0));

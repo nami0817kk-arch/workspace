@@ -727,7 +727,12 @@ extension GameTrade on Game {
         trade.trapped[c] = v - rel;
         cfAdd('trap', rel);
       }
-      if (trade.trapped[c]! < 1) trade.trapped.remove(c);
+      // 1円に満たない残りは戻して消す（消すだけだと、決算書の貸借に1円未満の「合わない差」が出る。1.1.0+35）
+      final left = trade.trapped[c]!;
+      if (left < 1) {
+        if (left > 0) cfAdd('trap', left);
+        trade.trapped.remove(c);
+      }
     }
     // 政変の残り
     for (final c in trade.shock.keys.toList()) {

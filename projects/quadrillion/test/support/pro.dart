@@ -15,8 +15,9 @@ import 'bot.dart';
 /// - 給料は相場に合わせ、責任者のいない事業には部下を置く
 ///
 /// [borrow] は借金の打ち方：'none' 借りない（つなぎの融資は自動で入る）/ 'some' 伸ばすお金が足りないときに、借金が利益の2倍までに収まる分だけ /
-/// 'max' 毎月、借りられるだけ借りる。[abroad] を立てると、1995年から稼ぎ頭の事業で外国にも出る
-void proMonth(Game s, {String borrow = 'some', bool abroad = false}) {
+/// 'max' 毎月、借りられるだけ借りる。[abroad] を立てると、1995年から稼ぎ頭の事業で外国にも出る。
+/// [keepSubs] を立てると、買った会社を合併せずに子会社のまま持ち続け、次々に買う（子会社を多く持つ打ち方。1.1.0+35 の測り）
+void proMonth(Game s, {String borrow = 'some', bool abroad = false, bool keepSubs = false}) {
   _resolve(s);
   if (s.hNormalLeft() < 40 && s.biz.length >= 3) s.delegAll();
   final y = s.yr();
@@ -178,14 +179,17 @@ void proMonth(Game s, {String borrow = 'some', bool abroad = false}) {
 
   // 買う話は、蓄えを残してもお金が余るときだけ（1件ずつ）
   // （利益の出ている会社だけ。買う値段は蓄えの外のお金の3割まで）
-  if (s.ap > 0 && room() > s.cap * .3 && s.corp.deals.isEmpty && s.pre > 0) {
-    final tg = (s.cos.where((c) => c.alive && c.parent != 'player' && c.profit > 0 && s.tobCost(c, 50.1) < room() * .3 && s.tobChance(c, 50.1) > .4).toList()
+  // （keepSubs のときは、蓄えの外のお金の6割までで買えるなら買う）
+  if (s.ap > 0 && (keepSubs || room() > s.cap * .3) && s.corp.deals.isEmpty && s.pre > 0) {
+    final tg = (s.cos.where((c) => c.alive && c.parent != 'player' && c.profit > 0 && s.tobCost(c, 50.1) < room() * (keepSubs ? .6 : .3) && s.tobChance(c, 50.1) > .4).toList()
           ..ssort((a, b) => b.cap.compareTo(a.cap)))
         .firstOrNull;
     if (tg != null) s.maStart(tg);
   }
-  for (final c in s.subs()) {
-    if (c.fromStaff == null && s.canMerge(c) && s.ap > 0) s.merge(c);
+  if (!keepSubs) {
+    for (final c in s.subs()) {
+      if (c.fromStaff == null && s.canMerge(c) && s.ap > 0) s.merge(c);
+    }
   }
   if (s.sh.rivMax > 20 && s.ap > 0) s.doWhiteKnight();
   s.nextQuarter();

@@ -18,7 +18,8 @@ String? _json;
 /// 数年遊ばせた会社（事業4つ以上・借金・子会社・現地法人）
 Game _grown() {
   if (_json == null) {
-    final g = grownGame(years: 12, search: false);
+    // 1.1.0+35 から子会社・現地法人の利益は配当しか現金に入らず、種 2024 の12年目は子会社の無い盤面になった。事業7・子会社2の種 2025 を使う
+    final g = grownGame(seed: 2025, years: 12, search: false);
     _json = jsonEncode(g.toJson());
   }
   return Game.fromJson(jsonDecode(_json!) as Map<String, dynamic>, rng: ParkMiller(3))
