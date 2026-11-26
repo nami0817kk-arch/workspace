@@ -93,12 +93,26 @@ Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = fa
     }
     await tester.pump();
     expect(tester.takeException(), isNull, reason: '$v ${size.width}x${size.height} $lang');
+    if (shoot) await shot(tester, key, '${size.width.round()}x${size.height.round()}_${lang}_${v.replaceAll(':', '-')}', pixelRatio: 1.5);
+    if (p[0] == 'town') {
+      // 1.1.0+42 から街の絵は無い。都市ごとの違いは「自社の拠点」の欄（都市の切り替えと、その都市の店などの数）で見せる
+      expect(find.byKey(const ValueKey('town-picture')), findsNothing, reason: v);
+      // 画面の下にあるときは、まだ作られていないので、そこまで送る（書き出しのあとで送る）
+      await tester.scrollUntilVisible(find.byKey(const ValueKey('town-sites')), 120,
+          scrollable: find.descendant(of: find.byKey(const PageStorageKey('tab-town')), matching: find.byType(Scrollable)).first);
+      expect(find.byKey(const ValueKey('town-sites')), findsOneWidget, reason: v);
+      expect(find.byKey(const ValueKey('town-city-1')), findsOneWidget, reason: '$v: 都市の切り替えは残す');
+      final g = ctl.game!, city = p.length > 1 ? int.parse(p[1]) : 0;
+      for (final b in g.biz) {
+        final n = g.unitsAt(b, '${g.home}/$city/0') + g.unitsAt(b, '${g.home}/$city/1');
+        if (KIND_ZONED.contains(g.kindB(b)) && n > 0) expect(find.byKey(ValueKey('town-site-${b.id}')), findsOneWidget, reason: '$v: ${b.ind} の数');
+      }
+    }
     if (lang == 'en') {
       for (final s in _texts(tester)) {
         expect(_cjk.hasMatch(s), isFalse, reason: '$v: 英語の画面に日本語「$s」');
       }
     }
-    if (shoot) await shot(tester, key, '${size.width.round()}x${size.height.round()}_${lang}_${v.replaceAll(':', '-')}', pixelRatio: 1.5);
   }
   // 幅の狭い画面は、右の帯を小窓で開く
   if (size.width < 760) {

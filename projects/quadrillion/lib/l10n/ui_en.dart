@@ -269,8 +269,10 @@ const Map<String, String> uiEn = {
   '（相棒）': ' (partner)',
 
   // ===== 街 =====
-  '自社のビルが並ぶ街': 'Town with your buildings',
-  '　{0}を拠点に{1}か国で勝負中': '  Based in {0}. Countries: {1}',
+  '{0}にある自社の拠点': 'Your sites in {0}',
+  '自社の拠点': 'Your sites',
+  '{0}には、まだ店や工場がありません': 'No stores or plants in {0} yet',
+  'ほか{0}事業': '+{0} more businesses',
   '月の売上': 'Sales/mo',
   '事業': 'Businesses',
   '{0}つ': '{0}',
@@ -286,7 +288,6 @@ const Map<String, String> uiEn = {
   'あなたの子会社': 'Your subsidiary',
   '関係 ': 'Relations ',
   '　あなたの株を {0} 保有': '  Owns {0} of you',
-  '最近のできごと': 'Recent events',
   'どれも手を1つ使う': 'Each uses 1 move',
   '最初の1つは手を使わない': 'Your first one is free',
   '株を分けて口説く。今の相棒 {0}/2人': 'Win them over with shares. Partners: {0}/2',

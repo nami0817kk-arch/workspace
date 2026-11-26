@@ -51,73 +51,7 @@ int hr(Game s, String k) => s.hrs(k).round();
 Widget _gap([double h = 8]) => SizedBox(height: h);
 String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
 
-// --- 街 ---
-List<Widget> townTab(GameController ctl) {
-  final s = ctl.game!;
-  final out = <Widget>[];
-  // 上から：今月やること → 街の絵 → 会社の数字 → 社長の行動 → 宿敵 → 最近のできごと
-  final todo = todoCard(ctl);
-  if (todo != null) out.add(Padding(padding: const EdgeInsets.only(top: 6), child: todo));
-  out.add(Padding(
-    padding: EdgeInsets.only(top: todo != null ? 4 : 10, bottom: 4),
-    child: Frame(
-      key: const ValueKey('town-picture'),
-      child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s), size: Size.infinite)))),
-    ),
-  ));
-  final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
-  out.add(Panel(
-      key: const ValueKey('town-company'),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-    // 会社の段階と拠点の文の右に、事務所の札。並べて入りきらないとき（英語の長い札・大きい字）は、札を次の行に回す
-    // （横に並べたままだと、札が文の幅を食いつぶして、文が1字ずつ縦に折れる）
-    LayoutBuilder(
-        builder: (context, c) => Wrap(alignment: WrapAlignment.spaceBetween, crossAxisAlignment: WrapCrossAlignment.center, spacing: 8, runSpacing: 4, children: [
-              Text.rich(
-                  key: const ValueKey('town-stage'),
-                  TextSpan(children: [
-                    TextSpan(text: tx(s.stageName()), style: ts(bold: true)),
-                    TextSpan(text: tr('　{0}を拠点に{1}か国で勝負中', [cm[s.home]!.city, nCtry == 0 ? 1 : nCtry]), style: ts(color: Pal.mute)),
-                  ])),
-              ConstrainedBox(constraints: BoxConstraints(maxWidth: c.maxWidth), child: Tag(s.officeName(), key: const ValueKey('town-office'), kind: TagKind.gold)),
-            ])),
-    _gap(),
-    Grid2([
-      Kv(tr('月の売上'), yen(s.rev)),
-      Kv(tr('月の利益'), yen(s.pre)),
-      Kv(tr('事業'), tr('{0}つ', [s.biz.length])),
-      Kv(tr('子会社'), tr('{0}社', [s.subs().length])),
-      Kv(tr('部下'), tr('{0}人', [s.staff.length])),
-      Kv(tr('持ち株'), pct(s.sh.own)),
-    ]),
-    // 目標は会社の数字の下に添える
-    Container(
-      margin: const EdgeInsets.only(top: 6),
-      padding: const EdgeInsets.only(top: 8),
-      decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
-      child: Text.rich(TextSpan(children: [TextSpan(text: tr('目標　'), style: ts(size: 13, bold: true)), TextSpan(text: tx(s.goalText()), style: ts(size: 13))])),
-    ),
-  ])));
-  final vow = s.vow;
-  if (vow != null) {
-    out.add(Panel(
-        border: Pal.down,
-        child: Text(tr('取締役会との約束：{0}年1月までに、年の利益を{1}まで戻す', [vow['y']!.round(), yen(vow['target']!)]), style: ts(size: 13))));
-  }
-  out.add(presPanel(ctl));
-  out.addAll(townRivalsOf(ctl));
-  final newsOpen = !ctl.folded.contains('news');
-  final recent = s.log.reversed.take(8).toList();
-  out.add(FoldHead(tr('最近のできごと'), key: const ValueKey('fold-news'), open: newsOpen, onTap: () => ctl.toggleFold('news'), note: tr('{0}件', [recent.length])));
-  if (newsOpen) {
-    for (final n in recent) {
-      out.add(NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n)));
-    }
-  }
-  return out;
-}
+// --- 街 ---（画面の本体は real_screens.dart の townTabL。1.1.0+42 で使っていなかった縦の画面の townTab と街の絵を外した）
 
 /// 宿敵：見出しを押すとたためる。1人1行の要約で、押すと因縁と「裏の手」が開く
 List<Widget> townRivalsOf(GameController ctl) {
