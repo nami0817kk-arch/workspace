@@ -223,6 +223,7 @@
     if (YA.kadaiBand) page.append(YA.kadaiBand(w, rerender));
     main.append(page);
     if (w.phase === 'event' && w.events.length) showEvent();
+    else if (w.kzNow && w.kzNow.length) showEvent('kzNow'); // 試合のあとの気づきの場面と、そこで覚醒した窓（2026-11-27）
     else if (!U().app.holdPrompts) YA.promptsFor();
   }
 
@@ -242,14 +243,17 @@
     if (!w || w.phase !== 'after' || w.week >= YA.WEEKS) return false;
     return w.planMonth === w.year * 100 + YA.monthIdx(w.week + 1);
   };
+  // 週のはじめに決めることがなければ、続けて今週の練習へ進める（契約・年度はじめ・合宿や入団の時期・出来事で止まる）
+  const canChain = (w) => w.phase === 'plan' && w.planMonth === w.year * 100 + YA.monthIdx(w.week) && !w.pendingContract && !w.pendingCoach && !w.yearIntro && !(YA.homeExtra && YA.homeExtra());
   function endWeek(go) {
     const w = W();
     if (YA.todoGate && YA.todoGate(w, () => endWeek(go))) return;
     const wasEnd = w.week >= YA.WEEKS;
     const res = YA.endWeek(w);
     YA.saveWorld();
-    // 週のはじめに決めることがあれば止まる（契約・年度はじめ・合宿や入団の時期・出来事）
-    if (go && !wasEnd && w.phase === 'plan' && w.planMonth === w.year * 100 + YA.monthIdx(w.week) && !w.pendingContract && !w.pendingCoach && !w.yearIntro && !(YA.homeExtra && YA.homeExtra())) {
+    // B の試合の一場面が来たら、先にそれを見せる（見終えたら続けて進む）
+    if (go && !wasEnd && w.kzNow && w.kzNow.length) { U().app._kzGo = true; U().app.tab = 'home'; return rerender(); }
+    if (go && !wasEnd && canChain(w)) {
       U().app.tab = 'home';
       return runWeek();
     }
@@ -266,15 +270,36 @@
     } else rerender();
   }
 
-  // 出来事の会話
-  function showEvent() {
+  // 出来事の会話。qk：'events'（週の出来事）か 'kzNow'（試合のあとの気づきの場面と、そこで覚醒した窓）
+  function showEvent(qk) {
     const w = W();
-    const e = w.events[0];
+    const Q = qk === 'kzNow' ? w.kzNow : w.events;
+    // 列の先頭を済ませた：週の出来事が尽きたら試合へ。試合のあとの列が尽きたら、止めていた「次の週へ」の続き
+    const next = () => {
+      Q.shift();
+      if (Q === w.events && !w.events.length) afterEvents();
+      if (Q === w.kzNow && !w.kzNow.length && U().app._kzGo) { U().app._kzGo = false; YA.saveWorld(); if (canChain(w)) return runWeek(); }
+      YA.saveWorld();
+      rerender();
+    };
+    const e = Q[0];
     const v = YA.eventView(w, e);
-    if (!v) {
-      w.events.shift();
-      if (!w.events.length) afterEvents();
-      return rerender();
+    if (!v) return next();
+    // 選手の目（試合・練習の気づきの場面）は、時間を止めた図の画面で選ぶ
+    if (e.id === 'kizuki' && v.eye && YA.kizukiScreen) {
+      modal((close) => {
+        const box = YA.kizukiScreen(w, e, {
+          onPick: (role) => YA.kizukiSettle(w, e, role),
+          onDone: (res) => {
+            // 覚醒したら、今の覚醒の窓をすぐ次に見せる
+            if (res.kind === 'awake') { const a = YA.kizukiTakeAwake(w, e.pid); if (a) Q.splice(1, 0, a); }
+            close();
+            next();
+          },
+        });
+        return box || h('div', {});
+      });
+      return;
     }
     modal((close) => {
       const p = v.p;
@@ -294,19 +319,21 @@
             o.hint === 'good' ? h('span', { class: 'fit good', style: 'flex:none' }, '響きそう') : o.hint === 'bad' ? h('span', { class: 'fit bad', style: 'flex:none' }, '逆効果かも') : null)),
           p && v.info.some((x) => x.hint) ? h('button', { class: 'note', style: 'text-align:left;text-decoration:underline dotted;align-self:flex-start', onclick: () => YA.toast && YA.toast('「響きそう」「逆効果かも」は、見えている性格からの目安です。同じ言葉でも、性格で受け止め方が変わります。') }, '？「響きそう」の目安とは') : null);
         box.replaceChildren(
-          h('div', { class: 'row' }, h('span', { class: 'chip pers' }, '出来事'), h('b', {}, v.name), h('span', { class: 'grow' }), h('span', { class: 'sub' }, `残り${w.events.length}件`)),
+          h('div', { class: 'row' }, h('span', { class: 'chip pers' }, v.kizuki ? '気づき' : '出来事'), h('b', {}, v.name), h('span', { class: 'grow' }), h('span', { class: 'sub' }, `残り${Q.length}件`)),
           h('div', { class: 'evcols', style: 'display:flex;gap:10px;min-height:0;flex:1' }, leftCol, rightCol),
         );
       };
       const choose = (i) => {
         const r = YA.resolveEvent(w, e, i);
+        // 日常の会話で覚醒したら、今の覚醒の窓をすぐ次に見せる
+        if (r.kz && r.kz.kind === 'awake') { const a = YA.kizukiTakeAwake(w, e.pid); if (a) Q.splice(1, 0, a); }
         box.replaceChildren(
-          h('div', { class: 'h' }, v.name),
-          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, (p ? `${p.name.split(' ')[0]}は、` : '') + r.line),
+          r.kz ? h('div', { class: 'h kzhead' + (r.kz.kind === 'awake' ? ' gold' : '') }, `${v.name}　${r.kz.head}`) : h('div', { class: 'h' }, v.name),
+          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, r.kz ? r.kz.text + (r.kz.say ? `「${r.kz.say}」` : '') : (p ? `${p.name.split(' ')[0]}は、` : '') + r.line),
           r.small ? h('div', { class: 'chip trait', style: 'align-self:flex-start' }, r.small) : null,
           r.small && /自信|調子/.test(r.small) ? h('div', { class: 'note' }, '自信：高いほど試合で力を出せる（低いと出来事が起きやすい）。調子：ここ数週の出来。') : null,
           r.leave ? h('div', { class: 'insight bad' }, r.leave) : null,
-          h('button', { class: 'btn pri', onclick: () => { w.events.shift(); if (!w.events.length) afterEvents(); YA.saveWorld(); close(); rerender(); } }, w.events.length > 1 ? '次へ' : '閉じる'),
+          h('button', { class: 'btn pri', onclick: () => { close(); next(); } }, Q.length > 1 ? '次へ' : '閉じる'),
         );
       };
       render1();

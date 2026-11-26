@@ -140,11 +140,14 @@
     }
     if (ph === 'match') {
       YA.playAuto(w);
+      if (YA.kizukiAuto) YA.kizukiAuto(w, log); // 試合のあとの気づきの場面は自動で選ぶ（止めない）
       return { played: true };
     }
     // after
     const wasEnd = w.week >= YA.WEEKS;
+    if (YA.kizukiAuto) YA.kizukiAuto(w, log); // 画面で見た試合のあとに残った場面も
     const grad = YA.endWeek(w);
+    if (YA.kizukiAuto) YA.kizukiAuto(w, log); // B の試合のあとの場面
     return { ended: true, grad: wasEnd ? grad : null };
   }
 

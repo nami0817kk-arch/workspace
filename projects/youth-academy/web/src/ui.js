@@ -1338,6 +1338,23 @@
       S.holdScene = true;
     }
 
+    // 気づきの場面（2026-11-27 段3）：課題の後半の子が出ていれば、決めた時間に試合を止めて「選手の目」を出す。
+    // 選んだ中身は試合が終わってから反映する（applyMatch）。ふだんの試合画面には図を出さない（止まった図はこの場面だけ）
+    if (m.scheduled && app.w && YA.kizukiPlan && m._kzPlan === undefined) m._kzPlan = YA.kizukiPlan(app.w, m);
+    function kzCheck() {
+      const P = m._kzPlan;
+      if (!P || P.done || m._kz || m.min < P.min) return false;
+      P.done = true;
+      const ev = YA.kizukiLiveScene(app.w, m, P);
+      if (!ev) return false; // 交代・退場でもうピッチにいない（出ていれば試合のあとに出る）
+      S.paused = true;
+      YA._v.modal((close) => YA.kizukiScreen(app.w, ev, {
+        live: true,
+        onPick: (role) => { m._kz = { e: ev, role }; return YA.kizukiDescribe(app.w, ev, role); },
+        onDone: () => { close(); S.paused = false; S.last = 0; },
+      }));
+      return true;
+    }
     function handle(e) {
       if (e.type === 'tick') {
         upd();
@@ -1348,6 +1365,7 @@
           S.hold = 0.6;
           YA.sfx.play('whistle');
         }
+        kzCheck();
       } else if (e.type === 'scene') {
         upd();
         playScene(e.scene);

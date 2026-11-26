@@ -32,6 +32,7 @@ require(path.join(__dirname, '../src/persona.js'));
 require(path.join(__dirname, '../src/cond2.js'));
 require(path.join(__dirname, '../src/stars2.js'));
 require(path.join(__dirname, '../src/kadai.js'));
+require(path.join(__dirname, '../src/kizuki.js'));
 require(path.join(__dirname, '../src/team2.js'));
 require(path.join(__dirname, '../src/records.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
@@ -1352,18 +1353,20 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const v0 = YA.eventView(w0, e0);
   ok(v0 && v0.opts.length === 3 && /課題/.test(v0.text) && /信頼/.test(v0.text) && !/undefined|null|NaN/.test(v0.text), '最初の会話の文 ' + (v0 && v0.text));
   ok(YA.trustLv(g[0]) === 3, '信頼は「ふつう」から');
-  // 前半は気づかない。後半に出場した試合で気づいて覚醒する
+  // 前半は気づきの場面が来ない。後半に来る場面で正しい手を選ぶと覚醒する（2026-11-27 段3。前は試合で確率で気づいた）
   const q = g[0];
-  ok(!YA.kadaiSpark(w0, q, { which: 'A', mins: 90, rating: 8 }), '前半（苦しむ時期）は試合で気づかない');
+  const at0 = YA.KZ_AT[q.kd.t][0];
+  ok(!YA.kizukiCan(w0, q, at0), '前半（苦しむ時期）は気づきの場面が来ない');
   const c1 = q.conf;
   YA.kadaiWeek(w0); w0.week++; YA.kadaiWeek(w0);
   ok(q.conf < c1, '前半は自信が少し下がる ' + c1 + '→' + q.conf);
+  w0.forced = (w0.forced || []).filter((e) => e.id !== 'kizuki');
   w0.week = 2 + Math.ceil(q.kd.len / 2);
-  let sp = 0;
-  for (let i = 0; i < 20 && !sp; i++) { w0.week++; if (YA.kadaiSpark(w0, q, { which: 'B', mins: 70, rating: 6.8 })) sp = w0.week; }
-  ok(sp > 0 && !YA.kadaiSpark(w0, q, { which: 'B', mins: 0, rating: 7 }), '後半は出場した試合で気づく（出ていなければ気づかない）');
+  ok(YA.kizukiCan(w0, q, at0), '後半は気づきの場面が来る（' + at0 + '）');
   const r0 = YA.rating(q), t0 = q.kd.t;
-  YA.kadaiAwakenNow(w0, q);
+  const sq = YA.kizukiMake(w0, q, at0 === 'match' ? 'match' : at0);
+  const sr = YA.kizukiSettle(w0, sq, 'ok');
+  ok(sr.kind === 'awake' && sr.head === '見えた。', '合う課題で正しい手を選ぶと「見えた。」');
   ok(q.awake && q.aw && q.aw.trait && YA.rating(q) > r0 && !q.kd && !q.star && q.kHist.slice(-1)[0].r === 'awake', '合う課題で気づくと覚醒し、課題が終わる ' + t0 + ' ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
   ok(q.awake.kadai && q.kf.g === 1 && q.kc.self === null && q.kc.coach && q.kf.t !== t0, '1回目の覚醒のあと、次の合う課題と新しい手がかりが決まる');
   const ev = (w0.forced || []).find((e) => e.id === 'awake');
@@ -1394,13 +1397,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(YA.kadaiGive(w0, hz, hz.kf.t, hc).ok && hz.kd.fit === 'half', '種類だけ合う課題 ' + hz.kd.t);
   const ab0 = YA.abSum(hz);
   const hl = hz.kd.len;
-  for (let i = 1; i <= hl + 1 && hz.kd; i++) { w0.week = 3 + i; YA.kadaiWeek(w0); }
+  for (let i = 1; i <= hl + 1 && hz.kd; i++) { w0.week = 3 + i; w0.forced = []; YA.kadaiWeek(w0); }
   ok(!hz.kd && hz.kHist.slice(-1)[0].r === 'half' && YA.abSum(hz) > ab0, '種類だけ合うと、あきらめずに少し伸びる');
   // 合う課題でも、試合に出ないまま期間が終わると「気づけずに終わった」
   const mz = g[2];
   // （上の週送りで、試合のないまま期間が過ぎていることもある）
-  if (mz.kd) { const ml = mz.kd.len; for (let i = 1; i <= ml + 1 && mz.kd; i++) { w0.week = 2 + i; YA.kadaiWeek(w0); } }
-  ok(!mz.kd && mz.kHist.slice(-1)[0].r === 'miss' && !mz.awake, '試合に出さないまま終わると、気づけずに終わる');
+  if (mz.kd) { const ml = mz.kd.len; for (let i = 1; i <= ml + 1 && mz.kd; i++) { w0.week = 2 + i; w0.forced = []; YA.kadaiWeek(w0); } }
+  ok(!mz.kd && mz.kHist.slice(-1)[0].r === 'miss' && !mz.awake, '気づきの場面で正しい手を選べないまま終わると、気づけずに終わる');
   // 面談で本人の言葉が出る（入団から2〜3か月）
   const tz = ps.find((p) => p.kc && !p.kc.self && !p.kd);
   w0.year = 1; w0.week = 15; tz.talk = -99;
@@ -1425,6 +1428,176 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   YA.alumniTick(wn);
   ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業（1年目卒）/.test(t) && !/★/.test(t)), '課題で覚醒した卒業生が便りに出る（★は付けない）');
   JSON.parse(JSON.stringify(w0));
+}
+// 気づきの場面（2026-11-27 段3。kizuki.js）：後半の子だけ・1人週1回／全体週2回・課題ごとの場所・選んだ結果・図の正解の位置・試合の結果は変わらない
+{
+  let nChk = 0;
+  const OK = (c, m) => { nChk++; ok(c, '気づき：' + m); };
+  // 課題ごとの場所（仕様の表のとおり）
+  const SPEC = { seal: 'match,prac', eye: 'match,prac', convert: 'match,prac', weapon: 'match,prac', body: 'match,prac', role: 'match,talk', stage: 'match,talk', captain: 'match,talk', pair: 'prac,talk', rival: 'prac,talk' };
+  OK(YA.KADAI.every((d) => (YA.KZ_AT[d.k] || []).join(',') === SPEC[d.k]), '課題ごとの場所の組み合わせが仕様どおり');
+  OK(YA.KADAI.every((d) => YA.KZ_EYE.filter((x) => x.k === d.k).length === 2) && YA.KZ_EYE.length === 20, '選手の目の場面は課題ごとに2つ（計20）');
+  OK(YA.KADAI.every((d) => (YA.KZ_AT[d.k].indexOf('talk') >= 0) === (YA.KZ_TALK.filter((x) => x.k === d.k).length === 2)), '日常の会話は気持ちの課題（役割・舞台・主将・組ませる・競わせる）に2つずつ');
+  const w = YA.newWorld(12);
+  w.week = 2;
+  const ps = Object.values(w.players).filter((p) => p.pos !== 'GK');
+  // 課題の種類ごとに1人ずつ（中身は合う課題なら合う中身、そうでなければ最初の候補）
+  const byT = {};
+  for (const d of YA.KADAI) {
+    const p = ps.find((x) => !x.kd && !d.why(w, x) && (!d.pick || (YA.kadaiOpts(w, x, d.k) || []).length));
+    if (!p) continue;
+    if (YA.kadaiLeft(w) <= 0) YA.kadaiActive(w).forEach((x) => { x.kd = null; x.star = false; });
+    const c = d.pick ? (p.kf.t === d.k ? p.kf.c : YA.kadaiOpts(w, p, d.k)[0]) : null;
+    const r = YA.kadaiGive(w, p, d.k, c);
+    if (r.ok) { byT[d.k] = p; p.kEnd = null; }
+  }
+  // 5人までなので、種類ごとに出し直しながら確かめる
+  let badPlace = 0, firstHalf = 0, texts = 0, badText = [];
+  for (const d of YA.KADAI) {
+    for (const x of YA.kadaiActive(w)) { x.kd = null; x.star = false; }
+    const p = ps.find((x) => !d.why(w, x) && (!d.pick || (YA.kadaiOpts(w, x, d.k) || []).length) && (d.k !== 'pair' && d.k !== 'rival' || YA.kadaiOpts(w, x, d.k).length));
+    p.kEnd = null;
+    const c = d.pick ? YA.kadaiOpts(w, p, d.k)[0] : null;
+    w.week = 2; w.kzW = null; w.forced = [];
+    if (!YA.kadaiGive(w, p, d.k, c).ok) { badPlace++; continue; }
+    for (const at of ['match', 'prac', 'talk']) if (YA.kizukiCan(w, p, at)) firstHalf++;
+    w.week = 2 + Math.ceil(p.kd.len / 2);
+    for (const at of ['match', 'prac', 'talk']) if (YA.kizukiCan(w, p, at) !== (YA.KZ_AT[d.k].indexOf(at) >= 0)) badPlace++;
+    // その課題の場面の文：どの場所・どの型も崩れない（図の場面は全型、会話も全型）
+    for (const T of YA.KZ_EYE.filter((x) => x.k === d.k).concat(YA.KZ_TALK.filter((x) => x.k === d.k))) {
+      for (let s = 1; s <= 6; s++) {
+        const talk = YA.KZ_TALK.indexOf(T) >= 0;
+        const e = { id: 'kizuki', pid: p.id, at: talk ? 'talk' : s % 2 ? 'match' : 'prac', tp: T.id, seed: s * 7919 + T.id.length, week: w.week, year: w.year };
+        const v = YA.eventView(w, e);
+        texts++;
+        const all = v ? [v.name, v.text].concat(v.opts).join(' ') : 'null';
+        if (!v || v.opts.length !== 3 || /undefined|NaN|null|\{\w\}|\[object/.test(all)) badText.push(T.id + ':' + all.slice(0, 80));
+        if (!talk) { const kv = YA.kizukiView(w, e); if (!kv.lock.text || !kv.lock.why || /\{\w\}|undefined/.test(kv.lock.text + kv.lock.why + kv.think + kv.hint + kv.sit)) badText.push(T.id + ' lock:' + kv.lock.text + '/' + kv.lock.why); }
+      }
+    }
+  }
+  OK(badPlace === 0, '後半の子は、課題の場所でだけ場面が来る（場所の外れ ' + badPlace + '）');
+  OK(firstHalf === 0, '前半の子には場面が来ない（' + firstHalf + '）');
+  OK(!badText.length, `場面の文が崩れない（${texts}通り） ` + badText.slice(0, 3).join(' / '));
+  // 1人週1回・全体週2回
+  {
+    for (const x of YA.kadaiActive(w)) { x.kd = null; x.star = false; }
+    w.week = 2; w.kzW = null; w.forced = [];
+    const three = ps.filter((x) => !YA.KADAI.find((d) => d.k === 'eye').why(w, x)).slice(0, 3);
+    for (const x of three) { x.kEnd = null; YA.kadaiGive(w, x, 'eye', null); }
+    w.week = 2 + 8;
+    const [a, b, c] = three;
+    OK(YA.kizukiCan(w, a, 'match') && YA.kizukiCan(w, b, 'match') && YA.kizukiCan(w, c, 'match'), '後半の3人は場面が来られる');
+    const ea = YA.kizukiMake(w, a, 'prac');
+    OK(!YA.kizukiCan(w, a, 'match'), '1人は週1回まで（同じ週の試合では来ない）');
+    w.kzNow = [YA.kizukiMake(w, b, 'match')];
+    OK(!YA.kizukiCan(w, c, 'match') && !YA.kizukiCan(w, c, 'prac'), '全員で週2回まで');
+    w.forced = [ea];
+    w.week++;
+    OK(!YA.kizukiCan(w, a, 'match') && !YA.kizukiCan(w, b, 'match'), '見ていない場面が残っている子には、次の場面が来ない');
+    OK(YA.kizukiCan(w, c, 'match'), '次の週は数え直す');
+    // 選んだ結果：無難は持ち越し、間違いは自信が下がって持ち越し、正しい手は合えば覚醒
+    const cf = b.conf;
+    const rb = YA.kizukiSettle(w, w.kzNow.shift(), 'bad');
+    OK(rb.kind === 'bad' && b.kd && b.conf < cf && !b.awake && /持ち越し/.test(rb.tag), '間違いは悔しい（自信が下がる）・持ち越し');
+    const rs = YA.kizukiSettle(w, w.forced.shift(), 'safe');
+    OK(rs.kind === 'safe' && a.kd && !a.awake && /持ち越し/.test(rs.tag), '無難は持ち越し');
+  }
+  // 正しい手：合っていれば覚醒、合っていなければ「何かが違う」＝手がかり+1・少し伸びる・その課題ではもう来ない
+  {
+    for (const x of YA.kadaiActive(w)) { x.kd = null; x.star = false; }
+    w.week = 3; w.kzW = null; w.forced = []; w.kzNow = [];
+    const yes = ps.find((x) => !x.kd && !x.awake && !YA.kadaiDef(x.kf.t).why(w, x) && x.kf.t !== 'stage' && YA.kadaiGive(w, x, x.kf.t, x.kf.c).ok);
+    const no = ps.find((x) => !x.kd && !x.awake && x.kf.t !== 'eye' && x.kc && !x.kc.self && (x.kEnd = null, YA.kadaiGive(w, x, 'eye', null).ok));
+    no.kd.fit = 'half'; // 「何かが違う」を見るため（外れの課題は後半の前にあきらめる）
+    w.week = 3 + 8;
+    const e1 = YA.kizukiMake(w, yes, YA.KZ_AT[yes.kd.t][0] === 'match' ? 'match' : YA.KZ_AT[yes.kd.t][0]);
+    const r1 = YA.kizukiSettle(w, e1, 'ok');
+    OK(r1.kind === 'awake' && yes.awake && !yes.kd && yes.kHist.slice(-1)[0].r === 'awake' && /覚醒/.test(r1.tag) && (w.forced || []).some((f) => f.id === 'awake' && f.pid === yes.id), '合う課題で正しい手 → 覚醒（今の覚醒の窓が出る） ' + r1.tag);
+    const ab0 = YA.abSum(no);
+    const e2 = YA.kizukiMake(w, no, 'prac');
+    const r2 = YA.kizukiSettle(w, e2, 'ok');
+    OK(r2.kind === 'clue' && r2.head === '何かが違う' && no.kd && no.kc.self && YA.abSum(no) === ab0 + 1 && /手がかり/.test(r2.tag), '合わない課題で正しい手 → 何かが違う（手がかり+1・少し伸びる） ' + r2.tag);
+    w.week++;
+    OK(!YA.kizukiCan(w, no, 'prac'), '「何かが違う」のあと、その課題では場面が来ない');
+  }
+  // 図の正解の位置と A〜C の並びが毎回変わる
+  {
+    let fixed = [];
+    for (const T of YA.KZ_EYE) {
+      const p = ps.find((x) => !YA.kadaiDef(T.k).why(w, x));
+      const keep = p.kd;
+      p.kd = { t: T.k, c: YA.kadaiDef(T.k).pick ? YA.kadaiOpts(w, p, T.k)[0] : null, w0: 0, len: 10, fit: 'yes' };
+      const xs = new Set(), keys = new Set(), sides = new Set();
+      for (let s = 1; s <= 40; s++) {
+        const v = YA.kizukiView(w, { id: 'kizuki', pid: p.id, at: 'match', tp: T.id, seed: s * 104729 + 17 });
+        const o = v.opts.find((x) => x.role === 'ok');
+        xs.add(Math.round(o.x * 5));
+        sides.add(o.x < 0.42 ? 'L' : o.x > 0.58 ? 'R' : 'C');
+        keys.add(o.key);
+      }
+      p.kd = keep;
+      if (keys.size < 3 || sides.size < 2 || xs.size < 3) fixed.push(`${T.id}(${[...keys].join('')}/${[...sides].join('')}/${xs.size})`);
+    }
+    OK(!fixed.length, '図の正解の場所と A〜C の並びがばらける（20の型 × 40回） ' + fixed.join(' '));
+  }
+  // 試合の結果（得点）は、場面の有無で変わらない（途中で選んでも、反映は試合のあと）
+  {
+    const base = YA.newWorld(31);
+    const st = Object.values(base.players).filter((p) => base.lineupA.some((s) => s.pid === p.id) && p.pos !== 'GK');
+    const kid = st.find((p) => YA.kadaiGive(base, p, 'eye', null).ok);
+    kid.kd.fit = 'yes';
+    let found = null;
+    for (let wk = 3; wk < 30 && !found; wk++) {
+      base.week = wk; base.kzW = null;
+      kid.kd.w0 = base.year * 40 + wk - 7; kid.kd.len = 12;
+      const m = new YA.Match({ seed: 77 + wk, home: YA.teamFromWorld(base, 'A'), away: YA.makeOpponent(YA.opponentOf(base), 5), settings: { autoStop: false, live: false } });
+      const P = YA.kizukiPlan(base, m);
+      if (P && P.pid === kid.id) found = wk;
+    }
+    OK(!!found, '画面で見る A の試合で、途中で止める子と時間が決まる（' + found + '週）');
+    const run = (withScene) => {
+      const w2 = JSON.parse(JSON.stringify(base));
+      w2.week = found; w2.kzW = null; w2.forced = [];
+      const m = new YA.Match({ seed: 77 + found, home: YA.teamFromWorld(w2, 'A'), away: YA.makeOpponent(YA.opponentOf(w2), 5), settings: { autoStop: false, live: false } });
+      m.scheduled = true;
+      const P = YA.kizukiPlan(w2, m);
+      m._kzPlan = P;
+      let g = 0, shown = false;
+      while (!m.finished && g++ < 3000) {
+        m.step();
+        if (withScene && !shown && P && m.min >= P.min) { shown = true; const e = YA.kizukiLiveScene(w2, m, P); if (e) m._kz = { e, role: 'ok' }; }
+      }
+      const rt = m.home.players[kid.id].st.rating;
+      YA.applyMatch(w2, m, 'A', YA.opponentOf(w2), true);
+      return { score: m.score.home + '-' + m.score.away, rt, rt2: w2.players[kid.id].st.rating, awake: !!w2.players[kid.id].awake, live: !!m._kz, now: (w2.kzNow || []).map((e) => e.id + ':' + e.at) };
+    };
+    const a = run(false), b = run(true);
+    console.log('  気づき：同じ試合', JSON.stringify(a), JSON.stringify(b));
+    OK(a.score === b.score && a.rt === b.rt, '途中で止めて選んでも、試合の得点と採点の流れは同じ ' + a.score + ' / ' + b.score);
+    OK(b.live && b.awake && Math.abs(b.rt2 - a.rt - 0.5) < 0.051, '途中で選んだ正しい手は、試合のあとに覚醒と採点+0.5で反映される');
+    OK(b.now.indexOf('awake:undefined') >= 0 || b.now.some((x) => /^awake/.test(x)), '覚醒の窓は試合のあとにすぐ出る（w.kzNow）');
+    OK(a.now.some((x) => x === 'kizuki:match'), '画面で見なかったときは、試合のあとに「試合の一場面」が来る');
+  }
+  // おまかせ：止まらず回り、場所ごとに場面が来る
+  {
+    const wa = YA.newWorld(44);
+    const at = {};
+    let stopKz = 0;
+    for (let i = 0; i < 40; i++) {
+      const r = YA.simulate(wa, { until: 'week', stopOnImportant: true });
+      if (r && r.stopped && /気づき/.test(r.stopped || '')) stopKz++;
+      // 止まった出来事は、おまかせと同じ選び方で済ませて先へ
+      if (wa.phase === 'event') YA.simulate(wa, { until: 'week', stopOnImportant: false });
+      if ((wa.kzNow || []).length) stopKz++;
+    }
+    for (const x of wa.kzLog || []) at[x.at] = (at[x.at] || 0) + 1;
+    console.log('  気づき：おまかせ40週の場面', JSON.stringify(at));
+    OK(stopKz === 0 && YA.SIM_IMPORTANT.indexOf('kizuki') < 0, 'おまかせは気づきの場面で止まらず、試合のあとの場面も残さない');
+    OK((at.match || 0) + (at.matchB || 0) > 0 && (at.prac || 0) > 0 && (at.talk || 0) > 0, 'おまかせでも試合・練習・日常の場面が来る');
+  }
+  console.log(`  気づき：点検 ${nChk}件`);
+  ok(nChk >= 20, '気づきの点検が全部走った ' + nChk);
 }
 {
   ok(YA.AWAKE_FORMS.length >= 80 && new Set(YA.AWAKE_FORMS.map((f) => f.k)).size === YA.AWAKE_FORMS.length && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は80種類・中身が正しい');
@@ -1477,6 +1650,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   }
   // おまかせ進行で3年回す：コーチのおすすめどおりに課題が出て、同時5人まで・33人・年の覚醒は5〜7人前後
   let aw = 0, other = 0, yrs = 0, given = 0, gaveup = 0, maxAct = 0, half = 0, miss = 0, sizeBad = 0;
+  const scN = [], scMiss = [];
   for (const seed of [8, 21]) {
     const wa = YA.newWorld(seed);
     const og = YA.kadaiGive;
@@ -1492,12 +1666,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       yrs++;
       aw += wa.awakeN && wa.awakeN.y === yy ? wa.awakeN.n : 0;
       gaveup += wa.kadaiN && wa.kadaiN.y === yy ? wa.kadaiN.give || 0 : 0;
-      for (const p of Object.values(wa.players)) for (const hh of p.kHist || []) if (hh.y === yy) { if (hh.r === 'half') half++; if (hh.r === 'miss') miss++; }
+      for (const p of Object.values(wa.players)) for (const hh of p.kHist || []) if (hh.y === yy) { if (hh.r === 'half') half++; if (hh.r === 'miss') miss++; if (hh.fit === 'yes' && (hh.r === 'miss' || hh.r === 'awake')) { scN.push(hh.n || 0); if (hh.r === 'miss') scMiss.push(hh.n || 0); } }
     }
     YA.kadaiGive = og;
     other += Object.values(wa.players).filter((p) => p.awake && !p.awake.kadai).length;
   }
   console.log(`  課題（おまかせ ${yrs}年）：出した${given}・覚醒${aw}・あきらめ${gaveup}・少し伸びた${half}・気づけず${miss}・同時の最大${maxAct}人`);
+  const avgN = (xs) => (xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : 0);
+  console.log(`  気づき：合う課題の後半に来た場面 平均${avgN(scN).toFixed(2)}回（覚醒まで・${scN.length}件）／最後まで選べなかった課題では 平均${avgN(scMiss).toFixed(2)}回（${scMiss.length}件）`);
+  ok(scMiss.length === 0 || (avgN(scMiss) >= 1.6 && avgN(scMiss) <= 4.5), '合う課題の後半いっぱいで、気づきの場面は2〜4回ほど ' + avgN(scMiss).toFixed(2));
   ok(maxAct <= YA.KADAI_MAX && maxAct >= 4, '同時に課題を出しているのは5人まで（おまかせ）' + maxAct);
   ok(sizeBad === 0, 'おまかせでも人数は33人前後（GK の途中加入で少し増えることがある）');
   ok(given >= yrs * 10, 'おまかせで課題が回る（1年に10件以上）' + given + '/' + yrs + '年');
