@@ -651,7 +651,10 @@ void main() {
       // 任せるのに時間は使わず、会議の時間が減る（1.1.0+25）
       expect(g.hUsed, h0);
       expect(g.hMeet(), lessThan(meet0));
-      expect(find.descendant(of: card, matching: find.text('任せ中')), findsOneWidget);
+      // 1.1.0+40 から、2列の画面では「任せ中」の札はカードの上の事業の頭に出す（札の鍵で見る）
+      expect(card, findsOneWidget);
+      expect(find.byKey(_k('deleg-tag-${b.id}')), findsOneWidget);
+      expect(find.text('任せ中'), findsWidgets);
       expect(find.byKey(_k('deleg-budget-${b.id}')), findsOneWidget);
       expect(find.byKey(_k('deleg-did-${b.id}')), findsOneWidget);
       // 月の枠を選ぶ（元手の 0／1／3／10 倍）

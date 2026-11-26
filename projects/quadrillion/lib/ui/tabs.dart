@@ -621,7 +621,8 @@ List<Widget> _newBizSection(GameController ctl) {
             key: ValueKey('newbiz-row-${i.id}'),
             opacity: block != null ? .45 : 1,
             child: Row(children: [
-        Padding(padding: const EdgeInsets.only(right: 8), child: IndIcon(i, size: 26)),
+        // 業種の絵（幅の狭い並びでは、名前の幅を取らないよう出さない）
+        if (!narrow) Padding(padding: const EdgeInsets.only(right: 6), child: IndIcon(i, size: 22)),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Wrap(key: ValueKey('newbiz-${i.id}'), spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -2583,7 +2584,11 @@ Widget _bizHead(GameController ctl, Biz b, {bool withChart = false}) {
                   const SizedBox(width: 8),
                   Expanded(child: bizTrendPanel(ctl, b, chartH: kpis.length > 4 ? 118 : 64)),
                 ]));
-  return Column(key: ValueKey('biz-head-${b.id}'), crossAxisAlignment: CrossAxisAlignment.stretch, children: [head, body]);
+  // 透明な面を敷いて、頭のどこを指しても「頭がある」と分かるようにする（カードのあいだのすきまも含めて）
+  return ColoredBox(
+      key: ValueKey('biz-head-${b.id}'),
+      color: Colors.transparent,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [head, body]));
 }
 
 /// 直近の推移の、ひとつ前の月の値（無ければ null）
@@ -2696,7 +2701,7 @@ Widget bizTrendPanel(GameController ctl, Biz b, {double chartH = 96}) {
     padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       SectionHead(tr('売上と利益の推移@@biz'), Icons.show_chart,
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: [dot(revCol, tr('売上')), dot(proCol, tr('利益'))])),
+          trailing: FittedBox(fit: BoxFit.scaleDown, child: Row(mainAxisSize: MainAxisSize.min, children: [dot(revCol, tr('売上')), dot(proCol, tr('利益'))]))),
       const SizedBox(height: 4),
       if (n < 2)
         Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Muted(tr('月を進めると、ここに線が引かれます'), size: 12))
