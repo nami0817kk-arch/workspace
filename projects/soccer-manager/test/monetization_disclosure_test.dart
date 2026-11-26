@@ -10,22 +10,7 @@ import 'package:soccer_manager/logic/economy_scale.dart';
 /// アプリ内の説明の両方で言っていること。実装がそこからずれると、
 /// **書いてあることと違う**という一番まずい形になる。
 void main() {
-  group('広告は任意で、進行を妨げない', () {
-    test('無料でも毎日受け取れる回数がある', () {
-      expect(RewardOffer.dailyLimitFree, greaterThan(0),
-          reason: '無料の受け取り回数が0だと、実質的に課金必須になる');
-    });
-
-    test('サポーターの回数は無料より多いが、桁違いではない', () {
-      expect(RewardOffer.dailyLimitSupporter,
-          greaterThan(RewardOffer.dailyLimitFree));
-      expect(RewardOffer.dailyLimitSupporter,
-          lessThanOrEqualTo(RewardOffer.dailyLimitFree * 2),
-          reason: '差が大きすぎると「買わないと不利」に傾く');
-    });
-  });
-
-  group('特典は資金だけで、強さには触らない', () {
+  group('前の版の資金パックの額(受け取り損ねたぶんだけ渡す)', () {
     test('受け取れるのは資金であり、ディビジョンに応じて変わる', () {
       // 成長率や勝率に触る特典を作ると、無料と有料で強さが変わる。
       final byTier = {

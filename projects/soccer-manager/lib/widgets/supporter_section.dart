@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../monetization/monetization_controller.dart';
 import '../monetization/purchase_service.dart';
-import '../monetization/reward_offer.dart';
 import '../services/feedback_service.dart';
 import '../l10n/tr.dart';
 
-/// サポーター購入と、購入の復元。設定画面に置く。
+/// 「広告を消す」の購入と、購入の復元。設定画面に置く。
+///
+/// クラス名と商品IDが supporter のままなのは、前の版で「サポーター」として
+/// 売っていたため(商品IDは変えられない)。
 ///
 /// 復元導線は iOS の審査要件なので、購入済みかどうかに関わらず出す。
 class SupporterSection extends StatefulWidget {
@@ -36,91 +38,67 @@ class _SupporterSectionState extends State<SupporterSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(Tr.pick('課金と広告', 'Payments and ads'),
+        Text(Tr.pick('広告と課金', 'Ads and payments'),
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 4),
-        // 課金要素の全体像。個々の画面には説明があるが、「このアプリで
-        // お金が関わるのは何か」を一箇所で見られる場所が無かった。
-        // 買う前・見る前に全体を把握できる方が、判断の材料になる。
+        // 広告と課金の全体像。「このアプリでお金が関わるのは何か」を
+        // 一箇所で見られるようにしてある。買う前に全体を把握できる方が、
+        // 判断の材料になる。
         Card(
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  Tr.pick('このアプリでお金が関わるのは次の2つだけです。',
-                      'Only two things in this app involve money.'),
-                  style: const TextStyle(fontSize: 13),
-                ),
-                const SizedBox(height: 8),
                 _PointRow(
                   icon: Icons.ondemand_video,
                   title: Tr.pick('広告', 'Ads'),
                   body: Tr.pick(
-                      '営業を強化できる動画広告は、クラブ経営の画面で自分から選んだときだけ'
-                          '再生されます。1日${RewardOffer.dailyLimitFree}回まで、見ると次の1節だけ'
-                          '収入が増えます。**一度も見なくても最後まで遊べます。**'
-                          'このほか、シーズンの切り替わりで全画面広告が1回だけ出ます。'
-                          '試合中やメニュー操作に割り込むことはなく、バナー広告もありません。',
-                      'The video ads that boost your marketing play only when you choose to watch them, from the '
-                          'club finance screen. Up to ${RewardOffer.dailyLimitFree} a day, each one raises '
-                          'income for the next matchday. **You can finish the game without ever watching one.** '
-                          'Separately, one full-screen ad appears when a season rolls over. '
+                      'ゲームの中で3か月たつごとに、全画面広告が1回出ます。'
+                          '試合中やメニュー操作の途中に割り込むことはなく、'
+                          'バナー広告もありません。',
+                      'A full-screen ad appears once every three in-game months. '
                           'Nothing interrupts a match or a menu, and there are no banners.'),
                 ),
                 const SizedBox(height: 8),
                 _PointRow(
-                  icon: Icons.favorite_border,
-                  title: Tr.pick('サポーター（買い切り）',
-                      'Supporter (one-off purchase)'),
+                  icon: Icons.block,
+                  title: Tr.pick('広告を消す（買い切り）', 'Remove ads (one-off purchase)'),
                   body: Tr.pick(
-                      '広告を見ずに同じ営業の強化ができるようになり、1日の回数が'
-                          '${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。'
-                          'シーズンの切り替わりの全画面広告も出なくなります。'
-                          '月額ではありません。**サポーター自体は、選手の成長や試合の勝率を'
-                          '変えるものではありません。**',
-                      'You get the same marketing boost without ads, your daily limit rises from '
-                          '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}, and the '
-                          'full-screen ad between seasons stops appearing. '
-                          'It is not a subscription. '
-                          '**The supporter purchase itself does not change player growth '
-                          'or your chances in a match.**'),
+                      '買うと全画面広告が出なくなります。変わるのはそれだけで、'
+                          '選手の成長や試合の勝率、資金は変わりません。月額ではありません。',
+                      'The full-screen ads stop appearing. That is all it changes: '
+                          'player growth, your chances in a match and your funds stay the same. '
+                          'It is not a subscription.'),
                 ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        Text(Tr.pick('サポーター', 'Supporter'),
-            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
         Card(
           child: Column(
             children: [
               if (money.isSupporter)
                 ListTile(
-                  leading: const Icon(Icons.favorite),
-                  title: Text(Tr.pick('サポーターとしてご支援いただいています',
-                      'Thank you for supporting the game')),
+                  leading: const Icon(Icons.check_circle_outline),
+                  title: Text(Tr.pick('広告を消しています', 'Ads removed')),
                   subtitle: Text(
-                    Tr.pick('広告を見なくても営業を強化できます。ありがとうございます。',
-                        'You can push marketing without watching an ad. Thank you.'),
+                    Tr.pick('ご購入ありがとうございます。全画面広告は出ません。',
+                        'Thank you for your purchase. No full-screen ads will appear.'),
                   ),
                 )
               else
                 ListTile(
-                  leading: const Icon(Icons.favorite_border),
+                  leading: const Icon(Icons.block),
                   title: Text(
                     price == null
-                        ? Tr.pick('サポーターになる', 'Become a supporter')
-                        : Tr.pick(
-                            'サポーターになる（$price）', 'Become a supporter ($price)'),
+                        ? Tr.pick('広告を消す', 'Remove ads')
+                        : Tr.pick('広告を消す（$price）', 'Remove ads ($price)'),
                   ),
                   subtitle: Text(
-                    Tr.pick(
-                        '買い切りです。広告を見なくても営業を強化できるようになり、1日の回数が${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。',
-                        'A one-off purchase. You can push marketing without watching an ad, and your daily limit rises from ${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}.'),
+                    Tr.pick('買い切りです。全画面広告が出なくなります。',
+                        'A one-off purchase. The full-screen ads stop appearing.'),
                   ),
                   trailing: _busy
                       ? const SizedBox(
@@ -163,7 +141,8 @@ class _SupporterSectionState extends State<SupporterSection> {
 
     final message = switch (outcome) {
       PurchaseOutcome.purchased => Tr.pick(
-          'ありがとうございます。サポーターとして登録されました', 'Thank you. You are now a supporter'),
+          'ありがとうございます。全画面広告は出なくなりました',
+          'Thank you. Full-screen ads are now removed'),
       // 自分でやめた場合は何も言わない。失敗のように見せない。
       PurchaseOutcome.canceled => null,
       PurchaseOutcome.unavailable =>

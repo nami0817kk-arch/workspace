@@ -438,12 +438,6 @@ class _NoAdService implements AdService {
   Future<void> initialize() async {}
 
   @override
-  bool get isRewardedAdReady => false;
-
-  @override
-  Future<bool> showRewardedAd() async => false;
-
-  @override
   bool get isInterstitialAdReady => false;
 
   @override

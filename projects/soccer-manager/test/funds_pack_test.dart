@@ -1,73 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
-import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/funds_pack.dart';
-import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/monetization/reward_offer.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
-class _FakePurchases implements PurchaseService {
-  /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
-  @override
-  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
-      onDeliveredCallback = callback;
-
-  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
-
-  _FakePurchases({this.outcome = PurchaseOutcome.purchased});
-
-  PurchaseOutcome outcome;
-  final List<FundsPack> bought = [];
-  int supporterBuys = 0;
-
-  @override
-  Future<void> initialize() async {}
-  @override
-  Future<bool> isAvailable() async => true;
-  @override
-  Future<String?> priceLabel() async => '¥480';
-  @override
-  Future<String?> priceLabelFor(FundsPack pack) async =>
-      switch (pack) {
-        FundsPack.small => '¥160',
-        FundsPack.medium => '¥600',
-        FundsPack.large => '¥1,600',
-      };
-  @override
-  Future<PurchaseOutcome> buySupporter() async {
-    supporterBuys++;
-    return outcome;
-  }
-
-  @override
-  Future<PurchaseOutcome> buyFundsPack(FundsPack pack) async {
-    if (outcome == PurchaseOutcome.purchased) bought.add(pack);
-    return outcome;
-  }
-
-  @override
-  Future<PurchaseOutcome> restorePurchases() async => outcome;
-  @override
-  void dispose() {}
-}
-
-Future<MonetizationController> _build(_FakePurchases purchases) async {
-  final controller = MonetizationController(
-    adService: NoOpAdService(),
-    purchases: purchases,
-  );
-  await controller.initialize();
-  return controller;
-}
-
 void main() {
   setUp(() {
     Tr.language = AppLanguage.japanese;
-    SharedPreferences.setMockInitialValues({});
   });
   tearDown(() => Tr.language = AppLanguage.system);
 
@@ -112,20 +54,6 @@ void main() {
           FundsPack.values.length + 1);
     });
 
-    test('回数の制限がなく、何度でも買える', () async {
-      // 上限を付けると広告の代わりに買うだけの商品になり、サポーターとの
-      // 違いが消える。ここは意図して制限していない。
-      final purchases = _FakePurchases();
-      final money = await _build(purchases);
-      for (var i = 0; i < 10; i++) {
-        expect(await money.buyFundsPack(FundsPack.small),
-            PurchaseOutcome.purchased);
-      }
-      expect(purchases.bought.length, 10);
-      // 広告の特典の残り回数には影響しない。別の仕組み。
-      expect(money.claimedToday, 0);
-    });
-
     test('購入すると、その額だけ資金が増えてニュースに残る', () async {
       final gameState = GameState();
       await gameState.startNewGame('テストFC');
@@ -141,12 +69,11 @@ void main() {
       expect(gameState.save!.newsLog.first.text, contains('資金'));
     });
 
-    test('購入が成立しなければ、資金は動かない', () async {
-      final purchases = _FakePurchases(outcome: PurchaseOutcome.canceled);
-      final money = await _build(purchases);
-      expect(await money.buyFundsPack(FundsPack.large),
-          PurchaseOutcome.canceled);
-      expect(purchases.bought, isEmpty);
+    test('もう売らない。買う口は課金の管理から外してある', () {
+      // 2026-11-26 に方針として確定。受け取りの口(_grant)だけ残す。
+      final controller = File('lib/monetization/monetization_controller.dart')
+          .readAsStringSync();
+      expect(controller, isNot(contains('buyFundsPack')));
     });
   });
 
@@ -163,12 +90,13 @@ void main() {
       }
     });
 
-    test('資金の購入は画面から外れ、設定画面の説明も「2つだけ」に揃っている', () {
+    test('資金の購入は画面から外れ、設定画面の説明は「広告を消す」だけになっている', () {
       // 1.2.0 のオーナー型では、買えば赤字を消せる商品は置かない。
       // 説明と画面のどちらかだけが残ると、書いてあることと違う形になる。
       final section =
           File('lib/widgets/supporter_section.dart').readAsStringSync();
-      expect(section, contains('お金が関わるのは次の2つだけ'));
+      expect(section, contains('広告を消す（買い切り）'));
+      expect(section, isNot(contains('資金パック')));
       expect(section, isNot(contains('有利になる商品です')));
       final finance =
           File('lib/screens/finance_screen.dart').readAsStringSync();

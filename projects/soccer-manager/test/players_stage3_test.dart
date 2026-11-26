@@ -85,7 +85,10 @@ void main() {
         relegationCutPct: () => 0,
         promotionRisePct: 30,
         releaseClause: () => p.marketValue * 2);
-    expect(game.renewalExtrasWeekly(p, offer), greaterThan(1));
+    // 最低額を1割っているので、出来高などの値打ちが1以上あれば届く。
+    // 年俸の安い選手に当たると値打ちがちょうど1になることがあり、
+    // 「1より大きい」では乱数でたまに落ちていた(2026-11-26)。
+    expect(game.renewalExtrasWeekly(p, offer), greaterThanOrEqualTo(1));
     final r = await game.offerContractTerms(offer);
     expect(r, ContractOfferResult.accepted);
     expect(p.wage, low);

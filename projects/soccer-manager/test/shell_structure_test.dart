@@ -38,7 +38,6 @@ import 'package:soccer_manager/widgets/owner_career_card.dart';
 import 'package:soccer_manager/widgets/owner_wealth_card.dart';
 import 'package:soccer_manager/widgets/business_card.dart';
 import 'package:soccer_manager/widgets/proposal_card.dart';
-import 'package:soccer_manager/widgets/reward_funds_card.dart';
 import 'package:soccer_manager/widgets/risk_card.dart';
 import 'package:soccer_manager/widgets/rival_owners_card.dart';
 import 'package:soccer_manager/widgets/rules_card.dart';
@@ -116,7 +115,6 @@ void main() {
         null,
         [
           type(ProposalCard),
-          type(RewardFundsCard),
           type(BudgetPlanCard),
         ]
       ),

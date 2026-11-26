@@ -12,7 +12,7 @@
 | アプリ名（短縮・ホーム画面表示） | サカマネ |
 | カテゴリ | ゲーム > スポーツ / シミュレーション |
 | 対象年齢 | 全年齢（暴力表現・実写、ギャンブル要素なし。クラブ経営の「融資」「スポンサー契約」はすべて架空のゲーム内通貨） |
-| 価格モデル | 無料（任意視聴のリワード広告で営業ブースト + シーズンの切り替わりの全画面広告 + 買い切りのサポーター課金）。資金の購入は 1.2.0 で画面から外した |
+| 価格モデル | 無料（ゲームの中で3か月ごとの全画面広告 + それを消す買い切りの課金「広告を消す」370円）。2026-11-26 に整理: 動画広告(リワード)と資金パックはやめた。課金の商品IDは前の「サポーター」の `soccer_manager_supporter` をそのまま使う |
 | 対応言語 | 日本語・英語（アプリ内で切り替え可。既定は端末の設定に従う） |
 | プライバシーポリシー | https://soccer-manager.pages.dev/legal/privacy.html |
 | 利用規約 | https://soccer-manager.pages.dev/legal/terms.html |
@@ -94,15 +94,11 @@
 
 進行状況は端末内に保存されます。オンラインのアカウント登録は不要です。
 
-営業を強化できる動画広告は「見たい人だけ」が対象で、自分から選んだときだけ
-再生されます。1日3回まで、見ると次の1節だけ収入が増えます。
-一度も見なくてもゲームは最後まで遊べます。
-全画面広告はシーズンの切り替わりで1回だけ表示され、試合中やメニュー操作には
-割り込みません。バナー広告はありません。
-課金はサポーター（買い切り）の1つだけです。購入すると、広告を見ずに同じ営業の
-強化ができ、1日の回数が3回から5回に増え、全画面広告も表示されなくなります。
-月額ではありません。資金を買う商品はありません。サポーターは、選手の成長や
-試合の勝率を変えるものではありません。
+広告は、ゲームの中で3か月たつごとに出る全画面広告だけです。試合中や
+メニュー操作には割り込みません。バナー広告はありません。
+課金は「広告を消す」（買い切り）の1つだけです。購入すると全画面広告が
+表示されなくなります。変わるのはそれだけで、選手の成長・試合の勝率・資金は
+変わりません。月額ではありません。
 ```
 
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
@@ -150,7 +146,8 @@
 
 【そのほか】
 ・設定から、このアプリを評価できるようになりました。お問い合わせの窓口も置きました
-・資金を買う商品はなくなりました。課金は、広告を見ずに済むサポーター（買い切り）の1つだけです
+・広告は、ゲームの中で3か月ごとに出る全画面広告だけにしました。動画広告と、資金を買う商品はなくなりました
+・課金は「広告を消す」（買い切り）の1つだけです。前に「サポーター」を購入された方は、そのまま広告が出ません
 ```
 
 ### 英語
@@ -179,7 +176,8 @@
 
 [Other]
 - You can rate the app and contact support from Settings.
-- Funds can no longer be bought. The only purchase is Supporter, a one-off that lets you skip the ads.
+- The only ad is a full-screen one every three in-game months. The video ads and the funds packs are gone.
+- The only purchase is Remove Ads, a one-off. If you bought Supporter before, you keep it and see no ads.
 ```
 
 ## このバージョンの新機能（1.1.8）
@@ -602,15 +600,11 @@ day with something on.
 
 Your progress is saved on your device. No account, no sign-in.
 
-The video ads that boost your marketing play only when you choose to watch
-them. Up to 3 a day, each one raises income for the next matchday. You can
-finish the game without watching a single one.
-One full-screen ad appears when a season rolls over, never during a match or
-while you are in the menus. There are no banners.
-The only purchase is Supporter, a one-off: you get the same marketing boost
-without ads, your daily limit rises from 3 to 5, and the full-screen ad between
-seasons stops appearing. It is not a subscription, funds are not for sale, and
-it does not change player growth or your chances in a match.
+The only ad is a full-screen one every three in-game months, never during a
+match or while you are in the menus. There are no banners.
+The only purchase is Remove Ads, a one-off that stops those ads. That is all it
+changes: player growth, your chances in a match and your funds stay the same.
+It is not a subscription.
 ```
 
 ## キーワード（App Store キーワードフィールド、100字以内目安）
@@ -798,15 +792,16 @@ App Preview は「アプリが動いている様子」であることを求め�
 - [ ] アプリ署名（Play App Signing）を有効にした
 - [ ] AAB をアップロードした（APK ではなく AAB）
 - [ ] データセーフティ フォームを提出した
-      **「データを収集しない」を選んではいけない。** リワード広告(AdMob)が
+      **「データを収集しない」を選んではいけない。** 全画面広告(AdMob)が
       広告IDなどを収集するため、下の行のとおり収集ありで申告する。
       （この記述は、広告もIAPも無かった頃の名残だった）
 - [ ] コンテンツのレーティング アンケートに回答した
 - [ ] ターゲット層と広告の申告で**「広告あり」**を選んだ
 - [ ] データセーフティで「広告 ID」「デバイスまたはその他の ID」の収集を申告した
 - [ ] アプリ内課金の商品を登録した（IDを1文字も違えないこと）。**いま画面から
-      売っているのはサポーターの1件だけ**（`lib/widgets/supporter_section.dart`）
-      - `soccer_manager_supporter`（**非消費型**）
+      売っているのは「広告を消す」の1件だけ**（`lib/widgets/supporter_section.dart`）
+      - `soccer_manager_supporter`（**非消費型**。前の名前は「サポーター」。1.2.0 の提出で
+        表示名・説明を「広告を消す」に、値段を370円に書き換える）
       - 資金パック3件（`soccer_manager_funds_small` / `soccer_manager_funds_medium` /
         `soccer_manager_funds_large`、**消費型**）は 1.2.0 で画面から外した
         （買う画面の部品 `FundsPackCard` も 2026-11-23 に消した）。**新しく登録しない。**
@@ -830,15 +825,20 @@ App Preview は「アプリが動いている様子」であることを求め�
 - [ ] App プライバシーで「識別子 > デバイス ID」を
       「サードパーティ広告」の目的で申告した
 - [ ] アプリ内課金の商品を登録した（IDを1文字も違えないこと）。**いま画面から
-      売っているのはサポーターの1件だけ**（`lib/widgets/supporter_section.dart`）
-      - `soccer_manager_supporter`（**非消費型**）
+      売っているのは「広告を消す」の1件だけ**（`lib/widgets/supporter_section.dart`）
+      - `soccer_manager_supporter`（**非消費型**。前の名前は「サポーター」。1.2.0 の提出で
+        表示名・説明を「広告を消す」に、値段を370円に書き換える）
       - 資金パック3件（`soccer_manager_funds_small` / `soccer_manager_funds_medium` /
         `soccer_manager_funds_large`、**消費型**）は 1.2.0 で画面から外した。
         **新しく登録しない。** App Store Connect に既にある分は、コードが
         ストアから届いた購入を受け取れるように残してある（承認待ちや、落ちて
-        届き損ねたぶん）。販売を止めるかどうかはストアの画面で決める
+        届き損ねたぶん）。**1.2.0 がストアに出るのと同時に、3つとも「販売をやめる」**
+        （2026-11-26 決定。配信中の 1.1.3 に買うボタンがあるので、先にやめない）
+- [ ] 1.2.0 の公開に合わせて `legal/privacy.html`・`legal/support.html`・`marketing/landing/index.html` の広告と課金の
+      説明を書き換えた（動画広告・資金パック・サポーターの記述を消し、3か月ごとの
+      全画面広告と「広告を消す」にする。公開中の 1.1.3 に合わせてあるので先に変えない）
 - [ ] 「購入の復元」導線が動くことを確認した（審査要件）
-      ※ 復元で戻るのは非消費型のサポーターのみ
+      ※ 復元で戻るのは非消費型の「広告を消す」のみ
 - [ ] 年齢制限レーティングのアンケートに回答した
 - [ ] サポートURL・マーケティングURLを登録した
 - [ ] キーワード（100字以内）を上記から転記した
