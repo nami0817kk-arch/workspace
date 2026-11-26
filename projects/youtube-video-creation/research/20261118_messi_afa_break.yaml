@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月18日）メッシがAFAに、名前と写真の商用利用をやめるよう求める書面を準備か（現地報道）。ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し
+# 取材: 2026-11-18。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 前提の確認（依頼文は「メッシがAFAとの関係を断ち、法的手段へ」）:
+#   A Bola（2026-11-17 20:49、全文）の見出しは「Messi corta relações com a federação argentina e avança para a via judicial」だが、本文は
+#     「クラリン（Clarín）によると」として、メッシが法律の専門家に書面を作らせ、AFAに名前・写真・販促物・映像を商用で使うのをすぐやめるよう求める、という内容。
+#     書面が既に届いたかは「情報源によって食い違う」、メッシもAFA会長タピアも公式のコメントは出していない（A Bola 本文）。→ 見出しの「断ち」「司法へ」は本文より強い。
+#   出どころ（元）は Clarín「Messi se despega del Chiqui Tapia y el AFAGATE」（clarin.com、全文を requests で読んだ。Google News の検索結果の転送先から辿った）。
+#     Clarín: 「メッシとAFAの現指導部との個人的・商業的な関係は壊れている」「近い数週間に具体的な行動と法的な結果が知られるかもしれない」（"podrían conocerse en las próximas semanas"）。
+#       書面は "carta documento"（公式な書状）の形でAFAに届く「かもしれない」（"podría llegar"）。「メッシは決してAFAを見捨てない」とも書く。
+#       "Las fuentes consultadas difieren: esa carta documento pudo ya haber sido enviada a la AFA ... mientras que para otros ... está redactado, listo para ser remitido."
+#       W杯でAFAのスポンサー（アルゼンチンのビール）がメッシの像を大型広告に使い、メッシ側は国際スポンサーに説明する羽目になった。
+#       10月の代表引退試合（ベナン戦、リーベルのモヌメンタル）の運営がまずく、AFAはリーベルのせいにして、リーベル側が否定。メッシはリーベルに最後の代表ユニフォームを贈った。
+#   裏取り（2社目）: マルカMX 2026-11-16「Lionel Messi se aleja de Chiqui Tapia y pide que la AFA deje de usar su imagen」（全文を requests で読んだ）。
+#     「クラリンなど」の報道を引き、書面が「すでに準備できているか、ビアモンテ（AFA本部）に向かっている」と書く。AFAは「沈黙」。
+#   そのほか Goal（2026-11-16）・A24・Futbolred なども同じ内容の見出し（本文は読んでいない。使わない）。
+#   → クラリンの報道を、マルカMXとA Bolaが追っている形。メッシ本人・AFA・タピア会長の公式な言葉は、読んだどの記事にも無い。確度は報道（クラリンの情報源の話）。
+# 扱い:
+#   ①「関係を断った」「法的手段に出た」とは言わない。台本は「求める書面を準備しているとクラリンが報じた」「書面が届いたかは情報源で食い違う」まで。
+#   ②AFA幹部（タピア会長・財務担当）への資金の疑いはクラリン・A Bola とも書くが、人への疑いを台本で言い立てない。「AFAの運営をめぐる疑惑の報道が続く中」とだけ言う。
+#   ③関連の A Bola「Messi vai jogar para lá de 2030」（スカローニの発言）は本件と別の話。使わない。
+#   ④ESPN 等では確かめていない（検索の転送先は取れたがクラリン・マルカを優先した）。
+# 重なり: scripts/20261115_scaloni_no_messi は別の話。AFA の件は初出。
+# 本人の言葉: 無し。X。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [リオネル・メッシ, アルゼンチン協会, クラウディオ・タピア]
+
+short_style: X
+short_hook_word: AFAとの関係が悪化
+short_photos:
+  - assets/images/20261118_messi_c/02_v.jpg
+  - assets/images/20261118_messi_c/01_v.jpg
+  - assets/images/20261118_messi_afa_break/03_v.jpg
+  - assets/images/20261118_messi_afa_break/01_v.jpg
+short_question: メッシとAFAの関係は、このあとどうなると思いますか。
+short_telops: []
+
+theme:
+  id: messi_afa_break
+  league: spain
+  league_name: アルゼンチン代表
+  prefix: ""
+  title: メッシ、アルゼンチン協会に名前と写真の使用停止を求める書面を準備と報道
+  hook: ""
+  question: メッシは協会に何を求めようとしていると報じられたのか
+  takeaway: 報じられたのは、名前と写真を商売に使うのをやめさせる書面。送ったかは情報源で食い違い、本人も協会も公式には語っていない
+
+thumbnail:
+  layout: face
+  line1: メッシ AFAに待った？
+  line2: 名前と写真の使用停止を要求か
+  tags: [メッシ, アルゼンチン代表]
+  photo: assets/images/20261118_messi_c/02_w.jpg
+  short_photo: assets/images/20261118_messi_c/02_v.jpg
+
+answer: 名前・写真・映像を商用に使うのをやめるよう求める書面。送付済みかは食い違う
+watch: メッシ側とAFAの公式な発表
+
+sections:
+  - id: what
+    main: true
+    heading: メッシがAFAに求めると報じられたこと
+    tier: 報道
+    telop: メッシ、AFAに名前と写真の商用利用の停止を求める書面を準備
+    say:
+      - text: メッシが、アルゼンチン協会に、名前と写真を商売に使うのをやめるよう求める。そう現地で報じられました。
+      - text: 報じたのは、アルゼンチンの有力紙です。メッシの周辺の関係者への取材だといいます。
+      - text: メッシ側は専門家に、書面を作らせたとされています。
+        image: assets/images/20261118_messi_c/02_w.jpg
+      - text: 求める内容は、名前、写真、販促物、映像を、お金を生む活動に使うのをすぐやめることです。
+      - text: ただ、その書面がもう協会に届いたのかは、情報源によって食い違っています。
+        image: assets/images/20261118_messi_afa_break/03_w.jpg
+        emph: true
+      - text: 書き上がって、送る準備ができた段階だと話す人もいます。
+    official: false
+    sources:
+      - https://www.clarin.com/politica/messi-analiza-despegarse-chiqui-tapia-afagate_0_xI6EbFmDq9.html
+      - https://www.marca.com/mx/futbol/argentina/2026/11/16/lionel-messi-aleja-chiqui-tapia-pide-afa-deje-imagen.html
+      - https://www.goal.com/es/noticias/escandalo-en-argentina-messi-lucha-para-evitar-que-se-manche-su-reputacion/bltd6f8373f0a772435
+      - https://www.abola.pt/noticias/messi-corta-relacoes-com-a-federacao-argentina-e-avanca-para-a-via-judicial-2026111720435423591
+  - id: why
+    heading: 報じられた、すれ違いの背景
+    tier: 報道
+    telop: W杯の広告と、10月の引退試合
+    say:
+      - text: 背景として、二つの出来事が伝えられています。
+        image: assets/images/20261118_messi_afa_break/01_w.jpg
+      - text: 一つめは、W杯のときの広告です。協会のスポンサーの会社が、メッシを使った大きな広告を出しました。
+        image: assets/images/20261118_messi_afa_break/03_w.jpg
+      - text: メッシには、別の企業との専属の契約がありました。メッシ側は、取引先に説明を迫られたといいます。
+      - text: 二つめは、10月の代表引退試合、ベナン戦です。音や照明などの運営に、強い批判が出ました。
+        image: assets/images/20261118_messi_afa_break/01_w.jpg
+      - text: 運営の責任をめぐって、会場のクラブ、リーベル・プレートと協会の言い分が食い違ったとも伝えられています。
+      - text: 協会の運営をめぐる疑惑の報道が続いています。
+        image: assets/images/20261118_messi_c/02_w.jpg
+      - text: そうした中で、メッシ側が自分の名前を守ろうとしている。それが報じた側の見方です。
+    official: false
+    sources:
+      - https://www.clarin.com/politica/messi-analiza-despegarse-chiqui-tapia-afagate_0_xI6EbFmDq9.html
+      - https://www.abola.pt/noticias/messi-corta-relacoes-com-a-federacao-argentina-e-avanca-para-a-via-judicial-2026111720435423591
+  - id: view
+    viewpoint: true
+    heading: 確かなことと、まだ分からないこと
+    tier: 背景
+    telop: 報道の段階。本人もAFAも公式には語っていない
+    say:
+      - text: 見立て。いま確かなのは、報じられたということまでです。
+        card: {type: table, title: 報じられた内容（クラリンなど）, columns: [項目, 状況], rows: [[求める内容, 名前・写真の商用利用をやめる], [書面の送付, 情報源で食い違う], [メッシ・AFAの公式な言葉, 出ていない]], highlight_row: 1}
+      - text: 書面が届いたのか。そのあと、法的な手続きに進むのか。そこは、まだ分かっていません。
+        card: none
+        emph: true
+      - text: 次の注目点は、メッシ側か協会が、公式に何かを語るかどうかです。
+        image: assets/images/20261118_messi_afa_break/01_w.jpg
+    official: false
+    sources:
+      - https://www.clarin.com/politica/messi-analiza-despegarse-chiqui-tapia-afagate_0_xI6EbFmDq9.html

@@ -1,0 +1,125 @@
+# 候補テーマ（2026年11月25日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年11月25日"
+candidates:
+  - id: fc_imabari_tegevajaro
+    title: "FC Imabari 2 - 1 Tegevajaro Miyazaki（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836388
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836388
+
+  - id: vanraure_hachinohe_albirex
+    title: "Vanraure Hachinohe 0 - 1 Albirex Niigata（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836395
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836395
+
+  - id: hokkaido_consadole_sapporo
+    title: "Hokkaido Consadole Sapporo 2 - 1 Fujieda MYFC（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836387
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836387
+
+  - id: iwaki_fc_kataller
+    title: "Iwaki FC 0 - 1 Kataller Toyama（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836389
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836389
+
+  - id: montedio_yamagata_j
+    title: "Montedio Yamagata 1 - 0 Júbilo Iwata（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836390
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836390
+
+  - id: rb_omiya_ardija
+    title: "RB Omiya Ardija 1 - 2 Tokushima Vortis（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836391
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836391
+
+  - id: sagan_tosu_oita
+    title: "Sagan Tosu 4 - 0 Oita Trinita（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836392
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836392
+
+  - id: shonan_bellmare_ventforet
+    title: "Shonan Bellmare 1 - 0 Ventforet Kofu（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836393
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836393
+
+  - id: tochigi_city_fc
+    title: "Tochigi City FC 0 - 0 Blaublitz Akita（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836394
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836394
+
+  - id: yokohama_fc_vegalta
+    title: "Yokohama FC 2 - 1 Vegalta Sendai（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836396
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836396
+

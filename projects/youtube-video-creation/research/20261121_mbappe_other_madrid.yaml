@@ -1,0 +1,114 @@
+# 取材メモ（2026年11月21日）レアル・マドリードの8連勝。ムバッペと、ギュレル・ベリンガム・ディオマンデの3人の数字を並べた（ニュースのショート。見せ方 X＝冒頭1秒に強い一言）
+# 取材: 2026-11-21。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: マルカ 2026-11-20「El Madrid juega con 'otro' Mbappé」（全文を読んだ。スペイン語）。主張: ギュレル・ベリンガム・ディオマンデの3人でムバッペ1人ぶんの攻撃の数字を再現している、8連勝の原動力。
+#   → マルカ独自の指標「acciones de valor gol」（ゴール＋アシスト＋PK獲得）。ムバッペ22、3人合計24（ギュレル5G5A・ベリンガム5G4A・ディオマンデ4G1A）。この指標とその内訳は一次で確かめられないので、台本では使わない。
+#   → 台本は、確かめられる数字（ゴール・アシストだけ）を ESPN の試合記録から自分で数え直したものだけで組む。
+# 確かめたこと（全部 ESPN の試合データ。site.api.espn.com .../summary?event=<id>、rosters の totalGoals・goalAssists を試合ごとに足した）:
+#   対象はリーグ戦12試合（event 401882912,919,899,894,880,872,865,848,839,832,819,808）とCL4試合（401915451,414,313,383）の計16試合（今季のコパ・デル・レイは含まれない）。
+#   ・ムバッペ 17ゴール3アシスト（マルカも「17ゴール3アシスト」で一致）／ギュレル 4ゴール6アシスト（14試合出場）／ベリンガム 5ゴール3アシスト／ディオマンデ 4ゴール4アシスト。
+#   ・→ 自分で数えたもの: ゴール＋アシスト は ムバッペ 20、ギュレル 10・ベリンガム 8・ディオマンデ 8＝3人合計 26。（ゴール13・アシスト13）
+#   ・8連勝: 敗戦は 9/20 アトレティコ 1-2。その後 ビジャレアル 1-0(10/10)・ローマ 4-3(CL 10/14)・セビージャ 4-1(10/18)・ライプツィヒ 4-1(CL 10/21)・バルサ 2-1(10/25)・ラシン 3-0(11/1)・AEK 3-2(CL 11/4)・バレンシア 3-0(11/7) の8連勝。
+#     8連勝の得点 1+4+4+4+2+3+3+3＝24点。その前の8試合（エスパニョール2・R.ソシエダ4・マラガ4・ベティス0・インテル2・ラージョ4・エルチェ3・アトレティコ1）は20点。マルカの「24点・20点」と一致。
+#   ・レアル・マドリード公式サイト 2026-11-21「Real Madrid-Celta」（全文）: 「eight consecutive victories」「Mbappé, who has scored in Real Madrid's last seven matches, netting nine goals during that period」。→ 8連勝・ムバッペの7試合連続ゴール（9ゴール）は公式（確定）。自分の数えでも ローマ戦〜バレンシア戦の7試合で 1+2+1+2+1+1+1＝9。
+#   ・セルタ戦: ESPN scoreboard 2026-11-21 20:00Z（日本時間22日5:00）Celta Vigo at Real Madrid。公式は「9:00 pm CEST」。
+#   ・ギュレルの契約: レアル公式声明 2026-11-18「renewal of Arda Güler」: 2032年6月30日まで延長（確定）。
+#   ・監督はモウリーニョ（公式の記事・会見ページ）。
+# 食い違い: ・ギュレルのゴール数 マルカ5 対 ESPN4（ESPN の試合記録はオウンゴールの1点を含まないなどの違いかもしれないが、原因は未確認）。台本は ESPN の数字だけを使い、「ESPNの記録で数えると」と言い切る代わりに画面の札は 報道 にとどめる。
+#   ・アシストの数 マルカ（ベリンガム4・ディオマンデ1・ギュレル5）と ESPN（3・4・6）は定義が違う。台本は ESPN の数字だけ。出典を混ぜない。
+# 前の本との重なり: 20261108_real_valencia_guler_mbappe（バレンシア戦の1試合）・20261105_real_aek_mbappe_6。今回の初出: 8連勝全体・ムバッペと3人の数字の並べ・公式の7試合連続ゴール・ギュレル契約延長。1試合の中身は繰り返さない。
+# 本人の言葉: 無し。X。 反応: 0件（作らない）。
+# 写真: assets/images/20261121_mbappe_other_madrid/（01=ギュレル・03=モウリーニョ会見・04=ベリンガムのゴールの喜び・06=練習＝いずれもレアル公式サイトの画像、05=マルカの記事の主写真。ムバッペ・ベリンガム・ディオマンデが喜ぶ場面）。マルカの写真は説明文が取れず配信元は未確認（Getty/EFE等の可能性）。ムバッペ単独の公式写真は取り込めなかった。
+slot: other_2
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [ムバッペ, ギュレル, ベリンガム, ディオマンデ, レアル・マドリード]
+
+short_style: X
+short_hook_word: 3人でムバッペ超え
+short_photos:
+  - assets/images/20261121_mbappe_other_madrid/05_v.jpg
+  - assets/images/20261121_mbappe_other_madrid/04_v.jpg
+  - assets/images/20261121_mbappe_other_madrid/01_v.jpg
+short_question: レアルの8連勝は、ムバッペなしでも続くと思いますか。
+short_telops: []
+
+theme:
+  id: mbappe_other_madrid
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: レアル・マドリード、8連勝の中身。ムバッペと3人の数字を並べた
+  hook: ""
+  question: 8連勝のレアル・マドリードは、ムバッペ1人に頼っているのか
+  takeaway: ゴールとアシストを数えると、ムバッペは20、ギュレル・ベリンガム・ディオマンデの3人は合わせて26。8連勝の24点は、ムバッペ1人の力だけでは生まれていない
+
+thumbnail:
+  layout: face
+  line1: レアル 8連勝
+  line2: 3人でムバッペ超え
+  tags: [レアル・マドリード, ムバッペ, ギュレル]
+  photo: assets/images/20261121_mbappe_other_madrid/05_w.jpg
+  short_photo: assets/images/20261121_mbappe_other_madrid/05_v.jpg
+
+answer: ムバッペは20、3人の合計は26。点はムバッペ1人に頼っていない
+watch: 21日夜、セルタ戦（ホーム）で9勝目がかかる
+
+sections:
+  - id: what
+    main: true
+    heading: 8連勝のレアル・マドリードは、ムバッペ1人に頼っているのか
+    tier: 報道
+    telop: レアル 8連勝。24ゴール
+    say:
+      - text: レアル・マドリードは、公式戦で8連勝中です。
+      - text: 10月10日のビジャレアル戦から、8試合で24ゴールを奪いました。
+        image: assets/images/20261121_mbappe_other_madrid/04_w.jpg
+      - text: その前の8試合は、20ゴールでした。
+      - text: ムバッペは、直近7試合続けてゴールを決めていて、その間に9ゴール。
+        image: assets/images/20261121_mbappe_other_madrid/05_w.jpg
+      - text: 今季はここまで、17ゴール3アシストです。
+      - text: ただ、点に絡んでいるのはムバッペだけではありません。
+        image: assets/images/20261121_mbappe_other_madrid/01_w.jpg
+      - text: ギュレルは4ゴール6アシスト。ベリンガムは5ゴール3アシスト。
+      - text: ディオマンデは、4ゴール4アシストです。
+        image: assets/images/20261121_mbappe_other_madrid/06_w.jpg
+    official: false
+    sources:
+      - https://www.realmadrid.com/en-US/news/football/first-team/fixtures/real-madrid-celta-a-por-la-novena-victoria-consecutiva-en-el-regreso-a-la-liga-21-11-2026
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/86/schedule?season=2026
+      - https://www.marca.com/futbol/real-madrid/2026/11/20/madrid-juega-mbappe.html
+  - id: count
+    heading: ゴールとアシストを数えると、ムバッペと3人のどちらが多いのか
+    tier: 報道
+    telop: ゴール＋アシスト ムバッペ20、3人で26
+    say:
+      - text: ゴールとアシストを足してみます。ムバッペは17と3で、20。
+        card: {type: table, title: 今季のゴール＋アシスト（リーグとCL、16試合）, columns: [選手, ゴール, アシスト, 合計], rows: [[ムバッペ, 17, 3, 20], [ギュレル, 4, 6, 10], [ベリンガム, 5, 3, 8], [ディオマンデ, 4, 4, 8], [3人の合計, 13, 13, 26]], highlight_row: 0}
+      - text: ギュレルは、10。
+        card: {type: table, title: 今季のゴール＋アシスト（リーグとCL、16試合）, columns: [選手, ゴール, アシスト, 合計], rows: [[ムバッペ, 17, 3, 20], [ギュレル, 4, 6, 10], [ベリンガム, 5, 3, 8], [ディオマンデ, 4, 4, 8], [3人の合計, 13, 13, 26]], highlight_row: 1}
+      - text: ベリンガムとディオマンデは、ともに8です。
+        card: {type: table, title: 今季のゴール＋アシスト（リーグとCL、16試合）, columns: [選手, ゴール, アシスト, 合計], rows: [[ムバッペ, 17, 3, 20], [ギュレル, 4, 6, 10], [ベリンガム, 5, 3, 8], [ディオマンデ, 4, 4, 8], [3人の合計, 13, 13, 26]], highlight_row: 3}
+      - text: 3人を合わせると26。ムバッペ1人の20を、上回ります。
+        card: {type: table, title: 今季のゴール＋アシスト（リーグとCL、16試合）, columns: [選手, ゴール, アシスト, 合計], rows: [[ムバッペ, 17, 3, 20], [ギュレル, 4, 6, 10], [ベリンガム, 5, 3, 8], [ディオマンデ, 4, 4, 8], [3人の合計, 13, 13, 26]], highlight_row: 4}
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/teams/86/schedule?season=2026
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/86/schedule?season=2026
+  - id: view
+    viewpoint: true
+    heading: ムバッペに頼らない形は、セルタ戦でも続くのか
+    tier: 背景
+    telop: 18日、ギュレルが2032年まで契約延長
+    say:
+      - text: 見立てです。8連勝の24点は、その前の8試合の20点より4点多い数字です。
+        card: none
+      - text: ムバッペが点を取り、ほかの3人も点に絡む。その形で、得点は増えました。
+        emph: true
+      - text: ギュレルは18日に、2032年6月までの契約延長が発表されています。
+      - text: 21日夜のセルタ戦で、レアルは9勝目に挑みます。
+    official: false
+    sources:
+      - https://www.realmadrid.com/en-US/news/club/announcements/comunicado-oficial-renovacion-arda-guler-18-11-2026
+      - https://www.realmadrid.com/en-US/news/football/first-team/fixtures/real-madrid-celta-a-por-la-novena-victoria-consecutiva-en-el-regreso-a-la-liga-21-11-2026

@@ -1,0 +1,137 @@
+# 取材メモ（2026年11月26日）グアルディオラ、イタリア代表の誘いを断ったと初めて本人が認めた。「断るのは恥ずかしかった」「2年早ければ受けていた」。次は代表チームだと話した（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元（見出し）: Voetbal International「Guardiola wees Italië af: 'Twee jaar geleden had ik het waarschijnlijk wél gedaan'」（11/25 17:09）、De Telegraaf「Ik vond het gênant」、Diario AS「Guardiola: "Me daba vergüenza decirle que no a Italia"」、El Periódico「"Me da vergüenza decirle 'no' a un país como Italia"」（いずれも Google ニュースの見出しで見た。本文は読んでいない）。
+# 一次に近いもの: 本人の言葉は会見ではなく、元ブラジル代表ロマーリオの番組（Romario TV）のインタビュー（11/24 火曜、ブラジルで配信）。番組の映像そのものは見ていない（ブラウザの道具を使わない決まり）。
+#   → 発言は ESPN（ESPN News Services、ESPN Brasil 協力。2026-11-25 02:11 UTC）の英語の引用を元にした。全文を読んだ:
+#   "This is the first time I speak about this, but yes, I did talk to them,"
+#   "I felt embarrassed to say 'no' to Italy, a country like Italy, it would have been one of the greatest honors of my career to coach the Italian national team. But I realized I needed to stop. If they had called two years earlier, I probably would have accepted. But when Paolo Maldini and Leonardo, whom I love dearly, reached out, it was at a point where I simply had to stop."
+#   "I needed some time for myself. After 18 years as a coach, with matches every three days, week in and week out, there comes a moment when you just have to say 'phew.'"
+#   （地の文）まだ率いたことが無く率いてみたいチームは "a national team," "and that is the next step."
+#   "The truth is, I don't know, I really don't know. But for now, I'm doing fine," "If I ever return, it will be because my gut tells me to, and because someone wants me …"
+#   https://www.espn.com/soccer/story/_/id/50587357/guardiola-embarrassed-italy-national-team-next （本文は content.core.api.espn.com/v1/sports/news/50587357 で取得）
+#   → 台本の言葉は、この英語を私が日本語にしたもの。スペイン語・ポルトガル語の見出し（AS「Me daba vergüenza decirle que no a Italia」、El Periódico、SAPO「Até me deu vergonha」、VI「Twee jaar geleden …」）と趣旨が一致することを見た。「…」で切れたところは補っていない。
+# ESPN（同じ記事の地の文）: シティでの10年（2016〜2026）でプレミアリーグ6回・FAカップ3回・チャンピオンズリーグ1回。イタリアは3大会続けてW杯に出られず、結局マンチーニ（2018〜23年にも代表監督）を呼び戻した。
+#   アメリカ代表はポチェッティーノがマンチェスター・ユナイテッドへ移って後任を探しており、ESPN の情報源は「探す候補にグアルディオラが入る見込み」と伝えた（第一候補と呼ぶのは早いとも）。
+# ESPN 2026-07-24「Pep Guardiola turns down Italy, he'll take year off - source」: 7月の時点で断ったことは情報源ベースで報じられていた。→ 今回の新しさは「本人が初めて自分の口で認めた」こと。
+# 食い違い:
+#   ・「恥ずかしかった」の時制: ESPN 英語は "I felt embarrassed"（過去）、El Periódico は "Me da vergüenza"（現在）、AS は "Me daba"（過去）。→ 台本は「恥ずかしかった」。
+#   ・監督歴: 本人は「18年」と言った（バルセロナBの2007年から数えると19季目）。本人の言葉なので直さず、語りでは年数を言わない。
+# 【言わないこと】ブラジル代表・アンチェロッティについての話（同じ番組で話したが題から離れる）／アメリカ代表の後任の話を確定のように言わない（報道止まり）／イタリアの監督選びの細かい経緯。
+# 前の本との重なり: 直近3日に無し。11/26 sa_inter・監督紹介の回で名前が出るだけ。7月の「断った」報道を扱った回は無い（scripts を grep）。
+# 本人の言葉: あり → Y。
+# 写真: 3枚とも Commons（Steffen Prößdorf, CC BY-SA 4.0、2023-10-04 CL ライプツィヒ対シティ。説明文に Guardiola と明記、目でも確認）。01＝ベンチの横顔、02＝テクニカルエリアの全身、03＝会見（縦長。03_w は頭の帯だけになるので作らず、ショートの 03_v だけ使う）。
+#   `portrait` は Wikidata の被写体の記載（Catalans 等）で弾いたので、Commons API で説明文とライセンスを見て手で取り込んだ。記事の写真（ESPN・Guardian など）は Getty なので使わない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: world
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [グアルディオラ監督, イタリア代表, マルディーニ, レオナルド, マンチェスター・シティ, マンチーニ監督]
+
+short_style: Y
+short_hook_quote: イタリアのような国に「いいえ」と言うのは、恥ずかしかった。
+short_question: グアルディオラ監督が最初に率いる代表は、どこになると思いますか。
+short_photos:
+  - assets/images/20261126_guardiola_italy_declined/03_v.jpg
+  - assets/images/20261126_guardiola_italy_declined/01_v.jpg
+  - assets/images/20261126_guardiola_italy_declined/02_v.jpg
+short_telops: []
+
+theme:
+  id: guardiola_italy_declined
+  league: italy
+  league_name: イタリア代表
+  prefix: ""
+  title: グアルディオラ、イタリア代表の誘いを断っていた。初めて明かした「2年早ければ」
+  hook: ""
+  question: グアルディオラ監督は、なぜイタリア代表の誘いを断ったのか
+  takeaway: グアルディオラはイタリア代表の誘いを断ったと初めて自分の口で認めた。理由は休みが必要だったこと。シティでの10年でプレミア6回の優勝を重ねたあとで、次に率いたいのは代表チームだと話した
+
+thumbnail:
+  layout: face
+  line1: グアルディオラ イタリア代表
+  line2: 断るのは恥ずかしかった
+  tags: [グアルディオラ, イタリア代表]
+  photo: assets/images/20261126_guardiola_italy_declined/01_w.jpg
+  short_photo: assets/images/20261126_guardiola_italy_declined/03_v.jpg
+
+answer: 18年続けて3日ごとに試合をしてきて、止まる必要があった。2年早ければ受けていた
+watch: 次に率いるのは代表チーム。いつ戻るかは決めていない
+
+sections:
+  - id: what
+    main: true
+    heading: グアルディオラ監督は、なぜイタリア代表の誘いを断ったのか
+    tier: 報道
+    telop: グアルディオラ監督「断るのは恥ずかしかった」
+    say:
+      - text: グアルディオラ監督が、イタリア代表の誘いを断ったと、初めて自分で認めました。
+      - voice: グアルディオラ監督
+        text: このことを話すのは、初めてです。
+      - voice: グアルディオラ監督
+        text: でも、そうです。彼らと話しました。
+        cont: true
+      - text: 声をかけたのは、イタリアサッカー連盟の依頼を受けた2人。
+        image: assets/images/20261126_guardiola_italy_declined/02_w.jpg
+      - text: 元主将のマルディーニと、ミランで監督も務めたレオナルドでした。
+      - voice: グアルディオラ監督
+        text: イタリアのような国に「いいえ」と言うのは、恥ずかしかった。
+        emph: true
+      - voice: グアルディオラ監督
+        text: イタリア代表を率いることは、
+        cont: true
+      - voice: グアルディオラ監督
+        text: キャリアで最高の名誉の1つになったはずです。
+        cont: true
+      - voice: グアルディオラ監督
+        text: あと2年早く声がかかっていたら、たぶん受けていました。
+        emph: true
+        image: assets/images/20261126_guardiola_italy_declined/01_w.jpg
+      - voice: グアルディオラ監督
+        text: でも、そのときは、とにかく止まらなければいけなかった。
+        cont: true
+      - voice: グアルディオラ監督
+        text: 監督を18年。3日ごとに試合があって、毎週それが続きます。
+        image: assets/images/20261126_guardiola_italy_declined/02_w.jpg
+      - voice: グアルディオラ監督
+        text: 一度、息をつくしかない時が、来るんです。
+        cont: true
+      - text: イタリアは結局、前にも代表を率いたマンチーニ監督を呼び戻しました。
+    official: false
+    quotes_from: [ESPN]
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50587357/guardiola-embarrassed-italy-national-team-next
+      - https://www.espn.com/soccer/story/_/id/49438651/pep-guardiola-turns-italy-take-year-source
+  - id: next
+    heading: グアルディオラ監督が、次に率いたいチームは
+    tier: 報道
+    telop: グアルディオラ監督「それが、次の一歩です」
+    say:
+      - text: 監督として、まだ率いたことが無く、率いてみたいのは「代表チーム」だと話しました。
+        image: assets/images/20261126_guardiola_italy_declined/01_w.jpg
+      - voice: グアルディオラ監督
+        text: それが、次の一歩です。
+      - text: ただ、いつ戻るかは決めていません。
+      - voice: グアルディオラ監督
+        text: 本当に分かりません。でも、いまは元気にやっています。
+    official: false
+    quotes_from: [ESPN]
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50587357/guardiola-embarrassed-italy-national-team-next
+  - id: view
+    viewpoint: true
+    heading: シティで10年、プレミア6回。グアルディオラが代表を選ぶ意味は
+    tier: 報道
+    telop: シティの10年 プレミア6回・FAカップ3回・CL1回
+    say:
+      - text: 見立てです。グアルディオラ監督がシティで過ごしたのは、2016年からの10年。
+        image: assets/images/20261126_guardiola_italy_declined/02_w.jpg
+        card: {type: stats, title: グアルディオラ監督 シティでの10年, items: [[6, 回, プレミアリーグ優勝], [3, 回, FAカップ優勝], [1, 回, チャンピオンズリーグ優勝]], focus: 0}
+      - text: 10年で6回。2年に1度より多いペースで、イングランドのリーグを制しました。
+      - text: クラブで勝ち続けた監督にとって、代表はまだ立ったことの無い舞台です。
+        card: none
+      - text: 例えばアメリカ代表。ポチェッティーノ監督が去り、後任を探しています。
+      - text: その候補に、グアルディオラ監督の名前が入る見込みだと報じられています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50587357/guardiola-embarrassed-italy-national-team-next

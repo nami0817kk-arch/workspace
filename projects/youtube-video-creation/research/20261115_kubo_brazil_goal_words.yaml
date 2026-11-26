@@ -1,0 +1,124 @@
+# 取材メモ（2026年11月15日）久保建英、ブラジル戦の先制点のあと「結果で応えたい」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-14 21:34「「今まで結果を出し続けてきた監督に僕たちも結果で応えたい」先制点の久保建英、ブラジル撃破は「思いの力」」（全文） https://web.gekisaka.jp/news/japan/detail/?463197-463197-fl
+#   サッカーキング 2026-11-14「先制点の久保建英「一対一では僕に分がある」 森保J集大成「想いの力」でブラジル撃破」（全文） https://www.soccer-king.jp/news/japan/national/20261114/2227730.html
+#   サッカーキング「中村敬斗は日本人初のブラジルから複数得点！」（全文。ブラジルからの得点者の一覧を読んだ） https://www.soccer-king.jp/news/japan/national/20261114/2227700.html
+# 写真の出どころ（本人の写真を探すため。サッカーキングの写真は説明に Getty Images とあるので使っていない）:
+#   https://web.gekisaka.jp/news/japan/detail/?463202-463202-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463197-463197-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463186-463186-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463011-463011-fl
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916337、2026-11-14 10:15 UTC）: 日本 3-2 ブラジル。15分 久保建英（左足、エリア中央からゴール右下。アシスト 堂安律のスルーパス）／19分 中村敬斗（アシスト 中野就斗）／33分 ヴィニシウス／75分 ヴィニシウス／90+1分 坂元達裕（VAR確認）。久保は先発で62分に佐野海舟と交代。
+#   ・ゲキサカ: 前半15分、中野就斗の縦パス→前田大然のポスト→こぼれ球を堂安律がスルーパス→久保がドリブルで持ち込み、左足アウトサイドのフェイントから左足でゴール右隅へ。久保は2-1の後半17分（＝62分）に交代。森保監督が指揮するのはブラジル戦を含めて「あと2試合のみ」（試合前の数え方）。
+#   ・久保の言葉（原文。ゲキサカ。字は変えていない。括弧は無い。台本は読点で行に分けた）:
+#       「今まで結果を出し続けてきた監督に最後、僕たちも結果で応えたいというのが僕らの今日の思いだったので、今日は思いの力で勝てたのかなと思う」
+#       「いい形でボールを奪えたあとのカウンターはみんなで意識していた。堂安選手からボールが来て、前が空いているのが見えたので、あとは落ち着いて、1対1は小回りが利く僕のほうに分があるなと思っていたので、ファーを見せてニアに落ち着いて決めることができた」
+#   ・サッカーキングは同じ発言を「今まで結果を残し続けてきた監督に僕たちも結果で応えたいというのが僕らの想いだった。想いの力で勝てた」と書く（書き起こしの違い。台本は主な出典のゲキサカの表記）。「次のパラグアイ戦が森保一監督のラストマッチ」（サッカーキング）、パラグアイ戦は11/17（サッカーキングの告知）。
+#   ・サッカーキング（中村の記事）: 日本は前回の対戦まででブラジル相手に9得点、いずれも別の選手。これまでの得点者は福田正博・中村俊輔・大黒将志・玉田圭司・槙野智章・南野拓実・中村敬斗・上田綺世・佐野海舟。「ここに久保と中村が加わる」。久保は W杯は出場が叶わなかった（同記事）。ESPN（W杯 event=760487、2026-06-29）でも久保は出場なし。
+# 自分で数えたもの: 上の一覧は9人。久保は一覧に無い→「ブラジルから点を取った日本人は、久保で10人目」（出典の一覧からの計算）。
+# 食い違い: 久保の言葉の書き起こしがゲキサカとサッカーキングで少し違う（上）。ゲキサカの見出しは「最後」を省いている。台本は本文の全文を使った。
+# 前の本との重なり: 20261112_kubo_brazil_no_revenge（試合前の「リベンジではない」・W杯に出ていなかった理由）。今回の初出: 先制点そのもの・試合後の言葉・得点者10人目。「リベンジ」の発言は繰り返さない。
+# 【言わないこと】Tシャツのメッセージ（別の題）／「攻め残り」の言葉（別記事 463202）／ブラジルの失点の中身・退場／他の得点者の話（中村・坂元は別の題）。
+# 本人の言葉: あり（久保建英。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [久保建英, 堂安律, 森保一, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 今まで結果を出し続けてきた監督に最後、
+short_photos:
+  - assets/images/20261115_kubo_brazil_goal_words/01_v.jpg
+  - assets/images/20261115_kubo_brazil_goal_words/03_v.jpg
+  - assets/images/20261115_kubo_brazil_goal_words/02_v.jpg
+  - assets/images/20261115_kubo_brazil_goal_words/04_v.jpg
+short_question: 森保監督のラストマッチ、17日のパラグアイ戦でも久保建英は点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: kubo_brazil_goal_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 久保建英、ブラジル戦の先制点のあとに語った「結果で応えたい」相手
+  hook: ""
+  question: ブラジルから先制点を取った久保建英は、試合後に何を語ったのか
+  takeaway: 日本がブラジルから奪った得点者は、久保で10人目。W杯のブラジル戦に出られなかった久保が、森保監督のラスト2試合の初戦で先制点を決め、「結果で応えたい」と話した
+
+thumbnail:
+  layout: face
+  line1: 久保建英 ブラジル撃破
+  line2: 結果で応えたい
+  tags: [久保建英, 日本代表, 森保J]
+  photo: assets/images/20261115_kubo_brazil_goal_words/01_w.jpg
+  short_photo: assets/images/20261115_kubo_brazil_goal_words/01_v.jpg
+
+answer: 久保は「結果で応えたい」という思いの力で勝てた、と語った。得点者は10人目
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジルから先制点を取った久保建英は、試合後に何を語ったか
+    tier: 報道
+    telop: 久保建英「結果で応えたいというのが僕らの思いだった」
+    say:
+      - text: 日本代表の久保建英が、14日のブラジル戦で先制ゴール。3対2で勝った試合の後、こう語りました。
+        image: assets/images/20261115_kubo_brazil_goal_words/01_w.jpg
+      - voice: 久保建英
+        text: 今まで結果を出し続けてきた監督に最後、
+        emph: true
+      - voice: 久保建英
+        text: 僕たちも結果で応えたいというのが、
+        cont: true
+      - voice: 久保建英
+        text: 僕らの今日の思いだったので、
+        cont: true
+      - voice: 久保建英
+        text: 今日は思いの力で勝てたのかなと思う。
+        cont: true
+      - text: 森保一監督が日本代表を指揮するのは、17日のパラグアイ戦が最後です。
+      - text: ゴールは前半15分。堂安律のスルーパスで抜け出し、左足でゴール右隅へ決めました。
+        image: assets/images/20261115_kubo_brazil_goal_words/02_w.jpg
+      - text: 決めた場面を、久保はこう語りました。
+      - voice: 久保建英
+        text: 1対1は小回りが利く僕のほうに分があるなと思っていたので、
+      - voice: 久保建英
+        text: ファーを見せてニアに落ち着いて決めることができた。
+        cont: true
+      - text: 遠いほうのポストを狙うように見せて、近いほうへ決めた、という意味です。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463197-463197-fl
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227730.html
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: game
+    heading: 久保の先制点から、3対2の勝利まで
+    tier: 報道
+    telop: 日本 3-2 ブラジル。久保が先制
+    say:
+      - text: 日本は久保の先制点のあと、前半のうちにもう1点を加えました。
+        card: {type: table, title: 日本 3-2 ブラジル（シンガポール）, columns: [分, 得点], rows: [[15分, 久保建英], [19分, 中村敬斗], [33分, ヴィニシウス], [75分, ヴィニシウス], [90分+1, 坂元達裕]], highlight_row: 0}
+      - text: 追加点を決めたのは、中村敬斗です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://web.gekisaka.jp/news/japan/detail/?463197-463197-fl
+  - id: view
+    viewpoint: true
+    heading: ブラジルから点を取った日本人は、久保で何人目か
+    tier: 背景
+    telop: 日本がブラジルから取った得点者は、久保で10人目
+    say:
+      - text: 見立てです。日本が前回の対戦までにブラジルから奪った9得点は、9人の別々の選手が決めたものでした。
+      - text: 久保はそこに加わる10人目。W杯のブラジル戦には出られなかった久保が、同じ相手から点を取りました。
+        emph: true
+      - text: 次は17日、森保監督のラストマッチです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227700.html
+      - https://www.espn.com/soccer/match/_/gameId/760487

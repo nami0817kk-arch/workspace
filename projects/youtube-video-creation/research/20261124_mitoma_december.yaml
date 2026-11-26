@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月24日）三笘薫の復帰は12月か。ブライトンのブルーム会長（オーナー）が「あと2、3週間で戻ってくれれば」。スペインの地元紙はバルセロナが候補から外したと報道（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 題材の元: footballnet（まとめサイト）60147100「三笘薫の復帰は１２月にずれ込みか…ブライトンオーナー言及　バルセロナは撤退と現地報道」。スレの1が引いていたのは東スポWEB。
+#   → 東スポWEB 410552（2026-11-20 16:41 JST）https://www.tokyo-sports.co.jp/articles/-/410552?page=1 （全文。2ページ目は無い＝404）
+#     「地元メディア「アーガス」によると、オーナーのトニー・ブルーム氏が「三笘は、おそらく今後２～３週間以内に復帰できるだろう」と発言」「１２月上旬から中旬にかけてに、戻ってくる可能性が高い」
+#     「スペインメディア「エル・ナシオナル」は先日、…フリック監督が三笘を獲得候補リストから外したと報道」
+# 一次（英語の元）まで辿った:
+#   ・The Argus 26742966（datePublished 2026-11-19 05:00 UTC）「Bloom says Brighton can do a Leicester and win the Premier League」
+#     https://www.theargus.co.uk/sport/26742966.tony-bloom-says-brighton-can-emulate-leicester-title-win/
+#     慈善の昼食会（Overcoming Multiple Sclerosis の支援）での発言。原文:
+#       "We had about ten injuries during August but we have got pretty much everyone coming back who has not already back.
+#        "Kaoru (Mitoma) will hopefully be back in the next two or three weeks.
+#        "He obviously hasn't played. (Yankuba) Minteh has not been playing and these were two of our key players.
+#       ほか "Certainly after Leicester City won the league, I always felt miracles can happen and it's doable." ／ 肩書きは "Albion chairman Bloom"。
+#     → 台本の言葉は、この英語を私が日本語にしたもの。東スポの「おそらく…復帰できるだろう」は "will hopefully" の訳としては強いので、「戻ってきてくれるといい」に寄せた。
+# バルセロナの話（確度は 未確認 どまり）:
+#   ・エル・ナシオナル（elnacional.cat）の元記事の本文には届かなかった（サイトの検索・サイトマップに残っておらず、URL を引けなかった）。
+#     見出しだけ Google ニュースの RSS で確かめた: 2026-11-17「Flick descarta para el Barça a las cuatro estrellas de la Premier que quedan libres en 2027 - El Nacional.cat」（三笘の名前は見出しに無い）。
+#     同じ話を引いた TODOmercadoWEB の見出し（11-18）「Flick dice 'no' a cuatro estrellas de la Premier: Van Dijk, Bruno Fernandes, Richarlison y Mitoma, descartados por el Barça」で、4人に三笘が入ることを見出しで確かめた。
+#   → 東スポは config の rumour 群、エル・ナシオナル・TODOmercadoWEB は網の外。本文を読めたのは東スポだけなので、節の tier は 未確認。語りは「スペインの地元紙が伝えた」「報道」の形にし、「撤退」とは言わない（バルサの公式な動きではない）。
+#     「2027年に契約が切れる」は見出しの言葉だが、三笘の契約年は一次で確かめていないので台本に入れない。
+# ESPN（site.api.espn.com）:
+#   ・ブライトンの日程（eng.1 teams/331/schedule fixture=true）: 11/29 14:05 UTC ニューカッスル（ホーム）／12/2 20:15 UTC ボーンマス（敵地）／12/5 17:30 UTC フォレスト（敵地）／12/13 14:00 UTC エヴァートン（ホーム）。
+#   ・カンファレンスリーグ（uefa.europa.conf scoreboard）: 11/26 17:45 UTC クラヨーヴァ（ホーム、前回の取材メモ）／12/10 20:00 UTC モナコ（ホーム）／12/17 パナシナイコス（敵地）。
+# 自分で数えたもの: 19日の記事から2、3週間 → 12月3日から10日ごろ。その幅に入る試合は、12/2（日本時間3日5時15分）ボーンマス戦・12/5（日本時間6日2時30分）フォレスト戦・12/10（日本時間11日5時）モナコ戦の3つ。
+#   監督の20日の見通し（1、2週間＝11/27〜12/4、前回の本で出し済み）と、ブルーム会長の2、3週間は、12月の初めで重なる。
+# 前の本との重なり: 11/23 mitoma_return_two_weeks（20日の会見の「あと1、2週間」・ハル戦の欠場・守田・試合の流れ・順位・ニューカッスル戦の日付計算）。11/11 mitoma_injury_update。
+#   → 今回の初出: ブルーム会長の言葉（2、3週間・主力2人）・12月の試合の並び・バルセロナの報道。監督の見通しは比べるために1行だけ。ハル戦・守田・順位は繰り返さない。
+# 【言わないこと】「この試合で復帰する」という予想（日付の幅に入る試合を並べるだけ）／三笘の契約年／バルサの「撤退」（公式の動きではない）／優勝争いの見立て。
+# 本人の言葉: 三笘本人の言葉は無い（Argus・東スポに無し）→ X。ブルーム会長の言葉は代弁で入れる。
+# 写真: 01〜03＝三笘（Commons の CC0、撮影 Timmy96、2026-01-24 フラム戦とスタジアム到着。11/23 の置き場から写した。credits.json も同じ行を写した）。
+#   ブルーム会長の写真は Commons に1枚（File:Tony bloom.jpg、2007年、CC BY-SA 3.0）しか無く、ポーカーの卓で横に別人が写っていたので使わない（「別の人が語るときはその人も画面に」に当たらないことになる）。Argus の主写真は撮影者の表記が読めず取り込まなかった。
+#   _pool.png を見た: 三笘3枚とも本人、透かし無し。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [三笘薫, ブライトン, ブルーム会長, バルセロナ, フリック監督]
+
+short_style: X
+short_hook_word: 三笘、復帰は12月か
+short_photos:
+  - assets/images/20261124_mitoma_december/03_v.jpg
+  - assets/images/20261124_mitoma_december/05_v.jpg
+  - assets/images/20261124_mitoma_december/01_v.jpg
+  - assets/images/20261124_mitoma_december/04_v.jpg
+short_question: 三笘薫は、12月のどの試合で戻ってくると思いますか。
+short_telops: []
+
+theme:
+  id: mitoma_december
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 三笘薫の復帰について、ブライトンのオーナーが口にした時期
+  hook: ""
+  question: ブライトンのブルーム会長は、三笘薫の復帰についてどう話したのか
+  takeaway: 会長の「2、3週間」を19日から数えると12月3日から10日ごろ。監督の見通しとは12月の初めで重なり、その幅にはボーンマス戦・フォレスト戦・モナコ戦の3試合が入る
+
+thumbnail:
+  layout: face
+  line1: 三笘薫の復帰は12月か
+  line2: オーナー「あと2、3週間」
+  tags: [三笘薫, ブライトン]
+  photo: assets/images/20261124_mitoma_december/03_w.jpg
+  short_photo: assets/images/20261124_mitoma_december/03_v.jpg
+
+answer: 「あと2、3週間で戻ってきてくれるといい」。19日から数えると12月の上旬
+watch: 12月2日のボーンマス戦（日本時間3日5時15分）から
+
+sections:
+  - id: what
+    main: true
+    heading: ブライトンのオーナーは、三笘薫の復帰をどう見ているのか
+    tier: 報道
+    telop: ブルーム会長「カオルは、あと2、3週間で戻ってきてくれれば」
+    say:
+      - voice: ブルーム会長
+        text: カオルは、あと2、3週間で戻ってきてくれるといい。
+        emph: true
+        image: assets/images/20261124_mitoma_december/03_w.jpg
+      - voice: ブルーム会長
+        text: 見てのとおり、彼はまだ試合に出ていない。
+        cont: true
+      - voice: ブルーム会長
+        text: ミンテーもそうだが、2人ともうちの主力なんです。
+        cont: true
+      - text: けがで今季まだ公式戦に出ていない三笘薫。その復帰の時期を、ブライトンの会長が口にしました。
+        short_only: true
+        image: assets/images/20261124_mitoma_december/05_w.jpg
+      - text: 地元で開かれた慈善の昼食会での発言で、19日に伝えられました。
+        image: assets/images/20261124_mitoma_december/01_w.jpg
+      - text: 19日から2、3週間なら、12月3日から10日ごろ。
+        emph: true
+        card: {type: table, title: 三笘薫の復帰の見通し, columns: [誰が, いつ, 見通し, 数えた幅], rows: [[ブルーム会長, 19日に報道, 2、3週間, 12月3日〜10日ごろ], [ヒュルツェラー監督, 20日の会見, 1、2週間, 11月27日〜12月4日ごろ]], highlight_row: 0}
+      - text: 監督が20日に示したのは「1、2週間」でした。2人の見通しは、12月の初めで重なります。
+        card: {type: table, title: 三笘薫の復帰の見通し, columns: [誰が, いつ, 見通し, 数えた幅], rows: [[ブルーム会長, 19日に報道, 2、3週間, 12月3日〜10日ごろ], [ヒュルツェラー監督, 20日の会見, 1、2週間, 11月27日〜12月4日ごろ]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.theargus.co.uk/sport/26742966.tony-bloom-says-brighton-can-emulate-leicester-title-win/
+      - https://www.tokyo-sports.co.jp/articles/-/410552?page=1
+  - id: view
+    viewpoint: true
+    heading: 三笘薫が戻るかもしれない12月の初め、ブライトンの試合はいつなのか
+    tier: 背景
+    telop: 12月3日〜10日ごろの幅に入る試合は3つ
+    say:
+      - text: 見立てです。会長の言う2、3週間の幅には、三笘薫のいるブライトンの試合が3つ入ります。
+        card: {type: table, title: ブライトンの12月の初め（日本時間）, columns: [日にち, 相手, 大会], rows: [[12月3日 5時15分, ボーンマス（敵地）, プレミアリーグ], [12月6日 2時30分, フォレスト（敵地）, プレミアリーグ], [12月11日 5時, モナコ（ホーム）, カンファレンスリーグ]], highlight_row: 0}
+        image: assets/images/20261124_mitoma_december/05_w.jpg
+      - text: まず、12月3日の朝にボーンマス戦。監督の見通しの幅とも重なるのは、この1試合だけです。
+        card: {type: table, title: ブライトンの12月の初め（日本時間）, columns: [日にち, 相手, 大会], rows: [[12月3日 5時15分, ボーンマス（敵地）, プレミアリーグ], [12月6日 2時30分, フォレスト（敵地）, プレミアリーグ], [12月11日 5時, モナコ（ホーム）, カンファレンスリーグ]], highlight_row: 0}
+      - text: 6日の未明に、ノッティンガム・フォレスト戦。
+        image: assets/images/20261124_mitoma_december/05_w.jpg
+        card: {type: table, title: ブライトンの12月の初め（日本時間）, columns: [日にち, 相手, 大会], rows: [[12月3日 5時15分, ボーンマス（敵地）, プレミアリーグ], [12月6日 2時30分, フォレスト（敵地）, プレミアリーグ], [12月11日 5時, モナコ（ホーム）, カンファレンスリーグ]], highlight_row: 1}
+      - text: そして11日の朝、チャンピオンズリーグ、ヨーロッパリーグに次ぐ大会、カンファレンスリーグのモナコ戦です。
+        image: assets/images/20261124_mitoma_december/02_w.jpg
+        card: {type: table, title: ブライトンの12月の初め（日本時間）, columns: [日にち, 相手, 大会], rows: [[12月3日 5時15分, ボーンマス（敵地）, プレミアリーグ], [12月6日 2時30分, フォレスト（敵地）, プレミアリーグ], [12月11日 5時, モナコ（ホーム）, カンファレンスリーグ]], highlight_row: 2}
+      - text: 三笘薫が12月の初めに戻れば、5月9日に左の太ももの裏を痛めてから、およそ7か月ぶりの試合になります。
+        card: none
+        image: assets/images/20261124_mitoma_december/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/331/schedule?fixture=true
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard?dates=20261210
+      - https://www.theargus.co.uk/sport/26742966.tony-bloom-says-brighton-can-emulate-leicester-title-win/
+  - id: barca
+    heading: 三笘薫とバルセロナについて、何が伝えられたのか
+    tier: 未確認
+    telop: スペインの地元紙「フリック監督が、獲得の候補から外した」
+    say:
+      - text: 復帰を待つ三笘薫には、スペインからも報道が出ています。
+        image: assets/images/20261124_mitoma_december/05_w.jpg
+      - text: バルセロナのフリック監督が、プレミアの4人を獲得の候補から外した、とスペインで報じられました。
+      - text: その4人のなかに、三笘の名前があります。けがで成長が止まってしまった、という見方でした。
+      - text: クラブが発表した話ではなく、報道の段階です。
+    official: false
+    sources:
+      - https://www.tokyo-sports.co.jp/articles/-/410552?page=1

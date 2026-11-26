@@ -1,0 +1,162 @@
+# 取材メモ（2026年11月26日）CL第5節 PSG 2-2 ローマ。王者PSGが本拠で初めて勝ち点を落とし、公式戦の連勝が12で止まった（ニュースのショート。見せ方 Y＝ルイス・エンリケ監督の言葉から始める）
+# 追記（親・書き出し後）: ショートの冒頭（本人の一言）で 01_w を縦に真ん中切りして監督の顔が右端で切れていた。01_v を顔中心に切り直し（facecrop --center 0.66）、一言の行に顔を真ん中にした横長の切り抜き 01_wf（01 から切っただけ）を指定した。語りは変えていない。
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915374、2026-11-25 20:00 UTC、パルク・デ・プランス、観客46,667人）: PSG 2-2 ローマ。
+#   5分 エルモソ（左足、エリア中央から。スーレのアシスト）／31分 ザバルニー（CKのあと、ゴール右の至近から頭でゴール右上。マユルのクロス）／
+#   60分 ハキミがエリア内で倒されPK（ヴェスレイに警告）→62分 デンベレ（右足、ゴール右下）／74分 ヴィティーニャのハンド→75分 VARでローマにPK→78分 マレン（右足、ゴール左下）。
+#   デンベレは先発外、59分にフェラン・トーレスと交代で出場。マレンも先発外、67分にモリーナと交代で出場。ディバラは63分から。
+#   シュート PSG 15本（枠内4）、ローマ 13本（枠内4）。ボール保持 PSG 66%。
+#   順位（ESPN standings、11/26 取得）: 1位 レアル・マドリード 5勝 勝ち点15／2位 PSG 4勝1分 勝ち点13／25位 ローマ 1勝2分2敗 勝ち点5。
+#   PSG の今大会: スロヴァン・ブラチスラヴァ 6-1、マンC 4-2（敵地）、バルセロナ 4-2、ビジャレアル 6-0（敵地）→ローマ 2-2。ローマ: フェネルバフチェ 1-1、レアル 3-4、スロヴァン 4-0、マンU 2-3、PSG 2-2。
+#   次: 12月8日（欧州時間）PSG は敵地でアストン・ヴィラ、ローマは本拠でスポルティング（ESPN の日程）。
+#   前の大会の決勝（ESPN 2026-05-30）: PSG 1-1 アーセナルで PSG が優勝（＝前回王者）。
+# ESPN の試合記事（espn.com/soccer/report/_/gameId/401915374）: 見出し「PSG's 12-game winning streak halted by home draw against Roma」。
+#   今大会で初めて勝ち点を落とした。公式戦12連勝が止まった。ルイス・エンリケはデンベレを先発から外し、ガスペリーニはディバラ・マレン・クリスタンテを控えに置いた。
+#   PKはヴェスレイがハキミを引き倒したもの。デンベレのPKは交代で入って2度目のタッチ、今大会4点目。ザバルニーはCL初ゴール。
+#   ローマのPKは、マレンのクロス→スーレのシュートがヴィティーニャの手に当たり、長いVARの確認のあと。
+# PSG 公式 psg.fr（試合記事「Paris held 2-2 by Roma」・数字の記事「The key numbers」）: 両クラブの公式戦は初めて（親善試合は3回）。12連勝は公式戦でクラブ2番目の記録（最長は2015-16の16）。
+#   ザバルニーは今季3点目でCL初ゴール。この引き分けで欧州の大会の無敗は15試合。
+# AS ローマ公式 asroma.com（試合記事「Hermoso and Malen on target in 2-2 draw with PSG」）: 結果のみ。言葉なし。写真22枚（この試合）。
+# ルイス・エンリケ監督の言葉: CulturePSG 61679「Luis Enrique : « Le match le plus difficile de cette saison »」（11/25 夜、全文）:
+#   « … on connaît la Roma et ça a été très difficile, très compliqué, ils pressent tout le temps. Cela a été le match le plus difficile de cette saison sans aucun doute. »
+#   « … C'était compliqué, mais on aurait pu perdre le match. On a fait un match nul, on est content. »
+#   （Footeo の見出しも « On aurait pu perdre le match »。2つの媒体で一致）→ 台本の言葉は私がフランス語から訳した。
+# ガスペリーニ監督の言葉: Sky Sport（sport.sky.it 2026/11/25 psg-roma-gasperini-intervista-video、全文）。Prime Video でも同じ趣旨:
+#   "Abbiamo giocato contro i più forti e sono molto soddisfatto di questa gara perché non ci siamo snaturati e ci siamo proposti con qualità."
+#   "loro hanno fatto entrare Dembelé, la gara si è accesa e poi non vedevamo l'ora finisse."
+#   "Eravamo in vantaggio, non dovevamo prendere un gol così."（CKからの失点について）
+#   → 台本の言葉は私がイタリア語から訳した。
+# 食い違い:
+#   ・PSG のPKの分: ファウルは60分（ESPN の実況）、決めたのは62分（ESPN・PSG公式）。→ 「62分、デンベレがPK」だけ言う。
+#   ・ローマのPKの分: ハンドは74分、VARの判定は75分、決めたのは78分（ESPN）。→ 「78分にマレンがPK」。ハンドの分は言わない。
+#   ・CulturePSG の言葉が会見か放送のインタビューかは記事に書いていない（PSG公式に会見の動画あり）。→ 「試合後、こう話しました」とだけ言う。
+#   ・「連勝」: ESPN は公式戦12連勝（全大会）、PSG 公式も12。CL だけでは開幕4連勝。→ 両方を分けて言う。
+# 自分で数えたもの: PSG の今大会の得点 6+4+4+6+2=22、失点 1+2+2+0+2=7。ローマはリードしたまま追いつかれたのが、レアル戦・マンU戦（ESPN 記事）に続き今大会3度目……ではなく、今回は追いついた側。→ 使わない。
+#   デンベレは59分に入って62分に得点（3分後）。マレンは67分に入って11分後にPK。
+# 前の本との重なり: 11/22 malen_roma_four（パルマ戦の4得点）・11/23 stadium_roma（本拠地）・11/25 kit_psg（紋章）・11/22 doue_knee_luisenrique。
+#   → 今回は試合そのもの。マレンの4得点は言わない。ドゥエのけがも言わない。
+# 【言わないこと】ルイス・エンリケのローマ監督時代（題から離れる）／ドゥエ・クヴァラツヘリアのけが／ハンドの判定の是非／観客数。
+# 写真: asroma.com の試合記事の写真（この試合）と PSG 公式・CulturePSG の写真。代理店の写真（Sky の ©Getty）は使わない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: world
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [パリ・サンジェルマン, ローマ, ルイス・エンリケ, ガスペリーニ, デンベレ, マレン, エルモソ, ザバルニー]
+
+short_style: Y
+short_hook_quote: 負けていてもおかしくなかった。
+short_photos:
+  - assets/images/20261126_psg_roma_draw/03_v.jpg
+  - assets/images/20261126_psg_roma_draw/02_v.jpg
+  - assets/images/20261126_psg_roma_draw/04_v.jpg
+  - assets/images/20261126_psg_roma_draw/05_v.jpg
+  - assets/images/20261126_psg_roma_draw/06_v.jpg
+short_question: PSGは、12月8日のアストン・ヴィラ戦で勝ちに戻ると思いますか。
+short_telops: []
+
+theme:
+  id: psg_roma_draw
+  league: france
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 王者PSG、本拠地でローマと2-2。ルイス・エンリケ監督が試合後に認めたこと
+  hook: ""
+  question: 王者PSGは、なぜ本拠地でローマに勝ち切れなかったのか
+  takeaway: 逆転のPKを決めたのも、追いつくPKを決めたのも、ベンチから入った選手だった。PSGの公式戦の連勝は12で止まった
+thumbnail:
+  layout: face
+  line1: 王者PSG ローマと2-2
+  line2: 監督「負けてもおかしくなかった」
+  tags: [PSG, ローマ, チャンピオンズリーグ]
+  photo: assets/images/20261126_psg_roma_draw/01_w.jpg
+  short_photo: assets/images/20261126_psg_roma_draw/03_v.jpg
+
+answer: ローマは最後までプレスをかけ続け、ベンチから入ったマレンが78分のPKで追いついた
+watch: 12月8日、PSGは敵地でアストン・ヴィラ戦
+sections:
+  - id: what
+    main: true
+    heading: 王者PSGは、なぜ本拠地でローマに勝ち切れなかったのか
+    tier: 報道
+    telop: PSG 2-2 ローマ。王者が今大会で初めて勝ち点を落とす
+    say:
+      - text: 前回王者のパリ・サンジェルマンが、本拠地でローマと2対2の引き分け。
+      - text: チャンピオンズリーグでは開幕から4連勝。今大会で初めて勝てませんでした。
+      - text: 試合のあと、ルイス・エンリケ監督はこう話しました。
+      - voice: ルイス・エンリケ監督
+        text: 負けていてもおかしくなかった。
+        emph: true
+        image: assets/images/20261126_psg_roma_draw/01_wf.jpg
+      - voice: ルイス・エンリケ監督
+        text: 引き分けで、満足しています。
+        cont: true
+      - voice: ルイス・エンリケ監督
+        text: ローマはずっとプレスをかけてきた。
+      - voice: ルイス・エンリケ監督
+        text: 間違いなく、今季いちばん難しい試合でした。
+        cont: true
+      - text: 試合はローマの先制で始まります。5分、エルモソがゴール前から決めました。
+        image: assets/images/20261126_psg_roma_draw/02_w.jpg
+        card: {type: table, title: PSG 2-2 ローマ, columns: [分, できごと], rows: [[5分, エルモソ（ローマ）], [31分, ザバルニー（PSG）], [62分, デンベレのPK（PSG）], [78分, マレンのPK（ローマ）]], highlight_row: 0}
+      - text: パリ・サンジェルマンは31分、コーナーキックからザバルニーが頭で決めて同点。
+        image: assets/images/20261126_psg_roma_draw/03_w.jpg
+        card: {type: table, title: PSG 2-2 ローマ, columns: [分, できごと], rows: [[5分, エルモソ（ローマ）], [31分, ザバルニー（PSG）], [62分, デンベレのPK（PSG）], [78分, マレンのPK（ローマ）]], highlight_row: 1}
+      - text: 62分には、交代で入って3分後のデンベレがPKを決めて逆転します。
+        image: assets/images/20261126_psg_roma_draw/04_w.jpg
+        card: {type: table, title: PSG 2-2 ローマ, columns: [分, できごと], rows: [[5分, エルモソ（ローマ）], [31分, ザバルニー（PSG）], [62分, デンベレのPK（PSG）], [78分, マレンのPK（ローマ）]], highlight_row: 2}
+      - text: ところが78分、ヴィティーニャの手にボールが当たり、ビデオの確認でローマにPK。
+        image: assets/images/20261126_psg_roma_draw/05_w.jpg
+        card: {type: table, title: PSG 2-2 ローマ, columns: [分, できごと], rows: [[5分, エルモソ（ローマ）], [31分, ザバルニー（PSG）], [62分, デンベレのPK（PSG）], [78分, マレンのPK（ローマ）]], highlight_row: 3}
+      - text: 途中から入ったマレンが決めて、ローマが追いつきました。
+        card: none
+    official: false
+    quotes_from: [CulturePSG]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915374
+      - https://www.espn.com/soccer/report/_/gameId/401915374
+      - https://www.psg.fr/en/content/paris-held-2-2-by-roma-match-report-paris-saint-germain-as-roma-uefa-champions-league-2026-2027
+      - https://www.asroma.com/en/news/76277/hermoso-and-malen-on-target-in-2-2-draw-with-psg
+      - https://www.culturepsg.com/news/match/luis-enrique-le-match-le-plus-difficile-de-cette-saison/61679
+  - id: roma
+    heading: 追いついたローマの監督は、何を語ったのか
+    tier: 報道
+    telop: ガスペリーニ監督「いちばん強い相手と戦って、満足している」
+    say:
+      - text: 2本のPKは、パリ・サンジェルマンもローマも、ベンチから入った選手が決めました。
+      - text: ローマのガスペリーニ監督は、こう振り返りました。
+        image: assets/images/20261126_psg_roma_draw/06_w.jpg
+      - voice: ガスペリーニ監督
+        text: 向こうがデンベレを入れて、試合に火がついた。
+      - voice: ガスペリーニ監督
+        text: そこからは、早く終わってほしかった。
+        cont: true
+      - voice: ガスペリーニ監督
+        text: いちばん強い相手と戦って、この試合にはとても満足しています。
+    official: false
+    quotes_from: [Sky Sport]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915374
+      - https://www.espn.com/soccer/report/_/gameId/401915374
+      - https://www.psg.fr/en/content/paris-held-2-2-by-roma-match-report-paris-saint-germain-as-roma-uefa-champions-league-2026-2027
+      - https://www.asroma.com/en/news/76277/hermoso-and-malen-on-target-in-2-2-draw-with-psg
+      - https://sport.sky.it/calcio/champions-league/2026/11/25/psg-roma-gasperini-intervista-video
+  - id: view
+    viewpoint: true
+    heading: この引き分けで、PSGとローマの立ち位置はどう変わったのか
+    tier: 報道
+    telop: PSGの公式戦の連勝は12で止まる
+    say:
+      - text: 見立てです。この引き分けで、パリ・サンジェルマンの公式戦の連勝は12で止まりました。
+        image: assets/images/20261126_psg_roma_draw/03_w.jpg
+        emph: true
+      - text: 36チームが1つの表で争うリーグフェーズで、パリ・サンジェルマンは4勝1引き分けの2位。
+        card: {type: table, title: チャンピオンズリーグ 5試合のあと, columns: [順位, クラブ, 成績, 勝ち点], rows: [[1位, レアル・マドリード, 5勝, 15], [2位, PSG, 4勝1分, 13], [25位, ローマ, 1勝2分2敗, 5]], highlight_row: 1}
+      - text: ローマは1勝2引き分け2敗で、25位です。
+        card: {type: table, title: チャンピオンズリーグ 5試合のあと, columns: [順位, クラブ, 成績, 勝ち点], rows: [[1位, レアル・マドリード, 5勝, 15], [2位, PSG, 4勝1分, 13], [25位, ローマ, 1勝2分2敗, 5]], highlight_row: 2}
+      - text: 次は12月8日。パリ・サンジェルマンは敵地でアストン・ヴィラと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401915374
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings

@@ -1,0 +1,118 @@
+# 取材メモ（2026年11月17日）南野拓実「森保さんがいなかったら、今の自分のキャリアはなかった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-16（元川悦子）「「感謝しかない」「森保さんがいなかったら、今の自分のキャリアはなかった」“森保ジャパンの象徴”南野拓実、8年間の感謝を胸にパラグアイ戦へ」（全文）
+#   https://www.soccer-king.jp/news/japan/national/20261116/2228275.html
+# 写真の出どころ（南野本人の写真。_pool.png を目で見て、伊東・ブラジル選手・別の選手の写真は外した）:
+#   https://www.soccer-king.jp/news/japan/national/20261111/2226694.html （01）
+#   https://web.gekisaka.jp/news/world/detail/?462604-462604-fl （05 モナコ時代）
+#   https://web.gekisaka.jp/news/world/detail/?462607-462607-fl （07 モナコ時代）
+#   ※11/16 のタックルの回（20261116_minamino_tackle_machida）と同じ写真が含まれる。南野の写真は記事側に新しいものが無かった（今日の記事 2228275 の写真は Getty 表記で使わない）。
+# 出典で確かめたこと:
+#   ・南野の言葉（サッカーキング。字は変えない。台本は読点で行に分けた）:
+#       「僕は最初の森保ジャパンから選ばれているので、一番長くやっている選手の一人。選ばれない時期もありましたけど、常にチームの一人として置いてくれたことにすごく感謝している。森保さんがいなかったら、今の自分のキャリアはなかった」
+#       「キャプテンマークを巻かせてもらったり、責任を与えてもらったり、いろいろありましたけど、森保さんとは一緒に成長できたのかなと。山あり谷ありのところをスタッフも一緒に経験して、成長していける監督だったのかなと感じます。僕自身、苦しいことも多かったですけど、それ以上に良かったこともあった。感謝しかないですね」
+#       「代表戦でこういう最後の試合を迎えるって、なんかすごく不思議な感じではありますけど、アジアカップがなくなったので。だから、しっかり勝って、みんなで森保さんを最後いい送り出し方ができればいいかなと思います」
+#   ・サッカーキング（地の文）: 南野は森保体制の初陣、2018年9月のコスタリカ戦に先発。今回のメンバーで森保ジャパン初戦に出ているのは、伊東純也・堂安律を含む3人だけ。15日の練習は本職のトップ下（先発かは未知数）。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=512438、2018-09-11 10:20 UTC）: Japan 3-0 Costa Rica。先発に南野拓実・堂安律、途中出場に伊東純也（Junya Ito）。→ 記事の「初戦に出た3人」と一致。
+#   ・ESPN scoreboard（fifa.friendly 20261117）: Paraguay at Japan（401916336）2026-11-17 13:10 UTC＝日本時間 22:10。まだ Scheduled。
+# 自分で数えたもの: 初陣（2018-09-11）からラストマッチ（2026-11-17）まで8年2か月。初陣に出た3人の出場の形（南野・堂安＝先発、伊東＝途中出場）。
+# 前の本との重なり: 20261112_minamino_return_words（復帰・「森保さんへの感謝の気持ちを伝えたい」）／20261116_minamino_tackle_machida（タックル・町田）。→ 今回の初出: 森保監督との8年を振り返る言葉（「キャリアはなかった」「選ばれない時期もあったが置いてくれた」「一緒に成長」）と初陣から残る3人。
+#   復帰の日数・ケガの話・ブラジル戦のタックルは繰り返さない。
+# 【言わないこと】ケガの詳細／カタールW杯のPK失敗（本人の言葉ではなく記者の整理＝本人を小さく見せる）／大岩新体制の話（記者の見立て）。
+# 本人の言葉: あり（南野拓実。サッカーキング）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [南野拓実, 森保一]
+
+short_style: Y
+short_hook_quote: 森保さんがいなかったら、今の自分のキャリアはなかった
+short_photos:
+  - assets/images/20261117_minamino_thanks_moriyasu/01_v.jpg
+  - assets/images/20261117_minamino_thanks_moriyasu/05_v.jpg
+  - assets/images/20261117_minamino_thanks_moriyasu/07_v.jpg
+short_question: ラストマッチのパラグアイ戦、南野拓実は先発すると思いますか。
+short_telops: []
+
+theme:
+  id: minamino_thanks_moriyasu
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 南野拓実、森保監督との8年を語る「今の自分のキャリアはなかった」
+  hook: ""
+  question: 森保ジャパンの初陣から選ばれ続けた南野拓実は、森保監督との8年間をどう語ったのか
+  takeaway: 南野は2018年9月11日の初陣に先発し、8年2か月を経たラストマッチを迎える。初陣に出た選手のうち、今回の代表に残るのは南野・堂安・伊東の3人だけ
+
+thumbnail:
+  layout: face
+  line1: 南野拓実 森保監督へ
+  line2: 「キャリアはなかった」
+  tags: [南野拓実, 森保一, 日本代表]
+  photo: assets/images/20261117_minamino_thanks_moriyasu/01_w.jpg
+  short_photo: assets/images/20261117_minamino_thanks_moriyasu/01_v.jpg
+
+answer: 選ばれない時期も置いてくれた。森保さんがいなかったら、今のキャリアはなかった
+watch: 17日（日本時間22時10分）、パラグアイ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 南野拓実は、森保監督との8年間をどう語ったのか
+    tier: 報道
+    telop: 南野拓実「キャリアはなかった」
+    say:
+      - text: 森保監督が最後に指揮するパラグアイ戦を前に、初陣から選ばれ続けた南野拓実が、思いを語りました。
+        image: assets/images/20261117_minamino_thanks_moriyasu/01_w.jpg
+      - voice: 南野拓実
+        text: 選ばれない時期もありましたけど、
+      - voice: 南野拓実
+        text: 常にチームの一人として置いてくれたことに、
+        cont: true
+      - voice: 南野拓実
+        text: すごく感謝している。
+        cont: true
+      - voice: 南野拓実
+        text: 森保さんがいなかったら、今の自分のキャリアはなかった。
+        emph: true
+      - text: 最初の森保ジャパンから選ばれ、いちばん長くやっている選手の一人でもあります。
+      - text: 監督とは、一緒に成長できたとも話しています。
+        image: assets/images/20261117_minamino_thanks_moriyasu/05_w.jpg
+      - text: 苦しいことも多かったが、それ以上に良かったこともあったといいます。
+      - voice: 南野拓実
+        text: 感謝しかないですね。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228275.html
+  - id: game
+    heading: 初陣に出た選手のうち、いまの代表に残るのは誰か
+    tier: 報道
+    telop: 初陣に出た3人が、ラストマッチにも残る
+    say:
+      - text: 森保ジャパンの初陣は、2018年9月11日のコスタリカ戦。3対0で勝ちました。
+        image: assets/images/20261117_minamino_thanks_moriyasu/07_w.jpg
+      - text: この試合に出た選手のうち、今回の代表に残っているのは、南野拓実、堂安律、伊東純也の3人だけです。
+        card: {type: table, title: 初陣（2018年9月11日）に出て、今回も代表, columns: [選手, 初陣での出場], rows: [[南野拓実, 先発], [堂安律, 先発], [伊東純也, 途中出場]], highlight_row: 0}
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228275.html
+      - https://www.espn.com/soccer/match/_/gameId/512438
+  - id: view
+    viewpoint: true
+    heading: 初陣から8年2か月、南野はラストマッチでどこに立つのか
+    tier: 背景
+    telop: 初陣から8年2か月。ラストマッチは17日
+    say:
+      - text: 見立てです。南野拓実は初陣の2018年9月11日にも先発し、ラストマッチまでは8年2か月です。
+        card: {type: table, title: 南野拓実と森保ジャパン, columns: [日付, 出来事], rows: [[2018年9月11日, 初陣のコスタリカ戦に先発], [2026年11月17日, ラストマッチのパラグアイ戦]], highlight_row: 1}
+      - text: 先発はまだ分かりませんが、15日の練習では、攻撃の起点になるトップ下に入っていました。
+        card: none
+      - text: 試合は、17日の夜にキックオフです。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228275.html
+      - https://www.espn.com/soccer/match/_/gameId/401916336

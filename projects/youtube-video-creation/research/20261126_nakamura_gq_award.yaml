@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月26日）中村敬斗が「GQ MEN OF THE YEAR 2026」のブレイクスルー・アスリート賞。8組の中でサッカー界からただ1人（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 追記（親・書き出し後）: qc で GQ の写真（01）が冒頭〜0:28 と後半に続き、0:11〜0:20 が9秒の停滞。6行に image: を足して 01/02/03 を入れ替えた。語りは変えていない。
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 一次: GQ JAPAN「中村敬斗がブレイクスルー・アスリート賞を受賞！──「GQ MEN OF THE YEAR 2026」」（2026-11-25、全文）
+#   https://www.gqjapan.jp/article/20261125-moty2026-keito-nakamura
+#   選んだ理由（原文の要旨）: FIFAワールドカップ2026では全4試合にスタメン出場して、1ゴール・1アシスト。オランダ戦のテクニカルなゴールが海外メディアにも称賛されるなど、世界的ブレイクを果たした。W杯後は、フランス「リーグ・アン」の名門クラブに完全移籍。
+#   人物欄: 2000年、千葉県生まれ。小学生の時に柏レイソルの下部組織に入団するも、パス主体のサッカーが肌に合わず、ジュニアユース（中学生）年代からは個人技を磨く三菱養和に所属。17歳でガンバ大阪と契約、18歳で渡欧、現在はリヨン。
+#   写真: PHOTOGRAPHS BY TARO MIZUTANI（GQ の撮影）。
+# 一次: GQ JAPAN「「GQ MEN OF THE YEAR 2026」発表！ これが今年の受賞者だ！」（11/25、全文）https://www.gqjapan.jp/article/20261125-moty2026-all
+#   受賞は8組: 岡本多緒（ベスト・アクター）・坂東龍汰（ブレイクスルー・アクター）・CORTIS・中村敬斗（ブレイクスルー・アスリート）・M!LK・吉井和哉・朝井リョウ・三浦璃来＆木原龍一（ベスト・パートナーシップ）。
+# フットボールゾーン 687020（11/25 09:09、全文）: スポーツ界からは2組。授賞式およびパーティは11月30日19時から。GQ の公式サイト・特設サイト・YouTube・X・TikTok でライブ配信。公式SNSで受賞者のコメントが順次公開される。
+# サッカーキング 2231089（11/25、全文）: 2023年に日本代表デビュー。W杯2026で全4試合に先発、1得点1アシスト。
+# サッカー批評（Yahoo b35ca131、11/25 22:06）: サッカー選手の受賞は2010年の本田圭佑以来、16年ぶり2人目。
+#   → 自分で確かめた: Wikipedia「GQ JAPAN」の受賞者一覧（2006〜2026年）で、男子のサッカー選手は 2010年 本田圭佑（2010 FIFAワールドカップ日本代表）だけ。
+#     （2011年の佐々木則夫は女子代表の監督、2013年の三浦知良は別の賞「Men of the Decade」。どちらも台本では触れない）
+# ESPN の試合データ（fifa.world）で確かめた W杯2026 の日本の4試合と中村:
+#   6/14 オランダ 2-2 日本（event 760425）: 57分 中村（右足、エリアの外から左下、久保のアシスト）。中村は先発フル出場。
+#   6/21 チュニジア 0-4 日本（760449）: 4分 鎌田（中村のアシスト）。中村は先発・途中交代。
+#   6/25 日本 1-1 スウェーデン（760471）: 中村は先発・途中交代。
+#   6/29 ブラジル 2-1 日本（760487）: 中村は先発・途中交代。
+#   → 4試合とも先発、1ゴール（オランダ戦）・1アシスト（チュニジア戦）で GQ と一致。
+# 食い違い:
+#   ・「サッカー界から唯一」「16年ぶり2人目」: 唯一は8組の一覧で確かめた。2人目は Wikipedia の一覧で確かめたが、GQ 自身はそう書いていない → 「本田圭佑以来」とだけ言い、「2人目」とは言わない（別の賞の三浦知良と取り違えられるのを避ける）。
+#   ・代表の試合数・得点（GQ の人物欄「33試合11得点」）は、いつ時点の数か書いていないので使わない。
+# 自分で数えたもの: 本田圭佑の受賞は2010年＝南アフリカW杯の年。中村は2026年＝北中米W杯の年。どちらもW杯の年。2010→2026 で16年。
+# 前の本との重なり: 11/13 nakamura_brazil_third（3度目のブラジル戦）／11/15 nakamura_brazil_double_words（ブラジルから2点目）。→ 今回は受賞そのもの・W杯の数字・子どものころの歩み（初出）。ブラジル戦の話はしない。
+# 【言わないこと】本人の気持ち（コメント無し）／モデル写真への世間の声／衣装のブランド名／代表の通算成績／「2人目」。
+# 本人の言葉: 見つからず（GQ の受賞記事・発表記事、フットボールゾーン・サッカーキング・サッカー批評を当たった。受賞者のコメントは GQ の公式SNSで後日公開と書かれていて、11/26 朝の記事には無い）。→ X。
+# 写真: 3枚。01＝GQ JAPAN の受賞記事の写真（PHOTOGRAPHS BY TARO MIZUTANI、ロゴ・文字の入っていない1枚）。02・03＝ゲキサカの写真ギャラリー 463288「中村敬斗がブラジル戦で再びゴール」の19枚目・1枚目（©Koki NAGAHAMA/GEKISAKA、11/14 の日本代表。過去の回で未使用）。
+#   02・03 は11月の代表戦の写真で、W杯の写真ではない → 台本で「この写真が」とは言わない。
+#   外した: GQ のロゴ入り告知画像・8組の集合ビジュアル（販促の合成）、フットボールゾーンの主写真（900px・6月の写真）、サッカー批評の写真（900px）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [中村敬斗, 本田圭佑, リヨン]
+
+short_style: X
+short_hook_word: 8組でただ1人
+short_photos:
+  - assets/images/20261126_nakamura_gq_award/01_v.jpg
+  - assets/images/20261126_nakamura_gq_award/02_v.jpg
+  - assets/images/20261126_nakamura_gq_award/03_v.jpg
+short_question: 中村敬斗は、30日の授賞式にどんな姿で登場すると思いますか。
+short_telops: []
+
+theme:
+  id: nakamura_gq_award
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 中村敬斗、GQの「今年の男」に。8組の中でサッカー界からただ1人選ばれた理由
+  hook: ""
+  question: 中村敬斗は、なぜ「GQ MEN OF THE YEAR 2026」に選ばれたのか
+  takeaway: 理由はW杯の4試合すべてで先発し、1ゴール1アシスト。サッカー選手の受賞は、同じくW杯の年だった2010年の本田圭佑以来になる
+thumbnail:
+  layout: face
+  line1: 中村敬斗 GQの今年の男に
+  line2: サッカー界からただ1人
+  tags: [中村敬斗, リヨン]
+  photo: assets/images/20261126_nakamura_gq_award/01_w.jpg
+  short_photo: assets/images/20261126_nakamura_gq_award/01_v.jpg
+
+answer: W杯の全4試合に先発し、オランダ戦のゴールを含む1ゴール1アシスト
+watch: 11月30日の授賞式（19時から配信）
+sections:
+  - id: what
+    main: true
+    heading: 中村敬斗は、なぜGQの「今年の男」に選ばれたのか
+    tier: 報道
+    telop: GQ MEN OF THE YEAR 2026。中村敬斗はブレイクスルー・アスリート賞
+    say:
+      - text: 中村敬斗が、雑誌ジーキュー・ジャパンの「メン・オブ・ザ・イヤー2026」に選ばれました。
+      - text: その年に大きく活躍した人をたたえる賞で、今年の受賞は8組。
+        image: assets/images/20261126_nakamura_gq_award/03_w.jpg
+      - text: 俳優や作家、音楽グループが並ぶ中、サッカー界からは中村ただ1人。
+        emph: true
+      - text: 贈られたのは「ブレイクスルー・アスリート賞」。この1年で一気に飛躍した選手、という意味です。
+        image: assets/images/20261126_nakamura_gq_award/01_w.jpg
+      - text: 理由として挙げられたのは、6月のワールドカップ。
+        image: assets/images/20261126_nakamura_gq_award/02_w.jpg
+      - text: 中村は日本の4試合すべてに先発し、1ゴール1アシスト。
+        card: {type: stats, title: 中村敬斗のW杯2026, items: [[4, 試合, すべて先発], [1, ゴール, オランダ戦], [1, アシスト, チュニジア戦]], focus: 1}
+      - text: オランダ戦では57分、エリアの外から右足で同点ゴールを決めました。
+        image: assets/images/20261126_nakamura_gq_award/03_w.jpg
+      - text: このゴールは海外でも高く評価され、選ばれた理由の一つになりました。
+        card: none
+        image: assets/images/20261126_nakamura_gq_award/01_w.jpg
+      - text: そしてW杯のあと、フランスのリヨンへ完全移籍しました。
+        image: assets/images/20261126_nakamura_gq_award/02_w.jpg
+    official: false
+    sources:
+      - https://www.gqjapan.jp/article/20261125-moty2026-keito-nakamura
+      - https://www.gqjapan.jp/article/20261125-moty2026-all
+      - https://www.espn.com/soccer/match/_/gameId/760425
+      - https://www.espn.com/soccer/match/_/gameId/760449
+      - https://www.football-zone.net/archives/687020
+      - https://www.soccer-king.jp/news/release/20261125/2231089.html
+  - id: roots
+    heading: 中村敬斗は、どんな道を通ってここまで来たのか
+    tier: 背景
+    telop: 柏の下部組織から三菱養和へ。17歳でガンバ大阪、18歳で欧州へ
+    say:
+      - text: 受賞の発表では、中村敬斗の歩みにも触れています。
+        image: assets/images/20261126_nakamura_gq_award/01_w.jpg
+        card: none
+      - text: 小学生のときに柏レイソルの下部組織に入りましたが、パスでつなぐサッカーが肌に合わなかったそうです。
+      - text: 中学生の年代からは、個人技を磨く三菱養和へ。
+        image: assets/images/20261126_nakamura_gq_award/03_w.jpg
+        card: none
+      - text: 17歳でガンバ大阪と契約し、18歳でヨーロッパに渡りました。
+        image: assets/images/20261126_nakamura_gq_award/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.gqjapan.jp/article/20261125-moty2026-keito-nakamura
+  - id: view
+    viewpoint: true
+    heading: 中村敬斗の前にGQに選ばれたサッカー選手は、誰だったのか
+    tier: 報道
+    telop: サッカー選手の受賞は、2010年の本田圭佑以来
+    say:
+      - text: 見立てです。この賞をサッカー選手が受けるのは、2010年の本田圭佑以来。
+        emph: true
+      - text: 2010年は南アフリカでワールドカップがあった年。今年も、ワールドカップの年です。
+        card: {type: timeline, title: GQ MEN OF THE YEARとサッカー選手, rows: [[2010年, 本田圭佑（南アフリカW杯の年）], [2026年, 中村敬斗（北中米W杯の年）]], highlight_row: 1}
+      - text: 本田圭佑も中村敬斗も、ワールドカップで名前を広めた年に選ばれた形です。
+      - text: 授賞式は11月30日の19時から。その様子は配信で見られます。
+        card: none
+    official: false
+    sources:
+      - https://www.gqjapan.jp/article/20261125-moty2026-all
+      - https://news.yahoo.co.jp/articles/b35ca1310a02f2c0a4016d6772d03bae07d9f1e8
+      - https://ja.wikipedia.org/wiki/GQ_JAPAN
+      - https://www.football-zone.net/archives/687020

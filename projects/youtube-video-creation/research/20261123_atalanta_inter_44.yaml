@@ -1,0 +1,145 @@
+# 取材メモ（2026年11月23日）アタランタ 4対4 インテル。2点を追うアタランタが90+1分にケシエのPKで追いつく。インテルのキヴ監督「2点を差し出した」（ニュースのショート。見せ方 Y＝キヴ監督の言葉から始める）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: kicker「Atalanta - Inter: Tor zum 4:4 durch Kessié in der 90.+1 Minute」（動画のページ。requests は 403 で本文を読めず、見出しだけ）。
+# ESPN の試合データ（site.api.espn.com summary ita.1 event=401875001、11/22 19:45 UTC、ベルガモ）:
+#   アタランタ 4-4 インテル。16分 ピオ・エスポージト（インテル）／32分 ピオ・エスポージト（頭、アシスト ディマルコ）／35分 エルマス（アタランタ、アシスト ザレフスキ）／
+#   52分 ピオ・エスポージト（アシスト テュラム）＝ハットトリック／72分 デ・ケテラーレ（頭、アシスト ザレフスキ）／76分 スチッチ（インテル、PK）／80分 デ・ケテラーレ（アシスト ロウ）／90+1分 ケシエ（PK）。
+#   33分 チャルハノールが負傷でスチッチと交代。シュート 15本（枠内10）対16本（枠内6）、支配率 40.6%対59.4%。
+# 食い違い: TuttoMercatoWeb の試合記事は デ・ケテラーレの得点を「73分」「81分」と書く。ESPN の試合データは 72分・80分。→ 台本は ESPN の分。ケシエのPKは両方とも 91分（ESPN 90+1）。
+# TuttoMercatoWeb（requests で全文。イタリア語）:
+#   ・2296515（試合記事）: 90分、バストーニがデ・ケテラーレとの競り合いで腕に当て、PK。91分にケシエが GK ジョゼプ・マルティネスの逆を突いて 4-4。インテルは29点で3位（ローマの勝利で）、首位ラツィオと3点差。アタランタは12位・15点。
+#     インテルはこの前の2試合（フェイエノールト・コモ）を無失点で勝っていた。→ 「直前の2試合は無失点」として使う。
+#   ・2296524（判定の解説）: 2つのPKはどちらも正しい判定（76分のPKはザッパコスタのハンド、90分はバストーニのハンド）。→ 判定の是非は言わない。PKの理由（ハンド）だけ。
+#   ・2296538 キヴ監督（DAZN、試合後）: "abbiamo fallito la prova di maturità nei minuti finali per leggerezza" ／ "Sono due punti regalati, impariamo la lezione" ／ "I gol concessi sono troppi" ／ "dare il massimo fino a che l'arbitro non fischia la fine"
+#   ・FCInterNews 1023816（同じ DAZN の言葉をより長く）: "Siamo andati tre volte in vantaggio, il rammarico è per questo" ／ "Facciamo i complimenti all'Atalanta" ／ "per me sono due punti regalati"
+#   ・2296531 サッリ監督（アタランタ、DAZN）: "La squadra ha dei pregi a livello caratteriale, nelle ultime partite siamo pericolosi davanti ma ci portiamo dietro il difetto della fragilità difensiva." ／ デ・ケテラーレについて "ha un potenziale che ho visto in pochi"
+#   → 台本の言葉は、このイタリア語を私が日本語にしたもの。
+# ESPN 順位表（ita.1、11/23 取得）: 1位ラツィオ 32／2位ローマ 30／3位インテル 29（12試合）／12位アタランタ 15（12試合 4勝3分5敗）。
+# ESPN scoreboard（uefa.champions 2026-11-25）: VfB Stuttgart at Internazionale 20:00 UTC＝日本時間 11/26 5:00。
+# 自分で数えたもの: アタランタは 76分に 2対4 とされてから、80分と 90+1分の2点で追いついた（約15分で2点差）。インテルは試合のうち 16分から 90分まで、ずっと先行していた。
+#   インテルの失点: 直前の2試合 0 → この試合 4。
+# 前の本との重なり: 20261126_sa_inter（シリーズの予約。インテルの紹介）、20261122_malen_roma_four（ローマの回）。この試合は初出。
+# 【言わないこと】判定の是非／チャルハノールの負傷の程度（クラブ発表なし）／ピオ・エスポージトの経歴の深掘り／アタランタの監督交代の経緯。
+# 本人の言葉: キヴ監督・サッリ監督の試合後の言葉あり → Y はキヴ監督。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 4枚。02＝サッリ監督・03＝キヴ監督（TuttoMercatoWeb の記事の主写真。記事内の表記は「foto di www.imagephotoagency.it」＝イタリアの写真会社。Getty 等の禁止の一覧には無いが代理店の写真なので引き受ける危険。1198x674 と小さいのでショートには使わず本編の横だけ）、
+#   05・06＝ケシエ（Commons、2026年6月のコートジボワール代表、Bryan Berlin CC BY-SA 4.0。今回の試合の写真ではない）。04（デ・ケテラーレのヘディングの場面で顔なし）・07（ピオ・エスポージトの私的な写真で画質が低い）は外した。一覧を目で見た: 本人、透かしなし。
+slot: foreign
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [インテル, キヴ監督, ケシエ, サッリ監督, アタランタ, ピオ・エスポージト, デ・ケテラーレ]
+
+short_style: Y
+short_hook_quote: これは、2点を差し出してしまった試合です。
+short_photos:
+  - assets/images/20261123_atalanta_inter_44/05_v.jpg
+  - assets/images/20261123_atalanta_inter_44/06_v.jpg
+short_question: インテルは、この4失点を次の試合で立て直せると思いますか。
+short_telops: []
+
+theme:
+  id: atalanta_inter_44
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: インテル、終了間際に追いつかれ4対4。キヴ監督が語った悔しさ
+  hook: ""
+  question: 2点差から追いつかれたインテルのキヴ監督は、何を語ったのか
+  takeaway: インテルは直前の2試合で無失点だったが、この試合で4失点。アタランタは2対4から約15分で2点を返し、90+1分のケシエのPKで追いついた
+
+thumbnail:
+  layout: face
+  line1: アタランタ 4対4 インテル
+  line2: 90+1分 ケシエのPK
+  tags: [アタランタ, インテル]
+  photo: assets/images/20261123_atalanta_inter_44/05_w.jpg
+  short_photo: assets/images/20261123_atalanta_inter_44/06_v.jpg
+
+answer: 「2点を差し出してしまった」。終盤の気のゆるみを認め、最後まで出し切ることを求めた
+watch: 25日のシュツットガルト戦（日本時間26日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: 4対4で追いつかれたインテル、キヴ監督は何を語ったのか
+    tier: 報道
+    telop: キヴ監督「2点を差し出してしまった」
+    say:
+      - voice: キヴ監督
+        text: これは、2点を差し出してしまった試合です。
+        emph: true
+        image: assets/images/20261123_atalanta_inter_44/03_w.jpg
+      - voice: キヴ監督
+        text: 終盤の気のゆるみで、
+        cont: true
+      - voice: キヴ監督
+        text: 大人のチームになるための試験に落ちました。
+        cont: true
+      - text: インテルのキヴ監督が、アタランタと4対4で引き分けた試合のあとに話した言葉です。
+        short_only: true
+      - text: 22日、敵地ベルガモでのアタランタ戦。インテルは52分までに3点を奪い、3対1とリードしました。
+        image: assets/images/20261123_atalanta_inter_44/03_w.jpg
+      - text: 3点はすべて、ピオ・エスポージト。1人で3点の、ハットトリックです。
+        image: assets/images/20261123_atalanta_inter_44/06_w.jpg
+      - text: アタランタに1点を返されても、76分にはPKで4対2。それでも、そこから2点を返されます。
+        image: assets/images/20261123_atalanta_inter_44/05_w.jpg
+      - text: 80分にデ・ケテラーレがこの日2点目。
+      - text: そして90分を過ぎた追加時間。ハンドで得たPKを、アタランタのケシエが落ち着いて決めました。
+        emph: true
+        image: assets/images/20261123_atalanta_inter_44/06_w.jpg
+      - text: キヴ監督は、こう続けました。
+        image: assets/images/20261123_atalanta_inter_44/03_w.jpg
+      - voice: キヴ監督
+        text: 3度もリードを奪ったのに。悔しいのは、そこです。
+      - voice: キヴ監督
+        text: 失点が多すぎる。
+        cont: true
+      - voice: キヴ監督
+        text: 審判が終わりの笛を吹くまで、出し切らないといけない。
+        cont: true
+    official: false
+    sources:
+      - https://www.tuttomercatoweb.com/serie-a/inter-chivu-nasconde-troppi-gol-concessi-punti-regalati-2296538
+      - https://www.fcinternews.it/in-primo-piano/chivu-dazn-fallito-esame-maturita-punti-regalati-leggeri-1023816
+      - https://www.tuttomercatoweb.com/serie-a/partita-folle-bergamo-inter-tripletta-pio-atalanta-trova-4-4-91-2296515
+      - https://www.espn.com/soccer/match/_/gameId/401875001
+  - id: goals
+    heading: 8点が入った試合は、どう動いたのか
+    tier: 報道
+    telop: アタランタ 4-4 インテル。90+1分に同点
+    say:
+      - text: 8点の流れを、表で見るとこうです。
+        card: {type: table, title: アタランタ 4-4 インテル, columns: [分, 得点], rows: [[16分, ピオ・エスポージト（インテル）], [32分, ピオ・エスポージト（インテル）], [35分, エルマス（アタランタ）], [52分, ピオ・エスポージト（インテル）], [72分, デ・ケテラーレ（アタランタ）], [76分, スチッチ（インテル・PK）], [80分, デ・ケテラーレ（アタランタ）], [90+1分, ケシエ（アタランタ・PK）]], highlight_row: 7}
+      - text: インテルは16分から90分まで、ずっと先にリードしていました。
+      - text: 一方、追いついたアタランタのサッリ監督は、自分のチームをこう話しています。
+        card: none
+        image: assets/images/20261123_atalanta_inter_44/02_w.jpg
+      - voice: サッリ監督
+        text: このチームには、気持ちの強さがある。
+      - voice: サッリ監督
+        text: ただ、守備のもろさを、まだ抱えたままです。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401875001
+      - https://www.tuttomercatoweb.com/serie-a/atalanta-sarri-paghiamo-troppi-errori-fase-difensiva-de-ketelaere-grandi-potenzialita-2296531
+  - id: view
+    viewpoint: true
+    heading: 4失点の引き分けで、インテルの順位はどうなったのか
+    tier: 背景
+    telop: 直前の2試合は無失点、この試合で4失点
+    say:
+      - text: 見立てです。インテルは、この前の2試合を無失点で勝っていました。
+        image: assets/images/20261123_atalanta_inter_44/06_w.jpg
+        card: {type: stats, title: インテルの失点, items: [[0, 失点, 直前の2試合], [4, 失点, アタランタ戦], [3, 位, 首位と3点差]], focus: 1}
+      - text: それが1試合で4失点。勝ち点は29で、3位に下がりました。
+      - text: 首位ラツィオとの差は、勝ち点3です。
+        card: none
+      - text: アタランタは、勝ち点15の12位のままです。
+      - text: インテルの次は25日、ヨーロッパのクラブ王者を決めるチャンピオンズリーグのシュツットガルト戦。
+      - text: 日本時間では、26日の午前5時です。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+      - https://www.tuttomercatoweb.com/serie-a/partita-folle-bergamo-inter-tripletta-pio-atalanta-trova-4-4-91-2296515

@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月24日）安藤智哉、ザンクトパウリでドイツ初ゴール。2か月ぶりの出場で2-0の勝利（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# リーグ: ザンクトパウリは今季ドイツ2部（ESPN の ger.2 順位表に載る）。欧州7リーグの国の2部で、松木の回（イングランド2部）と同じ扱い。league_name を「ブンデスリーガ2部」で上書き。
+# 題材の元: ゲキサカ フォトニュース 463746（11/23 16:48）「安藤智哉がドイツ初ゴール!! 2か月ぶりの出場で勝利に導くプレー披露(9枚)」 https://web.gekisaka.jp/photonews/world/detail/?463746-463746-pn
+#   本文は「ザンクト・パウリは21日、ブンデスリーガ2部の第12節でボーフムと対戦し2-0で勝利した」だけ。写真9枚はすべて Getty Images なので使わない。
+# 一次（クラブ）: ザンクトパウリ公式の試合記事「2:0 gegen Bochum - Blitztore ebnen den Weg zum dritten Saisonsieg」 https://www.fcstpauli.com/news/spielbericht-heimspiel-vfl-bochum-2627
+#   3分 ニアン先制。6分 安藤が7メートルからのシュートを GK ホルンに止められる。10分 コーナーキックから安藤が頭で合わせるも枠外。
+#   47分「Nach einem Freistoß aus dem Halbfeld scheiterte Niang zunächst am glänzend reagierenden Horn, den Nachschuss jagte Andō unter Mithilfe des rechten Innenpfostens in die Maschen - 2:0」
+#   （フリーキックのあと、ニアンのシュートを GK ホルンが止め、そのこぼれ球を安藤が右のポストの内側に当てて決めた）。「nach vier sieglosen Spielen in Folge」＝4試合勝ちなしのあとの勝利、今季3勝目。観衆29,546（満員）。
+#   先発の変更: 安藤・マティセン・ニアンが入った（マグデブルク戦 1-4 のあと）。安藤はフル出場（交代の記録なし）。
+#   ザンクトパウリ公式「Kurz und knackig November 2026」（11/22 の項）: 「Tomoya Andō … gewann 80 Prozent seiner Duelle und war damit der beste Zweikämpfer」＝1対1の競り合いの80%に勝ち、チームでいちばん。 https://www.fcstpauli.com/news/kurz-und-knackig-november-2026
+#   試合後の言葉の記事 https://www.fcstpauli.com/news/stimmen-heimspiel-vfl-bochum-2627 に安藤の言葉は無い（監督・ニアン・スミスら）。
+# ESPN の試合データ（site.api.espn.com ger.2 summary event=401885055、2026-11-21 19:30 UTC）: ザンクトパウリ 2-0 ボーフム。3分 ニアン／47分 安藤。安藤は先発でフル出場。原大智は81分から、ボーフムの三好康児は58分から出場。
+#   ESPN の 9/20 コトブス戦（event=401885102）: 安藤は17分に警告、21分に退場。ザンクトパウリの日程（ESPN）: 9/20 コトブス戦のあと、10/11・10/17・10/23・11/1・11/8 の5試合に安藤の出場なし → 11/21 が6試合ぶり・2か月ぶりの出場。勝利は 10/11 カールスルーエ戦以来（その後2分2敗）。
+# 日本語の記事:
+#   ・スポニチ（Yahoo 11/22）https://news.yahoo.co.jp/articles/4c8e1c2c73745d9d9a8900d6b8428d8586fe9468 9月20日のコトブス戦以来の出場。1-0の後半2分、こぼれ球に左足。今年1月にアビスパ福岡から当時1部のザンクトパウリへ加入、チームは2部に降格。日本代表は9〜10月の活動で復帰したが負傷離脱。
+#   ・サッカーキング（Yahoo 11/22）https://news.yahoo.co.jp/articles/42f7bc4ea4471e20b2d565290f50db10e6d63075 第6節コットブス戦で退場→次節出場停止→その後4試合はベンチ入りも出番なし→6試合ぶりの先発。5試合ぶりの勝利。
+# 食い違い:
+#   ・競り合い: スポニチは「デュエルで5戦全勝」、クラブは「80%」。→ 台本はクラブの80%。
+#   ・日本代表を離れた理由: ダイジェストは「ぎっくり腰」、スポニチは「負傷離脱」。JFA の発表は当たっていない → 台本では理由の病名を言わない（代表の話自体を入れない）。
+#   ・ゴールの足: スポニチ「左足」、ダイジェスト「利き足ではない左足」、クラブは足を書かない。→ 「左足」は報道として言う。「利き足ではない」は使わない。
+# ESPN 順位表（ger.2、11/24 取得）: ザンクトパウリ 8位 勝ち点15（12試合）。次は 11/28 12:00 UTC（日本時間 21時）ディナモ・ドレスデン戦（敵地）。
+# 自分で数えたもの: 9/20 → 11/21 ＝ 2か月。出られなかったのは5試合（出場停止1＋出番なし4）。
+# 前の本との重なり: 安藤の初ゴールは初出。
+# 【言わないこと】代表離脱の病名／「利き足ではない」／SNS の反応（ダイジェストがまとめたもの。作らない・まとめを引かない）／三好・原・藤田の細かい出場時間（題から離れる）。
+# 本人の言葉: 見つからず（クラブの試合後の言葉の記事・日本語各紙とも無し。本人の SNS はブラウザの道具を使わない決まりで当たっていない）。→ X。
+# 写真: 3枚（すべてザンクトパウリ側の写真）。
+#   01＝クラブの試合記事の中の写真（alt「2:0 Tor, Jubel, Torschuetze Tomoya Ando」、ファイル名 WITTERS_2390644＝ドイツの写真会社 Witters。禁止の一覧（Getty・AFLO・AFP・ロイター・AP・PA）には無いが、代理店の写真なので引き受ける危険）
+#   02＝クラブの試合記事の主写真（ゴールのあと仲間に囲まれる場面。1200x630 と小さいので、ショートで伸びる。02_v は手で安藤を中心に切った）
+#   04＝スポニチの主写真（説明「FCザンクトパウリの公式インスタグラムより」。688x914。右下にインスタの矢印があるので 04_w は手で切った）
+#   03（試合後の言葉の記事の主写真）は GK フォルで別人なので外した。サッカーキング・ダイジェスト（Getty）、フットボールゾーン（picture alliance/アフロ）は使わない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [安藤智哉, ザンクトパウリ, ボーフム]
+
+short_style: X
+short_hook_word: 2か月ぶりの試合で
+short_photos:
+  - assets/images/20261124_ando_first_goal/01_v.jpg
+  - assets/images/20261124_ando_first_goal/04_v.jpg
+  - assets/images/20261124_ando_first_goal/02_v.jpg
+short_question: 安藤智哉は、このまま先発の座を取り戻せると思いますか。
+short_telops: []
+
+theme:
+  id: ando_first_goal
+  league: germany
+  league_name: ブンデスリーガ2部
+  prefix: ""
+  title: 安藤智哉、ドイツで初ゴール。2か月ぶりの試合で決めた一撃
+  hook: ""
+  question: 2か月ぶりに出た安藤智哉は、どんな形でドイツ初ゴールを決めたのか
+  takeaway: 退場から2か月、5試合出られなかった安藤が、戻った試合の47分にこぼれ球を押し込んだ。競り合いの勝率80%はチームでいちばん。ザンクトパウリは4試合勝ちなしを止めた
+
+thumbnail:
+  layout: face
+  line1: 安藤智哉 ドイツ初ゴール
+  line2: 2か月ぶりの試合で
+  tags: [安藤智哉, ザンクトパウリ]
+  photo: assets/images/20261124_ando_first_goal/01_w.jpg
+  short_photo: assets/images/20261124_ando_first_goal/01_v.jpg
+
+answer: フリーキックのあと、味方のシュートのこぼれ球を左足で。ポストの内側に当てて決めた
+watch: 28日のディナモ・ドレスデン戦（日本時間21時）
+
+sections:
+  - id: what
+    main: true
+    heading: 安藤智哉のドイツ初ゴールは、どんな形だったのか
+    tier: 確定
+    telop: 安藤智哉、ザンクトパウリでドイツ初ゴール
+    say:
+      - text: ドイツ2部、ザンクトパウリの安藤智哉が、ドイツで初めてのゴールを決めました。
+        image: assets/images/20261124_ando_first_goal/01_w.jpg
+      - text: 試合に出るのは2か月ぶり。9月に退場になってから、5試合ピッチに立てていませんでした。
+        card: {type: timeline, title: 安藤智哉の2か月, rows: [[9月20日, 21分に退場], [次の1試合, 出場停止], [そのあと4試合, 出番なし], [11月21日, 先発でゴール]], highlight_row: 0}
+      - text: 次の試合は出場停止。そのあとの4試合も、出番がありませんでした。
+        card: {type: timeline, title: 安藤智哉の2か月, rows: [[9月20日, 21分に退場], [次の1試合, 出場停止], [そのあと4試合, 出番なし], [11月21日, 先発でゴール]], highlight_row: 2}
+      - text: そして21日、ホームのボーフム戦で先発に戻ります。
+        card: none
+        image: assets/images/20261124_ando_first_goal/02_w.jpg
+      - text: 前半から、至近距離のシュートにヘディングと、何度もゴールに迫ります。
+        card: none
+        image: assets/images/20261124_ando_first_goal/04_w.jpg
+      - text: 3分の先制で1点リードの後半、開始直後の47分。
+      - text: フリーキックから味方が打ったシュートを、キーパーが止めます。
+        card: none
+        image: assets/images/20261124_ando_first_goal/02_w.jpg
+      - text: そのこぼれ球に、安藤が左足。ボールはポストの内側に当たって、ゴールに入りました。
+        emph: true
+      - text: 本職は守りの安藤。その1点が、2対0の勝利につながりました。
+        image: assets/images/20261124_ando_first_goal/04_w.jpg
+    official: true
+    sources:
+      - https://www.fcstpauli.com/news/spielbericht-heimspiel-vfl-bochum-2627
+      - https://www.espn.com/soccer/match/_/gameId/401885055
+      - https://www.espn.com/soccer/match/_/gameId/401885102
+      - https://news.yahoo.co.jp/articles/4c8e1c2c73745d9d9a8900d6b8428d8586fe9468
+      - https://news.yahoo.co.jp/articles/42f7bc4ea4471e20b2d565290f50db10e6d63075
+  - id: defense
+    heading: 守りの面で、安藤智哉はどうだったのか
+    tier: 確定
+    telop: 競り合いの勝率80%、チームでいちばん
+    say:
+      - text: 守りでも、安藤智哉は光りました。
+        image: assets/images/20261124_ando_first_goal/01_w.jpg
+      - text: この試合、1対1の競り合いで勝った割合は80%。チームでいちばんの数字でした。
+        card: {type: stats, title: ボーフム戦の安藤智哉, items: [[47, 分, ドイツ初ゴール], [80, "%", 競り合いの勝率], [0, 失点, チームは無失点]], focus: 1}
+        emph: true
+      - text: ザンクトパウリは、4試合続いた勝ちなしを止めました。
+        card: none
+        image: assets/images/20261124_ando_first_goal/02_w.jpg
+    official: true
+    sources:
+      - https://www.fcstpauli.com/news/kurz-und-knackig-november-2026
+      - https://www.fcstpauli.com/news/spielbericht-heimspiel-vfl-bochum-2627
+  - id: view
+    viewpoint: true
+    heading: この1点で、安藤智哉の立場は変わるのか
+    tier: 背景
+    telop: ザンクトパウリは2部で8位
+    say:
+      - text: 見立てです。安藤智哉は今年1月に、アビスパ福岡からザンクトパウリへ移りました。
+        image: assets/images/20261124_ando_first_goal/04_w.jpg
+        card: none
+      - text: 5試合出られなかったあとの先発で、点を取り、競り合いでもいちばん。
+      - text: 2部で8位のチームで、先発の座を取り戻すきっかけになりうる1試合です。
+      - text: 次は28日、敵地でのディナモ・ドレスデン戦。日本時間では夜の9時キックオフです。
+        image: assets/images/20261124_ando_first_goal/01_w.jpg
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/4c8e1c2c73745d9d9a8900d6b8428d8586fe9468
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.2/standings

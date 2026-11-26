@@ -1,0 +1,121 @@
+# 取材メモ（2026年11月21日）PSV佐野航大の古巣対決の前日、ナイメヘンのシュレーダー監督が語ったこと（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し）
+# 取材: 2026-11-21。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 題材の元: Football Tribe Japan 2026-11-21 10:00「PSV佐野航大「正しい選択した」古巣ナイメヘン監督が警告！サポーターに「ブーイング良くない」」（全文）。
+# 一次: ForzaNEC 2026-11-20「Schreuder ziet Sano uitblinken bij PSV: "Hij heeft de juiste keuze gemaakt"」（オランダ語・全文を読んだ。https://www.forzanec.nl/nieuws/schreuder-ziet-sano-uitblinken-bij-psv-hij-heeft-de-juiste-keuze-gemaakt/ ）。
+# 【見出しの言葉は誰のものか】見出しの「正しい選択した」「ブーイング良くない」は、**佐野本人ではなくナイメヘンのディック・シュレーダー監督の言葉**（ForzaNEC の見出しも監督の発言）。
+#   → 本人の言葉は無い。short_style は X。台本の「」は全部シュレーダー監督の発言として書く。
+# 監督の発言（ForzaNEC、私が日本語にした）:
+#   "Ik ben niet verrast door zijn ontwikkeling. Ik heb een jaar met hem gewerkt en na september en oktober zag ik al dat hij zich enorm goed ontwikkelde. Hij heeft bij ons vorig jaar honderd procent alles getraind en gespeeld. Daardoor is hij ook fit naar PSV gegaan om de volgende stap te maken."
+#   "Peter Bosz speelt al zijn hele leven in de pressing en in het opbouwspel ... Daar past Sano precies bij." "Hij laat dat wel wekelijks zien."
+#   "Op een gegeven moment is hij al zes, zeven maanden bezig met een transfer. Dan snap ik het ook."
+#   "NEC is hem super dankbaar. Als je bijna alles honderd procent speelt, snap ik ook dat hij die stap wil maken. Het lijkt me niet handig als wij zo'n speler gaan uitfluiten."
+#   （"niet handig" は「得策でない／賢明でない」。Tribe の「良くない」より弱い言い方。「警告」は Tribe の言葉で、監督は記者会見で聞かれて答えた形 → 台本は「警告」と言わず「得策ではないと思う」とした。）
+#   ・"Ze hebben met Sano en Mijnans twee van de beste spelers bij andere ploegen weggehaald, die misschien al bij de beste tien spelers van Nederland hoorden."（misschien＝かもしれない。Tribe は「すでにトップ10」と断定しているので、台本は「かもしれない」を残した。マイナンスの綴りは確かめていないので名前は使わない）
+# 確かめたこと:
+#   ・ESPN ned.1 scoreboard: NEC Nijmegen（ホーム、ホフェルト＝Goffertstadion）対 PSV、キックオフ 2026-11-21 15:30 UTC（日本時間 11/22 0:30）。取材時点では未開催（Scheduled）。→ 台本は試合の結果に触れない。
+#   ・ESPN standings（11/21 取得）: PSV 12試合 8勝2分2敗 勝ち点26 首位／NEC 12試合 3勝5分4敗 勝ち点14 11位。
+#   ・佐野が今夏 NEC から PSV へ移ったこと: Tribe「2026年夏、NECからPSVへ完全移籍」、ForzaNEC もオランダ語で「PSV に移った元NEC」。
+#   ・Tribe にある「ホッフェンハイムなど複数クラブとの移籍交渉が破談」は監督の発言ではなく Tribe の地の文。ForzaNEC では「6、7か月移籍に動いていた」まで → 台本は ForzaNEC の範囲だけ。
+# 自分で数えたもの: 順位差 首位と11位、勝ち点26と14（ESPN）。
+# 前の本との重なり: scripts/20261119_sano_longest（代表の最長プレー・久保の称賛）。今回の初出: 古巣の監督の発言・古巣戦。直近のPSVの回（10月）は成績の話で、重ならない。
+# 候補の順位づけ: (a) 取材で前提は残った（本人の言葉ではなく監督の言葉＝Y にはしない）。(b) 松木は契約延長の当事者でなく見出しの添えもの → 見送り。
+# 写真: 実際に使うのは2枚（05 ゲキサカ・03 ForzaNEC＝Rob Koppers & Orange Pictures の写真、ファイル名 SanoSchreuder）。Getty と明記された soccer-king の主写真は外し、06（ゲキサカ）は頭が元写真の上端で切れるので外し、04（Qoly）は小さく（404x719）引き伸ばせないので外した。3枚に届かず。_pool.png を目で見た: 本人、透かし無し。03 は NEC 時代の佐野と監督の握手で題材に合う（顔の自動検出に失敗したため手で切った）。
+# 本人の言葉: なし。X。反応: 0件（作らない。approve は --no-voices）。
+# ヒットの条件: 日本代表の選手だが、W杯・代表の話ではない。本人の言葉でもない（弱め）。9〜17時に置く枠。
+slot: japanese
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [佐野航大, PSV, ナイメヘン, シュレーダー監督]
+
+short_style: X
+short_hook_word: 古巣戦、恩師の一言
+short_photos:
+  - assets/images/20261121_sano_psv_old_coach/05_v.jpg
+  - assets/images/20261121_sano_psv_old_coach/03_v.jpg
+short_question: 佐野航大は、古巣ナイメヘンのサポーターに歓迎されると思いますか。
+short_telops: []
+
+theme:
+  id: sano_psv_old_coach
+  league: netherlands
+  league_name: エールディビジ
+  prefix: ""
+  title: 佐野航大の古巣戦。ナイメヘン監督が、移籍とブーイングに触れた
+  hook: ""
+  question: 古巣対決を前に、ナイメヘンのシュレーダー監督は佐野航大の移籍をどう語ったのか
+  takeaway: シュレーダー監督は佐野の移籍を「理解できる」と話し、ブーイングは得策ではないと考えている。古巣戦は首位PSV（勝ち点26）と11位ナイメヘン（勝ち点14）の対戦
+
+thumbnail:
+  layout: face
+  line1: 佐野航大 古巣戦
+  line2: 恩師がブーイングに言及
+  tags: [佐野航大, PSV]
+  photo: assets/images/20261121_sano_psv_old_coach/03_w.jpg
+  short_photo: assets/images/20261121_sano_psv_old_coach/05_v.jpg
+
+answer: 佐野の移籍は理解できる、ナイメヘンは感謝している。だからブーイングは得策ではない、というのが古巣の監督の考え
+watch: ナイメヘン対PSV（現地21日）
+
+sections:
+  - id: what
+    main: true
+    heading: 古巣対決を前に、ナイメヘンの監督は佐野航大の移籍をどう語ったのか
+    tier: 報道
+    telop: ナイメヘンのシュレーダー監督「ブーイングは得策ではない」
+    say:
+      - text: PSVの佐野航大は、今夏ナイメヘンから移りました。
+        image: assets/images/20261121_sano_psv_old_coach/05_w.jpg
+      - text: 古巣戦を前に、ナイメヘンの監督が語りました。
+      - voice: シュレーダー監督
+        text: ナイメヘンは、佐野にとても感謝しています。
+        emph: true
+      - voice: シュレーダー監督
+        text: ほぼ全部を全力でプレーした選手が、
+        cont: true
+      - voice: シュレーダー監督
+        text: 次の一歩を望むのは理解できます。
+        cont: true
+      - voice: シュレーダー監督
+        text: そういう選手をブーイングするのは、得策ではないと思います。
+        cont: true
+        image: assets/images/20261121_sano_psv_old_coach/03_w.jpg
+      - text: 佐野は半年あまり、移籍に動いていた、といいます。
+        image: assets/images/20261121_sano_psv_old_coach/03_w.jpg
+      - text: 監督は、それなら自分も理解できる、と話しました。
+    official: false
+    sources:
+      - https://www.forzanec.nl/nieuws/schreuder-ziet-sano-uitblinken-bij-psv-hij-heeft-de-juiste-keuze-gemaakt/
+      - https://football-tribe.com/japan/2026/11/21/361561/
+      - https://www.espn.com/soccer/match/_/gameId/401875541
+  - id: growth
+    heading: シュレーダー監督は、PSVでの佐野をどう見ているのか
+    tier: 報道
+    telop: 「彼が成長しているのは驚きません」
+    say:
+      - text: PSVでの佐野の活躍について、シュレーダー監督はこう話しました。
+      - voice: シュレーダー監督
+        text: 彼の成長には驚いていません。
+      - text: ナイメヘン時代の佐野は、練習も試合も全力でこなしていた、と監督は振り返ります。
+      - text: PSVを率いるピーター・ボス監督は、プレッシングと組み立てを大事にする指導者です。
+        image: assets/images/20261121_sano_psv_old_coach/05_w.jpg
+      - voice: シュレーダー監督
+        text: 佐野は、そこに完璧に合います。
+    official: false
+    sources:
+      - https://www.forzanec.nl/nieuws/schreuder-ziet-sano-uitblinken-bij-psv-hij-heeft-de-juiste-keuze-gemaakt/
+      - https://football-tribe.com/japan/2026/11/21/361561/
+  - id: view
+    viewpoint: true
+    heading: 古巣戦は、首位と11位の対戦になる
+    tier: 背景
+    telop: PSV 首位（勝ち点26）／ナイメヘン 11位（勝ち点14）
+    say:
+      - text: 見立てです。佐野の古巣戦は、首位と11位の対戦です。
+        card: {type: table, title: エールディビジ 12試合を終えて, columns: [クラブ, 順位, 勝ち点], rows: [[PSV, 1位, 26], [ナイメヘン, 11位, 14]], highlight_row: 0}
+      - text: 試合は現地21日、ナイメヘンの本拠地で行われます。勝ち点の差は12です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401875541
+      - https://site.api.espn.com/apis/v2/sports/soccer/ned.1/standings

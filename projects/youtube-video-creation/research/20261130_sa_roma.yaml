@@ -1,0 +1,458 @@
+# セリエA チーム紹介 ローマ（tools/plbuild.py の research/20261113_sa04_roma.yaml から、11/24 ミランと同じ直しをしたもの）
+# 2026-11-21 作成。情報は11月21日時点。材料は research/sa_data/roma*.json・roma_say.yaml・roma_research.md
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年11月21日
+people:
+- ローマ
+- 中田英寿
+- フランチェスコ・トッティ
+- ダニエレ・デ・ロッシ
+- ガブリエル・バティストゥータ
+- ジャン・ピエロ・ガスペリーニ
+short_title: ローマ、2001年の優勝と中田英寿
+series: セリエAチーム紹介
+theme:
+  id: sa_roma
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ローマ
+  title: ローマの3度目の優勝に、中田英寿がいた。あの2001年、何が起きていたのか？
+  question: ローマの3度目の優勝に、中田英寿がいた。あの2001年、何が起きていたのか
+  hook: ''
+  lead: イタリアの首都ローマの、赤と黄色のクラブ。
+  opening_image: assets/stats/sa_roma_data_t.png
+  takeaway: 11月21日時点で、リーグ戦11試合の勝ち点は1試合2.45で、昨シーズン38試合の1.92を大きく上回る。得点は31でリーグ最多、1試合2.82は昨シーズンの1.55の1.8倍。一方でチャンピオンズリーグは4試合1勝1分け2敗。リーグの攻撃力を欧州の結果につなげられるかが今季の物差し
+thumbnail:
+  line1: ローマ
+  line2: 優勝の年に中田英寿がいた
+  crest_main:
+  - ローマ
+  tags:
+  - ローマ
+  - ASローマ
+  - セリエA
+  - 中田英寿
+  layout: classic
+  board: assets/stats/sa_roma_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 昨季3位でCLに復帰。監督はアタランタを9年率いたガスペリーニ。今季のリーグ戦はまだ負けなしで3位
+  narrator: キャスター
+  say:
+  - text: 昨季は3位で、チャンピオンズリーグに戻ってきました。
+    image: assets/stats/sa_roma_data_r1.png
+    no_telop: true
+  - text: 監督は、アタランタを9年率いたガスペリーニです。
+    image: assets/stats/sa_roma_data_r2.png
+    no_telop: true
+  - text: 今季のリーグ戦は、まだ負けなし。3位につけています。
+    image: assets/stats/sa_roma_data_r3.png
+    no_telop: true
+  - image: assets/stats/sa_roma_data0.png
+    text: 創立は**1927年**。ローマの3つのクラブが合併して生まれました。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ローマ.png
+    text: 本拠地はスタディオ・オリンピコ。収容は**7万634人**で、ラツィオと共用です。
+  - image: assets/stats/sa_roma_data2.png
+    text: ホームタウンはローマ。イタリアの首都。ラツィオと同じ街です。
+    no_telop: true
+  - image: assets/stats/sa_roma_cups.png
+    text: リーグ優勝は**3回**。1942年、1983年、そして2001年。
+    no_telop: true
+  - image: assets/stats/sa_roma_data8.png
+    text: 昨シーズンは**3位**。勝ち点73でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/AS_Roma
+  - https://en.wikipedia.org/wiki/2026–27_AS_Roma_season
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: rise
+  heading: ローマは、どんな道のりで3度の優勝をつかんだのか
+  tier: 背景
+  telop: 1927年に3クラブの合併で誕生。1942年に初優勝。2部は1951年の1度だけ。1983年に41年ぶりの優勝
+  narrator: 解説
+  say:
+  - text: 合併を進めたのは、イタロ・フォスキという人物でした。
+    image: assets/backgrounds/stadium_ローマ_in.png
+    card:
+      type: table
+      title: ローマの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 1927年
+        - 3つのクラブの合併で誕生
+      - - 1942年
+        - 初めてのリーグ優勝
+      - - 1951年
+        - ただ1度の2部降格
+      - - 1983年
+        - 41年ぶりのリーグ優勝
+      - - 2001年
+        - 3度目のリーグ優勝
+  - 目的は、北の強いクラブに対抗できる、首都のクラブを作ることです。
+  - 最初のリーグ優勝は、1941年から42年のシーズンです。
+  - 2部に落ちたのは、1951年の1度だけ。1年で戻りました。
+  - text: 1982年から83年には、41年ぶりのリーグ優勝。
+    card: none
+    image: assets/backgrounds/stadium_ローマ.png
+  - 翌1984年は、ヨーロッパ王者を決める決勝へ進みます。
+  - リヴァプールと1対1。PK戦で負けました。
+  - 3度目の優勝は、2000年から01年のシーズンです。
+  sources:
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: japan
+  heading: 中田英寿は、2001年の優勝で何をしたのか
+  tier: 背景
+  telop: 2000年1月にペルージャから加入。2001年5月のユヴェントス戦で1得点、同点弾も演出。リーグ戦30試合5得点
+  narrator: 解説
+  main: true
+  say:
+  - text: ローマの3度目の優勝には、日本人の中田英寿がいました。
+    image: assets/images/sa_roma_nakata_w/01.jpg
+    card:
+      type: table
+      title: ローマと中田英寿
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2000年1月
+        - ペルージャから加入
+      - - 2001年5月
+        - ユヴェントス戦で1得点
+      - - 2001年6月
+        - リーグ優勝
+      - - 2001年夏
+        - パルマへ
+  - 2000年1月、同じセリエAのペルージャから加わりました。
+  - 山場は2001年5月6日。優勝を争うユヴェントスとのアウェー戦です。
+  - ローマは0対2で負けていました。後半、トッティに代わって中田が入ります。
+  - 残り11分。中田が、ゴールから約27メートルの所から決めます。
+  - text: 終了間際には、中田のシュートをキーパーがはじき、モンテッラが押し込みます。
+    card: none
+    image: assets/backgrounds/stadium_ローマ_in.png
+  - 2対2の引き分け。ローマは首位のまま、6点差を保ちました。
+  - 6月17日、最終節でパルマに3対1。2位ユヴェントスと2点差で優勝します。
+  - 中田のローマでのリーグ戦は、**30試合5得点**でした。
+  - 2001年の夏、パルマへ移ります。アジアの選手として、当時の最高額でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Hidetoshi_Nakata
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: クラブの色は赤と黄色でローマ市と同じ。紋章は狼と双子。愛称は「狼」
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クラブの色
+      - 赤と黄色
+    - - 紋章
+      - 狼と双子
+    - - 愛称
+      - 狼・ジャッロロッシ
+  say:
+  - text: クラブの色は、赤と黄色。ローマ市の紋章と同じ色です。
+    image: assets/backgrounds/stadium_ローマ.png
+  - 紋章には、狼と2人の赤ん坊が描かれています。
+  - ローマを作ったとされる、ロムルスとレムスの伝説です。
+  - 狼に育てられた双子の話から、愛称は「狼」とも呼ばれます。
+  - もう1つの愛称は、色をそのまま呼んだ「ジャッロロッシ」。黄色と赤という意味です。
+  sources:
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: episode
+  heading: 2018年、ローマはどうやってバルセロナに1対4から勝ち上がったのか
+  tier: 背景
+  telop: 2018年4月、チャンピオンズリーグ準々決勝。1試合目は1対4、ホームで3対0。合計4対4、アウェーの得点で勝ち上がり
+  narrator: 解説
+  card:
+    type: table
+    title: 2018年 準々決勝
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1試合目（アウェー）
+      - 1対4
+  say:
+  - text: 2018年4月4日。チャンピオンズリーグ準々決勝、バルセロナとのアウェー戦。
+    image: assets/backgrounds/stadium_ローマ_in.png
+  - ローマは1対4で負けます。
+  - 4点のうち2点は、デ・ロッシと、守備のマノラスのオウンゴールでした。
+  - text: 4月10日、ホームのオリンピコでの2試合目。
+    card:
+      type: table
+      title: 2018年 準々決勝
+      columns: *id001
+      rows:
+      - - 2試合目（ホーム）
+        - 3対0
+  - 6分、フォワードのジェコが決めて先制。
+  - 58分、デ・ロッシがPKを決めます。
+  - 82分、マノラスが決めて、3対0の勝ち。
+  - text: 2試合の合計は4対4。アウェーで取った点の差で、ローマが勝ち上がりました。
+    card:
+      type: table
+      title: 2018年 準々決勝
+      columns: *id001
+      rows:
+      - - 2試合の合計
+        - 4対4
+  - オウンゴールをした2人が、どちらも点を取り返したことになります。
+  - 準決勝は、1984年から数えて34年ぶりでした。
+  sources:
+  - https://en.wikipedia.org/wiki/2017%E2%80%9318_AS_Roma_season
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - トッティ
+      - 1993-2017
+      - 786試合307得点
+  say:
+  - text: トッティは、1993年から2017年まで、ローマ一筋のフォワードです。
+    image: assets/photos/sa/roma/roma_legend_3c1ee1f5.jpg
+  - 全大会で**786試合307得点**。出場も得点も、クラブで最多です。
+  - セリエAの250得点は歴代2位。2006年には、ワールドカップを勝ち取りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Francesco_Totti
+  - https://en.wikipedia.org/wiki/Daniele_De_Rossi
+  - https://en.wikipedia.org/wiki/Gabriel_Batistuta
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - デ・ロッシ
+      - 2001-2019
+      - 616試合
+  say:
+  - text: デ・ロッシは、ローマ生まれのミッドフィールダー。2001年から2019年まで。
+    image: assets/photos/sa/roma/roma_legend_ce2897f1.jpg
+  - 全大会**616試合**は、トッティに次ぐクラブ2位です。
+  - 2017年、引退したトッティから、主将を受け継ぎました。
+  sources:
+  - https://en.wikipedia.org/wiki/Francesco_Totti
+  - https://en.wikipedia.org/wiki/Daniele_De_Rossi
+  - https://en.wikipedia.org/wiki/Gabriel_Batistuta
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - バティストゥータ
+      - 2000-2003
+      - 2000-01年20得点
+  say:
+  - text: バティストゥータは、アルゼンチン代表のフォワード。2000年に来ました。
+    image: assets/photos/sa/roma/roma_legend_a1f9675a.jpg
+  - 移籍金3600万ユーロは、30歳を超えた選手の額として、2018年まで最高でした。
+  - 2000年から01年は、リーグ戦**20得点**。自身初めてのセリエA優勝でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Francesco_Totti
+  - https://en.wikipedia.org/wiki/Daniele_De_Rossi
+  - https://en.wikipedia.org/wiki/Gabriel_Batistuta
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はガスペリーニ。2025年6月に就任。前はアタランタの監督
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ジャン・ピエロ・ガスペリーニ
+    - - 就任
+      - 2025年6月
+    - - 前の仕事
+      - アタランタの監督
+  say:
+  - text: ローマの今季の監督は、イタリア人のジャン・ピエロ・ガスペリーニ。**68歳**です。
+    image: assets/photos/sa/roma/roma_manager_c32f611c.jpg
+  - 前のアタランタでは、チャンピオンズリーグの出場権を5度取りました。
+  - 2024年には、そのアタランタでヨーロッパリーグに優勝しています。
+  - ローマに来たのは、2025年6月です。
+  - 1年目で3位に入り、チャンピオンズリーグの出場権を取りました。
+  sources:
+  - https://en.wikipedia.org/wiki/AS_Roma
+  - https://en.wikipedia.org/wiki/Gian_Piero_Gasperini
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_AS_Roma_season
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/sa_roma_gk.png
+    no_telop: true
+  - image: assets/stats/sa_roma_gk.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/sa_roma_df.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/sa_roma_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/sa_roma_mf_f.png
+    text: 主将を務めるのが**ブライアン・クリスタンテ**。
+    no_telop: true
+  - image: assets/stats/sa_roma_fw.png
+    text: フォワードは5人。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/AS_Roma
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+- id: season
+  heading: 負けなしのローマは、ヨーロッパでも勝てるのか
+  tier: 報道
+  telop: 11月21日時点でセリエA11試合8勝3分0敗。31得点10失点。3位。チャンピオンズリーグは4試合で1勝1分2敗
+  narrator: 解説
+  card:
+    type: table
+    title: セリエAの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - フィオレンティーナ（ホーム）
+      - 4対0
+    - - 第2節
+      - レッチェ（アウェー）
+      - 4対0
+    - - 第3節
+      - アタランタ（ホーム）
+      - 2対1
+    - - 第4節
+      - トリノ（アウェー）
+      - 2対0
+    - - 第5節
+      - インテル（ホーム）
+      - 2対2
+    - - 第6節
+      - コモ（アウェー）
+      - 0対0
+    - - 第7節
+      - ジェノア（ホーム）
+      - 2対0
+    - - 第8節
+      - ナポリ（アウェー）
+      - 3対3
+    - - 第9節
+      - カリアリ（ホーム）
+      - 4対2
+    - - 第10節
+      - ウディネーゼ（アウェー）
+      - 5対2
+    - - 第11節
+      - サッスオーロ（ホーム）
+      - 3対0
+  say:
+  - ローマのリーグ戦は11試合で、**8勝3引き分け**。黒星がありません。
+  - 順位は**3位**、勝ち点は27。首位ラツィオとは2差です。
+  - text: 得点は**31**。リーグ最多の得点です。
+    card:
+      type: stats
+      title: 今季のリーグ戦（11試合）
+      items:
+      - - '31'
+        - ''
+        - 得点
+      - - '10'
+        - ''
+        - 失点
+      - - '27'
+        - ''
+        - 勝ち点
+      focus: 0
+  - text: 失点は**10**。
+    mark:
+      kind: circle
+      item: 1
+  - 得点は1試合2.82。昨シーズンの1.55の、1.8倍です。
+  - 勝ち点は1試合2.45。昨シーズンの1.92を、大きく上回ります。
+  - 引き分けは、インテル、コモ、ナポリとの3試合でした。
+  - 一方、チャンピオンズリーグは4試合で1勝1引き分け2敗。
+  - レアル・マドリードには、3対4の負け。
+  - マンチェスター・ユナイテッドにも、2対3で負けました。どちらも1点差です。
+  - 11月21日には、アウェーでパルマと戦います。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/roma
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_AS_Roma_season
+  bg: assets/backgrounds/stadium_ローマ_in.png
+  official: false
+  viewpoint: true
+watch: 毎日、数字でサッカーを読み解きます

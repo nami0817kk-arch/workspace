@@ -1,0 +1,139 @@
+# 取材メモ（2026年11月23日）鈴木彩艶がアストン・ヴィラを選んだ理由を本人が語る「簡単な決断だった」「エメリ監督とは加入前に直接話していなかった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元: フットボール・トライブ 2026-11-22 02:59 UTC「鈴木彩艶が激白！「簡単な決断」アストン・ヴィラ移籍の裏側「直接話していなかった」」（全文） https://football-tribe.com/japan/2026/11/22/361593/
+#   本文（本人の言葉の訳）:
+#     「まず、アストン・ヴィラが自分に関心を示してくれたこと。そしてプレミアリーグでプレーすることは、僕の夢の一つだった。簡単な決断だったんだ。ヴィラは大きな野心を持つクラブで、リーグの上位を争い、欧州の大会でも戦っている。それが大きな理由だった。今はここにいられてとても幸せだし、ヴィラでプレーできることを誇りに思っている」
+#     「監督の考えは代理人を通じて聞いていたけれど、直接話してはいなかった。だから、実際に初めて会話したのは、ここに来てからだった」
+#     「とても情熱的な監督で、彼も興奮していたし、僕も興奮していた。良い印象を受けた」
+#   地の文: 2026年夏にパルマから完全移籍。PSG・ユベントスからの関心も報じられる中でプレミアを選んだ。
+# 一次（元の動画）まで辿った:
+#   ・Sky Sports Premier League の YouTube「Zion Suzuki answers the internet's most asked questions... | Fan Q&A」（videoId PGsAB5iiIT8、公開 2026-11-21 00:00 PST＝日本時間 21日17時、9分50秒）。
+#     概要欄: 聞き手 Sam Obaseki。章立てに「1:19 Why Villa?」がある。→ 「なぜヴィラを選んだのか」に答えた場面があることは確かめた。
+#   ・Sky Sports のサイトの同じ動画のページ（2026-11-21 09:57 UK）https://www.skysports.com/football/video/13614646/zion-suzuki-answers-the-internet-s-most-asked-questions-fan-q-and-a
+#     説明文 "revealing what inspired his Premier League move"。
+#   ・**英語の発言そのもの（字幕・文字起こし）は読めなかった。**ページに本文は無く、字幕の取得は許可が出なかった。→ 本人の言葉は日本語訳1社（Tribe）を元に、語順だけ日本語として通るように直した。意味は足していない。
+# 同じ動画の別記事の訳（ずれの確かめ）:
+#   ・東スポWEB（Yahoo!ニュース 2026-11-23）「鈴木彩艶〝プレミアで見たい日本代表〟にＦＷ上田綺世を指名」 https://news.yahoo.co.jp/articles/b9c85623135892f5d82e47efea9b96b0690835b7
+#     同じ Q&A の別の質問（プレミアで見たい代表選手＝上田綺世、憧れ＝西川周作）を訳している。ヴィラを選んだ理由・エメリ監督の話は東スポには無い。
+#     → 「簡単な決断」の訳を2社で突き合わせることはできなかった（1社のみ）。報道は1社でよい決まりなので tier は報道。訳の言い回しを強めない（「激白」「裏側」は Tribe の見出しの言葉なので使わない）。
+# ESPN の試合データ（site.api.espn.com summary event=401878756、2026-11-21 15:00 UTC）: アストン・ヴィラ 0-0 サンダーランド。鈴木は先発・交代なし（フル出場）。
+#   ゲキサカ 463642（全文）: 鈴木は無失点。ヴィラは7戦連続無敗。→ Q&A の公開と同じ21日の試合。
+# 自分で数えたもの: 本人が挙げた理由は3つ（関心を示してくれた／プレミアは夢の一つ／上位と欧州の大会で戦う野心）。
+#   ESPN の eng.1 teams/362/schedule と各試合の出場記録（11試合）: 8/23 ブライトン戦はベンチ、8/31 アーセナル戦から 11/21 サンダーランド戦まで10試合続けて先発。
+#   無失点 3試合（9/5 ハル 0-0／10/17 ニューカッスル 1-0／11/21 サンダーランド 0-0）。日刊スポーツの見出し「今季３度目のクリーンシート」と一致。
+#   チームのリーグ戦: 開幕4試合は 8/23 ブライトン 0-4・8/31 アーセナル 0-1・9/5 ハル 0-0・9/12 フォレスト 1-2 で1分3敗。9/12 フォレストに1-2で負けたあと、9/19〜11/21 の7試合 3勝4分で負けなし（ゲキサカ 463642「7戦連続無敗」と一致）。次は 11/28 17:30 UTC 敵地のイプスウィッチ戦（ESPN scoreboard）。
+# 前の本との重なり: 鈴木彩艶の本は 10/18〜11/20 に多数（無失点・BBCベスト11・ブラジル戦・2027年の11人など）。**ヴィラを選んだ理由・エメリ監督との最初の会話は初出**（scripts/*zion* を「決断」「選んだ理由」で探して0件）。
+# 【言わないこと】PSG・ユベントスの関心を本人の言葉として言う（報道の地の文。台本では「報じられる中で」と語りで一言だけ）／移籍金／上田綺世・西川周作の話（題から離れる）／「激白」「裏側」。
+# 本人の言葉: あり（上の訳）。Y。
+# 写真の取得元: ゲキサカの日本代表の写真ギャラリー（©Koki NAGAHAMA/GEKISAKA）463416（11/17 パラグアイ戦）の1・5枚目、463285（11/14 ブラジル戦）の2・5枚目 https://web.gekisaka.jp/photonews/japan/detail/?463416-463416-pn https://web.gekisaka.jp/photonews/japan/detail/?463285-463285-pn
+# 写真: 4枚とも日本代表の鈴木（ヴィラの写真は、ゲキサカの海外記事が画像に©Getty Images、Tribe は AFLO、東スポはロイター、Sky の主写真は動画のサムネ＝放送映像なので、どれも使えない）。_pool.png を目で見た: 4枚とも本人、透かしは撮影者表記のみ。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [鈴木彩艶, アストン・ヴィラ, エメリ監督, パルマ]
+
+short_style: Y
+short_hook_quote: 簡単な決断でした。
+short_photos:
+  - assets/images/20261123_suzuki_zion_villa_easy/01_v.jpg
+  - assets/images/20261123_suzuki_zion_villa_easy/02_v.jpg
+  - assets/images/20261123_suzuki_zion_villa_easy/04_v.jpg
+short_question: 鈴木彩艶がヴィラを選んだ3つの理由のうち、いちばん大きかったのはどれだと思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_zion_villa_easy
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 鈴木彩艶がヴィラを選んだ理由「簡単な決断だった」。監督とは直接話さずに来ていた
+  hook: ""
+  question: 鈴木彩艶は、なぜアストン・ヴィラを選んだのか
+  takeaway: 理由は3つ。関心を示してくれたこと、プレミアが夢の一つだったこと、上位と欧州の大会で戦うクラブの野心。エメリ監督と初めて話したのは、ヴィラに来てからだった
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 ヴィラを選んだ理由
+  line2: 簡単な決断だった
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  photo: assets/images/20261123_suzuki_zion_villa_easy/01_w.jpg
+  short_photo: assets/images/20261123_suzuki_zion_villa_easy/01_v.jpg
+
+answer: 関心を示してくれたこと、プレミアが夢だったこと、クラブの野心。だから簡単な決断だった
+watch: ヴィラでの次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: 鈴木彩艶は、なぜアストン・ヴィラを選んだのか
+    tier: 報道
+    telop: 鈴木彩艶「簡単な決断でした」ヴィラを選んだ理由
+    say:
+      - text: 今年の夏にヴィラへ移ったゴールキーパーの鈴木彩艶が、ファンの質問に答えました。なぜヴィラを選んだのか。
+      - voice: 鈴木彩艶
+        text: まず、ヴィラが僕に関心を示してくれました。
+        card: {type: table, title: 鈴木彩艶がヴィラを選んだ理由, columns: [順, 理由], rows: [[1, ヴィラが関心を示してくれた], [2, プレミアは夢の一つ], [3, 上位と欧州の大会で戦う野心]], highlight_row: 0}
+      - voice: 鈴木彩艶
+        text: プレミアでプレーするのは、僕の夢の一つでした。
+        card: {type: table, title: 鈴木彩艶がヴィラを選んだ理由, columns: [順, 理由], rows: [[1, ヴィラが関心を示してくれた], [2, プレミアは夢の一つ], [3, 上位と欧州の大会で戦う野心]], highlight_row: 1}
+      - voice: 鈴木彩艶
+        text: 簡単な決断でした。
+        emph: true
+        card: none
+        image: assets/images/20261123_suzuki_zion_villa_easy/02_w.jpg
+      - text: 理由は、もう一つありました。
+        card: {type: table, title: 鈴木彩艶がヴィラを選んだ理由, columns: [順, 理由], rows: [[1, ヴィラが関心を示してくれた], [2, プレミアは夢の一つ], [3, 上位と欧州の大会で戦う野心]], highlight_row: 2}
+      - voice: 鈴木彩艶
+        text: ヴィラは大きな野心を持つクラブです。
+      - voice: 鈴木彩艶
+        text: リーグの上位を争い、ヨーロッパの大会でも戦っています。
+        cont: true
+      - text: パリ・サンジェルマンやユベントスの関心も報じられる中で、鈴木はプレミアリーグを選びました。
+        card: none
+        image: assets/images/20261123_suzuki_zion_villa_easy/01_w.jpg
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/22/361593/
+      - https://www.youtube.com/watch?v=PGsAB5iiIT8
+      - https://www.skysports.com/football/video/13614646/zion-suzuki-answers-the-internet-s-most-asked-questions-fan-q-and-a
+  - id: emery
+    heading: エメリ監督と初めて話したのは、いつだったのか
+    tier: 報道
+    telop: 監督と初めて話したのは、ヴィラに来てから
+    say:
+      - text: エメリ監督との最初の会話も聞かれました。加入前、2人は直接話していなかったそうです。
+        image: assets/images/20261123_suzuki_zion_villa_easy/04_w.jpg
+      - voice: 鈴木彩艶
+        text: 監督の考えは、代理人を通じて聞いていました。
+        emph: true
+      - voice: 鈴木彩艶
+        text: 初めて話したのは、ここに来てからでした。
+        cont: true
+      - text: 初めて会った監督の印象は「とても情熱的」。お互いに、わくわくしていたと振り返りました。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/22/361593/
+      - https://www.youtube.com/watch?v=PGsAB5iiIT8
+  - id: view
+    viewpoint: true
+    heading: ヴィラに来てからの鈴木彩艶は、どれだけ試合に出ているのか
+    tier: 背景
+    telop: リーグ戦10試合続けて先発。チームは7試合負けなし
+    say:
+      - text: 見立てです。鈴木はプレミアリーグで、8月31日のアーセナル戦から10試合続けて先発しています。
+        card: {type: stats, title: 鈴木彩艶 ヴィラでのリーグ戦, items: [[10, 試合, 続けて先発], [3, 試合, 無失点], [7, 試合, チームの負けなし]], focus: 0}
+        image: assets/images/20261123_suzuki_zion_villa_easy/03_w.jpg
+      - text: 相手を0点に抑えた試合は、ハル戦、ニューカッスル戦、そして21日のサンダーランド戦の3つ。
+      - text: チームの成績も見てみます。ヴィラは開幕からの4試合、勝ちがありませんでした。
+      - text: それが9月12日の負けを最後に、7試合負けていません。
+        emph: true
+      - text: 監督とは話さないまま決めた移籍でしたが、鈴木はすぐに正ゴールキーパーになりました。
+        card: none
+      - text: 次は28日、相手の本拠地でのイプスウィッチ・タウン戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/362
+      - https://www.espn.com/soccer/match/_/gameId/401878756
+      - https://web.gekisaka.jp/news/world/detail/?463642-463642-fl

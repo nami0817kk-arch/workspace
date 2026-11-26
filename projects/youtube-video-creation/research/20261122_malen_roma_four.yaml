@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月22日）マレン、パルマ戦で4得点。「ファン・バステンとシェフチェンコより多い」の中身と、ガスペリーニ監督の言葉（ニュースのショート。見せ方 Y＝ガスペリーニ監督の言葉から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ガゼッタ・デッロ・スポルト 2026-11-21 21:32（ミラノ）「Malen, quattro gol per la storia: segna più di Van Basten e Sheva, meglio di lui solo...」（記事ページの本文を requests で全文読んだ）
+#   https://www.gazzetta.it/Calcio/Serie-A/Roma/21-11-2026/malen-quattro-gol-record-chi-ha-fatto-meglio-dopo-12-giornate.shtml
+# 「何を超えたのか」（ガゼッタ本文）: **セリエA、シーズンの最初の12節（1929-30 シーズン以降）の得点数**。マレンは12点（12試合のうち11試合出場。"12 gol in 11 presenze"）。
+#   ・食い違い: ガゼッタは「12位（dodicesimo）」と書くが、本文の一覧（マレンより多い人）は 延べ10件（ピオラ・バティストゥータ・イムモービレ×2・メアッツァ・グアイタ・マンフレディーニ・トーニ・ボレル・アンジェリーロ）で、数えると11位。→ 台本は順位を言わず「限られた数字」。
+#   ・開幕12節で得点が多かった顔ぶれ（本文のとおり）: アンジェリーロ20／ボレル17／メアッツァ15・グアイタ15（ローマ・1934-35）・マンフレディーニ15（ローマ・1960-61）・トーニ15／イムモービレ14（2回）／ピオラ13・バティストゥータ13。マレンは12点で「12位」（"dodicesimo"）。
+#   ・ヒグアインは36点を取った記録の年に、同じ12節で10点。
+#   ・ガゼッタは**見出しで**「ファン・バステンとシェフチェンコより多い」と書くが、**本文にはこの2人の数字が無い**（上の一覧にも2人は入っていない＝12点より少ない側のはず、ただし2人の数は本文で確かめられない）。→ 台本は「報じられている」と断り、2人の数字は言わない。
+#   ・（ガゼッタ）ローマ史上、セリエAの1暦年で25点超えは、ペドロ・マンフレディーニ（1960年に26点）だけだった。マレンは2026年に26点で並んだ。→ TuttoMercatoWeb も Opta のデータとして同じ内容（26点・66年ぶり・カーンとラフィーニャは21点）。
+# ESPN の試合データ（site.api.espn.com summary ita.1 event=401874967、11/21 17:00 UTC）:
+#   パルマ 1-5 ローマ。39分 マレン／54分 エルフェジ（パルマ）／68分 マレン／71分 モーラ／77分 マレン（アシスト ウェスレイ）／90分 マレン（アシスト ウェスレイ）。マレンは4得点。ESPN の順位表（11/22 取得）: 1位ラツィオ 12試合32点、2位ローマ 12試合30点。
+#   フットボール・イタリア（試合記録）: マレンは39分・68分・77分・90分（"Malen 39, 68, 77, 90 (R)"）で一致。
+#   食い違い: ESPN の90分の得点は「90分」、ガゼッタ・フットボール・イタリアも「90」。時間は台本で言わない（得点の表だけ）。
+# ガスペリーニ監督の言葉（試合後の DAZN 取材。TuttoMercatoWeb がイタリア語で全文を引用、ガゼッタが同じ内容を引用）:
+#   ・「イタリアで彼より上は？ 思いつくのはラウタロくらいか。いまのマレンは、とくにうちのチームとの組み合わせで見れば、素晴らしい」（"se guardiamo Malen in questo momento è straordinario, soprattutto per come si combina con la nostra squadra"）
+#   ・ガゼッタ引用: "Era un grande giocatore anche prima. Non vai in club come l'Aston Villa se non hai valori notevoli. Io forse l'ho messo a giocare dove lui si esprime meglio. In Italia parlano i numeri. Meglio di lui? Posso pensare solo a Lautaro forse. Bobby è straordinario e la squadra lo valorizza al meglio proprio in virtù delle sue caratteristiche"
+#   ・ガゼッタの副見出し: ガスペリーニは以前「ヒグアインの36点を超えられる」と話している（"Può superare i 36 gol di Higuain"）。→ 使う（「話していた」。いつかは言わない）
+#   ・台本のセリフは、私がイタリア語を日本語にした訳。「ボビー」は監督のマレンの呼び名（ガゼッタの引用のまま）。
+# マレン本人の言葉（ガゼッタ。イタリア語）: 試合球を持ち帰る。"A chi lo darò? A uno dei miei figli, magari litigheranno per contenderselo. Questo almeno è giallo, finora avevo soltanto palloni bianchi. Quindi è una bella cosa" → 台本は訳。
+# 前の本との重なり: 20261011_compare_malen_lautaro（比較の回）／20261120_compare_roma_lazio（ローマ対ラツィオ）。マレンの4得点・開幕12節の記録・ガスペリーニの言葉は初出。
+#   今日17時にシェフチェンコのレジェンド紹介（別の動画）が予約済み → シェフチェンコの話は深掘りしない（名前は見出しの引用で一度だけ）。
+# 【言わないこと】シェフチェンコ・ファン・バステンの成績・経歴／マレンの契約更新・年俸（TuttoMercatoWeb の記述）／アストン・ヴィラ時代の移籍金／ラウタロとの比較の評価（監督の言葉として出すだけ）／ケインらとの暦年の比較は記録の一言だけ。
+# 確度: 1社（ガゼッタ）の記録記事＋TuttoMercatoWeb（Opta 引用）＝報道。試合の得点者・スコアは ESPN の試合データ（リーグ公式まで辿っていない）。クラブ（asroma.com）の記事は本文が JS で読めなかった。
+# 本人の言葉: あり（ガスペリーニ監督、マレン本人。いずれも訳）。Y はガスペリーニ監督の言葉。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 4枚。01・04＝試合のマレン（背番号14、パルマ戦。01＝asroma.com の元画像4000px、04＝football-italia の1200px）、03＝ガスペリーニ監督（asroma.com 4000px）。02（ガスペリーニの顔のアップ）は顔が切れるので使わない。_pool.png を目で見た。透かしなし。04は小さい（ショートで2.4倍超に伸びる＝preshow ×）ので1行だけ。AS Roma・football-italia の写真で、代理店（Getty）表記は画像に無いが配信元は確かめられない（引き受ける危険）。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [マレン, ガスペリーニ監督, ローマ, パルマ]
+
+short_style: Y
+short_hook_quote: いまのマレンは、素晴らしい。
+short_photos:
+  - assets/images/20261122_malen_roma_four/01_v.jpg
+  - assets/images/20261122_malen_roma_four/03_v.jpg
+short_question: マレンは、ヒグアインの36点を超えられると思いますか。
+short_telops: []
+
+theme:
+  id: malen_roma_four
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: マレン、パルマ戦で4得点。歴代の名手を上回った数字の中身
+  hook: ""
+  question: マレンが超えたという数字は何で、ガスペリーニ監督は何と語ったのか
+  takeaway: マレンはセリエAの開幕12節で12点。1929-30シーズン以降の記録で、ファン・バステンとシェフチェンコを上回ったと報じられた。ヒグアインが36点を取った年は、同じ12節で10点だった
+
+thumbnail:
+  layout: face
+  line1: マレン パルマ戦4得点
+  line2: 開幕12節で12点
+  tags: [マレン, ローマ]
+  photo: assets/images/20261122_malen_roma_four/01_w.jpg
+  short_photo: assets/images/20261122_malen_roma_four/01_v.jpg
+
+answer: セリエAの開幕12節の得点（12点）。1929-30年以降の記録で、ファン・バステンとシェフチェンコより多い
+watch: 29日のモンツァ戦（日本時間30日2時）
+
+sections:
+  - id: what
+    main: true
+    heading: 4得点のマレンについて、ガスペリーニ監督は何と語ったのか
+    tier: 報道
+    telop: ガスペリーニ「いまのマレンは、素晴らしい」
+    say:
+      - voice: ガスペリーニ監督
+        text: いまのマレンは、素晴らしい。
+        emph: true
+        image: assets/images/20261122_malen_roma_four/03_w.jpg
+      - voice: ガスペリーニ監督
+        text: チームも、彼の特徴を最大限に生かしている。
+        cont: true
+      - text: ローマのガスペリーニ監督が、開幕12節で12点のマレンを語った言葉です。
+        short_only: true
+      - text: 21日、ローマは敵地でパルマに5対1で勝ちました。
+        image: assets/images/20261122_malen_roma_four/01_w.jpg
+      - text: 5点のうち4点が、マレンでした。
+        card: {type: table, title: パルマ 1-5 ローマ, columns: [分, 得点], rows: [[39分, マレン], [54分, エルフェジ（パルマ）], [68分, マレン], [71分, モーラ], [77分, マレン], [90分, マレン]], highlight_row: 0}
+      - text: 終盤の2点は、途中出場のウェスレイのパスからでした。
+        card: none
+      - text: 試合のあと、監督は、マレンより上の選手がいるかと聞かれました。
+        image: assets/images/20261122_malen_roma_four/03_w.jpg
+      - voice: ガスペリーニ監督
+        text: イタリアで、彼より上は？
+      - voice: ガスペリーニ監督
+        text: 思いつくのは、ラウタロくらいでしょう。
+        cont: true
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Roma/21-11-2026/parma-roma-gasperini-malen-lautaro.shtml
+      - https://www.tuttomercatoweb.com/serie-a/roma-gasperini-molto-soddisfatto-ragazzi-malen-messo-condizioni-esprimersi-meglio-2296095
+      - https://www.espn.com/soccer/match/_/gameId/401874967
+  - id: record
+    heading: 「ファン・バステンとシェフチェンコより多い」は、何の数字なのか
+    tier: 報道
+    telop: セリエAの開幕12節で12点。1929-30年以降の記録
+    say:
+      - text: 数字の中身は、セリエAの、シーズン最初の12節の得点です。
+        image: assets/images/20261122_malen_roma_four/01_w.jpg
+      - text: マレンは12点。ファン・バステンとシェフチェンコより多いと報じられました。
+      - text: この12点より多いのは、1929-30シーズン以降で、こちらの顔ぶれです。
+        card: {type: table, title: セリエA 開幕12節の得点（上位）, columns: [選手, 得点], rows: [[アンジェリーロ, 20点], [ボレル, 17点], [トーニ・メアッツァなど, 15点], [マレン, 12点]], highlight_row: 3}
+      - text: ヒグアインがセリエAで36点の記録を作った年は、同じ12節で10点でした。
+        card: none
+        image: assets/images/20261122_malen_roma_four/01_w.jpg
+      - text: ガスペリーニ監督は、その36点について、マレンにこう話したことがあります。
+      - voice: ガスペリーニ監督
+        text: ヒグアインの36点を、超えられる。
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Roma/21-11-2026/malen-quattro-gol-record-chi-ha-fatto-meglio-dopo-12-giornate.shtml
+  - id: view
+    viewpoint: true
+    heading: マレンの得点ペースは、ローマの歴史でどの位置にあるのか
+    tier: 背景
+    telop: ローマ史上、1年間のセリエA26点はマンフレディーニ以来
+    say:
+      - text: 見立てです。マレンは、今季11試合に出て12点。
+        card: {type: table, title: マレンの得点（セリエA）, columns: [項目, 数字], rows: [[今季の得点, 12点（11試合）], [2026年の得点, 26点], [ローマ史上の1年間, マンフレディーニの26点に並ぶ]], highlight_row: 1}
+      - text: 2026年の1月からの得点は、26点です。
+      - text: ローマの選手が1年間で25点を超えたのは、
+      - text: 1960年のマンフレディーニの26点だけでした。
+        card: none
+      - text: 66年ぶりに並んだことになります。あと1点で、ローマの新記録です。
+      - text: 4得点の記念に試合球を持ち帰るマレンは、こう話しました。
+        image: assets/images/20261122_malen_roma_four/01_w.jpg
+      - voice: マレン
+        text: 誰に渡すか？ 子どもの誰かにね。
+      - voice: マレン
+        text: 取り合いになるかもしれないけどね。
+        cont: true
+      - text: 次は29日のモンツァ戦。日本時間では30日の午前2時です。
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Roma/21-11-2026/malen-quattro-gol-record-chi-ha-fatto-meglio-dopo-12-giornate.shtml
+      - https://www.tuttomercatoweb.com/serie-a/malen-storia-roma-eguagliato-manfredini-2026-segna-kane-mbappe-2296104

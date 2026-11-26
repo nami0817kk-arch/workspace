@@ -1,0 +1,145 @@
+# 取材メモ（2026年11月24日）ナポリのデ・ブライネが、古巣マンチェスター・シティの「有罪」の判断に初めて口を開いた。CLでシティと対戦する前日の会見（ニュースのショート。見せ方 Y＝デ・ブライネ本人の言葉から始める）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: Sky Sports の Man City ライブブログ（11/23 21:10 UTC の項。見出し「Man City latest: De Bruyne speaks for first time on club's guilty verdict」、項の見出し「De Bruyne says Man City achievements will not be tainted if appeal fails」。requests で HTML の LiveBlogPosting から全文）
+#   ・本文（PA の配信と同じ文。ESPN 50576304 も同文で byline PA）: シティは9月、プレミアリーグの財務規則の重大な違反で有罪とされた（"found guilty of serious breaches of the Premier League's financial regulations in September"）。
+#     上訴で負けた場合の処分の1つに、タイトルの一部のはく奪がある。デ・ブライネは35歳、シティで10年、プレミア6回とCLを制し、2025年にナポリへ。
+#   ・デ・ブライネ（会見）: "I'm proud of what I've done as a football player, and honestly, this is my club, I love the owners." ／ "I've even spoken to (chairman) Khaldoon (Al Mubarak) about how to buy a club." ／
+#     "I have nothing but affection for this club, and that will never change, (the way) the people treated me and my family for 10 years." ／
+#     "Of course, in life there are rules, but everybody plays on the limit. I played in between the white lines, and I competed with other players ... That's the thing that I value most." ／
+#     "I've given my all and that's not going to change in my mind. I don't think a lot of people will change in their mind how they view me as a player, or how we played." ／ "But everybody has their own opinion, I guess."
+#     → 台本の言葉は、この英語を私が日本語にしたもの。'disgraced' の一文は意味が取りにくいので使わない。
+# Football Italia（Peter Young、11/23 19:59 UTC「De Bruyne hits back at Napoli exit rumours and comments on Man City guilty verdict」、requests で全文）:
+#   ・シティは「100を超える違反」で有罪（"found guilty of over 100 charges relating to the Premier League's financial rules"）。試合は火曜 20:00 GMT、エティハド。昨季9月のリーグフェーズでは0対2で負けている。
+#   ・同じ会見の言葉の書き起こしは Sky と少し違う（"everybody plays on the limit I would say" ／ "Other people will change in their mind how they view me"）。→ 食い違いのある最後の部分は使わず、両方で一致する部分だけ使う。
+#   ・本人「もうすぐ36歳」（"I'm almost 36"）。Sky・ESPN は「35歳」。→ 年齢は言わない。
+# ESPN（PA、50490251、11/15）: シティは「100を超える違反」で有罪とされ、上訴した。独立委員会の判断（9月）。調べの対象は2009〜2018年。処分は勝ち点の大幅な減点や降格もありうる（"could face heavy sanctions, including huge points deductions or demotion"）。
+#   → 判決の中身はこの報道の範囲だけ。£8億3,000万の資金の話は細部なので言わない。
+# Sky（11/23 12:23 UTC の項）マレスカ監督（シティ）: "He is a top player, one of the most important players at this club. We are very happy to see him back," ／ "All the trophies the club achieved, Kevin was here."
+# Football Italia（11/23 20:31 UTC「Allegri: 'Losing to Man City won't be decisive for Napoli'」）アッレグリ監督: "mathematically, even if we win tomorrow, six points won't be enough to qualify." ナポリはCLで4試合勝ち点3。
+# ESPN 順位表（uefa.champions、11/24 取得）: シティ 4試合3勝1敗 勝ち点9（7位）／ナポリ 4試合1勝3敗 勝ち点3（27位）。
+# ESPN scoreboard（uefa.champions 2026-11-24）: Napoli at Manchester City 20:00 UTC、Etihad Stadium（event 401915379）＝日本時間 11/25 5:00。
+# 自分で数えたもの: なし（数字は報道と ESPN の表のまま）。
+# 前の本との重なり: 20261007_finance_mancity（シティの財政のシリーズ）、20260916/20260920_pl15_mancity（115件の告発の頃）。判決後のデ・ブライネの言葉は初出。
+# 【言わないこと】判決の是非・処分の予想（報道にある「可能性」だけ）／妻と家・イタリアの記者への不満／ナポリ退団のうわさ・PSV の関心／'disgraced' の一文／年齢。
+# 本人の言葉: デ・ブライネ本人の会見の言葉あり → Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 4枚＋並べた1枚。すべて Commons。02・04＝デ・ブライネ（2026年3月・7月のベルギー代表、Bryan Berlin CC BY-SA 4.0）、03＝デ・ブライネ（2021年12月のCL、シティのユニフォーム、Steffen Prößdorf CC BY-SA 4.0。顔の検出が外れたので facecrop --top 0 --center 0.55 で手で切った）、
+#   05＝マレスカ監督（2024年のチェルシー時代、Oscar0123 CC BY-SA 4.0。今のシティの写真は Commons に無い）。pair_maresca＝マレスカ（左）＋デ・ブライネ（右）。
+#   記事の写真（Football Italia・ESPN）は説明が Getty なので使っていない。最初に取った PSG対シティ（2025年1月）の整列の写真はデ・ブライネが判別できず外した。一覧を目で見た: 本人、透かしなし。今回の会見の写真ではない。
+#   各 NN_w の隣にショート用の縦版 NN_w_v（= NN_v の写し）を置いた。Y の1行目の写真は 04_w（02_w は寄りすぎでショートの冒頭が額だけになった）。
+slot: foreign
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [ケヴィン・デ・ブライネ, マンチェスター・シティ, ナポリ, マレスカ監督, アッレグリ監督]
+
+short_style: Y
+short_hook_quote: ここは、私のクラブです。オーナーたちを、愛しています。
+short_photos:
+  - assets/images/20261124_debruyne_guilty_verdict/02_v.jpg
+  - assets/images/20261124_debruyne_guilty_verdict/03_v.jpg
+  - assets/images/20261124_debruyne_guilty_verdict/04_v.jpg
+short_question: シティのタイトルが取り消されたら、デ・ブライネの評価は変わると思いますか。
+short_telops: []
+
+theme:
+  id: debruyne_guilty_verdict
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: デ・ブライネ、古巣シティの「有罪」に初めて語ったこと
+  hook: ""
+  question: シティが規則違反で有罪とされたことを、デ・ブライネはどう受け止めたのか
+  takeaway: デ・ブライネは「ここは私のクラブ」とシティへの愛情を変えず、「自分は白線の内側で戦った」と話した。ナポリは25日朝、そのシティと戦う
+
+thumbnail:
+  layout: face
+  line1: デ・ブライネ 初めて語る
+  line2: 古巣シティの「有罪」
+  tags: [デ・ブライネ, マンチェスター・シティ]
+  photo: assets/images/20261124_debruyne_guilty_verdict/02_w.jpg
+  short_photo: assets/images/20261124_debruyne_guilty_verdict/02_v.jpg
+
+answer: 「ここは私のクラブ」。自分は白線の内側で戦い、すべてを出し切ったと話した
+watch: 24日のシティ戦（日本時間25日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: シティの「有罪」について、デ・ブライネは何を語ったのか
+    tier: 報道
+    telop: デ・ブライネ「ここは私のクラブ」
+    say:
+      - voice: デ・ブライネ
+        text: ここは、私のクラブです。オーナーたちを、愛しています。
+        emph: true
+        image: assets/images/20261124_debruyne_guilty_verdict/04_w.jpg
+      - text: ナポリのデ・ブライネが、古巣シティの「有罪」について、初めて口を開きました。
+        short_only: true
+        image: assets/images/20261124_debruyne_guilty_verdict/02_w.jpg
+      - text: シティは9月、プレミアリーグのお金の規則に違反したと判断されました。
+        image: assets/images/20261124_debruyne_guilty_verdict/03_w.jpg
+        card: {type: stats, title: シティとデ・ブライネ, items: [[100, 件超, 違反とされた数], [10, 年, デ・ブライネの在籍], [6, 回, そのあいだのプレミア優勝]], focus: 0}
+      - text: 独立した委員会が認めた違反は、100を超えます。
+      - text: 調べの対象は2009年から2018年。クラブは不服として上訴しています。
+      - text: デ・ブライネは、そのシティで10年プレーし、プレミアリーグを6回制しました。
+        image: assets/images/20261124_debruyne_guilty_verdict/04_w.jpg
+      - text: 上訴で負ければ、タイトルの一部の取り消しもありうると報じられています。
+        emph: true
+      - text: 2025年にナポリへ移り、25日朝、その古巣とチャンピオンズリーグで戦います。
+        image: assets/images/20261124_debruyne_guilty_verdict/02_w.jpg
+        card: none
+      - text: 試合の前日、23日の会見で、こう話しました。
+        image: assets/images/20261124_debruyne_guilty_verdict/04_w.jpg
+      - voice: デ・ブライネ
+        text: 人生には、もちろんルールがあります。
+      - voice: デ・ブライネ
+        text: でも、誰もがぎりぎりのところでプレーしている。
+        image: assets/images/20261124_debruyne_guilty_verdict/03_w.jpg
+        cont: true
+      - voice: デ・ブライネ
+        text: 私は、白線の内側でプレーしてきました。
+        image: assets/images/20261124_debruyne_guilty_verdict/02_w.jpg
+        cont: true
+      - voice: デ・ブライネ
+        text: 私はすべてを出し切った。その思いは、変わりません。
+        image: assets/images/20261124_debruyne_guilty_verdict/04_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025499/
+      - https://www.espn.com/soccer/story/_/id/50576304/kevin-de-bruyne-man-city-achievements-not-tainted-appeal-fails
+      - https://football-italia.net/de-bruyne-hits-back-at-napoli-exit-rumours/
+      - https://www.espn.com/soccer/story/_/id/50490251/haaland-incredibly-happy-man-city-not-thinking-possible-sanctions
+  - id: maresca
+    heading: シティの監督は、デ・ブライネをどう迎えるのか
+    tier: 報道
+    telop: マレスカ監督「クラブのタイトルの全部に、ケヴィンがいた」
+    say:
+      - text: 迎えるシティのマレスカ監督も、同じ日の会見で、デ・ブライネをこう評しました。
+        image: assets/images/20261124_debruyne_guilty_verdict/pair_maresca/01.jpg
+      - voice: マレスカ監督
+        text: トップの選手です。このクラブで、最も大事な選手の1人。
+      - voice: マレスカ監督
+        text: クラブが取ったタイトルの全部に、ケヴィンがいました。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025499/
+  - id: view
+    viewpoint: true
+    heading: 古巣との一戦は、ナポリにとってどんな試合なのか
+    tier: 背景
+    telop: ナポリはCLで1勝3敗、勝ち点3
+    say:
+      - text: 見立てです。デ・ブライネのナポリは、チャンピオンズリーグで4試合1勝3敗。
+        image: assets/images/20261124_debruyne_guilty_verdict/04_w.jpg
+        card: {type: stats, title: チャンピオンズリーグの4試合, items: [[3, 点, ナポリの勝ち点], [27, 位, ナポリの順位], [9, 点, シティの勝ち点]], focus: 0}
+      - text: 参加36チームの中で、勝ち点3の27位。相手のシティは勝ち点9です。
+      - text: ナポリのアッレグリ監督は、勝っても勝ち点6では突破に届かない、と話しています。
+        card: none
+      - text: 試合は24日、シティの本拠地で。日本では25日の午前5時に始まります。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings
+      - https://football-italia.net/allegri-losing-to-man-city-wont-be-decisive/
+      - https://www.espn.com/soccer/match/_/gameId/401915379

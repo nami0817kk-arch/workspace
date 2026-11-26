@@ -1,0 +1,597 @@
+# スタジアム紹介シリーズ：ドルトムントの本拠地（ジグナル・イドゥナ・パルク／ヴェストファーレンシュタディオン、11/27 予定）。雛形は 11/25 バイエルンの回。
+# 題材の選び方（2026-11-21）：ブンデスの大物で残っていた器。11/25 の担当が外した理由（買い戻しの金額が割れる）は、買い戻しを題にしないことで避けた。
+#   同日 11/27 の他シリーズ（選手紹介＝ケイン、比べる＝ヤマルとニコ・ウィリアムズ、国内レジェンド、サッカーの謎）とクラブが重ならない（research/20261127_picks.txt）。
+# 選んだ理由：「ヨーロッパで一番大きい立ち見 2万4454人」という強い一点／1992年に4万2800人まで縮んだのに立ち見を残した、という問いが立つ／今季の平均8万1365人で見立てが作れる。
+# 重なりの確認：scripts/*stadium_*・posted.json・covered.yaml・research/*picks.txt に無し（grep 済み）。
+# 一次情報の突き合わせ：en・de ウィキペディア（Westfalenstadion）、en ウィキペディア（Safe standing：UEFA は1998年夏から全席座席、ドルトムントはレールシート）、diefalsche9.de の観客表（2025-26・2026-27 とも平均8万1365。2026-27 は 11/16 時点）。
+#   開場 1974-04-02（シャルケとの慈善試合 0-3、de）／当初5万4000（en・de 一致）／1992 北スタンドの立ち見を座席に→4万2800（en・de 一致。理由は en が「UEFA の規定で」）／
+#   1995 優勝のあと東西に2階席（en はドイツ初の民間資金の増築）／1997 CL 優勝のあと南北を広げ、南は立ち見だけ 2万4454（de）／欧州の大会では座席だけになり約1万5000減る（de）／
+#   2006 W杯で四隅を埋め、柱を外の黄色い柱に（en・de）／名前は 2005-12-01 からジグナル・イドゥナ・パルク、2031年まで（en・de）／
+#   ドイツ代表は 1974-2006 にこの器で12試合負けなし、2006 準決勝のイタリア戦 0-2（延長）が唯一の負け（de）／最多は 2015-16 の平均8万1178（de）。
+#   食い違い（台本に入れない）：1974年の工費（3170万か3270万マルク）、ドルトムントに決まった年（1971か1972）、1995年増築後の席（5万4000か5万5000）、1997年増築後の席（6万8800か6万8600）、
+#   欧州の大会の席（6万5829か6万6099→「約6万6000」）、2022-23 から CL でも立ち見を許した（en だけ。de は国際試合は座席だけ→入れない）、不発弾（en だけ→入れない）、2002〜2006 の器の売却と買い戻し（金額が割れる→入れない）。
+#   確かめられなかった：UEFA・クラブ公式の席数の一次の表（bvb.de は読んでいない）。
+#   写真：Commons。南スタンドは CC BY 2.0、夜の場内は CC0、ほかは CC BY-SA。南スタンドの写真は遠景で、顔が分かる人は写らない。
+# 読みが割れる名前：ジグナル・イドゥナ・パルク（シグナル）／ヴェストファーレンシュタディオン／ローテ・エルデ／ズュートトリビューネ（台本では「南スタンド」）。
+date: 2026年11月21日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_dortmund
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ドルトムント
+  title: ドルトムントの本拠地、ヨーロッパ一の立ち見2万4454人。縮んでも残した理由は
+  question: 1992年に座席へ替えて縮んだ器で、ドルトムントは、なぜ南の立ち見を残したのか
+  lead: 立って見る観客が、黄色い壁と呼ばれる器です。
+  hook: ''
+  opening_image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  end_bg: assets/images/20261127_stadium_dortmund/04_w.jpg
+  takeaway: ドルトムントの本拠地は、1992年に立ち見を座席に替えて4万2800人まで縮んだ。その後の増築で南を立ち見だけのスタンドにして、2万4454人が立つ。欧州の大会では座席に替えて約1万5000減るが、リーグの平均は席と同じ8万1365人。
+  short_title: ドルトムントの南スタンド、立ち見は2万4454人
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - ドイツ最大8万1365人
+  - 4万2800人まで縮んだ
+  photo: assets/images/20261127_stadium_dortmund/01_w.jpg
+  line1: ドルトムントの本拠地
+  line2: 立ち見2万4454人の壁
+  tags:
+  - ドルトムント
+  - ブンデスリーガ
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: ドイツでいちばん大きい器は、いまどんな姿なのか
+  bg: assets/images/20261127_stadium_dortmund/01_w.jpg
+  card:
+    type: table
+    title: ジグナル・イドゥナ・パルクの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 開場
+      - 1974年4月2日
+    - - リーグの収容
+      - 8万1365人
+    - - 南スタンド
+      - 立ち見だけで2万4454人
+    - - 欧州の大会
+      - 座席だけで約6万6000人
+    - - 名前
+      - ジグナル・イドゥナ（2031年まで）
+  narrator: 解説
+  tier: 背景
+  telop: 1974年に開場。リーグの収容は8万1365人。南スタンドは立ち見だけで2万4454人
+  sources: &id001
+  - https://en.wikipedia.org/wiki/Westfalenstadion
+  - https://de.wikipedia.org/wiki/Signal_Iduna_Park
+  - https://en.wikipedia.org/wiki/Safe_standing
+  - https://www.diefalsche9.de/zuschauertabelle-2025-26/
+  say:
+  - text: ドルトムントの本拠地、ジグナル・イドゥナ・パルクの話です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+    short_only: true
+  - text: リーグの試合なら、8万1365人。ドイツでいちばん大きい器です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+    emph: true
+  - text: 開場は、1974年4月2日。南のスタンドは、座らずに立って見る人だけで埋まります。
+    card:
+      type: table
+      title: ジグナル・イドゥナ・パルクの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 開場
+        - 1974年4月2日
+      - - リーグの収容
+        - 8万1365人
+      - - 南スタンド
+        - 立ち見だけで2万4454人
+      - - 欧州の大会
+        - 座席だけで約6万6000人
+      - - 名前
+        - ジグナル・イドゥナ（2031年まで）
+      highlight_row: 2
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  - text: 立ち見だけのスタンドとしては、ヨーロッパでいちばん大きいとされます。
+    card:
+      type: table
+      title: ジグナル・イドゥナ・パルクの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 開場
+        - 1974年4月2日
+      - - リーグの収容
+        - 8万1365人
+      - - 南スタンド
+        - 立ち見だけで2万4454人
+      - - 欧州の大会
+        - 座席だけで約6万6000人
+      - - 名前
+        - ジグナル・イドゥナ（2031年まで）
+      highlight_row: 2
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+    emph: true
+  - text: ところが欧州の大会になると、同じ器が、座席だけの約6万6000人に変わります。
+    card:
+      type: table
+      title: ジグナル・イドゥナ・パルクの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 開場
+        - 1974年4月2日
+      - - リーグの収容
+        - 8万1365人
+      - - 南スタンド
+        - 立ち見だけで2万4454人
+      - - 欧州の大会
+        - 座席だけで約6万6000人
+      - - 名前
+        - ジグナル・イドゥナ（2031年まで）
+      highlight_row: 3
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  - text: 実はこの器、1992年に一度、大きく縮んでいます。
+    card:
+      type: stats
+      title: ドルトムントの本拠地の数字
+      items:
+      - - '81365'
+        - 人
+        - いまのリーグの収容
+      - - '24454'
+        - 人
+        - 南スタンドの立ち見
+      - - '42800'
+        - 人
+        - 1992年に縮んだ収容
+      focus: 2
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+    emph: true
+- id: history
+  heading: なぜ、W杯の器は、陸上のトラックを持たずに建ったのか
+  bg: assets/images/20261127_stadium_dortmund/03_w.jpg
+  card:
+    type: timeline
+    title: ドルトムントの本拠地の歩み
+    rows:
+    - - 1974年4月
+      - 開場（5万4000人）
+    - - 1974年6月
+      - W杯4試合
+    - - 1992年
+      - 座席に替え4万2800人
+    - - 1995年〜
+      - 東西に2階席
+    - - 1997年〜
+      - 南は立ち見だけに
+    - - 2006年
+      - W杯へ四隅を埋める
+    focus: 1992年
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1974年のW杯に合わせて建った。最初の収容は5万4000人
+  sources: *id001
+  say:
+  - text: それまでの本拠地は、すぐ隣の、ローテ・エルデという競技場でした。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: 1974年のW杯では、ケルンが会場の計画を下ろしました。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: その分の資金が、ドルトムントに回ったとされます。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: 陸上のトラックを持つ楕円の計画は、お金が足りずにやめました。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: 代わりに建てたのが、トラックの無い、サッカーだけの器です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+    emph: true
+  - text: 開場の日の試合は、シャルケとの慈善試合。0対3で負けました。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 0
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: この時の収容は、5万4000人です。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 0
+    image: assets/images/20261127_stadium_dortmund/03_w.jpg
+  - text: その年の夏、W杯の4試合がこの器で行われました。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 1
+    image: assets/images/20261127_stadium_dortmund/02_w.jpg
+  - text: スコットランド対ザイールも、この器の試合です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/02_w.jpg
+  - text: サハラより南のアフリカの国が、初めてW杯を戦った試合でした。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/02_w.jpg
+- id: shrink
+  heading: なぜ、5万4000人の器は、1992年に4万2800人へ縮んだのか
+  bg: assets/images/20261127_stadium_dortmund/05_w.jpg
+  card:
+    type: line
+    title: 収容の移り変わり（人）
+    x:
+    - '1974'
+    - '1992'
+    - '2006'
+    - '2026'
+    series:
+    - - 収容
+      - - 54000
+        - 42800
+        - 81264
+        - 81365
+    unit: 人
+    focus: 収容
+    highlight: '1992'
+  narrator: 解説
+  tier: 報道
+  telop: 1992年、北スタンドの立ち見を座席に替え、収容は4万2800人に縮んだ
+  sources: *id001
+  say:
+  - text: 1992年、北のスタンドなどの立ち見が、座席に替えられました。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 2
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+  - text: 欧州の大会の決まりに合わせるためだった、とされます。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+  - text: 座席は、立ち見より場所を取ります。収容は、4万2800人まで縮みました。
+    card:
+      type: line
+      title: 収容の移り変わり（人）
+      x:
+      - '1974'
+      - '1992'
+      - '2006'
+      - '2026'
+      series:
+      - - 収容
+        - - 54000
+          - 42800
+          - 81264
+          - 81365
+      unit: 人
+      focus: 収容
+      highlight: '1992'
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+    emph: true
+  - text: 割ると、開場の時の、およそ8割です。
+    card:
+      type: calc
+      title: 1992年の収容は、開場の何割か（自分で割った）
+      terms:
+      - - 4万2800人
+        - 1992年
+      - - 5万4000人
+        - 1974年
+      - - 約0.79
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+  - text: 1995年にリーグで優勝したあと、東と西のスタンドに、2階の席を足しました。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 3
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+  - text: クラブが自分のお金で広げた、ドイツで初めての例とされます。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/05_w.jpg
+  - text: 1997年に欧州の頂点に立つと、今度は南と北を広げます。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 4
+    image: assets/images/20261127_stadium_dortmund/06_w.jpg
+  - text: この時、南のスタンドは、座席を置かず、立ち見だけで作られました。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/06_w.jpg
+    emph: true
+- id: wall
+  heading: なぜ、欧州の大会では、約1万5000人が減るのか
+  bg: assets/images/20261127_stadium_dortmund/01_w.jpg
+  card:
+    type: table
+    title: 同じ器、2つの数え方
+    columns:
+    - 試合
+    - 入る人数
+    rows:
+    - - ブンデスリーガ
+      - 8万1365人（立ち見あり）
+    - - 欧州の大会・代表
+      - 約6万6000人（座席だけ）
+    - - 差
+      - 約1万5000人
+  narrator: 解説
+  tier: 報道
+  telop: 欧州の大会は座席だけ。南の立ち見に座席を付け、収容は約1万5000減る
+  sources: *id001
+  say:
+  - text: 欧州の大会は、1998年の夏から、全ての席を座席にする決まりです。
+    card:
+      type: table
+      title: 同じ器、2つの数え方
+      columns:
+      - 試合
+      - 入る人数
+      rows:
+      - - ブンデスリーガ
+        - 8万1365人（立ち見あり）
+      - - 欧州の大会・代表
+        - 約6万6000人（座席だけ）
+      - - 差
+        - 約1万5000人
+      highlight_row: 1
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  - text: そこで南のスタンドには、手すりと一体になった、折りたたみの座席が付いています。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  - text: リーグの試合では座席をたたんで立ち、欧州の試合の前に開いて座る形です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+  - text: その分、入れる人は、約1万5000人減ります。
+    card:
+      type: table
+      title: 同じ器、2つの数え方
+      columns:
+      - 試合
+      - 入る人数
+      rows:
+      - - ブンデスリーガ
+        - 8万1365人（立ち見あり）
+      - - 欧州の大会・代表
+        - 約6万6000人（座席だけ）
+      - - 差
+        - 約1万5000人
+      highlight_row: 2
+    image: assets/images/20261127_stadium_dortmund/01_w.jpg
+    emph: true
+  - text: 2006年のW杯に向けては、スタンドの四隅を埋めました。
+    card:
+      type: timeline
+      title: ドルトムントの本拠地の歩み
+      rows:
+      - - 1974年4月
+        - 開場（5万4000人）
+      - - 1974年6月
+        - W杯4試合
+      - - 1992年
+        - 座席に替え4万2800人
+      - - 1995年〜
+        - 東西に2階席
+      - - 1997年〜
+        - 南は立ち見だけに
+      - - 2006年
+        - W杯へ四隅を埋める
+      focus: 1992年
+      highlight_row: 5
+    image: assets/images/20261127_stadium_dortmund/02_w.jpg
+  - text: 屋根は、外に立てた黄色い柱で吊る形に変えています。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/02_w.jpg
+  - text: ドイツ代表は、1974年からの32年、この器で負けませんでした。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+  - text: 唯一の負けは、2006年W杯の準決勝。延長で、イタリアに0対2です。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+    emph: true
+- id: view
+  viewpoint: true
+  heading: 見立て・立ち見を残した器は、いまも埋まっているのか
+  bg: assets/images/20261127_stadium_dortmund/04_w.jpg
+  card:
+    type: table
+    title: 入りと席（2026-27、11月16日時点）
+    columns:
+    - 項目
+    - 人数
+    rows:
+    - - リーグの席
+      - 8万1365
+    - - ドルトムントの平均
+      - 8万1365
+    - - そのうち南の立ち見
+      - 2万4454
+  narrator: 解説
+  tier: 報道
+  telop: 2026-27の平均の入りは8万1365人。リーグの席と同じ数
+  sources: *id001
+  say:
+  - text: では、立ち見を残した器は、いま、どれだけ埋まっているのか。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+    emph: true
+  - text: 数字は、11月21日に確かめたものです。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+  - text: 今季のホームの平均の入りは、リーグの席とまったく同じ数と伝えられます。
+    card:
+      type: table
+      title: 入りと席（2026-27、11月16日時点）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - リーグの席
+        - 8万1365
+      - - ドルトムントの平均
+        - 8万1365
+      - - そのうち南の立ち見
+        - 2万4454
+      highlight_row: 1
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+  - text: 割ると、100%。毎試合が満員という計算です。
+    card:
+      type: calc
+      title: 平均の入りは、席の何%か（自分で割った）
+      terms:
+      - - 8万1365人
+        - 平均の入り
+      - - 8万1365席
+        - リーグの席
+      - - 100%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+    emph: true
+  - text: そのうち、およそ3割が、南の立ち見の人です。
+    card:
+      type: table
+      title: 入りと席（2026-27、11月16日時点）
+      columns:
+      - 項目
+      - 人数
+      rows:
+      - - リーグの席
+        - 8万1365
+      - - ドルトムントの平均
+        - 8万1365
+      - - そのうち南の立ち見
+        - 2万4454
+      highlight_row: 2
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+    mark:
+      kind: circle
+      row: 2
+  - text: 座席だけの数え方なら、いまの約8割しか入りません。
+    card:
+      type: table
+      title: 同じ器、2つの数え方
+      columns:
+      - 試合
+      - 入る人数
+      rows:
+      - - ブンデスリーガ
+        - 8万1365人（立ち見あり）
+      - - 欧州の大会・代表
+        - 約6万6000人（座席だけ）
+      - - 差
+        - 約1万5000人
+      highlight_row: 1
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+  - text: 2015年から16年の季には、平均8万1178人。ヨーロッパの最多を作りました。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+  - text: 縮んでも残した立ち見が、いまの満員の3割を支えています。
+    card: none
+    image: assets/images/20261127_stadium_dortmund/04_w.jpg
+    emph: true

@@ -1,0 +1,116 @@
+# 取材メモ（2026年11月20日）パレスのフランク新監督、冨安健洋は21日のコベントリー戦を欠場、来週から練習に復帰（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し＝監督の言葉）
+# 取材: 2026-11-20。WebFetch と requests（ブラウザUA）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-20「C・パレスの新監督、日本代表DF冨安健洋について言及 …」（全文） https://www.footballchannel.jp/2026/11/20/post1058431/
+# 一次: クラブ公式（cpfc.co.uk）2026-11-19「Team news: Frank gives first update as Palace Manager」（全文）
+#   https://www.cpfc.co.uk/news/first-team/team-news-frank-gives-first-update-as-palace-manager/
+#   同「Every word from Thomas Frank's first Palace press conference」（質疑の書き起こし） https://www.cpfc.co.uk/news/first-team/every-word-from-thomas-franks-first-palace-press-conference/
+# 出典で確かめたこと:
+#   ・クラブ公式: フランクは初の会見で、冨安とサール（Ismaïla Sarr）は土曜（21日15:00 GMT）のコベントリー戦に戻れないが、2人とも復帰へ向けて調整中と説明。
+#       フランクの言葉（原文）: "I can say that Tomiyasu will be back training next week."／書き起こしでは "No, Tomiyasu will train next week."（記者の質問に答えて）。
+#       マテタは出場停止で同じ試合に出られない（クラブ公式）。
+#   ・ESPN の試合データ（site.api.espn.com eng.1 summary event=401879273、2026-09-20、リーズ 0-0 パレス）: 冨安は先発、45分にレルマと交代（前半だけで交代）。
+#   ・ESPN のパレスの日程（eng.1 teams/384/schedule）と、9/21 以降の5試合（10/11 フォレスト 3-1／10/18 ブライトン 0-5／10/25 ニューカッスル 0-2／10/31 トッテナム 0-2／11/8 リバプール 1-3）の出場記録: 冨安の出場は0。→ パレスは冨安が出ていない5試合で1勝4敗。
+#   ・ESPN の順位表: パレス 10試合・勝ち点7・20位、コベントリー 10試合・勝ち点9・17位。
+#   ・ESPN の日程: 11/21 15:00 UTC コベントリー対パレス（コベントリーのホーム。クラブ公式も "trip to Coventry City"）。
+# 記事・依頼文との違い・食い違い:
+#   ・依頼文「代表ウィーク明けのコベントリー戦は欠場」。クラブ公式は "unable to return for the trip" ＝ 間に合わない。記事も「欠場する見通し」。→ 台本は「間に合いません」。
+#   ・フットボールチャンネルは「ふくらはぎの負傷でハーフタイム交代、別の負傷も重なり約2か月離脱」。ふくらはぎ・別の負傷はクラブ公式にも ESPN にも無い（記事だけ）。→ 台本では原因の話をせず、「前半で交代」までにする。
+#   ・記事は「16日に就任したフランク新監督」。11/17 の台本（palace_frank）が就任を扱い済み。今回の台本は就任を説明せず、冨安の復帰の話に絞る。
+#   ・記事はサールの復帰も触れるが、題に答えないので台本では落とす。
+# 自分で数えたもの: 冨安が出ていない5試合で1勝4敗・得点5・失点12（3-1, 0-5, 0-2, 0-2, 1-3）。
+# 前の本との重なり: 20261117_palace_frank（フランク就任・初戦はコベントリー）、20261107_kamada_tomiyasu_words（鎌田の言葉）。今回の初出は「冨安は来週から練習に復帰・21日は間に合わない」。同じ題は posted.json・直近3日の scripts/ に無い。
+# 【言わないこと】負傷の部位・別の負傷／復帰の試合の日付（監督は「来週から練習」としか言っていない）／サール・マテタ／冨安が戻れば勝てるという言い方／就任の経緯。
+# 本人の言葉: 無し（冨安本人の発言は無い。X）。
+# 写真の出どころ（目で見た）: 05・06＝クラブ公式サイトの会見写真（フランク、原寸）。c1＝Wikimedia Commons（Hans Reefman、CC BY-SA 4.0、冨安・アヤックス時代＝今のクラブではない）。ほかの冨安の写真は、フットボールゾーンの1枚が900pxで引き伸ばし×、Commons の2019年の2枚は小さく×のため使わない（冨安の写真がこの1枚しか無い）。01〜03（小さい写真）は使わない。フットボールチャンネルの主写真は Getty、Tribe は AFLO なので使わない。04（後ろ姿の人物）は誰か分からないので外した。
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [冨安健洋, トーマス・フランク, クリスタル・パレス]
+
+short_style: X
+short_hook_word: 来週から練習に復帰
+short_photos:
+  - assets/images/20261120_tomiyasu_frank_fitness/c1/01_v.jpg
+  - assets/images/20261120_tomiyasu_frank_fitness/05_v.jpg
+  - assets/images/20261120_tomiyasu_frank_fitness/06_v.jpg
+short_question: 冨安健洋は、復帰したらパレスの流れを変えられると思いますか。
+short_telops: []
+
+theme:
+  id: tomiyasu_frank_fitness
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 冨安健洋の復帰時期、パレスの新監督が明かした目安とは
+  hook: ""
+  question: 冨安健洋の復帰は、いつ頃になりそうなのか
+  takeaway: 冨安が最後に出たのは9月20日のリーズ戦で、前半だけで交代した。出ていない5試合でパレスは1勝4敗。新監督が示した復帰の目安は、21日ではなく、来週の練習再開
+
+thumbnail:
+  layout: face
+  line1: 冨安健洋 復帰へ前進
+  line2: 来週から練習に復帰
+  tags: [冨安健洋, クリスタル・パレス]
+  photo: assets/images/20261120_tomiyasu_frank_fitness/c1/01_w.jpg
+  short_photo: assets/images/20261120_tomiyasu_frank_fitness/c1/01_v.jpg
+
+answer: 21日のコベントリー戦は間に合わず、来週から練習に復帰
+watch: 来週の練習再開と、その後の起用
+
+sections:
+  - id: what
+    main: true
+    heading: パレスの新監督は、冨安健洋の復帰をどう語ったのか
+    tier: 報道
+    telop: 冨安健洋「来週から練習に復帰」新監督が明かす
+    say:
+      - text: 19日、パレスのフランク新監督が、初めての記者会見を開きました。
+        image: assets/images/20261120_tomiyasu_frank_fitness/c1/01_w.jpg
+      - text: 話題になったのは、日本代表の冨安健洋の状態です。
+      - text: 冨安は、21日のコベントリー戦には間に合いません。
+        emph: true
+      - text: ただ、監督は復帰の目安を示しました。冨安は来週、練習に戻ってくる、と話しています。
+        card: {type: table, title: 冨安健洋の現在地, columns: [項目, 状況], rows: [[21日 コベントリー戦, 間に合わない], [練習への復帰, 来週], [最後の公式戦, 9月20日 リーズ戦]], highlight_row: 1}
+        image: assets/images/20261120_tomiyasu_frank_fitness/05_w.jpg
+        emph: true
+      - text: 冨安が最後に出たのは、9月20日のリーズ戦。先発しましたが、前半で交代しました。
+        card: none
+        image: assets/images/20261120_tomiyasu_frank_fitness/c1/01_w.jpg
+    official: false
+    sources:
+      - https://www.cpfc.co.uk/news/first-team/team-news-frank-gives-first-update-as-palace-manager/
+      - https://www.footballchannel.jp/2026/11/20/post1058431/
+      - https://www.espn.com/soccer/match/_/gameId/401879273
+  - id: game
+    heading: 冨安が出られなかった5試合で、パレスはどうなったのか
+    tier: 報道
+    telop: 冨安が出ていない5試合で、パレスは1勝4敗
+    say:
+      - text: リーズ戦のあと、パレスのリーグ戦は5試合ありました。
+      - text: その5試合に、冨安は出ていません。パレスは1勝4敗です。
+        card: {type: table, title: 冨安が出ていない5試合のパレス, columns: [日付, 相手, 結果], rows: [[10月11日, フォレスト, 3-1 勝ち], [10月18日, ブライトン, 0-5 負け], [10月25日, ニューカッスル, 0-2 負け], [10月31日, トッテナム, 0-2 負け], [11月8日, リバプール, 1-3 負け]], highlight_row: 0}
+        image: assets/images/20261120_tomiyasu_frank_fitness/05_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/384
+  - id: view
+    viewpoint: true
+    heading: 20位のパレスに、冨安の復帰はどう響くのか
+    tier: 背景
+    telop: パレスは10試合で勝ち点7の20位。21日の相手は17位
+    say:
+      - text: 見立てです。パレスは10試合で勝ち点7。20チーム中の20位です。
+        card: {type: table, title: 21日のコベントリー戦（アウェー）, columns: [クラブ, 順位, 勝ち点], rows: [[パレス, 20位, 7], [コベントリー, 17位, 9]], highlight_row: 0}
+        image: assets/images/20261120_tomiyasu_frank_fitness/05_w.jpg
+      - text: 21日の相手のコベントリーは17位。勝ち点は9で、差は2です。
+        card: none
+      - text: 冨安が戻れるのは、早くても来週の練習から。新監督の最初の試合には、間に合いません。
+        image: assets/images/20261120_tomiyasu_frank_fitness/c1/01_w.jpg
+        emph: true
+      - text: 練習に戻ったあと、いつ試合に出られるかは、まだ語られていません。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/standings/_/league/eng.1
+      - https://www.cpfc.co.uk/news/first-team/team-news-frank-gives-first-update-as-palace-manager/

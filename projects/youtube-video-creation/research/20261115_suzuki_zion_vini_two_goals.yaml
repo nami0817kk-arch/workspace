@@ -1,0 +1,139 @@
+# 取材メモ（2026年11月15日）鈴木彩艶、ブラジル戦の2失点を試合後に語る。「いいメンタリティーで臨めた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-14（取材・文 矢内由美子）「ビニシウス2発被弾に反省も数々の好守光ったGK鈴木彩艶「いいメンタリティーで臨めた」」（全文） https://web.gekisaka.jp/news/japan/detail/?463208-463208-fl
+#   サッカーキング 2026-11-15「エリア外からの2発に悔しさ滲ませるも…ブラジル戦で示したGK鈴木彩艶の基準「割り切ってプレーできていた」」（全文） https://www.soccer-king.jp/news/japan/national/20261115/2227807.html
+# 写真の出どころ（本人の写真を探すため）:
+#   https://web.gekisaka.jp/news/japan/detail/?463208-463208-fl
+#   https://www.soccer-king.jp/news/japan/national/20261115/2227807.html
+#   https://web.gekisaka.jp/news/japan/detail/?463122-463122-fl
+#   https://www.soccer-king.jp/news/japan/national/20261113/2227402.html
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com fifa.friendly summary event=401916337、2026-11-14 10:15 UTC、シンガポール・ナショナルスタジアム）:
+#       日本 3-2 ブラジル。15分 久保建英（アシスト 堂安律）／19分 中村敬斗／33分 ヴィニシウス（エリア外、右足、ゴール左上）／75分 ヴィニシウス（エリア外、右足、ゴール左下、CKのあと）／90+1分 坂元達裕（VARの確認のあと認められた）。
+#       鈴木彩艶は先発で交代なし（フル出場）。ESPN の記録で失点2・セーブ4（stats の saves）。→ 「セーブ4回」は ESPN の記録として使う（shotsFaced は0と出るので枠内シュートの総数は使わない）。
+#   ・ゲキサカ: 2失点はいずれもヴィニシウスのエリア外からのミドル。前半にエリア内へ入るボールへ飛び出して防いだ。DF陣に「背後のケアを任せてほしい」と伝えていた。町田浩樹と久々に連係。ビルドアップはロングボールも選んだ（リスク回避）。
+#       「昨年10月以来、自身2度目のブラジル戦勝利。しかし、北中米W杯では敗れている」（地の文）。
+#   ・鈴木の言葉（原文。ゲキサカ。字は変えていない。台本は読点で行に分けた）:
+#       「シュートは素晴らしいシュートだった。ただ、ペナルティエリア外からのシュートだったので、やっぱりああいったシーンを止めなければいけない。どうやったら止められるか。そこは、しっかり反省したい」
+#       「ブラジルは僕たちよりもはるかにレベルの高いチームという認識がありました。その中でもチャレンジャー精神を、というのはチームで言っていましたし、隙ができたところに乗り込んでいくという話をしていました。いいメンタリティーで臨めたと思います」
+#       「ボールを保持する時間を増やすことは課題」（地の文の中のかぎ。台本では使わない）
+#   ・サッカーキングの言葉（鈴木）: 失点を引きずらず、自身を含めチームとして「割り切ってプレーできていた」。→ 切れ端なので、地の文として1か所だけ使う（原文のまま）。ほかの言葉の書き起こしはゲキサカと少し違う（「いいメンタリティでかぶせていけた」）ので、ゲキサカの表記に統一。
+#   ・W杯: ESPN（fifa.world event=760487、2026-06-29）ブラジル 2-1 日本。90+5分にマルティネッリ。鈴木は先発（20261114 の取材メモで確認済み）。
+# 食い違い: ゲキサカ「いいメンタリティーで臨めたと思います」とサッカーキング「いいメンタリティでかぶせていけた」→ ゲキサカに統一（題材の見出しもゲキサカ）。サッカーキングの記事は 11/15 付、ゲキサカは 11/14。
+# 前の本との重なり: 20261114_suzuki_zion_brazil_captain（試合前の警戒の言葉）。今回の初出: 試合後の2失点への反省、セーブ、「いいメンタリティー」。W杯の悔しさ・ラフィーニャへの警戒は繰り返さない。
+# 【言わないこと】他の選手の評価／ブラジル側の話（退場など）／鈴木の移籍・契約。
+# 本人の言葉: あり（鈴木彩艶。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [鈴木彩艶, ヴィニシウス, 町田浩樹, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: シュートは素晴らしいシュートだった。
+short_photos:
+  - assets/images/20261115_suzuki_zion_vini_two_goals/04_v.jpg
+  - assets/images/20261115_suzuki_zion_vini_two_goals/02_v.jpg
+  - assets/images/20261115_suzuki_zion_vini_two_goals/01_v.jpg
+short_question: 鈴木彩艶の「いいメンタリティー」は、次の試合でも日本代表を支えると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_zion_vini_two_goals
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鈴木彩艶、ヴィニシウスに2発被弾も「いいメンタリティーで臨めた」
+  hook: ""
+  question: ブラジルに2失点した鈴木彩艶は、試合後に何を語ったのか
+  takeaway: 2失点はどちらもエリア外から。鈴木は「止めなければいけない」と悔やみつつ、ESPNの記録で4つのセーブを残し、3対2の勝利に胸を張った
+
+thumbnail:
+  layout: face
+  line1: 鈴木彩艶 2失点の後に
+  line2: 「いいメンタリティー」
+  tags: [鈴木彩艶, ヴィニシウス, 日本代表]
+  photo: assets/images/20261115_suzuki_zion_vini_two_goals/04_w.jpg
+  short_photo: assets/images/20261115_suzuki_zion_vini_two_goals/04_v.jpg
+
+answer: エリア外からの2発は反省する。ただ、格上に挑むメンタリティーで臨めたことには胸を張る
+watch: 17日のパラグアイ戦
+
+sections:
+  - id: game
+    heading: 2失点の場面は、試合のどこで生まれたか
+    tier: 報道
+    telop: 日本 3-2 ブラジル。ヴィニシウスは33分と75分
+    say:
+      - text: 鈴木彩艶が先発した試合で、ヴィニシウスの2発は33分と75分でした。
+      - text: 日本は2点を先に取ったあと、一度は追いつかれています。
+        card: {type: table, title: 日本 3-2 ブラジル, columns: [分, 得点], rows: [[15分, 久保建英], [19分, 中村敬斗], [33分, ヴィニシウス], [75分, ヴィニシウス], [90+1分, 坂元達裕]], highlight_row: 2}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: what
+    main: true
+    heading: ブラジルに2失点した鈴木彩艶は、試合後に何を語ったか
+    tier: 報道
+    telop: 鈴木彩艶「ああいったシーンを止めなければいけない」
+    say:
+      - text: ブラジルに3対2で勝った試合。GK鈴木彩艶はヴィニシウスに2失点し、こう振り返りました。
+        image: assets/images/20261115_suzuki_zion_vini_two_goals/04_w.jpg
+      - voice: 鈴木彩艶
+        text: シュートは素晴らしいシュートだった。
+        emph: true
+      - voice: 鈴木彩艶
+        text: ただ、ペナルティエリア外からのシュートだったので、
+        cont: true
+        image: assets/images/20261115_suzuki_zion_vini_two_goals/02_w.jpg
+      - voice: 鈴木彩艶
+        text: やっぱりああいったシーンを止めなければいけない。
+        cont: true
+      - voice: 鈴木彩艶
+        text: どうやったら止められるか。そこは、しっかり反省したい。
+        cont: true
+      - text: それでも失点は引きずらず、チームとして「割り切ってプレーできていた」と話しました。
+      - text: 一方で、鈴木はこの試合で4つのセーブも記録しています。
+        image: assets/images/20261115_suzuki_zion_vini_two_goals/01_w.jpg
+      - text: チームの臨み方について、鈴木はこう語っています。
+      - voice: 鈴木彩艶
+        text: ブラジルは僕たちよりも、はるかにレベルの高いチームという、
+      - voice: 鈴木彩艶
+        text: 認識がありました。
+        cont: true
+      - voice: 鈴木彩艶
+        text: その中でも、チャレンジャー精神を、
+        cont: true
+        image: assets/images/20261115_suzuki_zion_vini_two_goals/04_w.jpg
+      - voice: 鈴木彩艶
+        text: というのはチームで言っていましたし、
+        cont: true
+      - voice: 鈴木彩艶
+        text: 隙ができたところに乗り込んでいく、という話をしていました。
+        cont: true
+        cont: true
+      - voice: 鈴木彩艶
+        text: いいメンタリティーで臨めたと思います。
+        emph: true
+        image: assets/images/20261115_suzuki_zion_vini_two_goals/03_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463208-463208-fl
+      - https://www.soccer-king.jp/news/japan/national/20261115/2227807.html
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: 鈴木彩艶が先発したブラジル戦は、W杯と今回で何が違ったか
+    tier: 背景
+    telop: 6月のW杯は1-2。今回は3-2
+    say:
+      - text: 見立てです。鈴木は、W杯のブラジル戦にも今回も先発でした。
+        card: {type: table, title: 鈴木彩艶が先発したブラジル戦, columns: [試合, 結果, 決勝点], rows: [[6月29日 W杯, 日本 1-2, 90+5分 ブラジル], [11月14日, 日本 3-2, 90+1分 日本]], highlight_row: 1}
+      - text: W杯はブラジルが、90分を過ぎてから逆転しました。今回は日本が、2対2から90分を過ぎて勝ち越しました。
+        card: none
+      - text: 次は17日、シンガポールでのパラグアイ戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/760487

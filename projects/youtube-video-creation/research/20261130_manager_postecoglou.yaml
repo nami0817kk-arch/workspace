@@ -1,0 +1,464 @@
+# 監督紹介：アンジェ・ポステコグルー（11/30 月、シリーズ「監督紹介」、key: manager_postecoglou、型は news）。9節（日本との接点＝横浜F・マリノスと古橋亨梧）。骨組みは 20261126_manager_allegri を写した。
+# 順：フック→基礎DATA→歩みと転機→戦術の色（実例の試合1つ）→数字で見る→本人の言葉→日本との接点→マル秘話→見立て。
+#
+# **題材の選び方（2026-11-21）**：既出22人以外から。トッテナムに17年ぶりのタイトル（2025 EL）、横浜F・マリノスを15年ぶりのJ1優勝へ。日本との接点がいちばん太い監督の1人。
+#   **重なりの確認（2026-11-21）**：scripts/・posted.json・picks（1109〜1127）に、ポステコグルーを主題にした本は無い（scripts に名前が出るのは2本だけで、どちらも脇の言及）。
+#   同じ日（11/30）の他担当の picks：セリエAのクラブ紹介はローマ。同じ担当の 11/28 はアモリム（同じ日ではない。台本の中でアモリムには触れない＝EL決勝の相手はクラブ名だけ）。
+#
+# **いまの立場**：アル・ナスル（サウジアラビア）監督。2026-07-03 就任、2年契約。ジョルジェ・ジェズスの後任（英語版 Wikipedia「Ange Postecoglou」、2026-11-21 に action=raw で読んだ。最終更新 2026-11-20）。
+#   ○ アル・ナスルのリーグの足元：12試合 9勝1分2敗 勝ち点28、3位（ESPN の順位 API、2026-11-21 に取得）。
+#
+# **通算（台本とサムネをそろえる）**＝英語版「Managerial statistics」（2026-11-20 時点、全大会）。
+#   **合計の行（806試合426勝154分226敗）は、行を足した数（807試合427勝151分229敗）と合わない**（アル・ナスルの行だけ更新されて、合計が古い）。**行を足した数を使う。**
+#   行：サウス・メルボルン 160試合85勝／オーストラリアU20 34試合23勝（下部組織・年代別なので除く）／パナハイキ 33試合16勝／ウィットルシー 16試合2勝／ブリスベン・ロアー 84試合42勝／メルボルン・ヴィクトリー 32試合15勝／
+#   オーストラリア代表 49試合22勝／横浜FM 161試合80勝28分53敗／セルティック 113試合83勝12分18敗／トッテナム 101試合47勝15分39敗／ノッティンガム・フォレスト 8試合0勝2分6敗／アル・ナスル 16試合12勝1分3敗。
+#   **トップチーム（U20を除く）**：773試合404勝。勝率 404÷773＝52.3%。
+#   セルティック 83÷113＝73.5%／横浜FM 80÷161＝49.7%／トッテナム 47÷101＝46.5%／アル・ナスル 12÷16＝75.0%。サムネの「ほか」は 382試合182勝（サウス・メルボルン・パナハイキ・ウィットルシー・ブリスベン・メルボルンV・豪州代表・フォレスト）。割合はすべて自分で割った。
+#   監督のタイトル（トップチーム）14個＝NSL 2・オセアニアのクラブ選手権 1（サウス・メルボルン）／Aリーグ 優勝決定戦 2・レギュラーシーズン首位 1（ブリスベン）／アジアカップ 2015／J1 2019／スコットランドのリーグ 2・カップ 1・リーグ杯 2／EL 2024-25。
+#
+# **歩み**（英語版）：1965-08-27 アテネ近郊のネア・フィラデルフィア生まれ、1970年（5歳）に家族でメルボルンへ。選手はサウス・メルボルンで193試合（1984〜93）、監督はプスカシュ。27歳でひざのけがで引退。
+#   2009-10 ブリスベン・ロアー、2010-11 に優勝＋36試合負けなし（オーストラリアの記録を更新）。2013-10 豪州代表、2015-01 アジアカップ初優勝。2018 横浜FM、2019 J1優勝（15年ぶり）。
+#   2021-06 セルティック（欧州の大きなクラブを率いた初のオーストラリア人）、2022-23 国内3冠。2023-07 トッテナム、2025-05-21 EL決勝 1-0 マンチェスター・ユナイテッド（17年ぶりのタイトル、欧州のタイトルは1984年以来）、2025-06-06 解任（就任からちょうど2年）。
+#   2025-09-09 ノッティンガム・フォレスト、8試合0勝、2025-10-18 チェルシー戦0-3の19分後に解任（在任39日）。2026-07-03 アル・ナスル。
+# **戦術の色**＝2025 EL 決勝（スペイン・ビルバオ）1-0 マンチェスター・ユナイテッド、決めたのはブレナン・ジョンソン（Guardian 2025-05-21 の見出し）。
+#   形：4-3-3。選手のころの監督プスカシュの4-3-3を土台に、サイドバックを内側に絞らせて攻めに加える（英語版、本人の話）。
+#
+# **本人の言葉**：2024-09-15、アーセナルに0-1で負けたあと（BBC Sport「I always win things in second year – Postecoglou」）：
+#   “I'll correct myself – I don't usually win things, I always win things in my second year. Nothing's changed. I've said it now. I don't say things unless I believe them.”
+#   2025-05-23 優勝パレードで（BBC Sport「Season three better than season two」）：“all the best TV series, season three is better than season two.”
+# **2年目の検算（見立て）**：サウス・メルボルン（1996就任）1997-98 優勝／ブリスベン（2009-10途中から）2010-11 優勝／豪州代表（2013-10）2015-01 アジアカップ／横浜FM（2018）2019 J1／セルティック（2021）1年目から2冠、2年目に3冠／トッテナム（2023）2年目にEL。
+#   2年目までいたクラブ・代表6つで、6つとも2年目にタイトル。フォレストは39日、アル・ナスルはいま1年目（2年契約なので、2年目が契約の最後の年）。
+# **日本との接点**：横浜F・マリノス 2018〜2021-06。2019年に15年ぶりのJ1優勝（ABC News 2019-12-07）。セルティックでは古橋亨梧を獲った最初の年（2021-07-16 加入）、2021-12-19 リーグ杯決勝でヒバーニアンに2-1、2点とも古橋。
+#   2023-02-26 リーグ杯決勝（対レンジャーズ 2-1）も古橋が2点。2022-23 シーズン、古橋はリーグ27点で得点王（英語版「Kyogo Furuhashi」）。
+# **マル秘話**：父は1967年の軍事クーデターで仕事を失い、一家でオーストラリアへ。法律上の姓は「ポステコス」（10歳のときに両親が短くした）。「父が見て楽しめるチームを作るのが、いつも私の動機」（2018年の話。英語版）。
+#
+# **入れなかったもの**：私生活（結婚・家族の詳細）、パナハイキ・ウィットルシーの細部、Aリーグの得点など細かい数字、フォレストのオーナーの振る舞い（人を責める話）、ロナウドとの関係（確かめていない）、
+#   アル・ナスルのACLの成績（確かめていない）、FotMob、女子、他の監督との優劣。前田大然・旗手怜央のセルティック加入の時期は今回確かめていないので入れない。
+date: 2026年11月21日
+slot: other_1
+format: news
+series: 監督紹介
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- ポステコグルー
+- 古橋亨梧
+theme:
+  end_bg: assets/images/20261130_manager_postecoglou/03_w.jpg
+  id: manager_postecoglou
+  league: england
+  league_name: アル・ナスル
+  kind: other
+  topic: ポステコグルー
+  title: ポステコグルー、アル・ナスル監督はどんな人？「2年目に必ず勝つ」は本当か
+  question: アル・ナスルのアンジェ・ポステコグルー監督は、どんな人なのか。「2年目に必ずタイトルを取る」という言葉は、これまでの歩みで当たっているのか
+  lead: アル・ナスル監督、アンジェ・ポステコグルー。
+  opening_image: assets/images/20261130_manager_postecoglou/03_w.jpg
+  takeaway: トップチームで通算773試合404勝、勝率52.3%。2年目までいたクラブと代表の6つすべてで、2年目にタイトルを取っている。横浜F・マリノスは2年目に15年ぶりのJ1優勝、トッテナムは2年目に17年ぶりのタイトル。アル・ナスルは16試合で勝率75.0%、リーグは11月21日時点で3位。2年契約の2年目は、契約の最後の年
+  short_title: ポステコグルー、2年目の約束
+  nameplate: アンジェ・ポステコグルー｜アル・ナスル監督
+thumbnail:
+  line1: ポステコグルー、通算404勝
+  line2: 横浜を15年ぶりのJ1優勝へ
+  tags: []
+  photo: assets/images/20261130_manager_postecoglou_b/panel_01.jpg
+  board: assets/images/20261130_manager_postecoglou_b/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261130_manager_postecoglou/02_v.jpg
+sections:
+- id: hook
+  main: true
+  heading: 「2年目に必ず勝つ」。そう言い切った監督は、本当に勝ってきたのか
+  tier: 報道
+  telop: トッテナムに17年ぶりのタイトル。いまはアル・ナスルの監督
+  narrator: 解説
+  card: &hook_stats
+    type: stats
+    title: ポステコグルーの歩み
+    items:
+    - ['17', 年ぶり, トッテナムのタイトル]
+    - ['15', 年ぶり, 横浜F・マリノスのJ1優勝]
+    - ['39', 日, フォレストにいた日数]
+    focus: 0
+  say:
+  - text: 2年目には、必ずタイトルを取る。そう言い切った監督がいます。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card: none
+  - text: アンジェ・ポステコグルーです。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    emph: true
+    card: none
+  - text: その言葉どおり、2年目のトッテナムで、17年ぶりのタイトルを取りました。
+    card:
+      <<: *hook_stats
+      focus: 0
+  - text: 日本では、横浜F・マリノスを、15年ぶりのJ1優勝に導いています。
+    emph: true
+    card:
+      <<: *hook_stats
+      focus: 1
+  - text: ところが、ノッティンガム・フォレストでは、わずか39日で解任されました。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card:
+      <<: *hook_stats
+      focus: 2
+  - text: 2026年7月から、サウジアラビアのアル・ナスルを率いています。
+    card: none
+  - text: 2年目の約束は、本当に守られてきたのか。数字で確かめます。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+- id: data
+  heading: ポステコグルーは、いつ、どこで、どんな道を歩いた人か
+  tier: 報道
+  telop: アンジェ・ポステコグルーの基礎DATA
+  narrator: 解説
+  card: &data_table
+    type: table
+    title: アンジェ・ポステコグルー（61歳）の基礎DATA
+    columns: [項目, 中身]
+    rows:
+    - [生年月日, 1965年8月27日（ギリシャ・アテネ近郊）]
+    - [育ち, 5歳でオーストラリアのメルボルンへ]
+    - [選手のころ, DF。オーストラリア代表に4試合]
+    - [監督, アル・ナスル（2026年7月から）]
+    - [タイトル, トップチームで14個]
+    highlight_row: 0
+  say:
+  - text: ポステコグルーは、1965年8月27日、ギリシャのアテネ近郊の生まれ。61歳です。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card:
+      <<: *data_table
+      highlight_row: 0
+  - text: 5歳のとき、家族でオーストラリアのメルボルンに渡りました。
+    card:
+      <<: *data_table
+      highlight_row: 1
+  - text: 選手のころはDF。オーストラリア代表でも、4試合に出ています。
+    card:
+      <<: *data_table
+      highlight_row: 2
+  - text: 監督としては、2026年7月から、アル・ナスル。契約は2年。
+    card:
+      <<: *data_table
+      highlight_row: 3
+  - text: トップチームで取ったタイトルは、14個にのぼります。
+    card:
+      <<: *data_table
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+- id: career
+  heading: メルボルンからトッテナムへ。ポステコグルーは何を積み上げたのか
+  tier: 背景
+  telop: 歩みと転機。オーストラリアから日本、スコットランド、イングランドへ
+  narrator: 解説
+  card: &career_tl
+    type: timeline
+    title: ポステコグルーの歩み
+    rows:
+    - [2011年, ブリスベンで優勝。36試合負けなし]
+    - [2015年, オーストラリア代表でアジアカップ初優勝]
+    - [2019年, 横浜F・マリノスでJ1優勝]
+    - [2023年, セルティックで国内3冠]
+    - [2025年5月, トッテナムでヨーロッパリーグ優勝]
+    - [2026年7月, アル・ナスルの監督に]
+    focus: 0
+  say:
+  - text: ポステコグルーの名が広まったのは、オーストラリアのブリスベン・ロアーでした。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: none
+  - text: 2011年に優勝。36試合負けなしは、オーストラリアの記録を塗り替えました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 0
+  - text: 2015年には、オーストラリア代表を率いて、アジアカップで初めての優勝。
+    card:
+      <<: *career_tl
+      focus: 1
+  - text: 2018年からは日本へ。横浜F・マリノスを率いました。
+    card:
+      <<: *career_tl
+      focus: 2
+  - text: 2021年にはスコットランドのセルティックへ。2年目の2023年に、国内3冠です。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card:
+      <<: *career_tl
+      focus: 3
+  - text: 2023年7月、トッテナムへ。2025年5月、ヨーロッパリーグで優勝しました。
+    emph: true
+    card:
+      <<: *career_tl
+      focus: 4
+  - text: その16日後、就任からちょうど2年の日に、クラブは解任を発表します。
+    card: none
+  - text: 2025年9月のノッティンガム・フォレストでは、8試合で勝ちなし。
+    card: none
+  - text: チェルシー戦の試合終了から19分後に、解任が発表されました。
+    card: none
+  - text: 2026年7月、アル・ナスルの監督になりました。
+    card:
+      <<: *career_tl
+      focus: 5
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+  - https://www.tottenhamhotspur.com/news/2025/june/club-statement-ange-postecoglou-departs/
+- id: style
+  heading: 17年ぶりの1対0。ポステコグルーのチームは、どんな形なのか
+  tier: 報道
+  telop: 戦術の色。2025年ヨーロッパリーグ決勝、マンチェスター・ユナイテッドに1対0
+  narrator: 解説
+  card: &style_doc
+    type: document
+    label: 2025 ヨーロッパリーグ 決勝 トッテナム対マンチェスター・ユナイテッド
+    paragraphs:
+    - 2025年5月21日、スペインのビルバオ。
+    - トッテナムが、マンチェスター・ユナイテッドに1対0。
+    - 決めたのは、ブレナン・ジョンソン。
+    - トッテナムにとって17年ぶりのタイトル。ヨーロッパの大会では1984年以来。
+    highlight:
+    - 1対0
+    - 17年ぶり
+  say:
+  - text: 形がよく見えるのは、2025年のヨーロッパリーグ決勝です。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card: *style_doc
+  - text: 相手はマンチェスター・ユナイテッド。
+    card: *style_doc
+  - text: ブレナン・ジョンソンの1点を、最後まで守りました。
+    emph: true
+    callword: 1対0
+    card: *style_doc
+  - text: ヨーロッパの大会での優勝は、トッテナムにとって1984年以来でした。
+    card: *style_doc
+  - text: ポステコグルーのふだんの形は、4-3-3。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: none
+  - text: 現役時代に教わった、プスカシュの形が土台です。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: none
+  - text: 違うのは、サイドバックの使い方。外ではなく内側に絞らせて、攻めに加えます。
+    card: none
+  - text: 攻めて勝つのが持ち味の監督が、いちばん大きな決勝は、1点を守り切って勝ちました。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+  - https://www.theguardian.com/football/2025/may/21/europa-league-final-tottenham-manchester-united-match-report
+- id: numbers
+  heading: 773試合で404勝。数字で見ると、どこがいちばん強かったのか
+  tier: 報道
+  telop: トップチームで通算773試合404勝。セルティックは勝率73.5%
+  narrator: 解説
+  card: &rate_table
+    type: table
+    title: ポステコグルーの成績（11月20日まで）
+    columns: [時期, 試合, 勝率]
+    rows:
+    - [通算（トップチーム）, '773', 52.3%]
+    - [横浜F・マリノス, '161', 49.7%]
+    - [セルティック, '113', 73.5%]
+    - [トッテナム, '101', 46.5%]
+    highlight_row: 0
+  say:
+  - text: ここからは、ポステコグルーの成績を数字で。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: トップチームの通算は773試合。勝ったのは404試合で、勝率は52.3%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 0
+  - text: 横浜F・マリノスでは、161試合で80勝。49.7%でした。
+    card:
+      <<: *rate_table
+      highlight_row: 1
+  - text: いちばん高いのは、セルティック。113試合で83勝、73.5%です。
+    emph: true
+    card:
+      <<: *rate_table
+      highlight_row: 2
+  - text: トッテナムでは、101試合で47勝。プレミアリーグでは、苦しい数字でした。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card:
+      <<: *rate_table
+      highlight_row: 3
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+- id: words
+  heading: 「2年目に必ず勝つ」。ポステコグルーは、いつ、どう言ったのか
+  tier: 報道
+  telop: ポステコグルーの言葉。2024年9月、アーセナル戦のあと
+  narrator: 解説
+  card: &words_doc
+    type: document
+    label: ポステコグルーの言葉（訳）。2024年9月15日、アーセナル戦のあと
+    paragraphs:
+    - 言い直します。たいてい勝つ、ではありません。
+    - 私は、2年目に必ず何かを勝ち取ります。
+    - 何も変わっていません。信じていないことは、言いません。
+    highlight:
+    - 2年目に必ず何かを勝ち取ります
+  say:
+  - text: 2024年9月、アーセナルに0対1で負けたあと。ポステコグルーは、こう話しました。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card: *words_doc
+  - voice: ポステコグルー
+    text: 言い直します。たいてい勝つ、ではありません。
+  - voice: ポステコグルー
+    text: 私は、2年目に必ず何かを勝ち取ります。
+    cont: true
+  - voice: ポステコグルー
+    text: 何も変わっていません。信じていないことは、言いません。
+    pause: 0.5
+  - text: その8か月後、決勝に勝った翌々日の、優勝パレードでは、こう続けました。
+    card: none
+  - voice: ポステコグルー
+    text: いいドラマは、どれも、
+  - voice: ポステコグルー
+    text: シーズン3のほうが、シーズン2より面白い。
+    cont: true
+    pause: 0.5
+  - text: ただ、そのシーズン3は、トッテナムでは来ませんでした。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: none
+  quotes_from:
+  - https://www.bbc.com/sport/football/articles/cglkk0474kpo
+  - https://www.bbc.com/sport/football/articles/c3v53rp20g7o
+  sources:
+  - https://www.bbc.com/sport/football/articles/cglkk0474kpo
+  - https://www.bbc.com/sport/football/articles/c3v53rp20g7o
+- id: japan
+  heading: 横浜と古橋亨梧。ポステコグルーと日本は、どこでつながるのか
+  tier: 報道
+  telop: 2019年、横浜F・マリノスで15年ぶりのJ1優勝
+  narrator: 解説
+  card: &jp_table
+    type: table
+    title: ポステコグルーと日本
+    columns: [いつ, 何があったか]
+    rows:
+    - [2019年, 横浜F・マリノスで15年ぶりのJ1優勝]
+    - [2021年7月, セルティックに古橋亨梧が加入]
+    - [2021年12月, リーグ杯決勝で古橋が2得点]
+    - [2023年2月, リーグ杯決勝で古橋がまた2得点]
+    highlight_row: 0
+  say:
+  - text: 日本との縁は、まず横浜です。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: ポステコグルーは、2018年に横浜F・マリノスの監督に。
+  - text: 2年目の2019年に、リーグを制しました。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 0
+  - text: マリノスにとって、2004年以来のリーグ優勝でした。
+    card: none
+  - text: セルティックに移った最初の夏、古橋亨梧がチームに加わりました。
+    card:
+      <<: *jp_table
+      highlight_row: 1
+  - text: 2021年12月のリーグ杯決勝は、2対1。2点とも、古橋です。
+    emph: true
+    card:
+      <<: *jp_table
+      highlight_row: 2
+  - text: 2023年2月、レンジャーズとのリーグ杯決勝でも、古橋が2点を決めました。
+    card:
+      <<: *jp_table
+      highlight_row: 3
+  - text: そのシーズン、古橋はリーグで27点。得点王になっています。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+  - https://en.wikipedia.org/wiki/Kyogo_Furuhashi
+  - https://www.abc.net.au/news/2019-12-07/ange-postecoglou-wins-j-league-with-yokohama-f-marinos/11777172
+- id: secret
+  heading: 数字に出ない話。ポステコグルーは、誰のためにチームを作るのか
+  tier: 背景
+  telop: 選手のころの監督はプスカシュ。父が見て楽しめるチームを
+  narrator: 解説
+  card: &sec_table
+    type: table
+    title: 数字の外にある話
+    columns: [いつ, 何があったか]
+    rows:
+    - [1970年, 5歳で家族とオーストラリアへ]
+    - [選手のころ, 監督はハンガリーのプスカシュ]
+    - [27歳, ひざのけがで、選手を終える]
+    highlight_row: 0
+  say:
+  - text: では、ポステコグルーの、数字の外の話を。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    card: none
+  - text: 父は、ギリシャで仕事を失い、1970年に、家族でオーストラリアへ渡りました。
+    card:
+      <<: *sec_table
+      highlight_row: 0
+  - text: 選手のころの監督は、ハンガリーの名選手、プスカシュ。父から話を聞いていた人でした。
+    emph: true
+    card:
+      <<: *sec_table
+      highlight_row: 1
+  - text: 27歳で、ひざのけがのため、選手を終えています。
+    card:
+      <<: *sec_table
+      highlight_row: 2
+  - text: 父と過ごした時間は、一緒にサッカーを見に行くときだけだった、と話しています。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: none
+  - text: 父が見て楽しめるチームを作ること。それが、いつも自分の動機だそうです。
+    emph: true
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+- id: view
+  viewpoint: true
+  heading: 見立て・2年目の約束は、どこまで当たっているのか
+  tier: 背景
+  telop: 2年目までいた6つで、6つとも2年目にタイトル
+  narrator: 解説
+  card: &view_table
+    type: verdict
+    title: 2年目にタイトルを取ったか（自分で数えた）
+    columns: [どこで, 判定, 2年目のタイトル]
+    rows:
+    - [サウス・メルボルン, ○, 1997-98 リーグ]
+    - [ブリスベン・ロアー, ○, 2010-11 リーグ]
+    - [オーストラリア代表, ○, 2015 アジアカップ]
+    - [横浜F・マリノス, ○, 2019 J1]
+    - [セルティック, ○, 2022-23 国内3冠]
+    - [トッテナム, ○, 2024-25 EL]
+    highlight_row: 0
+  say:
+  - text: 見立てです。2年目までいたクラブと代表を、数えてみました。
+    image: assets/images/20261130_manager_postecoglou/03_w.jpg
+    card: *view_table
+  - text: ポステコグルーは、6つのうち6つで、2年目にタイトルを取っています。
+    mark: {"kind": "circle", "row": 5, "col": 1}
+    emph: true
+    card:
+      <<: *view_table
+      highlight_row: 5
+  - text: 言葉どおりの数字。ただ、2年目までいられなかったのが、フォレストの39日でした。
+    card:
+      <<: *view_table
+      highlight_row: 5
+  - text: アル・ナスルでは、16試合で12勝。勝率75.0%です。
+    image: assets/images/20261130_manager_postecoglou/02_w.jpg
+    emph: true
+    card: none
+  - text: セルティックのときを、上回る数字。
+    card: none
+  - text: リーグは、11月21日時点で、12試合を終えて勝ち点28。3位です。
+    card: none
+  - text: 契約は2年。約束の2年目は、契約の最後の年にあたります。
+    card: none
+  sources:
+  - https://en.wikipedia.org/wiki/Ange_Postecoglou
+  - https://site.api.espn.com/apis/v2/sports/soccer/ksa.1/standings

@@ -1,0 +1,125 @@
+# 取材メモ（2026年11月26日）ラス・パルマスの宮代大聖、敵地ヒホンで今季4点目。自陣から走り切った追加点で2-0（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 追記（親・書き出し後）: qc.png で 0:35〜0:59 に 01 が続いたので、前半の先制の2行に image:（02 チームの喜び・03 宮代）を足した。語りは変えていない。
+# 取材: 2026-11-26。WebFetch は使わず requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない（見出しは Google ニュースの RSS の見出しだけ）。
+# 題材の元: フットボールゾーン 687098（11/25 13:40）「スペインで躍動『次の代表あるんじゃね』自陣から猛烈スプリント弾」（全文） https://www.football-zone.net/archives/687098
+#   第15節ヒホン戦に先発。1-0の後半36分、前がかりの相手にカウンター。イバン・ハイメが右からゴール前へ、DFとGKを引きつけてリターン、自陣からスプリントしていた宮代がスライディングで押し込む。3試合ぶりのゴール。
+#   2-0で勝ち、昇格プレーオフ圏まで勝ち点1差の9位。宮代は後半38分に交代。15試合4得点2アシスト。
+#   記事中のSNSの声（「次の代表あるんじゃね」など）は記事の抜き書きで、元の投稿は見ていない → 反応には使わない。主写真は「(C) La Liga」。
+# ESPN の試合データ（site.api.espn.com esp.2 summary event=401882298、2026-11-22 15:15 UTC、会場はヒホン＝ラス・パルマスはアウェー）:
+#   スポルティング・ヒホン 0-2 ラス・パルマス。35分 ロイオディセ／81分 宮代。宮代は先発・途中交代（83分）。シュート2本・枠内1。イバン・ハイメは先発フル出場で2アシスト。
+#   ボール保持 ヒホン 51.8%。シュート ヒホン12（枠内4）、ラス・パルマス13（枠内6）。
+# クラブ公式（udlaspalmas.es「Las Palmas gana en Gijón con acierto en la pizarra y en el contragolpe (0-2)」全文）:
+#   エル・モリノンに約2万1000人。1点目はCKのサインプレー（ハイメが中へ流し、ロイオディセ）。後半はカウンター。宮代はハイメと並走したあとの好パスから決定的な2点目。
+#   https://www.udlaspalmas.es/noticias/las-palmas-gana-en-gijon-con-acierto-en-la-pizarra-y-en-el-contragolpe-0-2
+# ラ・プロビンシア（11/22 17:03）: 81分、ハイメが裏へのパスを受けて宮代へ。後半の立ち上がりにも宮代がハイメのクロスをわずかに外していた。 https://www.laprovincia.es/ud-las-palmas/2026/11/22/sporting-0-ud-palmas-2-dv-136726545.html
+# フットボールチャンネル 1058777（11/23 17:23、全文）: 開幕から15試合連続で先発。81分。3試合ぶり。11位から9位へ。地元メディア udlaspalmas.net がチーム2位タイの「8点」、寸評「守備でも、中央でも、必要とされるあらゆる場所でチームを助けた」。
+#   主写真は Getty → 使わない。 https://www.footballchannel.jp/2026/11/23/post1058777/
+# 順位（ESPN esp.2 standings、11/26 取得）: 9位ラス・パルマス 15試合 勝ち点23。6位マジョルカ・7位エイバル 勝ち点24。
+# 次の試合: 11/28 13:00 UTC（日本時間 22時）ホームで FC アンドラ戦（ESPN scoreboard）。
+# 食い違い:
+#   ・1点目の分: ESPN 35分、ラ・プロビンシア 34分 → 1点目の分は言わない（「前半にロイオディセが先制」）。
+#   ・宮代の得点の分: ESPN 81分、フットボールゾーン「後半36分」(=81分)、ラ・プロビンシア 81分 → 一致。
+#   ・ハイメのパス: フットボールゾーン「右サイドからゴール前へ、DFとGKを引きつけてリターン」、ラ・プロビンシア「裏へのパスを受けて」→ 「右から運んだハイメの折り返し」とだけ言う。
+# 自分で数えたもの: ハイメは2点とも関わった（1点目のCKのつなぎ＝ESPN のアシスト2）。宮代の今季 15試合4得点2アシスト＝6点に関与。
+# 前の本との重なり: 直近3日（11/23〜26）に宮代の回は無い。
+# 本人の言葉: 見つからず（クラブ公式の試合記事・ラ・プロビンシア・カナリアス7の一覧・フットボールゾーン・フットボールチャンネルを当たった。AS は 403 で読めず）。→ X。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 【言わないこと】「次の代表」などのSNSの声（元の投稿を見ていない）／代表の話／1点目の分。
+slot: japanese
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [宮代大聖, ラス・パルマス, スポルティング・ヒホン, イバン・ハイメ]
+
+short_style: X
+short_hook_word: 自陣から全力疾走
+short_photos:
+  - assets/images/20261126_miyashiro_laspalmas_4th/01_v.jpg
+  - assets/images/20261126_miyashiro_laspalmas_4th/03_v.jpg
+  - assets/images/20261126_miyashiro_laspalmas_4th/02_v.jpg
+short_question: 宮代大聖は、今季2桁ゴールに届くと思いますか。
+short_telops: []
+
+theme:
+  id: miyashiro_laspalmas_4th
+  league: spain
+  league_name: スペイン2部
+  prefix: ""
+  title: 宮代大聖、自陣から走り切って今季4点目。敵地ヒホンで決めた追加点
+  hook: ""
+  question: 宮代大聖の今季4点目は、どんな形で生まれたのか
+  takeaway: 1対0の81分、カウンターで自陣からゴール前まで走り、イバン・ハイメの折り返しを滑り込んで押し込んだ。ラス・パルマスは9位に上がり、プレーオフ圏まで勝ち点1
+thumbnail:
+  layout: face
+  line1: 宮代大聖 今季4点目
+  line2: 自陣から走り切った追加点
+  tags: [宮代大聖, ラス・パルマス]
+  photo: assets/images/20261126_miyashiro_laspalmas_4th/01_w.jpg
+  short_photo: assets/images/20261126_miyashiro_laspalmas_4th/01_v.jpg
+
+answer: カウンターで自陣からゴール前まで走り、ハイメの折り返しを滑り込みながら押し込んだ
+watch: 28日のアンドラ戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: 宮代大聖の今季4点目は、どう生まれたのか
+    tier: 報道
+    telop: スポルティング・ヒホン 0-2 ラス・パルマス。宮代は81分
+    say:
+      - text: スペイン2部、ラス・パルマスで開幕から先発を続ける宮代大聖が、今季4点目。
+      - text: 22日、敵地でのスポルティング・ヒホン戦。1点をリードして迎えた81分でした。
+      - text: 前がかりになった相手から、ラス・パルマスがボールを奪ってカウンター。
+      - text: 宮代は自陣から、ゴール前まで一気に走ります。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/03_w.jpg
+        emph: true
+      - text: 右から運んだイバン・ハイメが、相手を引きつけて中へ折り返し。
+      - text: 宮代が滑り込みながら、ゴールへ押し込みました。
+      - text: 3試合ぶりのゴールで、ラス・パルマスは2対0の勝利。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/02_w.jpg
+      - text: この勝利で、チームは1部昇格のプレーオフ圏まで、勝ち点1に迫りました。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882298
+      - https://www.football-zone.net/archives/687098
+      - https://www.footballchannel.jp/2026/11/23/post1058777/
+      - https://www.udlaspalmas.es/noticias/las-palmas-gana-en-gijon-con-acierto-en-la-pizarra-y-en-el-contragolpe-0-2
+      - https://www.laprovincia.es/ud-las-palmas/2026/11/22/sporting-0-ud-palmas-2-dv-136726545.html
+  - id: game
+    heading: 敵地ヒホンで、ラス・パルマスはどう勝ったのか
+    tier: 報道
+    telop: 2点ともイバン・ハイメがアシスト
+    say:
+      - text: 時間を戻して前半。ラス・パルマスは、コーナーキックのサインプレーから先制していました。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/02_w.jpg
+      - text: ハイメが中へ流したボールを、チームメイトのロイオディセが決めました。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/03_w.jpg
+      - text: ハイメはこの日、2点ともアシスト。宮代の得点も、ハイメと並んで走った末の一点でした。
+        card: {type: table, title: スポルティング・ヒホン 0-2 ラス・パルマス, columns: [得点, アシスト], rows: [[ロイオディセ, イバン・ハイメ], [宮代大聖（81分）, イバン・ハイメ]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882298
+      - https://www.udlaspalmas.es/noticias/las-palmas-gana-en-gijon-con-acierto-en-la-pizarra-y-en-el-contragolpe-0-2
+      - https://www.footballchannel.jp/2026/11/23/post1058777/
+  # 写真: 01＝フットボールゾーンの主写真（(C) La Liga、今季4月の宮代）、02＝クラブ公式の試合記事の主写真（ヒホン戦の喜ぶ選手たち。宮代は写っていない→「勝利」の行だけ）、03＝ラ・プロビンシアの主写真（キャプション「/ UD Las Palmas」＝クラブ提供、プレー中の宮代）。フットボールチャンネルの Getty は外した。
+  - id: view
+    viewpoint: true
+    heading: 開幕から15試合続けて先発。宮代とラス・パルマスはどこにいるのか
+    tier: 報道
+    telop: 宮代は15試合で4得点2アシスト。チームは9位
+    say:
+      - text: 見立てです。今季の宮代は、15試合すべてに先発しています。
+        card: {type: stats, title: 宮代大聖 今季のスペイン2部, items: [[15, 試合, 先発], [4, 点, ゴール], [2, 本, アシスト]], focus: 1}
+      - text: ゴールとアシストを合わせて、6点に関わりました。
+        image: assets/images/20261126_miyashiro_laspalmas_4th/03_w.jpg
+      - text: 順位は11位から9位へ。プレーオフに進めるのは6位までです。
+        card: {type: table, title: スペイン2部の順位（11月26日）, columns: [順位, クラブ, 勝ち点], rows: [[6位, マジョルカ, 24], [7位, エイバル, 24], [9位, ラス・パルマス, 23]], highlight_row: 2}
+      - text: 次は28日、ホームでアンドラと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/23/post1058777/
+      - https://www.football-zone.net/archives/687098
+      - https://www.espn.com/soccer/match/_/gameId/401882298
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.2/standings

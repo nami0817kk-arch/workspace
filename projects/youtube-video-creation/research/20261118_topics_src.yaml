@@ -1,0 +1,74 @@
+title: 11月18日のショート題材（Claude選）
+lead: 昨夜の日本代表×パラグアイ（森保監督の最終戦、0-2の黒星）の試合後の言葉を中心に、日本人6本・海外4本を選びました。
+note: 確認なしの運用（11/4〜）のため、Claude が選んだ結果です。日本人の題は 9〜17時の枠、海外は18時以降の枠。ヒットの条件（代表・W杯／本人の言葉）は各行に書きました。外した題：ルーニーの告白（心の健康の話で、動画向きでない）・スペインの連勝が止まった件（11/16に扱い済み）・UEFAのディアロ推薦（11/17のクロップ回の続報）・J・高校選手権・女子。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 福田師王、森保ジャパン最終戦でデビュー弾。「W杯で日本を勝たせるのが夢」
+  why: サッカーキング・ゲキサカ（18日）。条件：代表に当たる・本人の言葉あり。11/16に初招集の題あり（今回はデビュー弾で別の出来事）。
+  src: サッカーキング、ゲキサカ
+  url: https://www.soccer-king.jp/news/japan/national/20261118/2229290.html
+  fmt: quote
+- num: 2
+  slot: 日本人（代表）
+  head: 久保建英「日本代表の未来を自分たちが担っていく」。森保監督と「なんで俺は試合に出られないんだ」と対話した過去
+  why: フットボールチャンネル・ゲキサカ（18日）。条件：代表・本人の言葉。久保の大物枠。
+  src: フットボールチャンネル、ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463395-463395-fl
+  fmt: quote
+- num: 3
+  slot: 日本人（代表）
+  head: 堂安律、最終戦で腕章。「最後勝てなくて申し訳ないと伝えた」
+  why: ゲキサカ・フットボールチャンネル（18日）。条件：代表・本人の言葉。
+  src: ゲキサカ、フットボールチャンネル
+  url: https://web.gekisaka.jp/news/japan/detail/?463392-463392-fl
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 田中碧が約2分半ノンストップで熱弁。「心の底から世界一を取りたいと思わせてくれた」
+  why: サッカーキング（18日）。条件：代表・本人の言葉。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/japan/national/20261118/2229283.html
+  fmt: quote
+- num: 5
+  slot: 日本人（代表）
+  head: 森保ジャパン最多出場の伊東純也「本当に勝ちたかった」。8年間の活動は「おかげで成長できた」
+  why: サッカーキング・ゲキサカ（18日）。条件：代表・記録（最多出場）・本人の言葉。
+  src: サッカーキング、ゲキサカ
+  url: https://www.soccer-king.jp/news/japan/national/20261118/2229252.html
+  fmt: quote
+- num: 6
+  slot: 日本人（代表）
+  head: 森保一監督、ラストマッチは黒星。「選手たちには本当に幸せな思いをさせていただいた」
+  why: ゲキサカ（18日）。条件：代表・本人（監督）の言葉・記録（113試合）。11/17に森保の題が3本あるが、試合後の言葉は新しい。
+  src: ゲキサカ、サッカーキング
+  url: https://web.gekisaka.jp/news/japan/detail/?463390-463390-fl
+  fmt: quote
+- num: 7
+  slot: 海外
+  head: ヴィニシウス、開始21分でハットトリック。ブラジルが7-0大勝、日本戦から2試合5ゴール
+  why: ESPN・A Bola・フットボールチャンネル（18日）。条件：日本戦のあとの話・大物・本人の言葉（レアルで続けたい）。
+  src: ESPN、A Bola、フットボールチャンネル
+  url: https://www.espn.com/soccer/story/_/id/50510724/vinicius-junior-brazil-hat-trick-real-madrid
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ハーランド「W杯が私を変えた」。ノルウェー代表で見せた変化
+  why: マルカ（17日）。条件：本人の言葉・大物。11/15にノルウェーの勝利の題あり。
+  src: マルカ
+  url: https://www.marca.com/futbol/nations-league/2026/11/17/haaland-mundial-me-cambio.html
+  fmt: quote
+- num: 9
+  slot: 海外
+  head: ムバッペに人種差別の言葉を浴びせたオビエドのファンに、執行猶予つきの禁錮刑
+  why: ESPN・BBC・フット・メルカート（17日）。条件：大物。判決の事実を確かめる。
+  src: ESPN、BBC、Foot Mercato
+  url: https://www.espn.com/soccer/story/_/id/50509888/kylian-mbappe-racist-abuse-oviedo-fan-real-madrid
+  fmt: news
+- num: 10
+  slot: 海外
+  head: メッシがアルゼンチン協会との関係を断ち、法的手段へ（A Bola 報道）
+  why: A Bola（17日夜）。条件：大物。報道のため、複数の出どころで確かめて崩れたら作らず次点（JJ・ガブリエルのレアル移籍）へ。
+  src: A Bola
+  url: https://www.abola.pt/noticias/messi-corta-relacoes-com-a-federacao-argentina-e-avanca-para-a-via-judicial-2026111720435423591
+  fmt: news

@@ -1,0 +1,121 @@
+# 取材メモ（2026年11月16日）ベルギーがイタリアに4-1で逆転。イタリアはUNL準々決勝を逃す（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は取れなかった）
+# 取材: 2026-11-16。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com, uefa.nations, event 401861176、2026-11-15 19:45Z、キング・ボードゥアン・スタジアム）: ベルギー 4-1 イタリア。
+#       11分 エスポージト（イタリア、アシスト カヨーデ）／15分 デ・カイペル（アシスト デ・ケテラーレ）／22分 エンゴイ（CKの流れ）／26分 ドク（アシスト デ・ケテラーレ）／80分 モレイラ（アシスト デ・ブライネ）。
+#       90+1分 エスポージトのPKをGKラメンスがセーブ。ドンナルンマは81分に警告。前半は 3-1。
+#   ・ESPN の順位表（uefa.nations standings、2026-11-16 取得）グループA1（各6試合）: フランス 勝ち点13／ベルギー 12／イタリア 10／トルコ 0。
+#       ESPN の試合データ（401861177）: フランス 2-1 トルコ（同時刻）。
+#   ・football-italia（2026-11-15、全文を読んだ）: イタリアは引き分け以上で準々決勝進出が決まる状況だった（"needing only a point"）。エスポージトは21歳、代表15試合で10点目。
+#       ドンナルンマは異議で警告を受け、次のイタリア代表の試合は出場停止。最後のPKはラメンスが止め、こぼれ球をドゥンビアが外した。
+#   ・フットボールチャンネル（2026-11-16 post1057657、全文）: 試合前の順位はイタリア 3勝1分1敗の勝ち点10で首位、フランス10、ベルギー9。ベルギーは15分から26分の11分間で3点。
+#       結果、ベルギーは4勝2敗の勝ち点12でグループ2位・準々決勝進出、フランスが勝ち点13で首位通過、イタリアは3位に転落して準々決勝進出を逃した。
+# 食い違い・扱い:
+#   ①22分の得点者はフットボールチャンネルが「エンゴイ」、football-italia と ESPN も Ngoy。「エンゴイ」（フットボールチャンネルの表記）を使う。
+#   ②15分のアシストは記事ごとに違う（ESPN: デ・ケテラーレ、football-italia: こぼれ球を押し込む）。アシストは台本に使わない。
+#   ③写真: 記事の写真は Getty なので使わない。Commons の CC BY-SA 4.0（Bryan Berlin、2026-07-06 米国戦・03-28 米国戦）などを使った。
+# 本人の言葉: 無し。X。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [ベルギー代表, イタリア代表]
+
+short_style: X
+short_hook_word: 4発逆転
+short_photos:
+  - assets/images/20261116_belgium_italy_comeback/01_v.jpg
+  - assets/images/20261116_belgium_italy_comeback/02_v.jpg
+  - assets/images/20261116_belgium_italy_comeback/03_v.jpg
+  - assets/images/20261116_belgium_italy_comeback/04_v.jpg
+short_question: ベルギーは、準々決勝でもこの勢いを保てると思いますか。
+short_telops: []
+
+theme:
+  id: belgium_italy_comeback
+  league: england
+  league_name: ベルギー代表
+  prefix: ""
+  title: ベルギー対イタリア、11分間で試合が動いた。準々決勝を逃したのはどちらか
+  hook: ""
+  question: ベルギーは、イタリア戦で何をしたのか
+  takeaway: 先に点を取られたベルギーが、11分間で3点を奪って逆転し、4-1。引き分けでよかったイタリアは、3位に落ちた
+
+thumbnail:
+  layout: face
+  line1: ベルギー 4発逆転
+  line2: イタリアは準々決勝を逃した
+  tags: [ベルギー代表, イタリア代表]
+  photo: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+  short_photo: assets/images/20261116_belgium_italy_comeback/02_v.jpg
+
+answer: 11分に先制を許したが、15分から26分の11分間で3点を奪って逆転。80分に4点目を加え、4-1で勝った
+watch: ドンナルンマが出場停止になる、次のイタリア代表の試合
+
+sections:
+  - id: what
+    main: true
+    heading: ベルギーは、イタリア戦でどう逆転したのか
+    tier: 報道
+    telop: ベルギー 4-1 イタリア。11分間で3点
+    say:
+      - text: ベルギーが、イタリアに4対1で逆転勝ち。イタリアは、準々決勝への進出を逃しました。
+        short_only: true
+        image: assets/images/20261116_belgium_italy_comeback/01_w.jpg
+      - text: 欧州の国同士による大会、ネーションズリーグ。15日が最終節でした。
+        image: assets/images/20261116_belgium_italy_comeback/04_w.jpg
+      - text: 各グループの上位2チームが、準々決勝に進みます。
+      - text: イタリアは首位で、引き分け以上なら準々決勝に進める状況でした。
+      - text: 先に決めたのはイタリア。11分、エスポージトのゴールでした。
+        image: assets/images/20261116_belgium_italy_comeback/01_w.jpg
+        card: {type: table, title: ベルギー 4-1 イタリア（15日）, columns: [分, 得点者], rows: [[11分, エスポージト（イタリア）], [15分, デ・カイペル], [22分, エンゴイ], [26分, ドク], [80分, モレイラ]], highlight_row: 3}
+      - text: ところがベルギーは、15分から26分の11分間で3点を奪いました。
+        card: none
+        image: assets/images/20261116_belgium_italy_comeback/01_w.jpg
+      - text: ドクのゴールで、3対1と逆転です。
+        image: assets/images/20261116_belgium_italy_comeback/04_w.jpg
+      - text: 80分には、デ・ブライネのパスからモレイラが4点目。
+        image: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+      - text: 終了間際、エスポージトのPKは、GKラメンスが止めました。
+        image: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861176
+      - https://football-italia.net/unl-belgium-4-1-italy-azzurri-crash-back-earth/
+      - https://www.footballchannel.jp/2026/11/16/post1057657/
+  - id: table
+    heading: この結果、グループの順位はどうなったのか
+    tier: 報道
+    telop: ベルギーは2位で準々決勝へ。イタリアは3位
+    say:
+      - text: ベルギーは、勝ち点12の2位通過です。
+        card: {type: table, title: ネーションズリーグ グループA1（6試合を終えて）, columns: [順位, 国, 勝ち点], rows: [[1, フランス, 13], [2, ベルギー, 12], [3, イタリア, 10], [4, トルコ, 0]], highlight_row: 1}
+        image: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+      - text: 首位通過は、勝ち点13のフランスです。
+        card: none
+        image: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+      - text: イタリアは勝ち点10のまま、3位に落ちました。
+        card: none
+        image: assets/images/20261116_belgium_italy_comeback/04_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings
+      - https://www.footballchannel.jp/2026/11/16/post1057657/
+  - id: view
+    viewpoint: true
+    heading: イタリアは、どこで準々決勝を逃したのか
+    tier: 背景
+    telop: 引き分けでよかった。失点は前半の3点
+    say:
+      - text: 見立てです。ベルギーに逆転されたイタリアは、あと勝ち点1で準々決勝でした。
+        card: none
+        image: assets/images/20261116_belgium_italy_comeback/01_w.jpg
+      - text: 前半の3失点は、15分から26分の11分間に集中しています。
+        image: assets/images/20261116_belgium_italy_comeback/04_w.jpg
+      - text: 守護神ドンナルンマは81分に警告を受け、次の代表戦は出場停止です。
+        image: assets/images/20261116_belgium_italy_comeback/02_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861176
+      - https://football-italia.net/unl-belgium-4-1-italy-azzurri-crash-back-earth/

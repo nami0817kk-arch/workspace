@@ -1,0 +1,145 @@
+# 取材メモ（2026年11月25日）セルティックのヤン・ヒョンジュンが、イプスウィッチへ移った前田大然を語った（ニュースのショート。見せ方 Y＝語り手ヤンの一言から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールゾーン 2026-11-24 18:10「韓国代表MF、日本代表の移籍に本音「本当に寂しい」 “助け”に感謝「多くを学んだよ」」（全文） https://www.football-zone.net/archives/686965
+#   → 元はデイリー・レコード。主写真は「PA Images/アフロ」なので使わない。
+# 元の記事（原文。全文を読んだ）:
+#   デイリー・レコード 2026-11-23 06:00（Michael Gannon）「Yang rues Asian Games injury that kept him out of Celtic run-in but says he can't complain about added 'bonus'」
+#   https://www.dailyrecord.co.uk/sport/football/football-news/yang-rues-asian-games-injury-37903510
+#     "I think there is still more improvement to come. I learned a lot from the players here – especially Daizen. He's an amazing guy. Do I miss him? No! I'm joking, of course. I do miss him. He's a really nice guy and he was a big help for me."
+#     （地の文）前田は "running machine"、ピッチの外では仲のいい友人（"a pal off the pitch and an inspiration on it"）。ヤンは英語で取材を受けたのは初めて（"did his interview in English for the first time"）。
+#     "It's easier now I can speak English. It's not perfect – maybe 70 percent!" / "I was really happy to sign my new contract because I wanted to stay here."
+#     週末のセント・ミレン戦で復帰（ヤンのクロスからオックスレイド＝チェンバレンの先制点）。アジア大会でハムストリングを痛め、韓国は決勝で日本を破って初優勝、兵役が免除。
+#   セルティック・ウェイ（ヘラルド系、同じ取材の言葉。照合用）: https://www.celticway.co.uk/interviews/26751392.key-factors-behind-yangs-celtic-rise-bonus-grateful/
+#     同じ言葉を確認。地の文「前田は7月にイプスウィッチへ移った（departed for Ipswich Town back in July）」「ヤンはセルティック4年目、2023年夏に加入」「新契約は2030年夏まで」。セント・ミレン戦は4-1。
+#   → 台本の言葉は、この英語を私が日本語にしたもの。フットボールゾーンの訳の語順はなぞっていない。
+# 前田の今季（ESPN eng.1 の試合データ、site.api.espn.com summary の rosters と keyEvents。11/25 取得）:
+#   イプスウィッチのリーグ戦11試合すべてに出場（先発7・途中出場4）。得点は1（10/17 マンチェスター・シティ戦 21分、event=401879259）。
+#     08/22 サンダーランド 先発（80分交代）／08/30 マンU 先発（73分）／09/04 リヴァプール 先発（66分）／09/12 パレス 途中（63分から）／09/19 エヴァートン 途中（74分から）／
+#     10/10 フラム 先発（81分）／10/17 シティ 先発・21分に得点（71分）／10/23 フォレスト 途中（73分から）／10/31 ハル 途中（70分から）／11/08 ボーンマス 先発（65分）／11/21 トッテナム 先発（56分交代、0-2で敗戦 event=401878754）
+#   ESPN 順位表（11/25 取得）: イプスウィッチ 11試合 勝ち点11 16位。
+# 食い違い: フットボールゾーンは兵役を「18か月」、セルティック・ウェイは「21-month period」。デイリー・レコードは「18-month」。→ 兵役の期間は題から離れるので台本では言わない。
+#   フットボールゾーンの訳「恋しいかって？ いや！」は原文 "Do I miss him? No!" と合う。
+# 前の本との重なり: 20261018（初ゴールの本人のSNS）・20261019（現地の評価）・20261021（監督の使い方）・20261024（フォレスト戦の役割）・20261113（「チャンスの数は桁が違う」）。
+#   今回の初出: 元同僚ヤンの言葉（セルティックでの前田の姿）と、今季11試合の出場の内訳（先発7・途中4）。初ゴールの中身・監督の使い方は繰り返さない。シティ戦の得点は「1点」と数だけ。
+# 【言わないこと】兵役の期間／ヤンのアジア大会の負傷の細部（題から離れる）／前田とヤンの私生活／トッテナム戦の前田の評価（現地のワースト評価の記事は使わない）。
+# 写真（目で見た。assets/images/20261125_maeda_yang_miss/_pool.png）:
+#   02＝前田（日本代表の練習着。サッカーキング 2227147 の本文写真、代理店の表記なし）
+#   06＝ヤン（Commons「Celtic-20240722-062 (cropped)」CC BY-SA 4.0 Hameltion、2024-07 セルティックの公開練習）
+#   07・08＝前田（Commons「Celtic-20240722-018 (cropped)」「Celtic-20240722-027」同じ公開練習、CC BY-SA 4.0 Hameltion）
+#   _pair/01＝ヤン（左）＋前田（右）を並べた1枚（tools/pairphoto.py）
+#   外したもの: ゲキサカの海外の前田の写真3枚（461665・461262・461279）は画像の右下に「©Getty Images」が焼き込まれていた。
+#     サッカーキング get20261010（ファイル名が Getty の形・写っていたのは別の選手）、トッテナムの選手の写真、セルティック・ウェイ（Shutterstock）とデイリー・レコード（SNS Group）のヤンの写真。
+#   イプスウィッチ姿の前田で代理店でない写真は見つからなかった（セルティック時代と代表の写真で組んだ）。
+# 次の試合: ESPN scoreboard 2026-11-28 17:30Z イプスウィッチ対アストン・ヴィラ（ホーム、event=401878752）。日本時間では29日の未明。
+#   自分で数えたもの: 先発7試合の交代の時間は 80・73・66・81・71・65・56分。先発で最後まで出た試合はまだ無い。
+# 本人の言葉: 題の人物（前田）の言葉は無し。語り手ヤン・ヒョンジュンの言葉（原文あり）を冒頭に使う → Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [前田大然, ヤン・ヒョンジュン, イプスウィッチ, セルティック]
+
+short_style: Y
+short_hook_quote: 寂しいかって？
+short_photos:
+  - assets/images/20261125_maeda_yang_miss_pair/01_v.jpg
+  - assets/images/20261125_maeda_yang_miss/07_v.jpg
+  - assets/images/20261125_maeda_yang_miss/02_v.jpg
+  - assets/images/20261125_maeda_yang_miss/08_v.jpg
+short_question: 前田大然とヤン・ヒョンジュン、また同じピッチで見たいと思いますか。
+short_telops: []
+
+theme:
+  id: maeda_yang_miss
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 前田大然がいなくて寂しいか。セルティックの元同僚ヤン・ヒョンジュンの答え
+  hook: ""
+  question: セルティックの元同僚は、イプスウィッチへ移った前田大然をどう語ったのか
+  takeaway: 前田はイプスウィッチでリーグ戦11試合すべてに出場（先発7・途中4）。先発7試合はどれも56〜81分で交代していて、90分を任された試合はまだ無い
+
+thumbnail:
+  layout: versus
+  names: [ヤン・ヒョンジュン, 前田大然]
+  line1: 前田大然とヤン・ヒョンジュン
+  line2: 寂しいか？の答え
+  tags: [前田大然, セルティック]
+  photos:
+    - assets/images/20261125_maeda_yang_miss/06.jpg
+    - assets/images/20261125_maeda_yang_miss/07.jpg
+  short_photo: assets/images/20261125_maeda_yang_miss/06_v.jpg
+
+answer: 冗談で「いや」と言ってから、本当に寂しい、大きな助けだったと答えた
+watch: 28日のアストン・ヴィラ戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: ヤン・ヒョンジュンが語った、前田大然のこと
+    tier: 報道
+    telop: ヤン・ヒョンジュン「本当に寂しい」
+    say:
+      - text: セルティックのヤンが、イプスウィッチへ移った前田大然を語りました。
+      - voice: ヤン・ヒョンジュン
+        text: ここの選手たちから、多くを学びました。
+      - voice: ヤン・ヒョンジュン
+        text: 特にダイゼンからです。
+        cont: true
+      - voice: ヤン・ヒョンジュン
+        text: 彼は最高の男です。
+        cont: true
+      - voice: ヤン・ヒョンジュン
+        text: 寂しいかって？　いや！　…もちろん冗談ですよ。
+        emph: true
+      - voice: ヤン・ヒョンジュン
+        text: 本当に寂しいです。
+        cont: true
+        image: assets/images/20261125_maeda_yang_miss_pair/01.jpg
+      - voice: ヤン・ヒョンジュン
+        text: すごくいいやつで、僕の大きな助けになってくれました。
+        cont: true
+      - text: ヤンにとって前田は、ピッチの外では仲のいい友人、ピッチの上ではお手本だった、と伝えられています。
+        image: assets/images/20261125_maeda_yang_miss/08_w.jpg
+    official: false
+    quotes_from: [デイリー・レコード]
+    sources:
+      - https://www.dailyrecord.co.uk/sport/football/football-news/yang-rues-asian-games-injury-37903510
+      - https://www.celticway.co.uk/interviews/26751392.key-factors-behind-yangs-celtic-rise-bonus-grateful/
+      - https://www.football-zone.net/archives/686965
+  - id: now
+    heading: イプスウィッチでの前田大然の今季
+    tier: 報道
+    telop: 前田大然 リーグ戦11試合すべてに出場
+    say:
+      - text: その前田は今季、プレミアリーグに上がってきたイプスウィッチでプレーしています。
+        image: assets/images/20261125_maeda_yang_miss/02_w.jpg
+      - text: 前田はリーグ戦11試合すべてに出場。得点は、10月のマンチェスター・シティ戦の1点です。
+        card: {type: table, title: 前田大然 イプスウィッチでのリーグ戦, columns: [項目, 数], rows: [[出場, 11試合（全試合）], [先発, 7試合], [途中出場, 4試合], [得点, 1]], highlight_row: 0}
+      - text: チームは11試合で勝ち点11、20チーム中の16位。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/_/id/373/ipswich-town
+      - https://www.espn.com/soccer/match/_/gameId/401879259
+      - https://www.espn.com/soccer/match/_/gameId/401878754
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+  - id: view
+    viewpoint: true
+    heading: 先発した7試合で、前田は何分までピッチにいたか
+    tier: 背景
+    telop: 先発7試合の交代 56分〜81分
+    say:
+      - text: 見立てです。前田が先発した7試合を並べると、いちばん長くピッチに立ったのは81分。
+        image: assets/images/20261125_maeda_yang_miss/02_w.jpg
+        card: {type: table, title: 前田大然 先発した試合と交代の時間, columns: [相手, 交代], rows: [[サンダーランド, 80分], [マンU, 73分], [リヴァプール, 66分], [フラム, 81分], [マンチェスター・C, 71分], [ボーンマス, 65分], [トッテナム, 56分]], highlight_row: 6}
+      - text: 直近のトッテナム戦は、試合開始から56分でベンチへ下がりました。
+      - text: 先発で90分を任された試合は、まだありません。
+        emph: true
+      - text: 次は28日、ホームでのアストン・ヴィラ戦です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/_/id/373/ipswich-town
+      - https://www.espn.com/soccer/match/_/gameId/401878752

@@ -1,0 +1,163 @@
+# 取材メモ（2026年11月24日）リヴァプールのヴィルツがマンU戦で決めた一撃。キャラガーが「今季のベストゴールの一つ」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 担当 a（宮代大聖・ラス・パルマス）は作らなかった: ゲキサカ 463731 の本文が「スペイン2部第15節 ヒホン 0-2 ラス・パルマス」。1部ではないため b に切り替えた。
+# 題材の元: Sky Sports の Liverpool ライブブログ（13025501。ページ埋め込みの LiveBlogPosting の本文を requests で全文読んだ）
+#   ・2026-11-23 20:51「Carra: Wirtz's volley vs Man Utd 'one of the goals of the season'」（Monday Night Football でのキャラガー）原文:
+#     "I just thought the cross had come in and he just volleyed it in with his left foot, and then you see the replays and the crowd's going wild."
+#     "I've come in this morning, and I think it's one of the goals of the season when I look at what Florian Wirtz has done."
+#     "Almost the biggest compliment I can give him, it feels like a goal Dennis Bergkamp would have scored or Gianfranco Zola - two of the absolute greats of foreign imports we've had in the Premier League."
+#     "What I find remarkable with this goal is when you volley a ball, you follow the ball the way you're going. He actually pirouettes the opposite way, which I can't quite understand, but it looks fantastic."
+#     "That is the best Florian Wirtz has been in a Liverpool shirt by a country mile since he came to the club."
+#     "Now, do I expect him to play like that every week? No." ／ "People think I've got a problem with him - I haven't! I'm desperate for the lad to do well, but that's what you pay big money for."
+#     本文: Wirtz was named man of the match ／ £116m ／ 23-year-old ／ strong criticism of the 23-year-old's previous performances this season
+#   ・2026-11-22 18:50「Carra praises 'outstanding' Wirtz who admits he 'feels very good'」:
+#     キャラガー（中継の解説）"I've been critical of him, but he has been outstanding." "This is why they spent the money on him."
+#     ヴィルツ本人（Sky Sports に）"I feel very good, but I think it's also because the team has just developed and gets better. Being part of this, you also get better. I'm enjoying this."
+#     本文: The German created 10 chances in open play for Liverpool, the most by a player in a Premier League match since Manchester City's David Silva against West Brom in March 2015 (11).
+#           five goals in his last four games for club and country（代表でクロップ監督のもと2試合3得点）
+# Sky Sports 記事 2026-11-23 09:01 UTC（13615535）: パレス戦で今季初ゴール、アンフィールドで次のゴール（"brilliantly flicking in a quickfire second"）。ヴィルツの言葉は上と同じ。
+#   Carragher（8月）: イサクとヴィルツ（合わせて£240m）を含む補強を "arguably the worst transfer window..." と言っていた。
+# ESPN の試合データ（site.api.espn.com summary eng.1 event=401878755、2026-11-22 16:30 UTC、アンフィールド）:
+#   リバプール 4-0 マンU。8分 ヨロ（マンU）退場／10分 ソボスライ（FK）／13分 ヴィルツ（左足・至近距離、アシスト ングモハ）／66分 ングモハ（アシスト バルコラ）／82分 ムニョス（アシスト ヴィルツのスルーパス）。
+#   ヴィルツ: 1得点1アシスト、シュート2本・枠内1本。
+# ESPN 順位表（eng.1、11/24 取得）: 4位 リバプール 11試合 6勝3分2敗 勝ち点21（1位アーセナル 28）。
+# ESPN 日程: CL 2026-11-25 20:00 UTC 敵地クラブ・ブルージュ戦（日本時間 26日 5時）／リーグ 11/29 12:00 UTC 敵地エヴァートン戦。
+# 食い違い（気をつけた点）:
+#   ・ゴールの形: キャラガーとライブブログは「左足のボレー」、ESPN は「左足・至近距離のシュート」、Sky の記事は "flicking in"。→ 「左足で合わせた」とし、ボレーはキャラガーの言葉として出す。
+#   ・"one of the goals of the season" は「今季のベストゴールの一つ」と訳す（依頼文どおり）。
+#   ・台本のキャラガーとヴィルツの言葉はすべて英語の原文を私が日本語にした訳。
+# 前の本との重なり: 11/23 の 20261123_bruno_painful_19th（同じ試合。ブルーノの言葉・ヨロの退場・19位が軸）。
+#   → こちらはヴィルツの一撃とキャラガーの評が軸。退場は「8分から10人」の一言だけ。ブルーノ・19位・判定には触れない。
+#   20261014_iraola_wirtz（キャラガーが「ヴィルツは外れるべき」と言った回）とは続き。
+# 【言わないこと】ブルーノ・マンUの順位・ヨロの判定／移籍金の是非／ベルカンプ・ゾラの説明を長くしない。
+# 本人の言葉: あり（ヴィルツ。Sky Sports）。Y。
+# 写真: 02＝Commons「Florian Wirtz 04012026 (3) (extracted)」CC0/Timmy96（2026-01-04 フラム戦のリバプールのジャージ。20261117_germany_netherlands_wirtz/01 から写した）、03・04＝Commons Bryan Berlin CC BY-SA 4.0（2026-06-25 エクアドル対ドイツ）、
+#   01＝Commons 2022 レバークーゼン（使わない）、carragher/01＝Commons 2014 Ludovic Péron CC BY-SA 3.0、pair/01＝キャラガー（左）＋ヴィルツ02（右）。
+#   photopool は候補0枚（Sky Sports は放送局、ESPN 等の写真は代理店）→ 記事の写真は使っていない。_pool.png を目で見た: 4枚とも本人、透かしなし。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [ヴィルツ, キャラガー, リバプール, マンチェスター・ユナイテッド, ングモハ, ムニョス]
+
+short_style: Y
+short_hook_quote: すごくいい感じです。楽しんでいます。
+short_photos:
+  - assets/images/20261124_wirtz_manutd_finish/02_v.jpg
+  - assets/images/20261124_wirtz_manutd_finish/pair/01_v.jpg
+  - assets/images/20261124_wirtz_manutd_finish/03_v.jpg
+  - assets/images/20261124_wirtz_manutd_finish/04_v.jpg
+short_question: ヴィルツは、この調子をシーズンの最後まで続けられると思いますか。
+short_telops: []
+
+theme:
+  id: wirtz_manutd_finish
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ヴィルツのマンU戦の一撃を、辛口のキャラガーが絶賛した理由
+  hook: ""
+  question: ヴィルツがマンU戦で決めたゴールを、キャラガーはなぜここまで褒めたのか
+  takeaway: 左足で合わせながら体は逆に回る一撃に、キャラガーは「ベルカンプやゾラのよう」。1得点1アシストで試合の最優秀選手になり、10回のチャンスを作った
+
+thumbnail:
+  layout: face
+  line1: ヴィルツの一撃にキャラガー
+  line2: 今季のベストゴール級
+  tags: [ヴィルツ, リバプール]
+  photo: assets/images/20261124_wirtz_manutd_finish/04_w.jpg
+  short_photo: assets/images/20261124_wirtz_manutd_finish/02_v.jpg
+
+answer: ボレーなのに体はボールと逆へ回る即興。キャラガーは「ベルカンプやゾラが決めそうなゴール」と言った
+watch: 25日のクラブ・ブルージュ戦（日本時間26日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: マンU戦の一撃。ヴィルツ本人と、キャラガーが語ったこと
+    tier: 報道
+    telop: ヴィルツ「すごくいい感じ。楽しんでいる」
+    say:
+      - voice: ヴィルツ
+        text: すごくいい感じです。楽しんでいます。
+        emph: true
+      - text: リバプールのヴィルツが、マンU戦のあとに話した言葉です。
+        short_only: true
+      - text: 22日、リバプールはホームでマンUに4対0で勝ちました。
+      - text: 13分の2点目を決めたのが、ヴィルツです。
+      - text: ングモハのクロスを、地面に落ちる前に左足で合わせました。
+      - text: この一撃を、元リバプールのキャラガーは翌日、こう評しています。
+        image: assets/images/20261124_wirtz_manutd_finish/pair/01.jpg
+      - voice: キャラガー
+        text: 今季のベストゴールの一つだと思う。
+        emph: true
+      - voice: キャラガー
+        text: ボレーは普通、ボールの行く方向へ体が流れる。
+        image: assets/images/20261124_wirtz_manutd_finish/carragher/01_w.jpg
+      - voice: キャラガー
+        text: 彼は逆の方向にくるっと回っている。
+        image: assets/images/20261124_wirtz_manutd_finish/pair/01.jpg
+        cont: true
+      - voice: キャラガー
+        text: ベルカンプやゾラが決めそうなゴールだ。
+        image: assets/images/20261124_wirtz_manutd_finish/carragher/01_w.jpg
+      - text: どちらも、プレミアリーグの歴史に残る海外出身の名手です。
+        image: assets/images/20261124_wirtz_manutd_finish/04_w.jpg
+      - text: ヴィルツ本人は、自分の調子をチームのおかげだと話しました。
+        image: assets/images/20261124_wirtz_manutd_finish/02_w.jpg
+      - voice: ヴィルツ
+        text: チームが成長して、良くなっているからだと思います。
+      - voice: ヴィルツ
+        text: その中にいれば、自分も良くなれます。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/live-blog/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.skysports.com/football/news/11661/13615535/liverpools-attack-shows-its-devastating-potential-as-florian-wirtz-steps-up-in-thumping-win-over-10-man-man-utd
+      - https://www.espn.com/soccer/match/_/gameId/401878755
+  - id: game
+    heading: 1得点1アシスト。ヴィルツがマンU戦で残した数字
+    tier: 報道
+    telop: ヴィルツ 1得点1アシスト・チャンス10回
+    say:
+      - text: 82分には、ヴィルツのスルーパスからムニョスが4点目。
+        image: assets/images/20261124_wirtz_manutd_finish/04_w.jpg
+        card: {type: table, title: リバプール 4-0 マンU, columns: [分, 得点], rows: [[10分, ソボスライ（FK）], [13分, ヴィルツ], [66分, ングモハ], [82分, ムニョス（アシスト ヴィルツ）]], highlight_row: 1}
+      - text: 流れの中で作ったチャンスは10回。
+        card: {type: stats, title: ヴィルツ マンU戦, items: [[1, 得点, ], [1, アシスト, ], [10, 回, 流れの中で作ったチャンス]], focus: 2}
+      - text: プレミアでは、2015年のダビド・シルバの11回以来の多さです。
+      - text: 試合の最優秀選手にも選ばれました。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401878755
+      - https://www.skysports.com/football/live-blog/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+  - id: view
+    viewpoint: true
+    heading: ヴィルツに厳しかったキャラガーは、何を変えたのか
+    tier: 背景
+    telop: 厳しかったキャラガーが「ここまでで一番」
+    say:
+      - text: 見立てです。キャラガーは今季、ヴィルツの出来を強く批判してきました。
+        image: assets/images/20261124_wirtz_manutd_finish/pair/01.jpg
+      - text: その彼が、試合中の解説でこう言い直しています。
+      - voice: キャラガー
+        text: 彼には厳しいことを言ってきた。でも、今日は見事だった。
+      - text: 翌日には、さらにこう続けました。
+      - voice: キャラガー
+        text: リバプールに来てから、断トツでいちばんの出来だ。
+      - voice: キャラガー
+        text: 毎週あのプレーができると思っているわけではない。
+        cont: true
+        image: assets/images/20261124_wirtz_manutd_finish/04_w.jpg
+      - text: ヴィルツは代表戦を含めて、直近4試合で5ゴール。
+      - text: リバプールはリーグ4位。次は25日のチャンピオンズリーグ。
+      - text: 敵地で、ベルギーのクラブ・ブルージュと戦います。
+      - text: 日本時間では、26日の午前5時キックオフ。
+    official: false
+    sources:
+      - https://www.skysports.com/football/live-blog/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.skysports.com/football/news/11661/13615535/liverpools-attack-shows-its-devastating-potential-as-florian-wirtz-steps-up-in-thumping-win-over-10-man-man-utd
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/teams/364/schedule?fixture=true

@@ -1,0 +1,74 @@
+title: 11月23日のショート題材
+lead: 海外フィード約280件から10件をClaudeが選びました（日本人6件・海外4件）。取材で前提が崩れたら次点に差し替えます。
+note: 月曜（23日）の朝7時に集めました。見出しからの選定。次点：鈴木彩艶のレアル関心、塩貝健人の負傷、鈴木唯人と後藤啓介、ムシアラとオリーズ。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 鈴木彩艶がヴィラ移籍の裏側を本人が語る「簡単な決断だった」「監督とは直接話していなかった」
+  why: スカイスポーツの動画（11/21）。条件：代表GK・本人の言葉→Y。重なり：11/20 の2027年の11人とは別の話。
+  src: Sky Sports / football-tribe（11/22）
+  url: https://football-tribe.com/japan/2026/11/22/361593/
+  fmt: quote
+- num: 2
+  slot: 日本人（代表）
+  head: 久保建英、途中出場もソシエダは昇格組ラシンに2-3で敗戦。スペイン紙は辛らつな評価
+  why: 11/22。条件：大物・久保。重なり：11/21 の移籍金の話とは別。
+  src: サッカーキング / フットボールチャンネル（11/23）
+  url: https://www.soccer-king.jp/news/world/esp/20261123/2230345.html
+  fmt: news
+- num: 3
+  slot: 日本人（代表）
+  head: 毎熊晟矢、加入3季目で待望のリーグ戦初ゴール。途中出場5分で右足ダイレクトボレー、AZは4位浮上
+  why: 11/22。条件：代表DF・初ゴール（記録）。
+  src: フットボールチャンネル（11/23）
+  url: https://www.footballchannel.jp/2026/11/23/post1058698/
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 大岩ジャパンにスペイン人コーチ入閣へ。技術委員長が渡米して接触
+  why: 日本代表・W杯後の新体制。元の報道機関まで辿る（まとめサイト経由の見出し）。
+  src: 報道（11/22-23）
+  url: https://footballnet.2chblog.jp/archives/60146726.html
+  fmt: news
+- num: 5
+  slot: 日本人（代表）
+  head: 堂安律の年俸はフランクフルトで2位タイ。ボーナス込みで最大10億円超えの報道
+  why: 代表・数字。元の報道機関（ドイツ紙）まで辿る。
+  src: 報道（11/22）
+  url: https://footballnet.2chblog.jp/archives/60146715.html
+  fmt: news
+- num: 6
+  slot: 日本人（代表）
+  head: 三笘薫の復帰は「あと1、2週間」。守田との元川崎F対決は2人とも欠場でお預け、ブライトンは10人のハルに敗戦
+  why: 代表・監督の言葉。
+  src: ゲキサカ（11/22）
+  url: https://web.gekisaka.jp/news/world/detail/?463696-463696-fl
+  fmt: news
+- num: 7
+  slot: 海外
+  head: ブルーノ「とても痛い」。ポチェッティーノ初陣のマンUはリバプールに敗れ19位
+  why: 18媒体。条件：大物・本人の言葉→Y。
+  src: ESPN / A Bola（11/22）
+  url: https://www.abola.pt/noticias/bruno-fernandes-reage-ao-19o-lugar-do-man-united-e-muito-doloroso-2026112219551696166
+  fmt: quote
+- num: 8
+  slot: 海外
+  head: バルサが0-2から逆転でビジャレアルに3-2。ヤマルはエムバペに続きPK失敗
+  why: 9媒体。条件：大物（ヤマル）。重なり：11/22 のエムバペのPKは別の試合。
+  src: ESPN / Foot Mercato（11/22）
+  url: https://www.espn.com/soccer/story/_/id/50562953/barcelona-villarreal-la-liga-hansi-flick-refereeing
+  fmt: news
+- num: 9
+  slot: 海外
+  head: アタランタ対インターは4-4。ケシエが90+1分に同点弾
+  why: 15媒体。点の取り合い（記録になりうる）。
+  src: kicker / ESPN（11/22）
+  url: https://www.kicker.de/atalanta-inter-tor-zum-4-4-durch-kessi-in-der-90-1-minute-1274089/video#omrss
+  fmt: news
+- num: 10
+  slot: 海外
+  head: デ・ゼルビがトッテナムの10代ウィリアムズ＝バーネットをヤマルと比べる
+  why: 監督の言葉・ヤマルの名前。
+  src: Sky Sports（11/22）
+  url: https://www.skysports.com/football/news/11661/13615058/luca-williams-barnett-tottenham-boss-roberto-de-zerbi-compares-teenager-to-lamine-yamal-after-ipswich-heroics
+  fmt: news

@@ -1,0 +1,144 @@
+# 取材メモ（2026年11月26日）堂安律のボール奪取が決勝点の起点に。クラブが専用の動画で取り上げ、本人は会見で「数字はうそをつかない。でも監督は守備も見ている」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 追記（親・書き出し後）: qc で同じ堂安の写真が続く停滞（10秒）が出たので、11/18 の回のゲキサカ自社写真（代表、463135）を04として足し、image: を3か所足した。
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元: Football ZONE 687075（11/25 11:30、全文）「堂安律のボール奪取『専用動画が必要だ』　クラブ公式が異例の注目」 https://www.football-zone.net/archives/687075
+#   第10節ホッフェンハイム戦 1-0。前半25分、右からのカウンター、クナウフの折り返しをブルカルトが決めた。きっかけは堂安が中盤で体を張ってボールを奪ったこと。クラブが公式Xで複数の角度の映像を出した。
+# クラブ公式 X（@Eintracht、2026-11-23、Football ZONE の2ページ目に埋め込み）: "Diese Doan-Balleroberung verdient ein eigenes Video! 🎞️ #SGE" https://x.com/Eintracht/status/2124911727812759788
+#   → 「この堂安のボール奪取には、専用の動画がふさわしい」と私が日本語にした。
+# クラブ公式の試合記事（profis.eintracht.de「Burkardt und Atubolu entscheidend」、ドイツ語、全文）:
+#   "Nach einem Ballgewinn von Ritsu Doan kam das Spielgerät über Knauff zur Frankfurter Nummer neun, die den Ball im linken Eck versenkte."（25分）
+#   41分 アトゥボルがクラマリッチのPKを止める／44分 バウマンがブルカルトのPKを止める。ヒュッター監督はホッフェンハイムに7戦7勝。クラブのブンデス通算500回目のホーム勝利。
+#   https://profis.eintracht.de/news/burkardt-und-atubolu-entscheiden-180516/
+# ESPN の試合データ（site.api.espn.com ger.1 summary event=401884734、2026-11-21 14:30 UTC）: フランクフルト 1-0 ホッフェンハイム。
+#   25分 ブルカルト（右足、エリア右から左下）、アシスト クナウフ。堂安は先発・交代なし（フル出場）。シュート フランクフルト21本（枠内6）、ボール保持 フランクフルト 41.5%。90+3分 カバク（ホッフェンハイム）退場。
+# 本人の言葉（クラブ公式「„Habe an dieser neuen Rolle sehr viel Freude"」2026-11-25 の会見、ドイツ語の書き起こし、全文を読んだ）:
+#   "Ich fokussiere mich voll auf meine Rolle – mehr im Zentrum als auf der Außenbahn. Von Spiel zu Spiel sammle ich Erfahrung, ich habe an dieser neuen Rolle sehr viel Freude.
+#    Zahlen lügen nicht, ich will mehr Tore erzielen beziehungsweise daran beteiligt sein. Der Trainer sieht aber auch die Zahlen abseits von Toren und Assists, wie man nach hinten arbeitet und was das Abwehrverhalten angeht. Dahingehend fühle ich mich bestätigt."
+#   "… das was der Trainer sagt, steht für mich an erster Stelle."
+#   https://profis.eintracht.de/news/habe-an-dieser-neuen-rolle-sehr-viel-freude-pressekonferenz-ritsu-doan-180605/
+#   Frankfurter Rundschau（Yahoo DE 転載、11/25）の書き起こしも同じ趣旨（"Zahlen lügen ja nicht. … Das hat Vorrang."）。言い回しが少し違うので、台本はクラブ公式の版を訳した。
+#   → 台本の言葉は、このドイツ語を私が日本語にしたもの。
+# 自分で数えたもの（ESPN の試合データ9試合ぶん）: 今季リーグ戦、堂安は出場9試合すべて先発。ゴール0・アシスト1（第? 節 フライブルク戦 9/19）。
+#   FR の地の文「732分で1アシスト」と一致（分は ESPN で数えていないので使わない）。
+# ESPN 日程: 次は 2026-11-28 17:30 UTC（日本時間29日 2時30分）敵地のシュトゥットガルト戦。
+# 前の本との重なり: 20261123_doan_salary_second（基本給）。今回はボール奪取と会見の言葉で初出。サウジの話（会見で出た）は題から離れるので使わない。
+# 【言わないこと】サウジからの誘い・家族の話（題から離れる）／出場分数（ESPN で数えていない）／ファンの声（Football ZONE が拾ったものは原文を当たれていない）。
+# 本人の言葉: あり → Y。
+# 写真: 3枚（すべてクラブ公式 media.eintracht.de）。01＝ホッフェンハイム戦の堂安（会見記事の主写真）、02＝今季アウクスブルク戦（9/6）の堂安、03＝ホッフェンハイム戦の決勝点のあと（左に堂安・右に9番ブルカルト。堂安は小さい）。
+#   2026-11-26 追記（下請け）: 01〜03 はクラブのサーバーの元の大きさ（6000x4000・3335x5000・4373x6557）で取り直した（1100px だとショートで2倍超に伸びた）。03_v は下の6割を手で切った（堂安と9番ブルカルト）。
+#   _pool.png を目で見た。外したもの: クラブ X の動画の1コマ（放送映像の静止画＝使わない）、FR の主写真（picture alliance/dpa の配信＝代理店）、Football ZONE の主写真（アフロ）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [堂安律, フランクフルト, ホッフェンハイム, ヒュッター監督, ブルカルト, クナウフ]
+
+short_style: Y
+short_hook_quote: 数字は、うそをつきません。
+short_question: 堂安律は、守備の仕事を続けながら、ゴールも取り戻せると思いますか。
+short_photos:
+  - assets/images/20261126_doan_ballwin_club/01_v.jpg
+  - assets/images/20261126_doan_ballwin_club/02_v.jpg
+  - assets/images/20261126_doan_ballwin_club/03_v.jpg
+short_telops: []
+
+theme:
+  id: doan_ballwin_club
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: 堂安律の奪ったボールが決勝点に。クラブが専用の動画を出した守備と、本人の答え
+  hook: ""
+  question: 決勝点のきっかけを作った堂安律は、いまの役割をどう語ったのか
+  takeaway: 前半25分、堂安が中盤で奪ったボールから決勝点が生まれ、クラブは専用の動画で取り上げた。今季のリーグ戦はゴール0・アシスト1。本人は「数字はうそをつかない」と認めたうえで、監督が見ているのは守備も含めた数字だと話した
+
+thumbnail:
+  layout: face
+  line1: 堂安律 決勝点の起点
+  line2: 数字はうそをつかない
+  tags: [堂安律, フランクフルト]
+  photo: assets/images/20261126_doan_ballwin_club/01_w.jpg
+  short_photo: assets/images/20261126_doan_ballwin_club/01_v.jpg
+
+answer: 点を取りたい気持ちはある。でも監督の言うことが先で、守備の働きは認められていると感じている
+watch: 日本時間29日、敵地のシュトゥットガルト戦
+
+sections:
+  - id: what
+    main: true
+    heading: 決勝点のきっかけになった堂安律は、いまの役割をどう語ったのか
+    tier: 報道
+    telop: 堂安律「数字は、うそをつきません」
+    say:
+      - text: 決勝点のきっかけを作った堂安律。今季まだゴールが無いことに、こう答えました。
+      - voice: 堂安律
+        text: 数字は、うそをつきません。
+        emph: true
+      - voice: 堂安律
+        text: もっと点を取りたいし、点に絡みたい。
+        cont: true
+      - voice: 堂安律
+        text: でも監督は、ゴールやアシスト以外の数字も見ています。
+        image: assets/images/20261126_doan_ballwin_club/04_w.jpg
+      - voice: 堂安律
+        text: 後ろに戻って守る動きや、守備のふるまいです。
+        cont: true
+      - voice: 堂安律
+        text: その点では、認められていると感じています。
+        cont: true
+      - text: その守備が、21日のホッフェンハイム戦で決勝点を生みました。
+        image: assets/images/20261126_doan_ballwin_club/02_w.jpg
+      - text: 前半25分。堂安が中盤で体を張って、相手からボールを奪います。
+      - text: そこから速攻。味方のクナウフがゴール前へパスを送り、ブルカルトが決めました。
+        emph: true
+        image: assets/images/20261126_doan_ballwin_club/03_w.jpg
+      - text: このゴールを守り切り、フランクフルトは1対0で勝ちました。
+      - text: クラブは「このボール奪取には、専用の動画がふさわしい」と投稿しました。
+        image: assets/images/20261126_doan_ballwin_club/01_w.jpg
+    official: true
+    sources:
+      - https://profis.eintracht.de/news/habe-an-dieser-neuen-rolle-sehr-viel-freude-pressekonferenz-ritsu-doan-180605/
+      - https://profis.eintracht.de/news/burkardt-und-atubolu-entscheiden-180516/
+      - https://x.com/Eintracht/status/2124911727812759788
+      - https://www.espn.com/soccer/match/_/gameId/401884734
+      - https://www.football-zone.net/archives/687075
+  - id: role
+    heading: 中央寄りの新しい役割を、堂安はどう受け止めているのか
+    tier: 報道
+    telop: 堂安律「監督の言うことが、いちばん先です」
+    say:
+      - text: いまの堂安は、サイドよりも中央寄りでプレーしています。
+        image: assets/images/20261126_doan_ballwin_club/04_w.jpg
+      - voice: 堂安律
+        text: 試合ごとに経験を積んでいます。
+      - voice: 堂安律
+        text: この新しい役割が、とても楽しいです。
+        cont: true
+      - voice: 堂安律
+        text: 期待は分かります。
+        image: assets/images/20261126_doan_ballwin_club/03_w.jpg
+      - voice: 堂安律
+        text: でも、監督の言うことが、僕にとっていちばん先です。
+        cont: true
+    official: true
+    sources:
+      - https://profis.eintracht.de/news/habe-an-dieser-neuen-rolle-sehr-viel-freude-pressekonferenz-ritsu-doan-180605/
+      - https://www.fr.de/eintracht-frankfurt/warum-doan-dem-weg-von-eintracht-trainer-huetter-folgt-94608035.html
+  - id: view
+    viewpoint: true
+    heading: 9試合で1アシスト。それでも堂安が先発を外れないのはなぜか
+    tier: 報道
+    telop: 今季のリーグ戦 9試合すべて先発、ゴール0・アシスト1
+    say:
+      - text: 見立てです。今季のリーグ戦、堂安律は出た9試合すべてで先発しています。
+        card: {type: stats, title: 堂安律 今季のリーグ戦, items: [[9, 試合, 先発], [0, 点, ゴール], [1, 本, アシスト]], focus: 0}
+        emph: true
+      - text: ゴールは0、アシストは1。攻めの数字は、まだ伸びていません。
+      - text: それでも堂安が先発を外れないのは、点にならない仕事を任されているから。
+        card: none
+      - text: 次は日本時間29日、敵地でのシュトゥットガルト戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884734
+      - https://www.fr.de/eintracht-frankfurt/warum-doan-dem-weg-von-eintracht-trainer-huetter-folgt-94608035.html

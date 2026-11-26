@@ -1,0 +1,178 @@
+# 取材メモ（2026年11月26日）CL第5節 クラブ・ブルージュ 0-3 リバプール。イサクが13分と82分に2得点（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-26。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915292、2026-11-25 20:00 UTC、クラブ・ブルージュのホーム）: クラブ・ブルージュ 0-3 リバプール。
+#   13分 イサク（右足、エリア中央から左下隅、アシスト ソボスライ）／79分 ヴィルツ（右足、エリアの外から左下隅、アシスト ングモハ、速攻）／82分 イサク（右足、エリア中央からゴール中央、アシスト アリソン、速攻）。
+#   イサクは先発、86分にクマスと交代。ムニョスが38分に負傷し42分にングモハと交代。ファン・ダイクは控えで73分から。
+#   シュート: ブルージュ17本（枠内5）、リバプール13本（枠内4）。ボール保持 ブルージュ 53.5%。
+# ESPN の CL 順位表（同じ summary の standings、11/26 取得。36チームとも5試合消化）: リバプール 4勝1敗 勝ち点12 得失点+7 で5位。ブルージュは 3勝2敗 勝ち点9 で13位。
+#   1位レアル・マドリード15、2位PSG13、3〜6位 コモ・バルセロナ・リバプール・ベティスが勝ち点12（得失点差の順）。
+# ESPN の日程: 次のCLは 2026-12-09 20:00 UTC、ホームでポルト戦（scoreboard dates=20261209）。クラブ公式の試合記事も「次はホームでポルト」。
+# ESPN の過去4試合（自分で数えた）: アトレティコ 2-1（ホーム）、LASK 6-3（敵地）、ビジャレアル 4-3（ホーム）、フェネルバフチェ 2-3（敵地）。
+#   → 失点 1+3+3+3＝10。この試合が今季のCLで初めての無失点。イサクのCLの得点はフェネルバフチェ戦の1点とこの2点で今季3点。
+# クラブ公式 liverpoolfc.com:
+#   ・試合記事「Match report: Isak and Wirtz strike…」（11/25 22:00 UTC、全文）: 13分、ゾマーの右へのパスをバルコラが奪い、ソボスライの折り返しをイサクがダイレクトで。
+#       79分、カウンターからングモハが右から左へ展開、ヴィルツがワントラップしてエリアの端から左ポストに当てて決めた。
+#       そのあとイサクが左サイドを抜け出し、ゾマーに向かっていき、頭上を越すループで決めた。CL勝ち点は15のうち12。ソボスライがキャプテン。
+#   ・「'A perfect away win' - Alexander Isak reacts…」（11/25 22:25 UTC、TNT Sports への試合直後の言葉。全文を読んだ）:
+#       "A perfect away win, I would say."
+#       "The performance until we got the second one, it was never obvious which way it was going to go because it's not easy."
+#       "In half-time we spoke about having to get the second goal."
+#       "They were playing man to man, so I was one-v-one with one defender. I think Ali tried to kick the ball to me a couple of times and I'm happy he didn't stop trying because the last one was good and I was able to come one against one against the goalie."
+#       "I can definitely say that I feel good. I'm in a good place. The team is in a good place most importantly."
+#       地の文: 今季の得点は10に。6試合続けて敵地で得点したのは、クラブの歴史で8人目。
+#   ・「Alexander Isak joins Liverpool greats with away scoring streak」（11/25 20:46 UTC）: 敵地6試合連続得点はクラブ史上8人目。
+#       それまでの5試合はクリスタル・パレス、フェネルバフチェ、ブレントフォード、ボーンマス、イプスウィッチ。並んだのはサラーやバーンズら。
+#   ・「Andoni Iraola press conference…」（11/25 23:02 UTC、イラオラ監督の会見の要約。全文を読んだ）:
+#       "Now with the result 3-0, you can think it was an easy game – and I don't think it was."
+#       "a team that was tied with us before this game in the Champions League"（試合前はブルージュと勝ち点で並んでいた）
+#       "Obviously he is in a great moment right now."
+#       "sometimes they were leaving him one-v-one against the centre-back and in one of those moments he has killed the game."
+#       "we were conceding a lot of goals in the Champions League so one of our goals definitely was to improve this side."
+#   ・「Who was Liverpool's Carlsberg Player of the Match v Club Brugge?」: サポーターの投票でイサクが試合の最優秀選手（今季2度目）。
+#   → 台本の言葉は、この英語を私が日本語にしたもの。語順はなぞらず日本語として通るように直した。「…」で切れたところは補っていない。
+# 食い違い:
+#   ・82分の得点の形: ESPN は「エリア中央からの右足のシュート、ゴール中央」、クラブ公式は「ゾマーの頭上を越すループ（dinked）」。
+#       → 足と形は言わず「アリソンのロングボールで抜け出し、GKと1対1を決めた」とだけ言う（ESPN のアシスト アリソン・速攻と、本人の言葉・クラブ公式で一致）。
+#   ・ヴィルツの得点の位置: ESPN「エリアの外から」、クラブ公式「エリアの端から（from the edge of the box）」。→ 「ペナルティエリアの外から」（ESPN）。
+#   ・ムニョスの交代: ESPN 42分、クラブ公式の先発の欄 41分。→ 交代の分は言わない（ムニョスの負傷は題から離れるので使わない）。
+#   ・イサクの交代: ESPN・クラブ公式とも86分（一致）。
+#   ・順位: 11/26 時点の ESPN の表。全チーム5試合消化済み。
+# 前の本との重なり: 11/23 bruno_painful_19th（マンUのヨロがイサクを倒して退場）／11/24 wirtz_manutd_finish（マンU戦のヴィルツの一撃・キャラガー・「すごくいい感じです」）。
+#   → 今回の主役はイサクの2得点・本人の言葉・敵地6試合連続・CL初の無失点。ヴィルツは79分の2点目を一言だけ。マンU戦とキャラガーには触れない。
+#     ヴィルツの「すごくいい感じ」と言い回しが重ならないよう、イサクの "I feel good" は「状態はいい」と訳す。
+# 【言わないこと】ムニョスの負傷の程度／ユースの試合／試合前の成績の細部（ブルージュの連勝など、監督の言葉にしか無い）／82分のシュートの足と形（食い違い）。
+# 本人の言葉: あり（上の英語、クラブ公式に載った TNT Sports への言葉）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: world
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [イサク, リバプール, クラブ・ブルージュ, ヴィルツ, アリソン, イラオラ監督]
+
+short_style: Y
+short_hook_quote: 完璧なアウェーでの勝利だと思います。
+short_photos:
+  - assets/images/20261126_liverpool_brugge_isak_double/01_v.jpg
+  - assets/images/20261126_liverpool_brugge_isak_double/02_v.jpg
+  - assets/images/20261126_liverpool_brugge_isak_double/04_v.jpg
+  - assets/images/20261126_liverpool_brugge_isak_double/pair/01_v.jpg
+short_question: イサクは、12月9日のポルト戦でも点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: liverpool_brugge_isak_double
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: イサクが2得点、リバプールは敵地で3対0。本人が「完璧」と呼んだ勝利の中身
+  hook: ""
+  question: クラブ・ブルージュ戦で2点を取ったイサクは、試合後に何を語ったのか
+  takeaway: 2点目を取るまでは分からない試合だったと本人。ハーフタイムに話した2点目のあと、アリソンのロングボールから3点目を決めた。リバプールは今季のチャンピオンズリーグで初めて無失点で、勝ち点12に伸ばした
+
+thumbnail:
+  layout: face
+  line1: イサク 敵地で2得点
+  line2: 本人「完璧なアウェーでの勝利」
+  tags: [イサク, リバプール]
+  photo: assets/images/20261126_liverpool_brugge_isak_double/01_w.jpg
+  short_photo: assets/images/20261126_liverpool_brugge_isak_double/01_v.jpg
+
+answer: 2点目までは分からない試合だった。アリソンが蹴り続けてくれたおかげで、最後はGKと1対1になれた
+watch: 12月9日のポルト戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: クラブ・ブルージュ戦で2点を取ったイサクは、試合後に何を語ったのか
+    tier: 報道
+    telop: イサク「完璧なアウェーでの勝利だと思います」
+    say:
+      - voice: イサク
+        text: 完璧なアウェーでの勝利だと思います。
+        emph: true
+      - text: リバプールのイサクが、チャンピオンズリーグで2得点。
+      - text: チームは敵地で、クラブ・ブルージュに3対0で勝ちました。
+      - text: 先制は13分。ソボスライの折り返しを、イサクがダイレクトで決めました。
+        image: assets/images/20261126_liverpool_brugge_isak_double/02_w.jpg
+        card: {type: table, title: クラブ・ブルージュ 0-3 リバプール, columns: [分, 得点], rows: [[13分, イサク], [79分, ヴィルツ], [82分, イサク]], highlight_row: 0}
+      - text: ただ本人は、楽な試合ではなかったと振り返ります。
+        card: none
+      - voice: イサク
+        text: 2点目を取るまでは、どちらに転ぶか分からない試合でした。
+        image: assets/images/20261126_liverpool_brugge_isak_double/04_w.jpg
+      - voice: イサク
+        text: ハーフタイムには、2点目が必要だと話し合いました。
+        cont: true
+      - text: その2点目は79分。ヴィルツがペナルティエリアの外から決めます。
+        card: {type: table, title: クラブ・ブルージュ 0-3 リバプール, columns: [分, 得点], rows: [[13分, イサク], [79分, ヴィルツ], [82分, イサク]], highlight_row: 1}
+      - text: そして3分後。ゴールキーパーのアリソンのロングボールで、イサクが抜け出します。
+        image: assets/images/20261126_liverpool_brugge_isak_double/02_w.jpg
+        card: {type: table, title: クラブ・ブルージュ 0-3 リバプール, columns: [分, 得点], rows: [[13分, イサク], [79分, ヴィルツ], [82分, イサク]], highlight_row: 2}
+      - text: 相手のゴールキーパーとの勝負を制し、この日2点目を決めました。
+      - voice: イサク
+        text: アリソンが、何度か僕に蹴ってくれていました。
+        image: assets/images/20261126_liverpool_brugge_isak_double/01_w.jpg
+        card: none
+      - voice: イサク
+        text: あきらめずに続けてくれてよかった。
+        cont: true
+      - voice: イサク
+        text: 最後のボールがよくて、キーパーと1対1になれました。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915292
+      - https://www.liverpoolfc.com/news/a-perfect-away-win-alexander-isak-reacts-to-club-brugge-0-3-liverpool
+      - https://www.liverpoolfc.com/news/match-report-liverpool-brugge-champions-league-isak-wirtz
+      - https://www.liverpoolfc.com/news/alexander-isak-joins-liverpool-greats-with-away-scoring-streak
+      - https://www.liverpoolfc.com/news/liverpool-player-of-the-match-v-club-brugge
+  - id: coach
+    heading: イラオラ監督は、イサクの2得点をどう見たのか
+    tier: 報道
+    telop: イラオラ監督「彼はいま、最高の状態にある」
+    say:
+      - text: イラオラ監督も、試合後にイサクをこう評しました。
+        image: assets/images/20261126_liverpool_brugge_isak_double/pair/01.jpg
+      - voice: イラオラ監督
+        text: 彼はいま、最高の状態にあります。
+        emph: true
+      - voice: イラオラ監督
+        text: センターバックと1対1になる場面がありました。
+        cont: true
+      - voice: イラオラ監督
+        text: その1つで、彼が試合を決めてくれました。
+        cont: true
+      - text: イサクはこれで、敵地の公式戦6試合連続ゴール。クラブの歴史で8人目です。
+        image: assets/images/20261126_liverpool_brugge_isak_double/04_w.jpg
+        card: {type: stats, title: イサク クラブ・ブルージュ戦のあと, items: [[6, 試合, 敵地で続けて得点], [8, 人目, クラブの歴史で], [10, 点, 今季の公式戦]], focus: 0}
+      - text: 今季の得点は、これで10点になりました。
+        card: {type: stats, title: イサク クラブ・ブルージュ戦のあと, items: [[6, 試合, 敵地で続けて得点], [8, 人目, クラブの歴史で], [10, 点, 今季の公式戦]], focus: 2}
+    official: false
+    sources:
+      - https://www.liverpoolfc.com/news/andoni-iraola-press-conference-club-brugge-champions-league-isak-wirtz
+      - https://www.liverpoolfc.com/news/alexander-isak-joins-liverpool-greats-with-away-scoring-streak
+      - https://www.liverpoolfc.com/news/a-perfect-away-win-alexander-isak-reacts-to-club-brugge-0-3-liverpool
+  - id: view
+    viewpoint: true
+    heading: この勝利で、リバプールのチャンピオンズリーグは何が変わったのか
+    tier: 報道
+    telop: 今季のCLで初めての無失点。勝ち点12で5位
+    say:
+      - text: 見立てです。イサクの2点で手にした、3対0の勝利。
+      - text: これが今季のチャンピオンズリーグで、初めての無失点でした。
+        emph: true
+      - text: それまでの4試合で、リバプールは10失点していました。
+        image: assets/images/20261126_liverpool_brugge_isak_double/02_w.jpg
+        card: {type: table, title: リバプールのチャンピオンズリーグ, columns: [相手, 結果], rows: [[アトレティコ, 2-1], [LASK, 6-3], [ビジャレアル, 4-3], [フェネルバフチェ, 2-3], [クラブ・ブルージュ, 3-0]], highlight_row: 4}
+      - text: 勝ち点は12に伸び、順位は36チーム中5位です。
+        card: none
+      - text: 次のチャンピオンズリーグは12月9日。ホームでポルトと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915292
+      - https://www.espn.com/soccer/table/_/league/uefa.champions
+      - https://www.espn.com/soccer/match/_/gameId/401915446
+      - https://www.espn.com/soccer/match/_/gameId/401915415
+      - https://www.espn.com/soccer/match/_/gameId/401915397
+      - https://www.espn.com/soccer/match/_/gameId/401915382
+      - https://www.liverpoolfc.com/news/andoni-iraola-press-conference-club-brugge-champions-league-isak-wirtz
