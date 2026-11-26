@@ -205,7 +205,8 @@ void _resolve(Game s) {
       ch = e.choices.where((c) => r.hasMatch(txIn(c.l, 'ja'))).firstOrNull;
       if (ch != null) break;
     }
-    // （当てはまらなければ最後の選択肢。会議の提案なら「見送る」、ほかもたいてい何もしない方）
+    // （当てはまらなければ最後の選択肢。会議の提案なら「見送る」、ほかもたいてい何もしない方。
+    //   子会社の資金が尽きた出来事（1.1.0+39）は、助けられるときだけ最後が「助ける」になる）
     (ch ?? e.choices.last).f();
   }
 }

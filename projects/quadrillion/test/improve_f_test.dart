@@ -36,7 +36,11 @@ void main() {
       // 1.1.0+29（段4）から宿敵と CPU の会社も同じ決まり（店などの数・借金・稼ぎからの投資）で動き、客の取り合いが厳しくなった。
       // 16の種のどれも事業20に届かず、いちばん多い種で9〜17になった（段5の時点でも、種ごとには25年後に事業1〜5の種が多く、
       // 16の種のうち1つが20に届いていただけ）。画面のテストに要る「事業が多い盤面」（事業を畳む線は8）を見る線に引き直した
-      expect(g.biz.length, inInclusiveRange(8, 30));
+      // 1.1.0+39 から、格付けを子会社の借金の持ち分も入れて見る。借りられるだけ借りるこの組み立て役は格付けが一段下がる月が増え、
+      // 16の種のいちばん多いもので事業7（種 2031。子会社3・現地法人2・持株会社・子会社の上場・提携2）になった。下の線を8から7に下げる
+      // （事業を畳む線8が要る画面のテストは、そのテストの中で事業を足して見る。2048〜2095 を回すと事業12〜19の種もあるが、
+      //   盤面を替えると助言や社史を見るほかのテストの前提が変わるので、盤面は替えない）
+      expect(g.biz.length, inInclusiveRange(7, 30));
       expect(g.holding, isTrue);
       // 上場（年の利益3億円が条件）は 1.1.0+26 から入らないことがある（店などの数で伸びが遅くなった）。子会社の上場は見る
       expect(g.locals(), isNotEmpty);
@@ -261,6 +265,15 @@ void main() {
       }
       g.calcAll();
       g.cash = 1e14;
+      // 1.1.0+39 から育った会社の盤面が事業7のことがある。事業を畳む線（bizManyMin）まで、元手の小さい業種から足す
+      for (final i in g.liveInds().where((i) => g.licMissing(i.id) == null).toList()..ssort((a, b) => g.capexOf(a).compareTo(g.capexOf(b)))) {
+        if (g.biz.length >= bizManyMin) break;
+        if (!g.biz.any((b) => b.ind == i.id) && g.subOn(i.id) == null) {
+          g.hUsed = 0;
+          g.startBiz(i.id);
+        }
+      }
+      g.calcAll();
       // 見出しでたたむ・並べ替え・まとめての手の欄は1つの列の事業の画面のもの（1.1.0+26 から、真ん中が幅520以上なら2列）。幅600の窓で見る
       final p = await Pilot.launch(tester, game: g, size: const Size(600, 590));
       await p.tab('biz');
@@ -414,7 +427,9 @@ void main() {
     testWidgets('押して遊ぶ役で、育った会社（10年目から）を$_midYears年回す', (tester) async {
       // 1.1.0+35 から子会社・現地法人の利益は配当しか現金に入らず、種 2024 の10年目は事業3つの小さな会社になった（育った会社にならない）。
       // 10年目に事業15・子会社4の種 2027 を使う
-      final g = grownGame(years: 10, seed: 2027);
+      // 1.1.0+39 で種 2027 → 2033。格付けを子会社の借金の持ち分も入れて見るようになり、借りられるだけ借りる組み立て役の筋が変わって、
+      // 2027 の10年目は事業1つになった（助言が毎月同じになる）。2033 は10年目に事業14・子会社4
+      final g = grownGame(years: 10, seed: 2033);
       final p = await Pilot.launch(tester, game: g, seed: 41);
       p.logTag = '中盤';
       final end = g.turn + _midYears * 12;

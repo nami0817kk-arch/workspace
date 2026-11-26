@@ -126,6 +126,9 @@ extension GameEvents on Game {
         case 'subRebel':
           final c = co('c');
           if (c != null && c.parent == 'player') e = evSubRebel(c);
+        case 'subBroke':
+          final c = co('c');
+          if (c != null && c.parent == 'player') e = evSubBroke(c);
         case 'stolen':
           final c = co('c'), b = bz('b');
           if (c != null && c.rival != null && b != null) e = evStolen(c, b);

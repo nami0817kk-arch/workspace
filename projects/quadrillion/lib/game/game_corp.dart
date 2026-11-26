@@ -288,6 +288,8 @@ extension GameCorp on Game {
           coBorrow(c, -c.cash * 1.2);
         } else {
           f.distress++;
+          // 自分の子会社なら、助けるか倒れさせるかを決める出来事を出す（1.1.0+39。前は何も起きず、現金がマイナスのまま持ち続けられた）。乱数は引かない
+          if (c.parent == 'player' && !events.any((e) => e.k == 'subBroke' && e.subco == c.id)) events.add(evSubBroke(c));
           if (f.distress == 3 && (c.rival != null || c.tier == 0)) {
             N(M('{0}が借りすぎて資金繰りに苦しんでいます。株価が半分に下がり、安く買えるかもしれません', [Nm(c.name)]), c.rival != null ? 'big' : '');
           }
@@ -332,6 +334,101 @@ extension GameCorp on Game {
       N(M('{0}が借金を返せずに倒れました', [Nm(c.name)]));
     }
     clientGone(c, N);
+  }
+
+  // ===== 子会社の資金が尽きたとき（1.1.0+39） =====
+  /// 子会社を助けるのに入れる額（足りない分＋月の売上の半分の蓄え＋3か月分の返済と赤字）
+  double subHelpNeed(Company c) {
+    final f = finOf(c);
+    return math.max(0.0, -c.cash) + math.max(0.0, c.rev) * .5 + 3 * math.max(0.0, f.debt / 60 - c.profit);
+  }
+
+  /// 助けるお金の出どころ（手元の、払えなくなる線より上の分＋足りない分は銀行から借りる）。借りても足りなければ null
+  ({double pay, double loan})? subHelpPlan(Company c) {
+    final need = subHelpNeed(c);
+    final pay = math.min(need, math.max(0.0, cash - dangerLine()));
+    final loan = need - pay;
+    if (loan > 1 && (bankCtl > 0 || ratingIdx() >= 3 || borrowRoom() < loan)) return null;
+    return (pay: pay, loan: loan > 1 ? loan : 0.0);
+  }
+
+  /// 子会社の株の値打ち（持ち分。決算書の「子会社の株」と同じ数え方）
+  double subStakeValue(Company c) => math.max(0.0, c.cap) * pctOf(c) / 100;
+
+  /// 子会社を助ける：足りない分と数か月分を増資で入れる（持ち株は、入れた額の分だけ増える）。お金が足りなければ借りる
+  String helpSub(Company c) {
+    if (!c.alive || c.parent != 'player') return M('{0}はもう子会社ではありません', [Nm(c.name)]);
+    final p = subHelpPlan(c);
+    if (p == null) return M('お金が足りず、{0}を助けられませんでした', [Nm(c.name)]);
+    final need = p.pay + p.loan;
+    if (p.loan > 0) {
+      loanFromEvent(p.loan);
+      cfAdd('borrow', p.loan);
+    }
+    // 増資は今の値打ちで新しい株を買う形（持ち株の値打ちが入れた額だけ増える）
+    final v = math.max(1.0, c.cap);
+    final st = pctOf(c);
+    c.stakePlayer = math.min(100.0, (st * v + need * 100) / (v + need));
+    cfAdd('stock', -need);
+    c.cash += need;
+    c.cap = v + need;
+    finOf(c).distress = 0;
+    // 親が立て直しに入るので、子会社は借りて店などを増やすのをやめる（守りの経営）。
+    // そうしないと、入れたお金の蓄えを店を開くのに使い、借金を増やして数か月でまた尽きた（30年の自動プレイで、同じ子会社を十数回助けていた）
+    finOf(c).appetite = 0;
+    c.rel += 5;
+    calcAll();
+    return p.loan > 0
+        ? M('{0}に{1}を入れて助けました（うち{2}は銀行から借りました）。持ち株は{3}になりました', [Nm(c.name), Y(need), Y(p.loan), pct(c.stakePlayer)])
+        : M('{0}に{1}を入れて助けました。持ち株は{2}になりました', [Nm(c.name), Y(need), pct(c.stakePlayer)]);
+  }
+
+  /// 子会社を倒れさせる：子会社は倒産し、持ち株は0に（決算書の特別損失）。貸していたお金も戻らない。評判・ブランド・部下の忠誠が少し下がる
+  String letSubFail(Company c) {
+    if (!c.alive || c.parent != 'player') return M('{0}はもう子会社ではありません', [Nm(c.name)]);
+    var loss = subStakeValue(c);
+    for (final l in lent.where((l) => l.co == c.id).toList()) {
+      loss += l.amt;
+      lent.remove(l);
+    }
+    books.add('subLoss', loss);
+    c.stakePlayer = 0;
+    c.parent = null;
+    coFail(c, (m, [t = '']) => log.add(LogEntry(m, t, year, q)));
+    rep = rep - 3;
+    if (lifeOn) lf.brand = math.max(0, lf.brand - 3);
+    for (final p in staff) {
+      p.loy -= 3;
+    }
+    calcAll();
+    chron('board', M('子会社{0}を倒産させた', [Nm(c.name)]));
+    return M('子会社{0}は倒産しました。持ち株の値打ち{1}を特別損失にしました。会社の評判と部下の気持ちが少し下がりました', [Nm(c.name), Y(loss)]);
+  }
+
+  /// 子会社の資金が尽きた（返せない）ときの出来事。助ける（お金を入れる）か、倒れさせるか。
+  /// 選択肢は「倒れさせる」を先に、助けられるときは「助ける」を最後に置く（自動プレイは最後を選ぶので、助けられるなら助け、無理なら倒れさせる）
+  GameEvent evSubBroke(Company c) {
+    final f = finOf(c);
+    final need = subHelpNeed(c);
+    final p = subHelpPlan(c);
+    final v = subStakeValue(c);
+    final st = pctOf(c);
+    final vv = math.max(1.0, c.cap);
+    final st2 = math.min(100.0, (st * vv + need * 100) / (vv + need));
+    return tagEv(
+      GameEvent(subco: c.id, title: M('子会社の資金が尽きた'), text: M('子会社{0}の現金が尽き、借金を返せなくなりました（足りない分 {1}・子会社の借金 {2}）。銀行はもう貸してくれません。親会社として助けるか、倒れさせるかを決めてください。', [Nm(c.name), Y(math.max(0.0, -c.cash)), Y(f.debt)]), choices: [
+        Choice(M('倒れさせる'), M('子会社は倒産し、持ち株の値打ち{0}が特別損失になる。評判とブランド、部下の忠誠が少し下がる', [Y(v)]), () => letSubFail(c)),
+        if (p != null)
+          Choice(
+              M('{0}を入れて助ける', [Y(need)]),
+              p.loan > 0
+                  ? M('増資で入れ、持ち株は{0}に増える。うち{1}は銀行から借りる', [pct(st2), Y(p.loan)])
+                  : M('増資で入れ、持ち株は{0}に増える。子会社は借りて広げるのをやめ、守りに入る', [pct(st2)]),
+              () => helpSub(c)),
+      ]),
+      'subBroke',
+      {'c': c.id},
+    );
   }
 
   /// CPU の会社どうしの買収（自社と同じく、上乗せを払い、独禁法で止められることがある）

@@ -151,6 +151,11 @@ const Map<String, String> realEn = {
   'メインバンクが経営に口を出しています（あと{0}か月）。新しく借りられません': "Your main bank is overseeing the company ({0} more months). No new loans",
   '借りている相手': "Lenders",
   '借金はありません': "No debt",
+  // 1.1.0+39 グループの借金
+  '子会社の借金（持ち分）': "Subsidiaries' debt (our share)",
+  'グループの借金': 'Group debt',
+  '子会社がいるので、格付け・上限・金利は、子会社の借金と利益と担保の持ち分を足したグループの数で見ます':
+      "Because you have subsidiaries, your rating, limit and rate are based on group figures, adding your share of their debt, profit and collateral",
   '借りた相手': "Lender",
   '無理 +{0}h': "Overtime +{0}h",
   '期限': "Term left",

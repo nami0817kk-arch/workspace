@@ -64,6 +64,7 @@ const Map<String, String> finEn = {
   'そのほかの特別利益（賠償金など）': 'Other gains (damages etc.)',
   '特別損失': 'Extraordinary losses',
   'のれんの減損': 'Goodwill impairment',
+  '子会社の倒産': 'Subsidiary bankruptcy',
   '罰金・災害・和解など': 'Fines, disasters & settlements',
   '分類していない出入り': 'Unclassified',
   '税引前当期純利益': 'Profit before tax',
@@ -91,6 +92,10 @@ const Map<String, String> finEn = {
   '純資産の合計': 'Total equity',
   '合わない差': 'Unreconciled difference',
   '負債と純資産の合計': 'Total liabilities & equity',
+  '参考：グループ借金': 'Memo: group debt',
+  'グループの借金@@term': 'Group debt',
+  '自社の借金に、株を過半持つ子会社の借金のうち持ち分の分を足したものです。銀行は格付け・借りられる上限・金利をこれで見ます。子会社が借りすぎると、親の格付けも下がります。':
+      "Your own debt plus your share of the debt of subsidiaries you control. Banks set your rating, borrowing limit and rate on it, so an overborrowed subsidiary lowers your rating too.",
   '時価総額は{0}（純資産の{1}倍）。株価はこれからの稼ぎの見込みで決まり、帳簿の純資産とは別です。':
       'Market cap is {0} ({1}× equity). The share price reflects expected earnings, not book equity.',
   '時価総額は{0}。純資産がマイナスでも、稼ぐ見込みがあれば株価はつきます。': 'Market cap is {0}. Even with negative equity, expected earnings give the shares a price.',
