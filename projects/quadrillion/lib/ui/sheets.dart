@@ -43,7 +43,13 @@ Face staffFace(Game s, Person p, {double size = 34}) =>
 /// 会議の発言者（名前だけを持つ）の顔。部下にいなければ null（名前から決まる色の丸になる）
 Face? _voiceFace(Game s, String name) {
   final p = s.staff.where((x) => x.name == name).firstOrNull;
-  return p == null ? null : staffFace(s, p);
+  if (p != null) return staffFace(s, p);
+  // 社長・辞めた部下・候補・会った人・宿敵の社長も、顔の絵で（1.1.0+41。前は名前の1文字の丸）
+  if (s.pres.name == name) return presFace(s);
+  final o = [...s.alumni, ...s.cands, ?s.meet].where((x) => x.name == name).firstOrNull;
+  if (o != null && s.faceOf(o) != null) return staffFace(s, o);
+  final c = s.cos.where((x) => x.rival != null && x.presName == name).firstOrNull;
+  return c == null ? null : rivalFace(s, c);
 }
 
 /// 社長の顔（金の輪つき）
@@ -51,6 +57,25 @@ Face presFace(Game s, {double size = 34}) => Face.pres(s.pres.name, img: s.presF
 
 /// 宿敵の社長の顔（角の丸い四角。縁は宿敵の色）
 Face rivalFace(Game s, Company c, {double size = 34}) => Face.rival(c.presName, c.rival!.col, img: s.coFace(c), size: size);
+
+/// 顔の絵がまだ無い小さな子ども（16歳まで）の印（1.1.0+41。前は名前の1文字の丸）。名前は隣に書くので、読み上げからは外す
+class KidFace extends StatelessWidget {
+  final double size;
+  const KidFace({super.key, this.size = 34});
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFFFFE3C2), Color(0xFFFFC9A3)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFFE0A070), width: 2),
+          ),
+          child: Icon(Icons.child_care, size: size * .62, color: const Color(0xFF7A4423)),
+        ),
+      );
+}
 
 /// 開いたカード・場面で見せる顔の大きさ
 const faceBig = 56.0;

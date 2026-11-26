@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'game/game.dart';
 import 'ui/app.dart';
 import 'ui/controller.dart';
+import 'ui/world_map.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,10 @@ Future<void> main() async {
   } catch (_) {
     // 読めなければ内蔵の最小データで動く（game_real.dart の econData）
   }
+  // 世界の地図の国の形（Natural Earth・パブリックドメイン。1.1.0+41）。読めなければ国を丸で描く
+  try {
+    WorldShapes.current = WorldShapes.parse(await rootBundle.loadString('assets/map/world.json'));
+  } catch (_) {}
   // 同梱フォント(OFL)のライセンス文を「ライセンス」画面に載せる。OFL は同梱時に添付を求めている
   LicenseRegistry.addLicense(() async* {
     yield LicenseEntryWithLineBreaks(['Noto Sans JP'], await rootBundle.loadString('assets/fonts/OFL-NotoSansJP.txt'));

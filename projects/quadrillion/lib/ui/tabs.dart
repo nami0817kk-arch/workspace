@@ -1193,8 +1193,8 @@ Widget _grpHead(String label, IconData icon) => Padding(
 List<Widget> peopleTab(GameController ctl, {double width = 0}) {
   final s = ctl.game!;
   // 横に広い画面は、左に人の一覧・右に1人の中身（1.1.0+27。経歴を持つ人の仕組みがあるときだけ）
-  if (s.peopleOn && width >= peopleSplitMin) return peopleSplit(ctl, width);
-  final out = <Widget>[H2(tr('社長')), ...presPanels(ctl)];
+  if (s.peopleOn && width >= peopleSplitMin) return [peopleBand(ctl), ...peopleSplit(ctl, width)];
+  final out = <Widget>[peopleBand(ctl), H2(tr('社長')), ...presPanels(ctl)];
   out.add(H2(tr('部下（{0}人）', [s.staff.length])));
   out.addAll(_staffAndCands(ctl));
   return out;
@@ -1246,7 +1246,10 @@ List<Widget> presPanels(GameController ctl) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     // 社風を変える手は、見出しの右を押すと開く（1.1.0+31）
     Row(children: [
-      Expanded(child: Wrap(spacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [CardTitle(tr('社風')), Tag(cu.n, kind: TagKind.gold)])),
+      Expanded(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: SectionHead(tr('社風'), Icons.diversity_3, tone: ScreenTone.people, trailing: Align(alignment: Alignment.centerLeft, child: Tag(cu.n, kind: TagKind.gold))))),
       if (s.cultLeft == 0) detailBtn(ctl, 'culture', label: tr('社風を変える')),
     ]),
     const SizedBox(height: 4),
@@ -1265,7 +1268,7 @@ List<Widget> presPanels(GameController ctl) {
   final succs = [...s.staff, ...s.kids.where((k) => k.age >= heirAge)];
   out.add(Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-    CardTitle(tr('後継ぎ')),
+    SectionHead(tr('後継ぎ'), Icons.family_restroom, tone: ScreenTone.people),
     const SizedBox(height: 6),
     Row(children: [
       Muted(tr('候補')),
@@ -1288,8 +1291,10 @@ List<Widget> presPanels(GameController ctl) {
       Padding(
         padding: const EdgeInsets.only(top: 6),
         child: Row(children: [
-          // 後継ぎの候補になる年頃（16歳〜）の子どもには顔の絵。小さい子は名前の1文字の丸
-          Padding(padding: const EdgeInsets.only(right: 8), child: Face(Game.givenOf(k.name), img: s.faceOf(k), key: ValueKey('kid-face-${k.id}'))),
+          // 後継ぎの候補になる年頃（16歳〜）の子どもには顔の絵。小さい子は子どもの絵（1.1.0+41。前は名前の1文字の丸）
+          Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: s.faceOf(k) != null ? Face(Game.givenOf(k.name), img: s.faceOf(k), key: ValueKey('kid-face-${k.id}')) : KidFace(key: ValueKey('kid-face-${k.id}'))),
           Expanded(child: Muted(tr('子ども {0}（{1}歳）', [nmL(Game.givenOf(k.name)), k.age]))),
           k.age >= 22 ? Btn(tr('入社させる'), () => ctl.act(() => s.kidJoin(k)), small: true) : Muted(tr('22歳で入社できる')),
         ]),
@@ -1308,7 +1313,7 @@ Widget _presGrowPanel(Game s) {
     key: const ValueKey('pres-grow'),
     padding: const EdgeInsets.fromLTRB(Ui.pad, 2, Ui.pad, Ui.pad),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(tr('腕の伸び方')),
+      Padding(padding: const EdgeInsets.only(top: 6), child: SectionHead(tr('腕の伸び方'), Icons.trending_up, tone: ScreenTone.people)),
       Muted(
           af >= 1
               ? tr('腕は事業を進める中で磨かれます。経験がたまると1上がります。')
@@ -1850,37 +1855,52 @@ List<Widget> numTab(GameController ctl) {
           ]),
         ),
       ])));
+  // 時価総額と、売上と利益の推移は、目盛り・日付つきのグラフ（押すとその月の値。直近10年。1.1.0+41）
+  final hs = s.hist.length > 120 ? s.hist.sublist(s.hist.length - 120) : s.hist;
+  final hl = [for (final h in hs) histLabel(h)];
   out.add(H2Info(tr('時価総額の推移'), ctl, const ['cap']));
-  out.add(Frame(
-    child: AspectRatio(
-        aspectRatio: 4,
-        // グラフは絵なので、読み上げには見出しと、はじめと今の値を言葉で渡す
-        child: Semantics(
-            key: const ValueKey('sem-cap-graph'),
-            image: true,
-            label: s.hist.isEmpty ? tr('時価総額の推移') : tr('{0}。はじめ {1}、今 {2}', [tr('時価総額の推移'), yen(s.hist.first.cap), yen(s.hist.last.cap)]),
-            child: CustomPaint(painter: SparkPainter(s.hist), size: Size.infinite))),
+  out.add(Panel(
+    key: const ValueKey('cap-trend'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
+    child: hs.length < 2
+        ? Muted(tr('月を進めると、ここに線が引かれます'), size: 12)
+        : TrendChart(
+            key: const ValueKey('cap-chart'),
+            height: 104,
+            labels: hl,
+            fmt: yen,
+            series: [TrendSeries(tr('時価総額'), ScreenTone.money.c, [for (final h in hs) h.cap])],
+            summary: tr('{0}。はじめ {1}、今 {2}', [tr('時価総額の推移'), yen(hs.first.cap), yen(hs.last.cap)]),
+          ),
   ));
   out.add(H2(tr('売上と利益の推移（月）')));
-  out.add(Frame(
-    child: AspectRatio(
-        aspectRatio: 640 / 180,
-        child: Semantics(
-            key: const ValueKey('sem-rev-graph'),
-            image: true,
-            label: s.hist.isEmpty ? tr('売上と利益の推移') : tr('{0}。今の売上 {1}、利益 {2}', [tr('売上と利益の推移'), yen(s.hist.last.rev), yen(s.hist.last.pre)]),
-            child: CustomPaint(painter: RevProfitPainter(s.hist), size: Size.infinite))),
-  ));
-  out.add(Padding(
-    padding: const EdgeInsets.only(top: 6),
-    child: Wrap(spacing: 14, children: [
-      for (final x in const [('売上', RevProfitPainter.revCol), ('利益（税引前）', RevProfitPainter.proCol), ('赤字の月', RevProfitPainter.lossCol)])
-        Row(mainAxisSize: MainAxisSize.min, children: [
-          Container(width: 14, height: 3, color: x.$2),
-          const SizedBox(width: 5),
-          Muted(tr(x.$1), size: 12),
-        ]),
-    ]),
+  out.add(Panel(
+    key: const ValueKey('rev-trend'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
+    child: hs.length < 2
+        ? Muted(tr('月を進めると、ここに線が引かれます'), size: 12)
+        : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            TrendChart(
+              key: const ValueKey('rev-chart'),
+              height: 104,
+              labels: hl,
+              fmt: yen,
+              series: [
+                TrendSeries(tr('売上'), RevProfitPainter.revCol, [for (final h in hs) h.rev]),
+                TrendSeries(tr('利益（税引前）'), RevProfitPainter.proCol, [for (final h in hs) h.pre]),
+              ],
+              summary: tr('{0}。今の売上 {1}、利益 {2}', [tr('売上と利益の推移'), yen(hs.last.rev), yen(hs.last.pre)]),
+            ),
+            const SizedBox(height: 4),
+            Wrap(spacing: 14, children: [
+              for (final x in const [('売上', RevProfitPainter.revCol), ('利益（税引前）', RevProfitPainter.proCol)])
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  Container(width: 14, height: 3, color: x.$2),
+                  const SizedBox(width: 5),
+                  Muted(tr(x.$1), size: 12),
+                ]),
+            ]),
+          ]),
   ));
   out.add(H2Info(tr('世界の企業ランキング'), ctl, const ['rank', 'cap']));
   final rk = s.rankList();
@@ -2040,7 +2060,21 @@ const zukanViews = [('ind', '業種@@zukan'), ('syn', 'シナジー'), ('trait',
 
 List<Widget> zukanTab(GameController ctl) {
   final view = zukanViews.any((v) => v.$1 == ctl.zukanView) ? ctl.zukanView : 'syn';
+  final s = ctl.game!;
   return [
+    // 見出しの帯（1.1.0+41）：業種・シナジー・実績・特性の集まり具合
+    ScreenBand(
+      key: const ValueKey('zukan-band'),
+      tone: ScreenTone.zukan,
+      icon: Icons.menu_book,
+      title: tr('図鑑@@tab'),
+      facts: [
+        (tr('業種'), '${s.inds.where((i) => s.handled(i.id)).length}/${s.inds.length}'),
+        (tr('シナジー'), '${s.found.length}/${s.syns.length}'),
+        (tr('実績'), '${s.ach.keys.where(achm.containsKey).length}/${ACHS.length}'),
+        if (s.trOn) (tr('特性@@zukan'), '${STAFF_TRAITS.where((t) => s.trFound.contains(t.id)).length}/${STAFF_TRAITS.length}'),
+      ],
+    ),
     Segments('zukan', [for (final v in zukanViews) (v.$1, tr(v.$2))], value: view, onChanged: ctl.setZukan),
     ...switch (view) {
       'ind' => zukanInds(ctl),
@@ -2057,7 +2091,7 @@ List<Widget> zukanTraits(GameController ctl) {
   final s = ctl.game!;
   final found = s.trFound;
   return [
-    H2(tr('特性図鑑')),
+    pageHead(tr('特性図鑑'), Icons.psychology_outlined, ScreenTone.zukan),
     Progress(tr('見つけた特性'), STAFF_TRAITS.where((t) => found.contains(t.id)).length, STAFF_TRAITS.length, key: const ValueKey('trait-progress')),
     for (final c in STRAIT_CATS)
       Panel(
@@ -2097,7 +2131,7 @@ List<Widget> zukanInds(GameController ctl) {
   final s = ctl.game!;
   final done = s.inds.where((i) => s.handled(i.id)).length;
   final out = <Widget>[
-    H2(tr('業種図鑑')),
+    pageHead(tr('業種図鑑'), Icons.category_outlined, ScreenTone.zukan),
     Progress(tr('手がけた業種'), done, s.inds.length, key: const ValueKey('ind-progress')),
     Muted(tr('手がけたことのある業種は、生まれた年・頂点の年・利益率・稼ぎ方が見えます。業種を押すと、37の特性と市場の大きさの推移が見えます。')),
   ];
@@ -2124,6 +2158,8 @@ List<Widget> zukanInds(GameController ctl) {
         constraints: const BoxConstraints(minHeight: minTap),
         padding: const EdgeInsets.fromLTRB(Ui.pad, 6, 6, 6),
         child: Row(children: [
+          // 分類の色の印（業種の絵と同じ色。1.1.0+41）
+          Container(width: 12, height: 12, margin: const EdgeInsets.only(right: 8), decoration: BoxDecoration(color: catColor(cat), borderRadius: BorderRadius.circular(3))),
           Expanded(child: Text(CATN[cat]!, style: Ui.h3)),
           Muted('${list.where((i) => s.handled(i.id)).length} / ${list.length}', size: 12),
           Icon(open ? Icons.expand_less : Icons.expand_more, size: 22, color: Pal.mute),
@@ -2158,6 +2194,8 @@ List<Widget> zukanInds(GameController ctl) {
                     padding: const EdgeInsets.only(top: 2, right: 6),
                     child: Icon(look == 'done' ? Icons.check_circle : Icons.radio_button_unchecked, size: 15, color: look == 'done' ? Pal.goldtx : Pal.line),
                   ),
+                  // 業種の絵（まだ手がけていない業種は薄く。1.1.0+41）
+                  Padding(padding: const EdgeInsets.only(right: 8), child: Opacity(opacity: look == 'done' ? 1 : .4, child: IndIcon(i, size: 26))),
                   Expanded(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text(i.name, style: ts(size: 13, bold: look == 'done')),
@@ -2195,7 +2233,7 @@ List<Widget> zukanInds(GameController ctl) {
 List<Widget> zukanAchs(GameController ctl) {
   final s = ctl.game!;
   return [
-    H2(tr('実績')),
+    pageHead(tr('実績'), Icons.emoji_events_outlined, ScreenTone.zukan),
     Progress(tr('達成した実績'), s.ach.keys.where(achm.containsKey).length, ACHS.length, key: const ValueKey('ach-progress')),
     // 幅が足りるときは2つずつ横に並べる（1.1.0+31）
     Panel(
@@ -2238,7 +2276,7 @@ List<Widget> zukanAchs(GameController ctl) {
 List<Widget> zukanSyns(GameController ctl) {
   final s = ctl.game!;
   // 数は下の進み具合の欄に出す（見出しにも同じ「0 / 141」を出していて、同じ数字が2つ並んでいた。業種・実績の見出しとそろえた。1.0.0+18）
-  final out = <Widget>[H2Info(tr('シナジー図鑑'), ctl, const ['synergy'])];
+  final out = <Widget>[pageHead(tr('シナジー図鑑'), Icons.hub_outlined, ScreenTone.zukan, trailing: Info(ctl, const ['synergy']))];
   out.add(Progress(tr('見つけたシナジー'), s.found.length, s.syns.length, key: const ValueKey('syn-progress')));
   out.add(Muted(tr('2つの事業を同時に持つと見つかります。見つけた組み合わせは事業の力を2割上げます。')));
   // 見つけた組み合わせと手がかりのあるものを先に全部出し、まだ何も分からないものは最初の数件だけ（残りは「もっと見る」。1.1.0+31）
@@ -2277,7 +2315,7 @@ List<Widget> zukanSyns(GameController ctl) {
     for (final x in known) synRow(x),
     ...firstOf(ctl, 'syn-unknown', [for (final x in unknown) synRow(x)], 8),
   ])));
-  out.add(H2(tr('大シナジー')));
+  out.add(pageHead(tr('大シナジー'), Icons.auto_awesome, ScreenTone.zukan));
   // 完成したものは2つずつ横に並べ、まだのものは「？？？ ×数」の1枚にまとめる（同じ文の札が並んでいた。1.1.0+31）
   final bigDone = s.bigs.where((g) => s.big[g.k] != null).toList();
   final bigLeft = s.bigs.length - bigDone.length;

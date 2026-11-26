@@ -67,17 +67,21 @@ class Tip {
 
 /// 画面に出す言葉を組み立てる（試作の画面側にあった、状態から文を作る関数）
 extension GameView on Game {
-  String officeName() {
+  String officeName() => M(const ['ワンルームの事務所', '雑居ビルの1フロア', '自社ビル', '本社タワー', '摩天楼の本社'][officeLevel()]);
+
+  /// 本社の大きさの段（0 ワンルーム・1 雑居ビルの1フロア・2 自社ビル・3 本社タワー・4 摩天楼。年の売上を物価で割って決める。
+  /// 街の絵の本社のビルの大きさにも使う。1.1.0+41）
+  int officeLevel() {
     final r = rev * 12 / nom();
-    return M(r < 5e7
-        ? 'ワンルームの事務所'
+    return r < 5e7
+        ? 0
         : r < 1e9
-            ? '雑居ビルの1フロア'
+            ? 1
             : r < 3e10
-                ? '自社ビル'
+                ? 2
                 : r < 1e12
-                    ? '本社タワー'
-                    : '摩天楼の本社');
+                    ? 3
+                    : 4;
   }
 
   String stageName() => M(biz.length + subs().length >= 10

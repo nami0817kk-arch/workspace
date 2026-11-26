@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'look.dart';
 import 'real_screens.dart';
+import 'tabs.dart' show firstOf;
 import 'widgets.dart';
 
 /// 0〜1 の整い具合を言葉に（視察していない国はおおまかにしか分からない）
@@ -76,12 +78,16 @@ List<Widget> worldDetailPanels(GameController ctl, String c) {
       key: const ValueKey('world-trade'),
       padding: const EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(child: CardTitle(tr('関税・物流・政治'))),
-          if (stops.isNotEmpty) Tag(tx(stops.first.ja), kind: TagKind.bad),
-          if (shock != null) Padding(padding: const EdgeInsets.only(left: 4), child: Tag(tr('政変'), kind: TagKind.bad)),
-          DetailBtn(key: const ValueKey('detail-world-trade'), open: more, onTap: () => ctl.toggleShown('detail-world-trade')),
-        ]),
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: SectionHead(tr('関税・物流・政治'), Icons.local_shipping_outlined,
+              tone: ScreenTone.world,
+              trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                if (stops.isNotEmpty) Flexible(child: Tag(tx(stops.first.ja), kind: TagKind.bad)),
+                if (shock != null) Padding(padding: const EdgeInsets.only(left: 4), child: Tag(tr('政変'), kind: TagKind.bad)),
+                DetailBtn(key: const ValueKey('detail-world-trade'), open: more, onTap: () => ctl.toggleShown('detail-world-trade')),
+              ])),
+        ),
         Grid2([
           Kv(tr('関税の平均'), _pct1(kp(TARIFF[c] ?? const [(1980, 8.0)], s.yr()) / 100)),
           if (c != s.home) Kv(tr('{0}から入る物', [cm[s.home]!.n]), _pct1(s.tariffOf(c, s.home))),
@@ -115,21 +121,25 @@ List<Widget> worldDetailPanels(GameController ctl, String c) {
     // 伸びている業種
     Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('伸びている業種')),
+        SectionHead(tr('伸びている業種'), Icons.trending_up, tone: ScreenTone.world),
         const SizedBox(height: 2),
         if (!s.ctryOpen(c))
           Muted(tr('この年はまだ入れません'))
         else if (!knows)
           Muted(tr('視察で分かります'))
         else
-          for (final i in s.growingIn(c)) Text('${tr('・@@bullet')}${i.name}', style: ts(size: 12.5)),
+          // 業種の絵と名前を並べる（1.1.0+41）
+          Wrap(spacing: 10, runSpacing: 4, children: [
+            for (final i in s.growingIn(c))
+              Row(mainAxisSize: MainAxisSize.min, children: [IndIcon(i, size: 20), const SizedBox(width: 4), Text(i.name, style: ts(size: 12.5))]),
+          ]),
       ]),
     ),
-    // 自社の出方
+    // 自社の出方（はじめは4つまで。残りは「もっと見る」。1.1.0+41）
     Panel(
       key: const ValueKey('world-mine'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('自社の出方')),
+        SectionHead(tr('自社の出方'), Icons.flag_outlined, tone: ScreenTone.world, trailing: mine.isEmpty ? null : Muted(tr('{0}つ', [mine.length]), size: 12)),
         const SizedBox(height: 2),
         if (!s.ctryOpen(c))
           Muted(tr('この年はまだ入れません'))
@@ -137,7 +147,7 @@ List<Widget> worldDetailPanels(GameController ctl, String c) {
           Muted(tr('まだ出ていません。「事業」の「海外に出る」から出られます')),
           if (s.biz.isNotEmpty && s.entryNote(s.biz.first, c) != null) Padding(padding: const EdgeInsets.only(top: 2), child: Muted(tx(s.entryNote(s.biz.first, c)!), size: 12)),
         ] else
-          for (final b in mine) _mineRow(s, b, c),
+          ...firstOf(ctl, 'world-mine', [for (final b in mine) _mineRow(s, b, c)], 4),
         if ((s.trade.trapped[c] ?? 0) > 0)
           Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('送金の制限で国の外へ出せないお金：{0}', [yen(s.trade.trapped[c]!)]), size: 12)),
       ]),
@@ -149,10 +159,12 @@ List<Widget> worldDetailPanels(GameController ctl, String c) {
         padding: const EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad),
         // 仕入れ先の国はいつも出し、足す・やめるの手と説明は押すと開く（1.1.0+31）
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Row(children: [
-            Expanded(child: CardTitle(tr('仕入れの網'))),
-            DetailBtn(key: const ValueKey('detail-world-supply'), open: supplyOpen, label: tr('仕入れ先を変える'), onTap: () => ctl.toggleShown('detail-world-supply')),
-          ]),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: SectionHead(tr('仕入れの網'), Icons.hub_outlined,
+                tone: ScreenTone.world,
+                trailing: DetailBtn(key: const ValueKey('detail-world-supply'), open: supplyOpen, label: tr('仕入れ先を変える'), onTap: () => ctl.toggleShown('detail-world-supply'))),
+          ),
           if (supplyOpen) Muted(tr('仕入れ先を分けると高くつくが、1か国が止まっても作り続けられる'), size: 12),
           for (final b in inputs) _supplyRow(ctl, s, b, c, acts: supplyOpen),
         ]),

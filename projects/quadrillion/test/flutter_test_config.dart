@@ -7,6 +7,7 @@ import 'package:quadrillion/game/game.dart';
 import 'package:quadrillion/ui/controller.dart';
 import 'package:quadrillion/ui/look.dart';
 import 'package:quadrillion/ui/widgets.dart';
+import 'package:quadrillion/ui/world_map.dart';
 
 /// テストの端末の言語は日本語にしておく（もとからあるテストは日本語の画面を見る）。英語のテストは lang: 'en' で始める
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
@@ -23,5 +24,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   GameController.saveDelay = Duration.zero;
   // 本物の経済の統計（アプリは起動時に rootBundle から読む。1.1.0+25）
   EconData.current = loadEcon(File('assets/econ/econ.json').readAsStringSync());
+  // 世界の地図の国の形（アプリは起動時に rootBundle から読む。1.1.0+41）
+  WorldShapes.current = WorldShapes.parse(File('assets/map/world.json').readAsStringSync());
   await testMain();
 }

@@ -11,10 +11,12 @@ import 'controller.dart';
 import 'fin_screens.dart';
 import 'glossary.dart';
 import 'life_screens.dart';
+import 'look.dart';
 import 'painters.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
+import 'world_map.dart';
 import 'world_screen.dart';
 
 /// 左の切り替え（id・名前・印）
@@ -401,54 +403,85 @@ List<Widget> townTabL(GameController ctl, double width) {
   );
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
   final rival = topRival(s);
+  const tone = ScreenTone.town;
+  final t = s.turn;
+  final m1 = histBack(s, 1), y1 = histBack(s, 12);
+  final mon = tr('前月'), yr = tr('前年');
+  final rank = s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1;
+  // 見出しの帯（1.1.0+41）：会社の段階・本社・拠点と出ている国の数
+  final band = ScreenBand(
+    key: const ValueKey('town-band'),
+    tone: tone,
+    icon: Icons.location_city,
+    title: tr('街@@tab'),
+    facts: [
+      (tr('段階'), tx(s.stageName())),
+      (tr('本社'), tx(s.officeName())),
+      (tr('拠点'), tr('{0}・{1}か国', [cm[s.home]!.city, nCtry == 0 ? 1 : nCtry])),
+    ],
+  );
+  // 会社の数字は要点のカード（前の月・前の年からの増減つき。1.1.0+41）
+  final kpis = KpiRow(key: const ValueKey('town-kpis'), minW: 92, [
+    KpiCard(key: const ValueKey('kpi-town-cap'), label: tr('時価総額'), icon: Icons.trending_up, value: s.cap, fmt: yen, turn: t, tone: tone,
+        delta: Delta.pct(s.cap, m1?.cap, label: mon), delta2: Delta.pct(s.cap, y1?.cap, label: yr)),
+    KpiCard(key: const ValueKey('kpi-town-rank'), label: tr('世界の順位'), icon: Icons.emoji_events_outlined, value: rank.toDouble(), fmt: (v) => tr('{0}位', [v.round()]), turn: t, tone: tone),
+    KpiCard(key: const ValueKey('kpi-town-rev'), label: tr('月の売上'), icon: Icons.payments_outlined, value: s.rev, fmt: yen, turn: t, tone: tone,
+        delta: Delta.pct(s.rev, m1?.rev, label: mon), delta2: Delta.pct(s.rev, y1?.rev, label: yr)),
+    KpiCard(key: const ValueKey('kpi-town-pre'), label: tr('月の利益'), icon: Icons.savings_outlined, value: s.pre, fmt: yen, turn: t, tone: tone,
+        color: s.pre >= 0 ? Pal.up : Pal.down, delta: Delta.diff(s.pre, m1?.pre, yen, label: mon), delta2: Delta.diff(s.pre, y1?.pre, yen, label: yr)),
+    KpiCard(key: const ValueKey('kpi-town-cash'), label: tr('現金'), icon: Icons.account_balance_wallet_outlined, value: s.cash, fmt: yen, turn: t, tone: tone,
+        color: s.cash < 0 ? Pal.down : Pal.ink, delta: Delta.diff(s.cash, m1?.cash, yen, label: mon)),
+    KpiCard(key: const ValueKey('kpi-town-biz'), label: tr('事業'), icon: Icons.work_outline, value: s.biz.length.toDouble(), fmt: (v) => tr('{0}つ', [v.round()]), turn: t, tone: tone,
+        sub: tr('子会社 {0}社・部下 {1}人', [s.subs().length, s.staff.length])),
+  ], maxPer: 3);
+  // 会社の段階・本社・拠点は上の帯に出すので、ここは目標だけ（1.1.0+41）
   final me = Panel(
     key: const ValueKey('town-company'),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Wrap(spacing: 8, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
-        Text(tx(s.stageName()), key: const ValueKey('town-stage'), style: ts(bold: true)),
-        Text(tr('{0}を拠点に{1}か国で勝負中', [cm[s.home]!.city, nCtry == 0 ? 1 : nCtry]), style: ts(size: 12.5, color: Pal.mute)),
-        Tag(s.officeName(), key: const ValueKey('town-office'), kind: TagKind.gold),
-      ]),
-      const SizedBox(height: 6),
-      Grid2([
-        Kv(tr('時価総額'), yen(s.cap)),
-        Kv(tr('世界の順位'), tr('{0}位', [s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1])),
-        Kv(tr('月の売上'), yen(s.rev)),
-        Kv(tr('月の利益'), yen(s.pre)),
-        Kv(tr('現金'), yen(s.cash)),
-        Kv(tr('事業'), tr('{0}つ', [s.biz.length])),
-      ]),
-      if (rival != null)
-        Container(
-          key: const ValueKey('town-rival-gap'),
-          margin: const EdgeInsets.only(top: 6),
-          padding: const EdgeInsets.only(top: 6),
-          decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
-          child: Text(
-              s.cap >= rival.cap
-                  ? tr('宿敵 {0} の時価総額は{1}。あなたが{2}倍', [nmL(rival.name), yen(rival.cap), timesL(s.cap / math.max(rival.cap, 1))])
-                  : tr('宿敵 {0} の時価総額は{1}。あなたの{2}倍', [nmL(rival.name), yen(rival.cap), timesL(rival.cap / math.max(s.cap, 1))]),
-              style: ts(size: 12.5)),
-        ),
-      Container(
-        margin: const EdgeInsets.only(top: 6),
-        padding: const EdgeInsets.only(top: 6),
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
-        child: Text.rich(TextSpan(children: [TextSpan(text: tr('目標　'), style: ts(size: 12.5, bold: true)), TextSpan(text: tx(s.goalText()), style: ts(size: 12.5))])),
-      ),
-    ]),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
+    child: Text.rich(TextSpan(children: [
+      WidgetSpan(alignment: PlaceholderAlignment.middle, child: Padding(padding: const EdgeInsets.only(right: 6), child: Icon(Icons.flag, size: 16, color: tone.ink))),
+      TextSpan(text: tr('目標　'), style: ts(size: 12.5, bold: true)),
+      TextSpan(text: tx(s.goalText()), style: ts(size: 12.5)),
+    ])),
   );
-  final econ = countryPanel(ctl, s.home, key: const ValueKey('town-econ'), title: tr('{0}の景気', [cm[s.home]!.n]));
-  // 今月の分（この月と、月を進めたときに出た知らせ）だけを出し、それより前は「もっと見る」で出す（1.1.0+31）
+  // 宿敵の顔つき（いちばん大きい宿敵。顔・名前・時価総額の差。押すと下の宿敵の欄で開く）
+  final foe = rival == null
+      ? null
+      : Panel(
+          key: const ValueKey('town-rival-gap'),
+          border: rivalInk(rival.rival!.col).withValues(alpha: .5),
+          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+          child: Row(children: [
+            rivalFace(s, rival, size: 44),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text.rich(TextSpan(children: [
+                  TextSpan(text: tr('宿敵 '), style: ts(size: 11.5, color: Pal.mute)),
+                  TextSpan(text: nmL(rival.name), style: ts(size: 14, bold: true, color: rivalInk(rival.rival!.col))),
+                ])),
+                Text(tr('社長 {0}・関係 {1}', [nmL(rival.presName), tx(relWord(rival.rel))]), style: ts(size: 12, color: Pal.mute)),
+                const SizedBox(height: 2),
+                Text(
+                    s.cap >= rival.cap
+                        ? tr('時価総額 {0}（あなたが{1}倍）', [yen(rival.cap), timesL(s.cap / math.max(rival.cap, 1))])
+                        : tr('時価総額 {0}（あなたの{1}倍）', [yen(rival.cap), timesL(rival.cap / math.max(s.cap, 1))]),
+                    style: ts(size: 12.5, bold: true, color: s.cap >= rival.cap ? Pal.up : Pal.down)),
+              ]),
+            ),
+          ]),
+        );
+  final econ = countryPanel(ctl, s.home, key: const ValueKey('town-econ'), title: tr('{0}の景気', [cm[s.home]!.n]), tone: tone);
+  // 今月の分（この月と、月を進めたときに出た知らせ）を4つまで出し、残りは「もっと見る」で出す（1.1.0+31。1.1.0+41 から4つまで）
   final recent = s.log.reversed.take(townNewsMax).toList();
   final cur = s.year * 12 + s.q;
-  final fresh = recent.takeWhile((n) => n.y != null && n.q != null && n.y! * 12 + n.q! >= cur - 1).length;
+  final fresh = math.min(townNewsFew, recent.takeWhile((n) => n.y != null && n.q != null && n.y! * 12 + n.q! >= cur - 1).length);
   final newsOpen = ctl.shown.contains('town-news');
   Widget line(LogEntry n) => NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n));
   final news = Panel(
     key: const ValueKey('town-news'),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(tr('今月のニュース')),
+      SectionHead(tr('今月のニュース'), Icons.newspaper, tone: tone),
       const SizedBox(height: 4),
       if (recent.isEmpty) Muted(tr('まだ知らせはありません')) else if (fresh == 0) Muted(tr('今月の知らせはありません')),
       for (final n in recent.take(newsOpen ? recent.length : fresh)) line(n),
@@ -456,18 +489,15 @@ List<Widget> townTabL(GameController ctl, double width) {
         MoreBtn(key: const ValueKey('more-town-news'), open: newsOpen, rest: recent.length - fresh, onTap: () => ctl.toggleShown('town-news')),
     ]),
   );
-  final out = <Widget>[];
+  final out = <Widget>[band];
   if (wide) {
-    out.add(Padding(
-      padding: const EdgeInsets.only(top: 6),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [pic, if (cities.length > 1) cityChips, me])),
-        const SizedBox(width: 8),
-        Expanded(flex: 2, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [econ, news])),
-      ]),
-    ));
+    out.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [pic, if (cities.length > 1) cityChips, const SizedBox(height: 6), kpis, me])),
+      const SizedBox(width: 8),
+      Expanded(flex: 2, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [?foe, econ, news])),
+    ]));
   } else {
-    out.addAll([const SizedBox(height: 6), pic, if (cities.length > 1) cityChips, me, econ, news]);
+    out.addAll([pic, if (cities.length > 1) cityChips, const SizedBox(height: 6), kpis, me, ?foe, econ, news]);
   }
   final vow = s.vow;
   if (vow != null) {
@@ -480,6 +510,9 @@ List<Widget> townTabL(GameController ctl, double width) {
 /// 街のニュースで「もっと見る」まで含めて出す数
 const townNewsMax = 10;
 
+/// 街のニュースで、はじめに出す数（今月の知らせがもっとあれば「もっと見る」。1.1.0+41）
+const townNewsFew = 4;
+
 /// いちばん大きい宿敵（いなければ null）
 Company? topRival(Game s) {
   final l = s.cos.where((c) => c.alive && c.rival != null && c.parent != 'player').toList()..ssort((a, b) => b.cap.compareTo(a.cap));
@@ -487,16 +520,15 @@ Company? topRival(Game s) {
 }
 
 /// 国の景気の欄（成長・物価・金利・為替・最低賃金・法人税・失業率）
-Widget countryPanel(GameController ctl, String c, {Key? key, String? title}) {
+Widget countryPanel(GameController ctl, String c, {Key? key, String? title, ScreenTone tone = ScreenTone.world}) {
   final s = ctl.game!;
   final g = s.growthOf(c);
   return Panel(
     key: key,
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Row(children: [
-        Expanded(child: CardTitle(title ?? cm[c]!.n)),
-        Tag(g < 0 ? tr('不況') : g < 1.5 ? tr('足踏み') : g < 4 ? tr('ふつう') : tr('好景気'), kind: g < 0 ? TagKind.bad : g >= 4 ? TagKind.good : TagKind.plain),
-      ]),
+      // 見出しは印つき（1.1.0+41）
+      SectionHead(title ?? cm[c]!.n, Icons.insights,
+          tone: tone, trailing: Tag(growthWord(g), kind: g < 0 ? TagKind.bad : g >= 4 ? TagKind.good : TagKind.plain)),
       const SizedBox(height: 4),
       Grid2([
         Kv(tr('成長率'), '${pctD(g)}%'),
@@ -517,13 +549,29 @@ Widget countryPanel(GameController ctl, String c, {Key? key, String? title}) {
 const moneyViews = [('cash', '資金繰り'), ('bank', '借金と銀行'), ('cost', '経費'), ('tax', '税金'), ('fs', '決算書'), ('seg', '事業別'), ('book', '社史と順位')];
 
 List<Widget> moneyTab(GameController ctl) {
+  final s = ctl.game!;
   final out = <Widget>[
-    Padding(
-      padding: const EdgeInsets.only(top: 6, bottom: 2),
-      child: Wrap(spacing: 6, runSpacing: 4, children: [
-        for (final v in moneyViews) PickChip(tr(v.$2), key: ValueKey('money-${v.$1}'), on: ctl.moneyView == v.$1, onTap: () => ctl.setMoney(v.$1)),
+    // 見出しの帯（1.1.0+41）：現金・借金・月の利益・格付け
+    ScreenBand(
+      key: const ValueKey('money-band'),
+      tone: ScreenTone.money,
+      icon: Icons.account_balance,
+      title: tr('お金@@tab'),
+      facts: [(tr('現金'), yen(s.cash)), (tr('借金'), yen(s.debt)), (tr('月の利益'), yen(s.pre)), (tr('格付け'), s.rating())],
+    ),
+    // 札は1行に並べ、入りきらない分は横に送る（1.1.0+41）
+    SingleChildScrollView(
+      key: const PageStorageKey('money-views'),
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(children: [
+        for (final v in moneyViews) ...[
+          if (v != moneyViews.first) const SizedBox(width: 6),
+          PickChip(tr(v.$2), key: ValueKey('money-${v.$1}'), on: ctl.moneyView == v.$1, onTap: () => ctl.setMoney(v.$1)),
+        ],
       ]),
     ),
+    ?moneyKpis(ctl),
   ];
   switch (ctl.moneyView) {
     case 'bank':
@@ -542,6 +590,78 @@ List<Widget> moneyTab(GameController ctl) {
       out.addAll(_cashView(ctl));
   }
   return out;
+}
+
+/// 前の月・1年前の記録（無ければ null。hist のいちばん後ろが今月）
+HistEntry? histBack(Game s, int back) => s.hist.length > back ? s.hist[s.hist.length - 1 - back] : null;
+
+/// お金の画面の要点のカード（1.1.0+41。見ている面ごとに4枚まで。決算書・事業別は表が主なので出さない）
+Widget? moneyKpis(GameController ctl) {
+  final s = ctl.game!;
+  final t = s.turn;
+  final m1 = histBack(s, 1), y1 = histBack(s, 12);
+  final mon = tr('前月'), yr = tr('前年');
+  const tone = ScreenTone.money;
+  KpiCard card(String id, String label, IconData icon, double v, String Function(double) fmt,
+          {Delta? d, Delta? d2, String? sub, Color? subColor, Color color = Pal.ink}) =>
+      KpiCard(key: ValueKey('kpi-$id'), label: label, icon: icon, value: v, fmt: fmt, turn: t, tone: tone, color: color, delta: d, delta2: d2, sub: sub, subColor: subColor);
+  final cards = <Widget>[];
+  switch (ctl.moneyView) {
+    case 'cash':
+      final plan = s.cashPlan();
+      final line = s.dangerLine();
+      final last = plan.isEmpty ? s.cash : plan.last.cash;
+      cards.addAll([
+        card('cash', tr('現金'), Icons.account_balance_wallet_outlined, s.cash, yen,
+            d: Delta.diff(s.cash, m1?.cash, yen, label: mon), d2: Delta.diff(s.cash, y1?.cash, yen, label: yr), color: s.cash < 0 ? Pal.down : Pal.ink),
+        if (plan.isNotEmpty) ...[
+          card('cash-in', tr('来月入る'), Icons.south_west, plan.first.inflow, yen, color: Pal.up),
+          card('cash-out', tr('来月出る'), Icons.north_east, plan.first.out, yen, color: Pal.down),
+        ],
+        card('cash-6', tr('6か月後の残り'), Icons.event_outlined, last, yen,
+            color: last < line ? Pal.down : Pal.ink, sub: tr('払えなくなる線 {0}', [yen(line)]), subColor: last < line ? Pal.down : null),
+      ]);
+    case 'bank':
+      final r = s.ratingIdx();
+      final hasSubs = s.subs().isNotEmpty;
+      cards.addAll([
+        card('bank-rating', tr('格付け'), Icons.verified_outlined, r.toDouble(), (v) => ratings[v.round().clamp(0, ratings.length - 1)],
+            color: r == 0 ? Pal.up : r >= 3 ? Pal.down : r == 2 ? Pal.warn : Pal.ink,
+            sub: tr('借金は利益の{0}', [s.groupDebt <= 0 ? '―' : (s.annualProfit() <= 0 ? tr('赤字') : tr('{0}倍', [s.debtMultiple().toStringAsFixed(1)]))])),
+        card('debt', tr('借金の合計'), Icons.receipt_long_outlined, s.debt, yen, sub: hasSubs ? tr('グループ {0}', [yen(s.groupDebt)]) : null),
+        card('room', tr('あと借りられる'), Icons.add_card_outlined, s.borrowRoom(), yen, sub: tr('上限 {0}', [yen(s.borrowLimit())])),
+        card('rate', tr('次に借りる金利'), Icons.percent, s.loanRate() * 100, (v) => '${pctD(v)}%', sub: tr('今月の返済 {0}', [yen(s.loanPrincipal() + s.loanInterest())])),
+      ]);
+    case 'cost':
+      final now = s.expenses(), was = s.expLast;
+      double sum(Map<String, double> m) => expKeys.fold(0.0, (a, k) => a + (m[k] ?? 0));
+      final top = expKeys.reduce((a, b) => (now[a] ?? 0) >= (now[b] ?? 0) ? a : b);
+      cards.addAll([
+        card('cost-all', tr('経費の合計（月）'), Icons.receipt_outlined, sum(now), yen,
+            d: was.isEmpty ? null : Delta.pct(sum(now), sum(was), label: mon, higherIsBetter: false)),
+        card('cost-labor', tr('人件費'), Icons.groups_outlined, now['labor'] ?? 0, yen,
+            d: was['labor'] == null ? null : Delta.pct(now['labor'] ?? 0, was['labor'], label: mon, higherIsBetter: false)),
+        card('cost-top', tr('いちばん大きい内訳'), Icons.leaderboard_outlined, now[top] ?? 0, yen, sub: tr(expNames[top]!)),
+      ]);
+    case 'tax':
+      cards.addAll([
+        card('tax-rate', tr('法人税率'), Icons.gavel_outlined, s.corpTaxRate() * 100, (v) => '${pctD(v)}%', sub: '${cm[s.home]!.n}${tr('・')}${yearL(s.year)}'),
+        card('tax-ytd', tr('今年払った税金'), Icons.request_quote_outlined, s.ytdTax, yen, sub: tr('今年の利益 {0}', [yen(s.ytdPre)])),
+        card('tax-last', tr('先月の税金'), Icons.event_note_outlined, s.lastTax, yen),
+      ]);
+    case 'book':
+      final me = s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1;
+      cards.addAll([
+        card('cap', tr('時価総額'), Icons.trending_up, s.cap, yen, d: Delta.pct(s.cap, m1?.cap, label: mon), d2: Delta.pct(s.cap, y1?.cap, label: yr)),
+        card('rank', tr('世界の順位'), Icons.emoji_events_outlined, me.toDouble(), (v) => tr('{0}位', [v.round()])),
+        card('rev', tr('月の売上'), Icons.payments_outlined, s.rev, yen, d: Delta.pct(s.rev, m1?.rev, label: mon), d2: Delta.pct(s.rev, y1?.rev, label: yr)),
+        card('pre', tr('月の利益'), Icons.savings_outlined, s.pre, yen,
+            color: s.pre >= 0 ? Pal.up : Pal.down, d: Delta.diff(s.pre, m1?.pre, yen, label: mon), d2: Delta.diff(s.pre, y1?.pre, yen, label: yr)),
+      ]);
+    default:
+      return null;
+  }
+  return Padding(padding: const EdgeInsets.only(top: 2), child: KpiRow(cards, minW: 92));
 }
 
 Widget _cell(String t, {double w = 0, bool bold = false, Color c = Pal.ink, TextAlign a = TextAlign.right}) {
@@ -580,7 +700,7 @@ List<Widget> _cashView(GameController ctl) {
     Panel(
       key: const ValueKey('money-cash'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('この先6か月の資金繰り')),
+        SectionHead(tr('この先6か月の資金繰り'), Icons.waterfall_chart, tone: ScreenTone.money),
         const SizedBox(height: 4),
         Text(
             firstBad < 0
@@ -645,7 +765,6 @@ List<Widget> _bankView(GameController ctl) {
   final s = ctl.game!;
   final room = s.borrowRoom();
   final x = s.debtMultiple();
-  final r = s.rating();
   // 子会社の借金の持ち分（1.1.0+39。子会社がいれば、グループの借金として出す）
   final subD = s.subDebtShare();
   final hasSubs = s.subs().isNotEmpty;
@@ -667,14 +786,11 @@ List<Widget> _bankView(GameController ctl) {
     Panel(
       key: const ValueKey('money-bank'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(child: CardTitle(tr('借金と銀行'))),
-          if (hasSubs) Info(ctl, const ['grpdebt']),
-          Tag(tr('格付け {0}', [r]), key: const ValueKey('bank-rating'), kind: r == 'A' ? TagKind.good : r == 'D' ? TagKind.bad : r == 'C' ? TagKind.gold : TagKind.plain),
-        ]),
+        // 格付け・借金の合計・あと借りられる・次に借りる金利は、上の要点のカードに出す（1.1.0+41）
+        SectionHead(tr('借金と銀行'), Icons.account_balance_outlined,
+            tone: ScreenTone.money, trailing: hasSubs ? Info(ctl, const ['grpdebt']) : null),
         const SizedBox(height: 4),
         Grid2([
-          Kv(tr('借金の合計'), yen(s.debt)),
           Kv(tr('年の利益'), yen(s.annualProfit())),
           if (hasSubs) ...[
             Kv(tr('子会社の借金（持ち分）'), yen(subD), key: const ValueKey('bank-subdebt')),
@@ -683,10 +799,7 @@ List<Widget> _bankView(GameController ctl) {
           // 「赤字」は年の利益が無いときだけ（1.1.0+39。子会社の借金が入ると、黒字でも99倍を超えることがある）
           Kv(tr('借金は利益の'), s.groupDebt <= 0 ? '―' : (s.annualProfit() <= 0 ? tr('赤字') : tr('{0}倍', [x.toStringAsFixed(1)]))),
           Kv(tr('借りられる上限'), yen(s.borrowLimit())),
-          Kv(tr('あと借りられる'), yen(room)),
           Kv(tr('担保の値打ち'), yen(s.collateral())),
-          Kv(tr('次に借りる金利'), '${pctD(s.loanRate() * 100)}%'),
-          Kv(tr('今月の返済'), yen(s.loanPrincipal() + s.loanInterest())),
         ]),
         const SizedBox(height: 4),
         Muted(
@@ -699,7 +812,7 @@ List<Widget> _bankView(GameController ctl) {
     Panel(
       key: const ValueKey('bank-loans'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('借りている相手')),
+        SectionHead(tr('借りている相手'), Icons.list_alt, tone: ScreenTone.money, trailing: rows.isEmpty ? null : Muted(tr('{0}件', [rows.length]), size: 12)),
         const SizedBox(height: 4),
         if (rows.isEmpty)
           Muted(tr('借金はありません'))
@@ -711,17 +824,15 @@ List<Widget> _bankView(GameController ctl) {
             _cell(tr('期限'), c: Pal.mute),
             _cell(tr('毎月の返済'), c: Pal.mute),
           ]),
-          ...rows,
+          // 期限の近い5件を先に出し、残りは「もっと見る」（1.1.0+41。毎月借りる会社では20件を超えて、画面が長くなっていた）
+          ...firstOf(ctl, 'bank-loans', rows, 5),
         ],
       ]),
     ),
     Panel(
       key: const ValueKey('bank-act'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(child: CardTitle(tr('銀行に会う'))),
-          ApTag(hr(s, 'bank')),
-        ]),
+        SectionHead(tr('銀行に会う'), Icons.handshake_outlined, tone: ScreenTone.money, trailing: ApTag(hr(s, 'bank'))),
         const SizedBox(height: 4),
         Wrap(spacing: 6, runSpacing: 4, children: [
           Muted(tr('返す期限'), size: 12),
@@ -792,7 +903,7 @@ List<Widget> _costView(GameController ctl) {
     Panel(
       key: const ValueKey('money-cost'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('経費（毎月）')),
+        SectionHead(tr('経費（毎月）'), Icons.receipt_outlined, tone: ScreenTone.money),
         const SizedBox(height: 4),
         Row(children: [
           _cell(tr('内訳'), w: Ui.sw(110), a: TextAlign.left, c: Pal.mute),
@@ -809,85 +920,71 @@ List<Widget> _costView(GameController ctl) {
 }
 
 List<Widget> _taxView(GameController ctl) {
-  final s = ctl.game!;
+  // 税金・減価償却・保険・IT・特許の欄は、短いほうの列へ詰めて2列に（1.1.0+41）
   return [
+    Masonry2([
     Panel(
       key: const ValueKey('money-tax'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('税金')),
-        const SizedBox(height: 4),
-        Grid2([
-          Kv(tr('法人税率（{0}・{1}）', [cm[s.home]!.n, yearL(s.year)]), '${pctD(s.corpTaxRate() * 100)}%'),
-          Kv(tr('今年の利益（積み上げ）'), yen(s.ytdPre)),
-          Kv(tr('今年払った税金'), yen(s.ytdTax)),
-          Kv(tr('先月の税金'), yen(s.lastTax)),
-        ]),
-        const SizedBox(height: 6),
+        SectionHead(tr('税金'), Icons.gavel_outlined, tone: ScreenTone.money),
+        // 税率・今年払った税金・先月の税金は、上の要点のカードに出す（1.1.0+41）
+        const SizedBox(height: 2),
         Muted(tr('税金は国と年の法人税率で、今年の利益の積み上げにかかります。赤字の月があると、今年払った分から戻ります。年が替わると積み上げは0に戻ります'), size: 11.5),
       ]),
     ),
     // 減価償却・消費税・保険・IT・特許（1.1.0+30）
     ...taxLifePanels(ctl),
+    ]),
   ];
 }
 
 // ===== 世界 =====
-/// 地図に置く国の場所（経度・緯度のおおよそ）
-const Map<String, (double, double)> ctryPos = {
-  'jp': (138, 36), 'cn': (105, 34), 'kr': (127.5, 37), 'tw': (121, 23.7), 'in': (78, 22), 'id': (113, -2), 'th': (101, 15), 'vn': (106, 17), //
-  'ph': (122, 12), 'sg': (103.8, 1.3), 'us': (-98, 39), 'ca': (-100, 57), 'mx': (-102, 23), 'br': (-52, -10), 'uk': (-2, 54), 'de': (10, 51), //
-  'fr': (2, 46.5), 'it': (12.5, 42.5), 'es': (-4, 40), 'ru': (80, 60), 'sa': (45, 24), 'ng': (8, 9), 'za': (25, -29), 'au': (134, -25),
-};
-
-/// 成長率の色（不況は赤、ふつうは薄い緑、好景気は濃い緑）
-Color growthColor(double g) => g < 0
-    ? const Color(0xFFE57373)
+/// 景気のひとこと（成長率から）
+String growthWord(double g) => g < 0
+    ? tr('不況')
     : g < 1.5
-        ? const Color(0xFFF2D98A)
+        ? tr('足踏み')
         : g < 4
-            ? const Color(0xFFA5D6A7)
-            : const Color(0xFF43A047);
+            ? tr('ふつう')
+            : tr('好景気');
 
+/// 世界の画面（1.1.0+41 から、見出しの帯と、本物の形の地図を幅いっぱいに。地図は world_map.dart）
 List<Widget> worldTab(GameController ctl, double width) {
   final s = ctl.game!;
   final sel = ctl.worldSel ?? s.home;
   final open = [for (final c in CTRY) if (s.ctryOpen(c.c)) c];
   final sorted = open.toList()..ssort((a, b) => cw(b.c, s.yr()).compareTo(cw(a.c, s.yr())));
+  final nIn = CTRY.where((c) => _inMark(s, c.c).isNotEmpty).length;
+  final foes = s.unitsOn ? s.rivalsByCountry() : const <String, List<Company>>{};
+  final band = ScreenBand(
+    key: const ValueKey('world-band'),
+    tone: ScreenTone.world,
+    icon: Icons.public,
+    title: tr('世界@@tab'),
+    facts: [
+      (tr('出られる国'), tr('{0}か国', [open.length])),
+      (tr('出ている国'), tr('{0}か国', [nIn])),
+      (tr('選んでいる国'), '${cm[sel]!.n}${tr('・')}${growthWord(s.growthOf(sel))}'),
+    ],
+  );
+  Widget key(Widget mark, String t, {Key? k}) => Row(mainAxisSize: MainAxisSize.min, children: [mark, const SizedBox(width: 3), Text(t, key: k, style: ts(size: 11, color: Pal.mute))]);
+  Widget box(Color c) => Container(width: 10, height: 10, decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(2), border: Border.all(color: const Color(0x22000000))));
   final map = Panel(
     key: const ValueKey('world-map'),
     padding: const EdgeInsets.all(6),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      AspectRatio(
-        aspectRatio: 2.1,
-        child: LayoutBuilder(
-          builder: (context, c) => GestureDetector(
-            onTapUp: (d) {
-              final hit = WorldPainter.hitCountry(s, Size(c.maxWidth, c.maxHeight), d.localPosition);
-              if (hit != null) ctl.setWorld(hit);
-            },
-            child: Semantics(
-                label: tr('世界地図。国の色はその年の成長率'),
-                image: true,
-                child: CustomPaint(painter: WorldPainter(s, sel), size: Size.infinite)),
-          ),
-        ),
-      ),
+      WorldMap(s: s, sel: sel, onPick: ctl.setWorld),
       const SizedBox(height: 4),
       Wrap(spacing: 10, runSpacing: 2, children: [
-        for (final l in [(-1.0, '不況'), (1.0, '足踏み'), (3.0, 'ふつう'), (5.0, '好景気')])
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Container(width: 10, height: 10, decoration: BoxDecoration(color: growthColor(l.$1), borderRadius: BorderRadius.circular(2))),
-            const SizedBox(width: 3),
-            Text(tr(l.$2), style: ts(size: 11, color: Pal.mute)),
-          ]),
+        for (final l in [(-1.0, '不況'), (1.0, '足踏み'), (3.0, 'ふつう'), (5.0, '好景気')]) key(box(growthColor(l.$1)), tr(l.$2)),
+        if (open.length < CTRY.length) key(box(MapPal.closed), tr('まだ出られない国')),
         // 自社の名前があれば、その名前で（1.1.0+37）
         Text(s.myCo.isNotEmpty ? tr('★ {0}が出ている国', [nmL(s.myCo)]) : tr('★ 自社が出ている国'), style: ts(size: 11, color: Pal.mute)),
         if (s.unitsOn)
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Container(width: 9, height: 9, decoration: BoxDecoration(color: Pal.down.withValues(alpha: .25), shape: BoxShape.circle, border: Border.all(color: Pal.down))),
-            const SizedBox(width: 3),
-            Text(tr('宿敵の本拠'), key: const ValueKey('legend-rival'), style: ts(size: 11, color: Pal.mute)),
-          ]),
+          key(Container(width: 9, height: 9, decoration: BoxDecoration(color: rivalInk(foes.values.expand((l) => l).firstOrNull?.rival?.col ?? '#d23f3f'), borderRadius: BorderRadius.circular(2.5))),
+              tr('宿敵の本拠（札の右の四角）'),
+              k: const ValueKey('legend-rival')),
+        Text(tr('国を押すと、下に中身が出ます'), style: ts(size: 11, color: Pal.mute)),
       ]),
     ]),
   );
@@ -895,7 +992,7 @@ List<Widget> worldTab(GameController ctl, double width) {
     key: const ValueKey('world-table'),
     padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(tr('国の比較（{0}）', [yearL(s.year)])),
+      SectionHead(tr('国の比較（{0}）', [yearL(s.year)]), Icons.table_chart_outlined, tone: ScreenTone.world),
       const SizedBox(height: 4),
       Row(children: [
         _cell(tr('国'), w: Ui.sw(84), a: TextAlign.left, c: Pal.mute),
@@ -934,109 +1031,24 @@ List<Widget> worldTab(GameController ctl, double width) {
   );
   // 1.1.0+28 から、関税・物流・政治・伸びている業種・仕入れの網・視察を足した（world_screen.dart）
   // iPhone の横（幅約550）は、地図と国の中身の欄を短いほうの列へ詰めて2列にし、表はその下に全部の幅で置く（1.1.0+31）
+  // 1.1.0+41 から、地図は幅いっぱいに置き、その下に国の中身（短いほうの列へ詰めて2列）と表
   if (width < 620 && width >= cols2Min) {
-    return [const SizedBox(height: 6), Masonry2([map, ...worldDetailPanels(ctl, sel)]), table];
+    return [band, map, Masonry2(worldDetailPanels(ctl, sel)), table];
   }
   final detail = worldDetail(ctl, sel);
   if (width >= 620) {
     return [
-      Padding(
-        padding: const EdgeInsets.only(top: 6),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Expanded(flex: 3, child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [map, table])),
-          const SizedBox(width: 8),
-          Expanded(flex: 2, child: detail),
-        ]),
-      ),
+      band,
+      map,
+      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(flex: 3, child: table),
+        const SizedBox(width: 8),
+        Expanded(flex: 2, child: detail),
+      ]),
     ];
   }
-  return [const SizedBox(height: 6), map, detail, table];
+  return [band, map, detail, table];
 }
 
 String _inMark(Game s, String c) => s.biz.any((b) => s.ctryOf(b).contains(c)) ? '★' : '';
 
-/// 世界地図（国を丸で置く。色＝その年の成長率、大きさ＝市場の大きさ、★＝自社が出ている国）
-class WorldPainter extends CustomPainter {
-  final Game s;
-  final String sel;
-  final int stamp;
-  WorldPainter(this.s, this.sel) : stamp = Object.hash(s.turn, sel, s.biz.length, L.lang);
-
-  static Offset _pos(String c, Size size) {
-    final p = ctryPos[c] ?? (0.0, 0.0);
-    // 経度 -130〜160、緯度 -45〜70 を絵に収める
-    return Offset((p.$1 + 130) / 290 * size.width, (70 - p.$2) / 115 * size.height);
-  }
-
-  static double _r(Game s, String c, Size size) => (math.sqrt(math.max(cw(c, s.yr()), .01)) * .045 * size.height).clamp(size.height * .035, size.height * .12).toDouble();
-
-  /// 押した場所の国（いちばん近い国。遠すぎれば null）
-  static String? hitCountry(Game s, Size size, Offset at) {
-    String? best;
-    var bd = double.infinity;
-    for (final c in CTRY) {
-      if (!s.ctryOpen(c.c)) continue;
-      final d = (_pos(c.c, size) - at).distance - _r(s, c.c, size);
-      if (d < bd) {
-        bd = d;
-        best = c.c;
-      }
-    }
-    return bd < size.height * .12 ? best : null;
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bg = Paint()..color = const Color(0xFFDDEFF8);
-    canvas.drawRRect(RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(8)), bg);
-    // 大陸の目安（ごく簡単な形）
-    final land = Paint()..color = const Color(0xFFF3EEDF);
-    for (final r in const [
-      (-125.0, 70.0, -60.0, 15.0), (-80.0, 12.0, -35.0, -40.0), (-10.0, 70.0, 40.0, 36.0), (-15.0, 35.0, 50.0, -35.0), //
-      (40.0, 70.0, 145.0, 10.0), (95.0, 8.0, 125.0, -8.0), (113.0, -12.0, 153.0, -38.0),
-    ]) {
-      final a = _pos2(r.$1, r.$2, size), b = _pos2(r.$3, r.$4, size);
-      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromPoints(a, b), Radius.circular(size.height * .08)), land);
-    }
-    final dot = Paint();
-    final ring = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    // 宿敵の本拠の印（1.1.0+29。国の円の右上に、宿敵の色の点を並べる）
-    final foes = s.unitsOn ? s.rivalsByCountry() : const <String, List<Company>>{};
-    for (final c in CTRY) {
-      final o = _pos(c.c, size);
-      final r = _r(s, c.c, size);
-      final open = s.ctryOpen(c.c);
-      dot.color = open ? growthColor(s.growthOf(c.c)) : const Color(0xFFCCCCCC);
-      canvas.drawCircle(o, r, dot);
-      ring.color = c.c == sel ? Pal.goldtx : (c.c == s.home ? Pal.ink : Pal.line);
-      ring.strokeWidth = c.c == sel ? 2.5 : 1;
-      canvas.drawCircle(o, r, ring);
-      final mark = _inMark(s, c.c);
-      final tp = TextPainter(
-          text: TextSpan(text: '$mark${c.c.toUpperCase()}', style: TextStyle(fontSize: math.max(8, size.height * .045), color: Pal.ink, fontFamily: fontFamily, fontWeight: FontWeight.w700)),
-          textDirection: TextDirection.ltr)
-        ..layout();
-      tp.paint(canvas, o - Offset(tp.width / 2, tp.height / 2));
-      final fl = foes[c.c] ?? const <Company>[];
-      for (var i = 0; i < fl.length; i++) {
-        final p = o + Offset(r * .75 + i * size.height * .035, -r * .75);
-        final rr = math.max(3.0, size.height * .016);
-        canvas.drawCircle(p, rr, Paint()..color = hexColor(fl[i].rival!.col));
-        canvas.drawCircle(
-            p,
-            rr,
-            Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 1.2
-              ..color = Pal.down);
-      }
-    }
-  }
-
-  static Offset _pos2(double lon, double lat, Size size) => Offset((lon + 130) / 290 * size.width, (70 - lat) / 115 * size.height);
-
-  @override
-  bool shouldRepaint(covariant WorldPainter o) => o.s != s || o.stamp != stamp;
-}
