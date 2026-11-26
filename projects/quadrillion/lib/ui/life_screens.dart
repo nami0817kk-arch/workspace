@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'look.dart';
 import 'widgets.dart';
 
 String _p0(double v) => '${jsNum(jsRound(v * 100))}%';
@@ -26,17 +27,19 @@ List<Widget> presLifePanels(GameController ctl) {
   final l = s.life, bio = l.bio;
   // 細かい能力と説明の文は、押すと開く（1.1.0+31）
   bool open(String id) => ctl.shown.contains('detail-$id');
-  Widget head(String title, String id) => Row(children: [
-        Expanded(child: CardTitle(title)),
-        DetailBtn(key: ValueKey('detail-$id'), open: open(id), onTap: () => ctl.toggleShown('detail-$id')),
-      ]);
+  // 見出しは印つき（1.1.0+41）
+  Widget head(String title, String id, IconData icon) => Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: SectionHead(title, icon,
+            tone: ScreenTone.people, trailing: DetailBtn(key: ValueKey('detail-$id'), open: open(id), onTap: () => ctl.toggleShown('detail-$id'))),
+      );
   const pad = EdgeInsets.fromLTRB(Ui.pad, 0, Ui.pad, Ui.pad);
   return [
     Panel(
       key: const ValueKey('pres-bio'),
       padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        head(tr('経歴'), 'pres-bio'),
+        head(tr('経歴'), 'pres-bio', Icons.school_outlined),
         Grid2([
           Kv(tr('始め方'), switch (l.start) {
             'work' => tr('会社員を{0}年してから', [l.workYears]),
@@ -68,7 +71,7 @@ List<Widget> presLifePanels(GameController ctl) {
       key: const ValueKey('pres-private'),
       padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        head(tr('私生活'), 'pres-private'),
+        head(tr('私生活'), 'pres-private', Icons.home_outlined),
         Grid2([
           Kv(tr('家族'), l.married ? tr('結婚・子ども{0}人', [s.kids.length]) : tr('独身・子ども{0}人', [s.kids.length])),
           Kv(tr('個人の財産'), yen(s.wealth)),
@@ -85,7 +88,7 @@ List<Widget> presLifePanels(GameController ctl) {
       key: const ValueKey('pres-public'),
       padding: pad,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        head(tr('世間の顔'), 'pres-public'),
+        head(tr('世間の顔'), 'pres-public', Icons.campaign_outlined),
         Grid2([
           Kv(tr('評判'), '${l.fame.round()}'),
           Kv(tr('ブランド'), '${l.brand.round()}'),
@@ -118,7 +121,7 @@ List<Widget> taxLifePanels(GameController ctl) {
     Panel(
       key: const ValueKey('money-tax-more'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('減価償却と消費税')),
+        SectionHead(tr('減価償却と消費税'), Icons.calculate_outlined, tone: ScreenTone.money),
         const SizedBox(height: 4),
         Grid2([
           Kv(tr('今月の減価償却'), yen(s.depMonth())),
@@ -131,7 +134,7 @@ List<Widget> taxLifePanels(GameController ctl) {
     Panel(
       key: const ValueKey('money-insure'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('災害と保険')),
+        SectionHead(tr('災害と保険'), Icons.shield_outlined, tone: ScreenTone.money),
         const SizedBox(height: 4),
         Row(children: [
           Expanded(child: Text(l.insured ? tr('保険をかけている') : tr('保険をかけていない'), style: ts(size: 13, bold: true))),
@@ -143,7 +146,7 @@ List<Widget> taxLifePanels(GameController ctl) {
     Panel(
       key: const ValueKey('money-it'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('時代のIT')),
+        SectionHead(tr('時代のIT'), Icons.computer_outlined, tone: ScreenTone.money),
         const SizedBox(height: 4),
         for (var i = 0; i < itEras.length; i++)
           if (s.yr() >= s.itYear(i))
@@ -169,7 +172,7 @@ List<Widget> taxLifePanels(GameController ctl) {
       Panel(
         key: const ValueKey('money-patents'),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          CardTitle(tr('特許')),
+          SectionHead(tr('特許'), Icons.lightbulb_outline, tone: ScreenTone.money),
           for (final p in l.patents)
             Row(children: [
               Expanded(child: Text(tx(M('{0}（{1}年まで）', [I(p.ind), s.startYear + p.until ~/ 12])), style: ts(size: 12.5))),
@@ -336,7 +339,7 @@ List<Widget> zukanHist(GameController ctl) {
     if (!years.contains(c.y)) years.add(c.y);
   }
   return [
-    H2(tr('歴史')),
+    pageHead(tr('歴史'), Icons.history_edu, ScreenTone.zukan),
     Muted(tr('この遊びで起きた大きな出来事の年表です（新しい順）。')),
     if (rows.isEmpty) Panel(child: Muted(tr('まだ記録はありません。'))),
     for (final y in years)

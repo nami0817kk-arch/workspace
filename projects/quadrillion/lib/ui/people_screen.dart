@@ -3,13 +3,12 @@
 /// 右に1人の中身（経歴・分野ごとの能力・人柄・暮らし・健康・やる気・給料と相場。下に昇給・異動・研修・任せる・話を聞く・解雇）
 library;
 
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
 import 'life_screens.dart';
+import 'look.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -42,6 +41,24 @@ List<Person> peopleOf(Game s, String seg, {String src = 'all', String sort = 'ab
   };
   l.sort((a, b) => key(a).compareTo(key(b)));
   return l;
+}
+
+/// 人の画面の見出しの帯（1.1.0+41）：部下の数・給料の合計・注意のいる人・採用の候補
+Widget peopleBand(GameController ctl) {
+  final s = ctl.game!;
+  final warn = s.staff.where((p) => personWarns(s, p).isNotEmpty).length;
+  return ScreenBand(
+    key: const ValueKey('people-band'),
+    tone: ScreenTone.people,
+    icon: Icons.people,
+    title: tr('人@@tab'),
+    facts: [
+      (tr('部下'), tr('{0}人', [s.staff.length])),
+      (tr('給料の合計'), tr('{0}／月', [yen(s.salaries())])),
+      if (warn > 0) (tr('注意'), tr('{0}人', [warn])),
+      (tr('採用の候補'), tr('{0}人', [s.cands.length])),
+    ],
+  );
 }
 
 /// 人の注意の印（引き抜かれそう・体を壊しそう・不満）
@@ -182,7 +199,6 @@ List<Widget> _peopleStrip(GameController ctl, double width, List<Person> list, P
     if (seg == 'exec') SizedBox(width: pw, child: _presRow(ctl, presSel)),
     for (final p in list) SizedBox(width: pw, child: _personRow(ctl, p, p == sel)),
   ];
-  final at = presSel ? 0 : picks.length - list.length + (sel == null ? -1 : list.indexOf(sel));
   final head = <Widget>[
     Padding(
       padding: const EdgeInsets.only(top: 6, bottom: 4),
@@ -192,7 +208,14 @@ List<Widget> _peopleStrip(GameController ctl, double width, List<Person> list, P
         PickChip(tr('並べ替え：{0}', [tr(peopleSorts[i < 0 ? 0 : i].$2)]), key: const ValueKey('psort'), on: false, onTap: () => ctl.setPeopleSort(next)),
       ]),
     ),
-    Wrap(spacing: 6, runSpacing: 0, children: firstOf(ctl, 'people-picks', picks, math.max(6, at + 1))),
+    // 人の札は1段に並べ、入りきらない分は横に送って見る（1.1.0+41。事業の画面と同じ。前は2段＋「もっと見る」）
+    SingleChildScrollView(
+      key: const ValueKey('people-picks'),
+      scrollDirection: Axis.horizontal,
+      child: Row(children: [
+        for (var i = 0; i < picks.length; i++) ...[if (i > 0) const SizedBox(width: 6), picks[i]],
+      ]),
+    ),
     if (list.isEmpty && seg != 'exec')
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -344,7 +367,17 @@ Widget personDetail(GameController ctl, Person p, String seg) {
   final s = ctl.game!;
   final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
   final isCand = s.cands.contains(p), isOut = s.alumni.contains(p) || p == s.meet;
-  final head = Panel(
+  const tone = ScreenTone.people;
+  // 頭は画面の色の薄い面（事業の画面の頭と同じ作り。1.1.0+41）
+  final head = Container(
+    margin: const EdgeInsets.only(top: Ui.cardGap, bottom: 6),
+    padding: const EdgeInsets.all(Ui.pad),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [tone.soft, Pal.panel], begin: Alignment.topLeft, end: Alignment.bottomRight, stops: const [0, .7]),
+      borderRadius: BorderRadius.circular(Ui.rCard),
+      border: Border.all(color: tone.c.withValues(alpha: .35)),
+      boxShadow: const [BoxShadow(color: Color(0x141F2433), blurRadius: 10, offset: Offset(0, 3))],
+    ),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -354,7 +387,7 @@ Widget personDetail(GameController ctl, Person p, String seg) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(bold: true)),
+              Semantics(header: true, child: Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(size: 16, bold: true))),
               const SizedBox(height: 2),
               Wrap(
                 spacing: 4,
@@ -494,6 +527,23 @@ Widget personDetail(GameController ctl, Person p, String seg) {
     if (isCand) Kv(tr('雇う費用'), yen(s.hireFeeOf(p))),
   ]);
   final acts = _actions(ctl, p, job, isCand: isCand, isOut: isOut);
+  // 要点のカード（1.1.0+41）：いちばん高い能力・給料・やる気・健康（候補は能力の代わりに雇う費用）
+  final ab = topAbility(s, p);
+  final healthKnown = s.knows(p, 'health') || p.health < healthWarn || !isCand;
+  Color lvCol(double v) => v < 40 ? Pal.down : (v < 60 ? Pal.warn : Pal.up);
+  final kpis = KpiRow(key: ValueKey('person-kpis-${p.id}'), minW: 84, [
+    if (isCand)
+      KpiCard(label: tr('雇う費用'), icon: Icons.how_to_reg_outlined, value: s.hireFeeOf(p), fmt: yen, turn: s.turn, tone: tone)
+    else
+      KpiCard(label: tr('いちばん高い能力'), icon: Icons.star_outline, value: (p.ab[ab] ?? 0).toDouble(), fmt: (v) => '${ABN[ab]} ${s.showAb(p, ab)}', turn: s.turn, tone: tone),
+    KpiCard(label: tr('給料（月）'), icon: Icons.payments_outlined, value: p.salary * (s.hasT('frugal') && !isCand ? .7 : 1), fmt: yen, turn: s.turn, tone: tone,
+        sub: tr('相場の{0}', [pct(r * 100)]), subColor: r < payLowRatio ? Pal.down : null),
+    if (!isCand)
+      KpiCard(label: tr('やる気'), icon: Icons.local_fire_department_outlined, value: p.loy.clamp(0, 100).toDouble(), fmt: (v) => '${v.round()}', turn: s.turn, tone: tone,
+          color: lvCol(p.loy.toDouble())),
+    KpiCard(label: tr('健康'), icon: Icons.favorite_border, value: p.health, fmt: (v) => healthKnown ? '${v.round()}' : tr('？'), turn: s.turn, tone: tone,
+        color: healthKnown ? lvCol(p.health) : Pal.mute),
+  ]);
   return LayoutBuilder(
     builder: (context, c) {
       // iPhone の横（幅約550）でも2列にする（1.1.0+31）
@@ -502,6 +552,7 @@ Widget personDetail(GameController ctl, Person p, String seg) {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           head,
+          kpis,
           // 短いほうの列へ詰めて2列に並べる（1.1.0+31）
           if (wide)
             Masonry2([skills, career, person, life, pay])
@@ -583,12 +634,24 @@ String _awayJa(String? why) => switch (why) {
   _ => (why ?? '').startsWith('course') ? '研修中' : '休み',
 };
 
+/// 1人の中身の欄の見出しの印
+IconData _secIcon(String title) => title == tr('経歴')
+    ? Icons.work_history_outlined
+    : title == tr('分野ごとの能力')
+        ? Icons.insights
+        : title == tr('人柄')
+            ? Icons.psychology_outlined
+            : title == tr('給料と相場')
+                ? Icons.payments_outlined
+                : Icons.favorite_border;
+
 Widget _sec(String title, List<Widget> c) => Panel(
   padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Text(title, style: ts(size: 13, bold: true)),
+      // 見出しは印つき（1.1.0+41）
+      SectionHead(title, _secIcon(title), tone: ScreenTone.people),
       const SizedBox(height: 3),
       ...c,
     ],

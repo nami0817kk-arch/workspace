@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../game/game.dart';
 import 'controller.dart';
 import 'glossary.dart';
+import 'look.dart';
 import 'widgets.dart';
 
 /// 表の1行の決まり（id・名前の鍵・値の求め方・増えると良いか（1 良い・-1 悪い・0 どちらでもない）・段（0 ふつう・1 内訳・2 小計・3 合計）・たたむ組）
@@ -380,7 +381,8 @@ Widget _table(GameController ctl, String id, String title, List<FinLine> lines, 
     key: ValueKey(id),
     padding: const EdgeInsets.fromLTRB(Ui.pad, 4, Ui.pad, 8),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Row(children: [Flexible(child: CardTitle(title)), Info(ctl, terms), const Spacer(), ?yearStep]),
+      SectionHead(title, Icons.table_rows_outlined,
+          tone: ScreenTone.money, trailing: Row(mainAxisSize: MainAxisSize.min, children: [Info(ctl, terms), ?yearStep])),
       Row(children: [
         Expanded(flex: finLabelFlex, child: Muted(tr('項目'), size: 11.5)),
         finNum(tr('この年'), c: Pal.mute, size: 11.5),
@@ -478,7 +480,7 @@ List<Widget> _monthView(GameController ctl) {
       key: const ValueKey('fs-month'),
       padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [Flexible(child: CardTitle(tr(title))), Info(ctl, [ctl.fsTab == 'bs' ? 'bs' : ctl.fsTab == 'cf' ? 'cf' : 'pl'])]),
+        SectionHead(tr(title), Icons.table_rows_outlined, tone: ScreenTone.money, trailing: Info(ctl, [ctl.fsTab == 'bs' ? 'bs' : ctl.fsTab == 'cf' ? 'cf' : 'pl'])),
         Row(children: [
           finCell(tr('月'), w: Ui.sw(78), a: TextAlign.left, c: Pal.mute, size: 11.5),
           for (final c in cols) finNum(tr(c.$1), c: Pal.mute, size: 11.5),
@@ -503,7 +505,7 @@ List<Widget> _trendView(GameController ctl) {
   final show = ys.length > 5 ? ys.sublist(ys.length - 5) : ys;
   final recs = [for (final y in show) s.finYear(y)!];
   return _trendCharts(ctl, [for (final r in recs) r.n < 12 ? tr('{0}（{1}か月）', [r.y, r.n]) : '${r.y}'], recs, [for (final r in recs) r.n < 12],
-      tr('直近5年（年は1月〜12月。途中の年は薄い色）'));
+      tr('直近5年（年は1月〜12月。途中の年は月の数つき）'));
 }
 
 List<Widget> _trendMonths(GameController ctl, List<FinRec> recs) =>
@@ -526,18 +528,21 @@ List<Widget> _trendCharts(GameController ctl, List<String> labels, List<FinRec> 
         for (var i = 0; i < names.length; i++)
           Row(mainAxisSize: MainAxisSize.min, children: [Container(width: 12, height: 10, color: cols[i]), const SizedBox(width: 4), Muted(tr(names[i]), size: 12)]),
       ]);
+  // 1.1.0+41 から、棒ではなく推移のグラフ（目盛り・日付つき。押すと、その期間の値が出る）
   Widget chart(String id, String title, List<List<double>> series, List<Color> cols, List<String> names, List<String> info) => Panel(
         key: ValueKey(id),
         padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 8),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Row(children: [Flexible(child: CardTitle(title)), Info(ctl, info)]),
+          SectionHead(title, Icons.show_chart, tone: ScreenTone.money, trailing: Info(ctl, info)),
           const SizedBox(height: 4),
-          SizedBox(
-              height: 96,
-              child: Semantics(
-                  image: true,
-                  label: '$title. ${[for (var i = 0; i < names.length; i++) '${tr(names[i])} ${series[i].isEmpty ? '' : yen(series[i].last)}'].join(', ')}',
-                  child: CustomPaint(painter: FinBarsPainter(labels, series, cols, part), size: Size.infinite))),
+          TrendChart(
+            key: ValueKey('$id-chart'),
+            height: 104,
+            labels: labels,
+            fmt: yen,
+            series: [for (var i = 0; i < names.length; i++) TrendSeries(tr(names[i]), cols[i], series[i])],
+            summary: '$title. ${[for (var i = 0; i < names.length; i++) '${tr(names[i])} ${series[i].isEmpty ? '' : yen(series[i].last)}'].join(', ')}',
+          ),
           const SizedBox(height: 4),
           legend(names, cols),
         ]),
@@ -699,7 +704,8 @@ List<Widget> segView(GameController ctl) {
     key: const ValueKey('seg-sum'),
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(children: [Flexible(child: CardTitle(tr('事業ごとの損益'))), Info(ctl, const ['seg']), const Spacer(), finYearStep(ctl, 'seg')]),
+      SectionHead(tr('事業ごとの損益'), Icons.stacked_bar_chart,
+          tone: ScreenTone.money, trailing: Row(mainAxisSize: MainAxisSize.min, children: [Info(ctl, const ['seg']), finYearStep(ctl, 'seg')])),
       Wrap(spacing: 14, runSpacing: 2, children: [
         Row(mainAxisSize: MainAxisSize.min, key: const ValueKey('seg-best'), children: [
           const Icon(Icons.star, size: 16, color: Pal.gold),

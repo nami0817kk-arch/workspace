@@ -330,6 +330,10 @@ class SectionHead extends StatelessWidget {
       );
 }
 
+/// カードの外に置く見出し（図鑑など、前は大きな金の字の見出しだった所。1.1.0+41）
+Widget pageHead(String title, IconData icon, ScreenTone tone, {Key? key, Widget? trailing}) =>
+    Padding(key: key, padding: const EdgeInsets.only(top: 10, bottom: 2), child: SectionHead(title, icon, tone: tone, trailing: trailing));
+
 // ===== 業種の絵 =====
 /// 分類の色（白い印が 3:1 以上で見える濃さ）
 Color catColor(String cat) => switch (cat) {
@@ -679,6 +683,12 @@ String ymShort(int y, int q) {
   const mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   final yy = (y % 100).toString().padLeft(2, '0');
   return L.en ? '${mon[(q - 1).clamp(0, 11)]} $yy' : '$yy年$q月';
+}
+
+/// 毎月の記録（hist。't' は「1997-3」）の短い日付
+String histLabel(HistEntry h) {
+  final p = h.t.split('-');
+  return p.length == 2 ? ymShort(int.tryParse(p[0]) ?? 0, int.tryParse(p[1]) ?? 1) : h.t;
 }
 
 /// 今の月（[y] 年 [q] 月）から [back] か月前の短い日付

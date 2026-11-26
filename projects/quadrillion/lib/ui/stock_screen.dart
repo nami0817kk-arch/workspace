@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import '../game/game.dart';
 import 'controller.dart';
 import 'glossary.dart';
+import 'look.dart';
+import 'real_screens.dart' show histBack;
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -25,9 +27,10 @@ const stockSplitMin = 520.0;
 List<Widget> stockScreen(GameController ctl, {double width = 0}) {
   final s = ctl.game!;
   // 試作と同じ遊び（extras を切ったとき）は今までの1枚の画面
-  if (!s.unitsOn) return stockTab(ctl);
+  if (!s.unitsOn) return [stockBand(ctl), ...stockTab(ctl)];
   final seg = ctl.stockSeg;
   return [
+    stockBand(ctl),
     Segments('stock', [for (final e in stockSegs) (e.$1, tr(e.$2))], value: seg, onChanged: ctl.setStockSeg),
     const SizedBox(height: 6),
     ...switch (seg) {
@@ -36,6 +39,48 @@ List<Widget> stockScreen(GameController ctl, {double width = 0}) {
       _ => _ownFace(ctl, width),
     },
   ];
+}
+
+/// 株の画面の見出しの帯（1.1.0+41）：株価・時価総額・あなたの持ち分・上場か
+Widget stockBand(GameController ctl) {
+  final s = ctl.game!;
+  return ScreenBand(
+    key: const ValueKey('stock-band'),
+    tone: ScreenTone.stock,
+    icon: Icons.pie_chart,
+    title: tr('株@@tab'),
+    facts: [
+      (tr('株価'), yen(s.sharePrice())),
+      (tr('時価総額'), yen(s.cap)),
+      (tr('あなたの持ち分'), pct(s.sh.own)),
+      (tr('市場'), tr(s.listed ? '上場@@tag' : '未上場')),
+    ],
+  );
+}
+
+/// 株価の月ごとの記録の、[back] か月前の値（無ければ null）
+double? _pxBack(Game s, int back) => s.corp.px.length > back ? s.corp.px[s.corp.px.length - 1 - back] : null;
+
+/// 自社の株の要点のカード（1.1.0+41）
+Widget _ownKpis(GameController ctl) {
+  final s = ctl.game!;
+  final t = s.turn;
+  const tone = ScreenTone.stock;
+  final now = s.sharePrice();
+  final m1 = histBack(s, 1), y1 = histBack(s, 12);
+  final mon = tr('前月'), yr = tr('前年');
+  final riv = s.sh.rivMax;
+  return KpiRow(key: const ValueKey('stock-kpis'), minW: 92, [
+    KpiCard(key: const ValueKey('kpi-price'), label: tr('株価'), icon: Icons.candlestick_chart_outlined, value: now, fmt: yen, turn: t, tone: tone,
+        delta: Delta.pct(now, _pxBack(s, 1), label: mon), delta2: Delta.pct(now, _pxBack(s, 12), label: yr), sub: s.listed ? null : tr('未上場なので見込み')),
+    KpiCard(key: const ValueKey('kpi-stock-cap'), label: tr('時価総額'), icon: Icons.trending_up, value: s.cap, fmt: yen, turn: t, tone: tone,
+        delta: Delta.pct(s.cap, m1?.cap, label: mon), delta2: Delta.pct(s.cap, y1?.cap, label: yr)),
+    KpiCard(key: const ValueKey('kpi-own'), label: tr('あなたの持ち分'), icon: Icons.person_outline, value: s.sh.own, fmt: pct, turn: t, tone: tone,
+        color: s.sh.own > 50 ? Pal.up : (s.sh.own < 33.4 ? Pal.down : Pal.ink),
+        sub: riv > 0 ? tr('宿敵の持ち分 最大{0}', [pct(riv)]) : tr('宿敵は持っていない'), subColor: riv >= 5 ? Pal.down : null),
+    KpiCard(key: const ValueKey('kpi-shares'), label: tr('株の数'), icon: Icons.numbers, value: s.corp.nSh, fmt: (v) => jsNum(jsRound(v)), turn: t, tone: tone,
+        sub: tr('市場の地合い：{0}', [_mood(s)])),
+  ]);
 }
 
 Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 4, children: c);
@@ -55,6 +100,7 @@ List<Widget> _ownFace(GameController ctl, double width) {
   }
   // 株価・株主・上場の有無を先に、決算と株主総会の日付はいちばん後ろに置く（短い欄を最後にすると、左右の長さがそろう）
   return [
+    _ownKpis(ctl),
     Masonry2([_pricePanel(ctl), ...g.take(2), ..._clientPanels(ctl), ...g.skip(2), _schedulePanel(ctl)], min: stockSplitMin)
   ];
 }
@@ -66,23 +112,27 @@ Widget _pricePanel(GameController ctl) {
   final ago = px.length >= 13 ? px[px.length - 13] : (px.isNotEmpty ? px.first : now);
   final ch = ago > 0 ? now / ago - 1 : 0.0;
   final shown = px.length > 60 ? px.sublist(px.length - 60) : px;
+  // 株価の推移は目盛り・日付つきのグラフ（押すとその月の株価。1.1.0+41）
   return Panel(
     key: const ValueKey('price-panel'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 8, Ui.pad, 10),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Row(children: [
-        Expanded(child: Text(tr(s.listed ? '株価' : '株価（未上場なので見込み）'), style: ts(size: 13, color: Pal.mute))),
-        Text(yen(now), key: const ValueKey('price-now'), style: ts(size: 16, bold: true)),
-      ]),
-      Text(tr('1年で{0}・時価総額 {1}・株の数 {2}', ['${ch >= 0 ? '+' : '−'}${pctD(ch.abs() * 100)}%', yen(s.cap), jsNum(jsRound(s.corp.nSh))]),
-          style: ts(size: 12, color: ch >= 0 ? Pal.up : Pal.down)),
-      const SizedBox(height: 6),
-      SizedBox(
-        height: 90,
-        child: Semantics(
-          label: tr('株価のグラフ（この5年）'),
-          child: CustomPaint(painter: PricePainter(shown), size: Size.infinite),
+      // 今の株価・1年の動き・時価総額・株の数は上の要点のカードに出すので、ここは推移と理由（1.1.0+41）
+      SectionHead(tr('株価の推移'), Icons.show_chart,
+          tone: ScreenTone.stock,
+          trailing: Text(tr('{0}（{1}）', [yen(now), '${tr('1年で')} ${ch >= 0 ? '+' : '−'}${pctD(ch.abs() * 100)}%']), key: const ValueKey('price-now'), style: ts(size: 13, bold: true, color: ch >= 0 ? Pal.up : Pal.down))),
+      const SizedBox(height: 4),
+      if (shown.length < 2)
+        Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Muted(tr('月を進めると、ここに線が引かれます'), size: 12))
+      else
+        TrendChart(
+          key: const ValueKey('price-chart'),
+          height: 110,
+          labels: [for (var i = 0; i < shown.length; i++) ymBack(s.year, s.q, shown.length - 1 - i)],
+          fmt: yen,
+          series: [TrendSeries(tr('株価'), ScreenTone.stock.c, shown)],
+          summary: tr('株価のグラフ（{0}か月）。今は{1}。押すと、その月の株価が出ます', [shown.length, yen(now)]),
         ),
-      ),
       const SizedBox(height: 6),
       Text(tr('先月から動いた理由'), style: ts(size: 12.5, bold: true)),
       if (s.corp.why.isEmpty) Muted(tr('大きな動きはありませんでした'), size: 12),
@@ -122,7 +172,7 @@ Widget _schedulePanel(GameController ctl) {
   return Panel(
     key: const ValueKey('schedule-panel'),
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(tr('決算と株主総会')),
+      SectionHead(tr('決算と株主総会'), Icons.event_outlined, tone: ScreenTone.stock),
       if (!s.listed) Muted(tr('上場すると、3か月ごとに決算を発表し、毎年6月に株主総会を開きます'), size: 12),
       ...rows,
       if (s.listed)
@@ -146,7 +196,7 @@ List<Widget> _clientPanels(GameController ctl) {
     Panel(
       key: const ValueKey('client-panel'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('取引先（大口の客）')),
+        SectionHead(tr('取引先（大口の客）'), Icons.storefront_outlined, tone: ScreenTone.stock),
         Muted(tr('大口の客に頼りすぎると、取引を切られたり、客が倒れて売掛金が戻らないことがあります'), size: 12),
         for (final (b, c) in l)
           Padding(
@@ -280,7 +330,11 @@ Widget _coRow(GameController ctl, Company c) {
         constraints: const BoxConstraints(minHeight: minTap),
         padding: const EdgeInsets.fromLTRB(6, 4, 6, 4),
         child: Row(children: [
-          if (c.rival != null) ...[rivalFace(s, c), const SizedBox(width: 4)],
+          // 宿敵は顔、ほかの会社はいちばん大きい業種の絵（1.1.0+41）
+          if (c.rival != null)
+            ...[rivalFace(s, c), const SizedBox(width: 4)]
+          else if (c.biz.isNotEmpty && indm[c.biz.first.ind] != null)
+            ...[IndIcon(indm[c.biz.first.ind]!, size: 28), const SizedBox(width: 6)],
           // 名前を1行目に広く取り、時価総額と状態（調べ中・審査中・統合の進み）は2行目に並べる（札を右に置くと、狭い列で名前が切れた）
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -307,15 +361,29 @@ Widget _dealPanel(GameController ctl, Company c) {
   final f = s.finOf(c);
   final d = s.dealOf(c);
   final mine = c.parent == 'player';
+  const tone = ScreenTone.stock;
+  final own = s.pctOf(c);
   final kids = <Widget>[
+    // 名前の行（宿敵は顔、ほかは業種の絵）と、見えている数字の確かさ
     Row(children: [
-      Expanded(child: Text(nmL(c.name), style: ts(bold: true))),
-      Text(tr(f.dd > 0 || mine ? '調べ済み' : c.listed ? '決算で見える幅' : '未上場（幅が広い）'), style: ts(size: 12, color: Pal.mute)),
+      if (c.rival != null)
+        Padding(padding: const EdgeInsets.only(right: 8), child: rivalFace(s, c, size: 38))
+      else if (c.biz.isNotEmpty && indm[c.biz.first.ind] != null)
+        Padding(padding: const EdgeInsets.only(right: 8), child: IndIcon(indm[c.biz.first.ind]!, size: 34)),
+      Expanded(child: Semantics(header: true, child: Text(nmL(c.name), style: ts(size: 15, bold: true)))),
+      Flexible(child: Text(tr(f.dd > 0 || mine ? '調べ済み' : c.listed ? '決算で見える幅' : '未上場（幅が広い）'), textAlign: TextAlign.right, style: ts(size: 12, color: Pal.mute))),
     ]),
-    const SizedBox(height: 4),
+    const SizedBox(height: 6),
+    // 時価総額・あなたの持ち分・月の利益は要点のカード（1.1.0+41）
+    KpiRow(minW: 88, [
+      KpiCard(key: ValueKey('kpi-co-cap-${c.id}'), label: tr('時価総額'), icon: Icons.trending_up, value: c.cap, fmt: (v) => c.listed ? yen(v) : seenText(s, c, v, 0), turn: s.turn, tone: tone),
+      KpiCard(key: ValueKey('kpi-co-own-${c.id}'), label: tr('あなたの持ち分'), icon: Icons.pie_chart_outline, value: own, fmt: pct, turn: s.turn, tone: tone,
+          color: own > 50 ? Pal.up : Pal.ink, sub: own >= 66.7 ? tr('合併も自由') : own > 50 ? tr('子会社') : own >= 33.4 ? tr('合併を止められる') : null),
+      KpiCard(key: ValueKey('kpi-co-pro-${c.id}'), label: tr('月の利益'), icon: Icons.savings_outlined, value: c.profit, fmt: (v) => seenText(s, c, v, 1), turn: s.turn, tone: tone,
+          color: c.profit >= 0 ? Pal.ink : Pal.down),
+    ]),
     Grid2([
       Kv(tr('月の売上'), seenText(s, c, c.rev, 2)),
-      Kv(tr('月の利益'), seenText(s, c, c.profit, 1)),
       Kv(tr('借金'), seenText(s, c, s.coDebt(c), 3)),
       Kv(tr('店などの数'), _seenCount(s, c)),
     ]),
@@ -405,7 +473,7 @@ List<Widget> _ipoFace(GameController ctl) {
       Panel(
         key: const ValueKey('ipo-listed'),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          CardTitle(tr('上場済み')),
+          SectionHead(tr('上場済み'), Icons.verified_outlined, tone: ScreenTone.stock),
           Muted(tr('3か月ごとに決算を発表し、開示の義務があります。毎月の費用 {0}', [yen(s.listCost())]), size: 12.5),
           Kv(tr('次の決算発表'), tr('{0}年{1}月', [s.nextEarnYear(), s.nextEarnMonth()])),
           Kv(tr('市場の地合い'), _mood(s)),
@@ -417,7 +485,7 @@ List<Widget> _ipoFace(GameController ctl) {
   final cpa = s.staff.any((x) => x.lic.contains('cpa')), law = s.staff.any((x) => x.lic.contains('lawyer'));
   final who = Panel(
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      CardTitle(tr('準備に効く人')),
+      SectionHead(tr('準備に効く人'), Icons.badge_outlined, tone: ScreenTone.stock),
       Kv(tr('会計士'), tr(cpa ? 'いる（6か月早い・調べも安い）' : 'いない')),
       Kv(tr('弁護士'), tr(law ? 'いる（3か月早い）' : 'いない')),
       Muted(tr('会計士・弁護士は「人」の画面の採用で、資格を持つ人を雇えます'), size: 11.5),
@@ -429,7 +497,7 @@ List<Widget> _ipoFace(GameController ctl) {
       Panel(
         key: const ValueKey('ipo-plan'),
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          CardTitle(tr('上場の準備')),
+          SectionHead(tr('上場の準備'), Icons.flag_outlined, tone: ScreenTone.stock),
           Muted(tr('上場するには、監査法人の監査を2期分（24か月）受け、社内の決まり（内部統制）を整え、主幹事の証券会社を選びます。'), size: 12.5),
           const SizedBox(height: 4),
           Kv(tr('かかる年数'), tr('約{0}か月（{1}年）', [m, pctD(m / 12)])),
@@ -447,7 +515,7 @@ List<Widget> _ipoFace(GameController ctl) {
     Panel(
       key: const ValueKey('ipo-prep'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('上場の準備の進み')),
+        SectionHead(tr('上場の準備の進み'), Icons.timelapse, tone: ScreenTone.stock),
         _bar(tr('準備 {0}/{1}か月', [p.done, p.total]), p.done / math.max(1, p.total)),
         _bar(tr('監査 {0}/24か月', [math.min(24, p.audit)]), math.min(1, p.audit / 24)),
         _bar(tr('社内の決まり {0}', [pct0Of(p.ctrl)]), p.ctrl),
@@ -459,7 +527,7 @@ List<Widget> _ipoFace(GameController ctl) {
     Panel(
       key: const ValueKey('ipo-uw'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        CardTitle(tr('主幹事')),
+        SectionHead(tr('主幹事'), Icons.account_balance_outlined, tone: ScreenTone.stock),
         _wrap([
           for (final k in const ['big', 'mid', 'small'])
             PickChip(

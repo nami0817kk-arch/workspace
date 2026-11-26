@@ -101,12 +101,9 @@ class TownPainter extends CustomPainter {
     x = 20;
     rect(0, H - 22, W, 22, const Color(0xFF7D8A6A));
     rect(0, H - 22, W, 2, const Color(0xFF5C6650));
-    if (s.rev * 12 / s.nom() < 5e7) {
-      rect(40, H - 40, 26, 18, const Color(0xFF6A5A48));
-      rect(46, H - 34, 4, 4, Pal.gold);
-      rect(56, H - 34, 4, 4, Pal.gold);
-      rect(38, H - 42, 30, 3, const Color(0xFF8A3C32));
-    } else {
+    // 本社（1.1.0+41）：会社の大きさの段（ワンルーム→雑居ビル→自社ビル→本社タワー→摩天楼）で建物が大きくなる。いちばん左に置く
+    x = 14 + _hq(rect, 14, H - 22, s.officeLevel());
+    if (s.officeLevel() > 0) {
       for (final b in mine.take(12)) {
         final hh = clampD(math.log(math.max(b.rev, 1e5)) / math.ln10 * 11 - 58, 10, 140);
         final w = 14 + (hh / 14).floorToDouble();
@@ -144,6 +141,80 @@ class TownPainter extends CustomPainter {
   /// 900社の並べ替えを伴うので、中身が変わったときだけ描き直す（上の帯の数字が光るあいだも描き直さない）
   @override
   bool shouldRepaint(covariant TownPainter oldDelegate) => oldDelegate.s != s || oldDelegate.stamp != stamp || oldDelegate.W != W;
+}
+
+/// 本社の建物（1.1.0+41）。[lv] は本社の段（0 ワンルームの事務所・1 雑居ビルの1フロア・2 自社ビル・3 本社タワー・4 摩天楼の本社）。
+/// 左下 ([x], [ground]) から描き、使った幅（右のすきま込み）を返す。看板と窓は会社の金色
+double _hq(void Function(double x, double y, double w, double h, Color c) rect, double x, double ground, int lv) {
+  const hqWall = Color(0xFF4B3F72), hqDark = Color(0xFF362D55), sign = Pal.gold, lit = Color(0xFFFFE9A8);
+  void windows(double x0, double y0, double w, double h, {double step = 4}) {
+    for (var yy = y0 + 3; yy < y0 + h - 4; yy += 5) {
+      for (var xx = x0 + 3; xx < x0 + w - 3; xx += step) {
+        rect(xx, yy, 2, 2, lit);
+      }
+    }
+  }
+
+  switch (lv) {
+    case 0:
+      // 小さな事務所（屋根と窓2つ・入口）
+      rect(x, ground - 18, 26, 18, const Color(0xFF6A5A48));
+      rect(x - 2, ground - 21, 30, 3, const Color(0xFF8A3C32));
+      rect(x + 5, ground - 13, 4, 4, sign);
+      rect(x + 17, ground - 13, 4, 4, sign);
+      rect(x + 11, ground - 8, 4, 8, const Color(0xFF3B3026));
+      return 32;
+    case 1:
+      // よその雑居ビルの1フロアだけを借りている（灰色のビルに、自社の階だけ金色の帯）
+      const w = 28.0, h = 50.0;
+      rect(x, ground - h, w, h, const Color(0xFF8C909C));
+      for (var yy = ground - h + 4; yy < ground - 4; yy += 6) {
+        for (var xx = x + 3; xx < x + w - 3; xx += 5) {
+          rect(xx, yy, 2, 3, const Color(0xFFB9BECA));
+        }
+      }
+      rect(x, ground - 28, w, 7, hqWall);
+      for (var xx = x + 3; xx < x + w - 3; xx += 5) {
+        rect(xx, ground - 26, 3, 3, lit);
+      }
+      rect(x + w, ground - 27, 5, 5, sign);
+      return w + 10;
+    case 2:
+      // 自社ビル（屋上に看板）
+      const w = 32.0, h = 58.0;
+      rect(x, ground - h, w, h, hqWall);
+      rect(x, ground - h, 2, h, hqDark);
+      windows(x + 1, ground - h + 2, w - 1, h - 10);
+      rect(x + 4, ground - h - 6, w - 8, 6, sign);
+      rect(x + 12, ground - 9, 8, 9, hqDark);
+      return w + 8;
+    case 3:
+      // 本社タワー（上が細くなり、屋上に看板）
+      const w = 36.0, h = 78.0;
+      rect(x, ground - h, w, h, hqWall);
+      rect(x + 6, ground - h - 16, w - 12, 16, hqWall);
+      rect(x, ground - h, 2, h, hqDark);
+      windows(x + 1, ground - h + 2, w - 1, h - 10);
+      windows(x + 7, ground - h - 14, w - 13, 14);
+      rect(x + 8, ground - h - 22, w - 16, 6, sign);
+      rect(x + 13, ground - 10, 10, 10, hqDark);
+      return w + 8;
+    default:
+      // 摩天楼の本社（2段に細くなり、尖塔と赤い灯）
+      const w = 42.0, h = 88.0;
+      rect(x, ground - h, w, h, hqWall);
+      rect(x + 6, ground - h - 18, w - 12, 18, hqWall);
+      rect(x + 12, ground - h - 30, w - 24, 12, hqWall);
+      rect(x, ground - h, 2, h, hqDark);
+      windows(x + 1, ground - h + 2, w - 1, h - 10);
+      windows(x + 7, ground - h - 16, w - 13, 16);
+      windows(x + 13, ground - h - 28, w - 25, 10, step: 3);
+      rect(x + 14, ground - h - 35, w - 28, 5, sign);
+      rect(x + w / 2 - 1, ground - h - 50, 2, 15, const Color(0xFF9AA3B5));
+      rect(x + w / 2 - 1.5, ground - h - 53, 3, 3, const Color(0xFFE5484D));
+      rect(x + 15, ground - 11, 12, 11, hqDark);
+      return w + 8;
+  }
 }
 
 /// 「#9fb3ff」の色
