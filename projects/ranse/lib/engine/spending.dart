@@ -860,6 +860,51 @@ List<SpendItem> spendingMenu(Game g) {
   ];
 }
 
+/// 一覧に見せる一行。[lack] が null なら使える。そうでなければ、使えない訳（「あと30貫」など）。
+class SpendView {
+  const SpendView(this.item, [this.lack]);
+  final SpendItem item;
+  final String? lack;
+  bool get usable => lack == null;
+}
+
+/// 見せるための一覧（2026-11-26、ユーザー「仕官していないと見られない」）。
+/// 銭は、いまの身分と暮らしに合う使い道を、足りなくても並べる（足りないものは「あとn貫」）。
+/// 功は、主家に仕えていなくても並べる（「主家に仕えると願い出られる」）。買える条件そのものは [spendingMenu] と同じ。
+/// 年の初めでないときも並べる（使えるかは画面が [spendingOpen] で決める）。この年にもう使ったものは並べない。
+List<SpendView> spendingCatalog(Game g) {
+  if (g.life == null || g.finished || g.isChild) return const [];
+  final have = g.l.gold;
+  final ctx = _meritCtx(g);
+  final spare = ctx ? spMeritSpare(g) : 0;
+  bool fits(_Use u) {
+    try {
+      return u.ok(g);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  return [
+    for (final u in _goldUses)
+      if (fits(u) && !_boughtThisYear(g, u.id) && u.cost(g) != null)
+        SpendView(
+          SpendItem(u.id, false, u.label(g), u.hint(g), u.cost(g)!),
+          u.cost(g)! <= have ? null : 'あと${u.cost(g)! - have}貫',
+        ),
+    for (final u in _meritUses)
+      if ((!ctx || fits(u)) && !_boughtThisYear(g, u.id) && u.cost(g) != null)
+        SpendView(
+          SpendItem(u.id, true, u.label(g), u.hint(g), u.cost(g)!),
+          !ctx
+              ? '主家に仕えると、主君に願い出られる'
+              : u.cost(g)! <= spare
+              ? null
+              : '昇進に要る功の余りが、あと${u.cost(g)! - spare}足りない',
+        ),
+  ];
+}
+
 /// 使い道を一つ使う。年の初めでなければ、買えないものなら何もせず null。
 /// 使ったら見聞録に書き、年の初めの問いのまま保存し直す（`Game.resaveYearStart`）。見聞録の文を返す。
 String? spendingBuy(Game g, String id) {

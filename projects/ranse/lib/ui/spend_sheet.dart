@@ -98,9 +98,11 @@ class _SpendSheetState extends State<SpendSheet> {
     return ListenableBuilder(
       listenable: g,
       builder: (context, _) {
-        final items = spendingMenu(g);
-        final gold = items.where((i) => !i.merit).toList();
-        final merit = items.where((i) => i.merit).toList();
+        final open = spendingOpen(g);
+        final views = spendingCatalog(g);
+        final gold = views.where((v) => !v.item.merit).toList();
+        final merit = views.where((v) => v.item.merit).toList();
+        final usable = open && views.any((v) => v.usable);
         final l = g.l;
         final spare = spMeritSpare(g);
         return ListView(
@@ -134,26 +136,44 @@ class _SpendSheetState extends State<SpendSheet> {
                   style: const TextStyle(fontSize: 13, height: 1.5),
                 ),
               ),
-            if (!spendingOpen(g))
+            if (!open)
               const Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: Text('この年の使い道は、もう考えられない。'),
               )
-            else if (items.isEmpty)
+            else if (!usable)
               const Padding(
                 padding: EdgeInsets.only(top: 16),
                 child: Text(
-                  'いまの身分と蓄えで使えるものはない。',
+                  'いまの蓄えと功で使えるものはない。薄い行は、何があれば使えるかの目安。',
                   style: TextStyle(color: Pal.muted),
                 ),
               ),
             if (gold.isNotEmpty) ...[
               const _Head('銭の使い道'),
-              for (final it in gold) _ItemRow(it, () => _buy(it)),
+              for (final v in gold)
+                _ItemRow(
+                  v.item,
+                  open && v.usable ? () => _buy(v.item) : null,
+                  lack: v.lack,
+                ),
             ],
             if (merit.isNotEmpty) ...[
               const _Head('功の使い道（主君に願い出る）'),
-              for (final it in merit) _ItemRow(it, () => _buy(it)),
+              if (merit.any((v) => v.lack?.startsWith('主家') ?? false))
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 6),
+                  child: Text(
+                    '功は、主家に仕えると主君に願い出て使える。',
+                    style: TextStyle(color: Pal.muted, fontSize: 12),
+                  ),
+                ),
+              for (final v in merit)
+                _ItemRow(
+                  v.item,
+                  open && v.usable ? () => _buy(v.item) : null,
+                  lack: v.lack,
+                ),
             ],
           ],
         );
@@ -174,51 +194,69 @@ class _Head extends StatelessWidget {
 }
 
 class _ItemRow extends StatelessWidget {
-  const _ItemRow(this.it, this.onTap);
+  const _ItemRow(this.it, this.onTap, {this.lack});
   final SpendItem it;
-  final VoidCallback onTap;
+
+  /// null なら押せない（足りない・年の初めでない）。
+  final VoidCallback? onTap;
+
+  /// 使えない訳（「あと30貫」など）。あれば行を薄くして添える。
+  final String? lack;
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 6),
-    child: Material(
-      color: Pal.panel,
-      borderRadius: BorderRadius.circular(6),
-      child: InkWell(
+    child: Opacity(
+      opacity: lack == null ? 1 : .5,
+      child: Material(
+        color: Pal.panel,
         borderRadius: BorderRadius.circular(6),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Pal.line),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(it.label, style: const TextStyle(fontSize: 15)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Pal.line),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        it.label,
+                        style: const TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      it.price,
+                      style: const TextStyle(color: Pal.gold, fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  it.hint,
+                  style: const TextStyle(
+                    color: Pal.muted,
+                    fontSize: 12,
+                    height: 1.4,
                   ),
-                  const SizedBox(width: 8),
+                ),
+                if (lack != null) ...[
+                  const SizedBox(height: 2),
                   Text(
-                    it.price,
-                    style: const TextStyle(color: Pal.gold, fontSize: 14),
+                    lack!,
+                    style: const TextStyle(color: Pal.accent, fontSize: 12),
                   ),
                 ],
-              ),
-              const SizedBox(height: 2),
-              Text(
-                it.hint,
-                style: const TextStyle(
-                  color: Pal.muted,
-                  fontSize: 12,
-                  height: 1.4,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
