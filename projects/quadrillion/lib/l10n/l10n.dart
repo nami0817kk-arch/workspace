@@ -17,6 +17,7 @@ import '../game/data.dart';
 import '../game/format.dart';
 import 'corp_en.dart';
 import 'data_en.dart';
+import 'fin_en.dart';
 import 'game_en.dart';
 import 'lang.dart';
 import 'life_en.dart';
@@ -35,7 +36,7 @@ const _tagMark = '\u0002';
 const _joinKey = '\u0003join';
 
 /// 英語の表（日本語の文 → 英語の文）。同じ日本語の鍵は、どの表でも同じ英語にする
-String? enText(String ja) => uiEn[ja] ?? gameEn[ja] ?? dataEn[ja] ?? midEn[ja] ?? realEn[ja] ?? unitsEn[ja] ?? peopleEn[ja] ?? tradeEn[ja] ?? corpEn[ja] ?? lifeEn[ja] ?? traitsEn[ja] ?? _dynEn[ja];
+String? enText(String ja) => uiEn[ja] ?? gameEn[ja] ?? dataEn[ja] ?? midEn[ja] ?? realEn[ja] ?? unitsEn[ja] ?? peopleEn[ja] ?? tradeEn[ja] ?? corpEn[ja] ?? lifeEn[ja] ?? traitsEn[ja] ?? finEn[ja] ?? _dynEn[ja];
 
 /// 読み込んだ統計にある名前の英語（出来事・都市。1.1.0+25 から。統計を読むたびに足す）
 final Map<String, String> _dynEn = {};

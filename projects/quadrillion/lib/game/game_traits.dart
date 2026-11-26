@@ -660,7 +660,7 @@ extension GameTraits on Game {
       }
       if (p.has('betting') && tr() < .003) {
         final x = p.salary * 6;
-        cash -= x;
+        cfAdd('sp', -x);
         scandal = math.max(scandal, 3);
         p.loy -= 10;
         trSee(p, 'betting');

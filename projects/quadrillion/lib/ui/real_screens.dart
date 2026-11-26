@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'fin_screens.dart';
 import 'glossary.dart';
 import 'life_screens.dart';
 import 'painters.dart';
@@ -435,7 +436,9 @@ Widget countryPanel(GameController ctl, String c, {Key? key, String? title}) {
 }
 
 // ===== お金 =====
-const moneyViews = [('cash', '資金繰り'), ('bank', '借金と銀行'), ('cost', '経費'), ('tax', '税金'), ('book', '決算と記録')];
+/// 1.1.0+34 から、「決算と記録」を「決算書」「事業別（事業ごとの損益）」「社史と順位（社史とランキング）」に分けた。
+/// iPhone の横の画面で札が1行に収まるように、札の名前は短くしている
+const moneyViews = [('cash', '資金繰り'), ('bank', '借金と銀行'), ('cost', '経費'), ('tax', '税金'), ('fs', '決算書'), ('seg', '事業別'), ('book', '社史と順位')];
 
 List<Widget> moneyTab(GameController ctl) {
   final out = <Widget>[
@@ -453,6 +456,10 @@ List<Widget> moneyTab(GameController ctl) {
       out.addAll(_costView(ctl));
     case 'tax':
       out.addAll(_taxView(ctl));
+    case 'fs':
+      out.addAll(finView(ctl));
+    case 'seg':
+      out.addAll(segView(ctl));
     case 'book':
       out.addAll(numTab(ctl));
     default:

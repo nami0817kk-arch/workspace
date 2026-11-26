@@ -114,11 +114,25 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
-  /// お金の画面で見ているもの（cash 資金繰り・bank 借金と銀行・cost 経費・tax 税金・book 決算と記録）
+  /// お金の画面で見ているもの（cash 資金繰り・bank 借金と銀行・cost 経費・tax 税金・fs 決算書・seg 事業ごとの損益・book 社史とランキング）
   String moneyView = 'cash';
 
   void setMoney(String v) {
     moneyView = v;
+    notifyListeners();
+  }
+
+  /// 決算書（1.1.0+34。画面だけの状態）: 見ている表（pl 損益計算書・bs 貸借対照表・cf キャッシュフロー・trend 推移）・
+  /// 年ごとか月ごとか・月ごとの範囲（ytd 今年の各月・last12 直近12か月）・見ている年（null は最新）・事業ごとの損益の並べ方
+  String fsTab = 'pl', fsMode = 'year', fsMonths = 'last12', segSort = 'profit';
+  int? fsYear;
+
+  void setFs({String? tab, String? mode, String? months, int? year, String? sort}) {
+    if (tab != null) fsTab = tab;
+    if (mode != null) fsMode = mode;
+    if (months != null) fsMonths = months;
+    if (year != null) fsYear = year;
+    if (sort != null) segSort = sort;
     notifyListeners();
   }
 

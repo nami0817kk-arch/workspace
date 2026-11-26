@@ -413,7 +413,7 @@ extension GameUnits on Game {
       rent = 1;
     }
     final cost = unitCapexAt(b, s) * got;
-    cash -= cost;
+    cfAdd('capex', -cost);
     // 減価償却と設備の古さ（1.1.0+30）
     capSpend(cost, prof(b).life);
     eqMix(b, got.toDouble());
@@ -500,7 +500,7 @@ extension GameUnits on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('crew');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     // 育つまでの月と腕は、育てる人（責任者・いなければ社長）の人事と統率の腕で変わる（1.1.0+27）
     final q = peopleOn ? trainLeadQ(b) : 50.0;
     final mo = math.max(3, ((KIND_LEAD_MONTHS[kindB(b)] ?? 6) * (1 - (q - 50) / 150)).round());
@@ -525,7 +525,7 @@ extension GameUnits on Game {
     if (k == 'shop') {
       b.leads -= n;
     } else {
-      cash -= svHireCost(b) * n;
+      cfAdd('grow', -(svHireCost(b) * n));
     }
     b.sv += n;
     presXp('tou', .6);
@@ -540,7 +540,7 @@ extension GameUnits on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('build');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('capex', -cost);
     capSpend(cost, 20);
     final left = ri(6, 9);
     b.pipe.add(Pipe(k: 'hub', c: area, cost: cost, left: left));

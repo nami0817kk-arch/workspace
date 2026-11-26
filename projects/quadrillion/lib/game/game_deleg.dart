@@ -158,7 +158,7 @@ extension GameDeleg on Game {
       if (need > 0) {
         final n = need, c = hireCost(b, n);
         out.add(_DelegOpt('crew', c, () {
-          cash -= c;
+          cfAdd('grow', -c);
           _addHeads(b, n);
           return M('現場の人を{0}人雇いました（{1}）', [n, Y(c)]);
         }));
@@ -185,7 +185,7 @@ extension GameDeleg on Game {
         } else if (extendCost(b) <= room && b.upg < upgMax - 1e-9 && unitTotal(b) > 0) {
           final c = extendCost(b);
           out.add(_DelegOpt('ext', c, () {
-            cash -= c;
+            cfAdd('grow', -c);
             b.pipe.add(Pipe(k: 'build', cost: c, left: 1, ext: true));
             return M('今ある{0}を広げ始めました（{1}）', [uw(b), Y(c)]);
           }));
@@ -196,14 +196,14 @@ extension GameDeleg on Game {
         if (bi != null) {
           final n = buildUnits[bi], c = buildCost(b, n);
           out.add(_DelegOpt('build', c, () {
-            cash -= c;
+            cfAdd('grow', -c);
             b.pipe.add(Pipe(k: 'build', cost: c, left: b.model == 'fc' ? 1 : ri(1, 2)));
             return M('{0}増やし始めました（{1}）', [unitsOf(b, n), Y(c)]);
           }));
         } else if (extendCost(b) <= room) {
           final c = extendCost(b);
           out.add(_DelegOpt('ext', c, () {
-            cash -= c;
+            cfAdd('grow', -c);
             b.pipe.add(Pipe(k: 'build', cost: c, left: 1, ext: true));
             return M('今ある{0}を広げ始めました（{1}）', [uw(b), Y(c)]);
           }));
@@ -215,7 +215,7 @@ extension GameDeleg on Game {
       if (di != null) {
         final c = devCost(b, di);
         out.add(_DelegOpt('dev', c, () {
-          cash -= c;
+          cfAdd('grow', -c);
           b.pipe.add(Pipe(k: 'dev', cost: c, left: ri(devMonths[di].$1, devMonths[di].$2), sz: di));
           return M('{0}を始めました（{1}）', [devName(di), Y(c)]);
         }));
@@ -225,7 +225,7 @@ extension GameDeleg on Game {
     final adC = invBase(b) * .25;
     if (b.ad == 0 && t != 'frugal' && adC <= room) {
       out.add(_DelegOpt('ad', adC, () {
-        cash -= adC;
+        cfAdd('grow', -adC);
         b.ad = 6;
         b.adCost = 0;
         return M('広告を打ちました（{0}）', [Y(adC)]);

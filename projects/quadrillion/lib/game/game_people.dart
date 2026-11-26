@@ -620,7 +620,7 @@ extension GamePeople on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('talk');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     p.away = g < 0 ? 12 : 1;
     p.awayWhy = g < 0 ? 'abroad' : 'course:$g';
     calcAll();
@@ -638,7 +638,7 @@ extension GamePeople on Game {
     if (cash < fee) return M('お金が足りません');
     final nt = spendT('hire');
     if (nt != null) return nt;
-    cash -= fee;
+    cfAdd('grow', -fee);
     alumni.remove(p);
     p.left = null;
     p.tenure = math.max(p.tenure, 12);
@@ -723,7 +723,7 @@ extension GamePeople on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('crew');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     _leadHired[b] = (_leadHired[b] ?? 0) + m;
     b.pipe.add(Pipe(k: 'train', cost: cost, pw: m.toDouble(), left: 1, mul: midLeadQ()));
     presXp('tou', .6);

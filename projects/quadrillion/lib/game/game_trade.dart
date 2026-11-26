@@ -700,13 +700,13 @@ extension GameTrade on Game {
         final cc = capCtl(c);
         final held = pc * cc;
         if (held > 0) {
-          cash -= held;
+          cfAdd('trap', -held);
           trade.trapped[c] = (trade.trapped[c] ?? 0) + held;
           trap += held;
         }
         if (!treaty(c)) {
           final w = (pc - held) * .1;
-          cash -= w;
+          cfAdd('misc', -w);
           wht += w;
         }
         // 政変と国有化（政治が不安定な国ほど）
@@ -725,7 +725,7 @@ extension GameTrade on Game {
       final rel = v * (capCtl(c) < .05 ? .2 : .02);
       if (rel > 0 && !(c == 'ru' && capCtl(c) > .5)) {
         trade.trapped[c] = v - rel;
-        cash += rel;
+        cfAdd('trap', rel);
       }
       if (trade.trapped[c]! < 1) trade.trapped.remove(c);
     }
@@ -759,7 +759,7 @@ extension GameTrade on Game {
     b.ctry = ctryOf(b).where((x) => x != c).toList();
     b.jv?.remove(c);
     trade.adapt.remove('${b.id}/$c');
-    cash += back;
+    cfAdd('sp', back);
     N(M('{0}の政府が「{1}」を国有化しました。戻ったのは{2}だけです', [C(c), I(b.ind), Y(back)]), 'bad');
     calcAll();
   }
@@ -782,7 +782,7 @@ extension GameTrade on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('inspect');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('misc', -cost);
     trade.know[c] = math.min(1, (trade.know[c] ?? 0) + .6);
     calcAll();
     return M('{0}を1週間視察しました（{1}）。関税・物流・政治・伸びている業種が詳しく分かりました', [C(c), Y(cost)]);
@@ -805,7 +805,7 @@ extension GameTrade on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('supply');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     trade.sup[b.id] = [...l, s];
     calcAll();
     return M('「{0}」の仕入れ先に{1}を足しました（{2}）。1か国が止まっても作り続けやすくなりますが、まとめ買いの値引きが減ります', [I(b.ind), C(s), Y(cost)]);

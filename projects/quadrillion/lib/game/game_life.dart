@@ -307,7 +307,7 @@ extension GameLife on Game {
     if (lf.it >= 3 && biz.isNotEmpty && lr() < .002 * (lf.it - 2)) {
       final what = ['システムの障害', '顧客情報の漏れ', 'システムの乗っ取り'][(lr() * 3).floor()];
       final loss = math.max(0.0, rev) * .2;
-      cash -= loss;
+      cfAdd('sp', -loss);
       lf.brand = math.max(0, lf.brand - 5);
       N(M('{0}が起き、{1}の損と信用の傷を負いました', [M(what), Y(loss)]), 'bad');
     }
@@ -317,7 +317,7 @@ extension GameLife on Game {
         lf.patents.remove(p);
         N(M('「{0}」の特許が切れました。もう真似を止められません', [I(p.ind)]), 'bad');
       } else if (p.lic) {
-        cash += patentFee(p);
+        cfAdd('nonop', patentFee(p));
       }
     }
     // 他社の特許に触れて訴えられる（技術の要る業種で、自社の特許が無いとき）
@@ -395,7 +395,7 @@ extension GameLife on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('build');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('capex', -cost);
     capSpend(cost, profileOf(indm[b.ind]!).life);
     lf.eqAge[b.id] = 0;
     presXp('kai', 2);
@@ -431,7 +431,7 @@ extension GameLife on Game {
     final cost = closeCost(b, s, n);
     final nt = spendT('build');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('sp', -cost);
     st.n -= n;
     if (st.n <= 0) b.sites.remove(s);
     calcAll();
@@ -460,7 +460,7 @@ extension GameLife on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('dev');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('capex', -cost);
     capSpend(cost, profileOf(indm[b.ind]!).techLife);
     lf.techGen[b.id] = techCur(indm[b.ind]!);
     presXp('kai', 4);
@@ -484,7 +484,7 @@ extension GameLife on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('it');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('capex', -cost);
     capSpend(cost, 5);
     lf.it = a;
     presXp('kai', 3);
@@ -516,7 +516,7 @@ extension GameLife on Game {
     // 危機に強い人がいると、立て直しが早く痛手が小さい（1.1.0+33）
     if (anyTr('crisis')) dmg *= .5;
     final pay = lf.insured ? dmg * .2 : dmg;
-    cash -= pay;
+    cfAdd('sp', -pay);
     N(M(lf.insured ? '店や工場の修理に{0}かかり、保険で8割が戻りました（自社の負担 {1}）' : '店や工場の修理に{0}かかりました。保険をかけていないので全部自社の負担です', [Y(dmg), Y(pay)]), lf.insured ? '' : 'bad');
   }
 
@@ -553,7 +553,7 @@ extension GameLife on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('deal');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('grow', -cost);
     lf.uni[b.id] = turn + 36;
     return M('「{0}」で大学と組みました（3年・{1}）。新商品が当たりやすくなります', [I(b.ind), Y(cost)]);
   }
@@ -564,12 +564,12 @@ extension GameLife on Game {
     final settle = math.max(0.0, b.rev) * 2;
     return GameEvent(title: M('特許で訴えられた'), text: M('「{0}」が他社の特許に触れていると訴えられました。', [I(b.ind)]), choices: [
       Choice(M('和解する'), M('{0}を払って終わらせる', [Y(settle)]), () {
-        cash -= settle;
+        cfAdd('sp', -settle);
         return M('和解しました');
       }),
       Choice(M('争う'), M('勝てば何も払わない。負けると和解の倍を払う'), () {
         if (lr() < .5) return M('裁判に勝ちました');
-        cash -= settle * 2;
+        cfAdd('sp', -(settle * 2));
         return M('裁判に負け、{0}を払いました', [Y(settle * 2)]);
       }),
     ]);
@@ -605,7 +605,7 @@ extension GameLife on Game {
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('donate');
     if (nt != null) return nt;
-    cash -= cost;
+    cfAdd('misc', -cost);
     lf.fame = math.min(100, lf.fame + 6);
     lf.brand = math.min(100, lf.brand + 3);
     return M('{0}を寄付しました。評判が上がりました', [Y(cost)]);
@@ -639,6 +639,8 @@ extension GameLife on Game {
       l.left = math.max(l.left, 60);
     }
     final shortNow = -math.min(0.0, cash);
+    // 決算書：足りない分を借りて埋めた（借金の6割の減免は、借金の動きから「借金の減免」に入る。1.1.0+34）
+    cfTag = 'borrow';
     cash = 0;
     if (shortNow > 0) loans.add(Loan(id: ++loanSeq, lender: 'main', amt: shortNow, orig: shortNow, rate: loanRate() + .02, left: 60, term: 60, at: turn));
     // 支援する会社が、減った分の株を持つ

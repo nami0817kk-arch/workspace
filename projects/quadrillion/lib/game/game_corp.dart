@@ -537,11 +537,11 @@ extension GameCorp on Game {
     if (tight && !corp.tight) {
       // 1.1.0+30 から、早めるのは半月分から1週間分ほど（0.25か月分）に。前は1度の格下げで資金が尽き、そこから倒れることが多かった
       final hit = cogsOf.values.fold(0.0, (a, b) => a + b) * .25;
-      cash -= hit;
+      cfAdd('pp', -hit);
       corp.tightAmt = hit;
       N(M('格付けが下がり、仕入れ先が支払いを早めるよう求めてきました。{0}を前倒しで払いました', [Y(hit)]), 'bad');
     } else if (!tight && corp.tight) {
-      cash += corp.tightAmt;
+      cfAdd('pp', corp.tightAmt);
       corp.tightAmt = 0;
       N(M('格付けが戻り、仕入れ先への支払いの条件も元に戻りました'), 'good');
     }
@@ -551,7 +551,7 @@ extension GameCorp on Game {
       corp.noise = 1 + (corp.noise - 1) * .85 + (rnd() - .5) * .04;
       corp.shock = 1 + (corp.shock - 1) * .9;
       // 上場している会社は、3か月ごとの決算発表と開示の費用がかかる
-      cash -= listCost();
+      cfAdd('misc', -listCost());
       if ([2, 5, 8, 11].contains(q)) earnings(N);
       if (q == 6 && corp.agmY != year) agm(N);
     }
@@ -597,7 +597,7 @@ extension GameCorp on Game {
       text: M('市場の株を持つ投資家が、貯めこんだ現金を株主に返すよう求めています（{0}の配当か自社株買い）。断ると社長の選び直しの議案が出され、株価も下がります。', [Y(want)]),
       choices: [
         Choice(M('配当を出す'), M('{0}を株主に払う', [Y(want)]), () {
-          cash -= want;
+          cfAdd('payout', -want);
           corp.noise *= 1.04;
           corp.demand = null;
           return M('配当を出し、株主に{0}を返しました', [Y(want)]);
@@ -658,7 +658,7 @@ extension GameCorp on Game {
     if (p == null || listed) return;
     final was = ipoReady();
     final c = ipoMonthCost();
-    cash -= c;
+    cfAdd('misc', -c);
     p.spent += c;
     p.done++;
     p.audit++;
@@ -701,7 +701,7 @@ extension GameCorp on Game {
     if (nt != null) return nt;
     final money = ipoRaise();
     final fee = ipoFee();
-    cash += money - fee;
+    cfAdd('equity', money - fee);
     const k = 100 / 120;
     _dilute(k);
     sh.float = sh.float * k + 20 * k;
@@ -761,7 +761,7 @@ extension GameCorp on Game {
     rollHidden(c);
     if (check) {
       final cost = ddCost(c);
-      cash -= cost;
+      cfAdd('misc', -cost);
       corp.deals.add(MaDeal(co: c.id, stage: 'dd', left: ddMonths(c), target: target, prem: prem, pay: pay, spent: cost));
       return M('{0}を調べ始めました（{1}か月・{2}）。帳簿・契約・人を見て、隠れた問題を探します', [Nm(c.name), ddMonths(c), Y(cost)]);
     }
@@ -826,7 +826,7 @@ extension GameCorp on Game {
             corp.deals.remove(d);
             c.rel -= 20;
             tieRec(c, 'g', M('TOBを仕掛けた'));
-            cash -= price * .01;
+            cfAdd('misc', -(price * .01));
             N(M('{0}の株主は買い付けに応じませんでした（助言の手数料 {1}）', [Nm(c.name), Y(price * .01)]), 'bad');
             continue;
           }
@@ -866,7 +866,7 @@ extension GameCorp on Game {
       _dilute(k);
       sh.float = sh.float * k + n * 100;
     } else {
-      cash -= price;
+      cfAdd('stock', -price);
     }
     final fromFloat = math.min(need, floatOf(c));
     c.fam = math.max(0, c.fam - math.max(0, need - fromFloat));
@@ -943,6 +943,8 @@ extension GameCorp on Game {
         final cut = f.gw * clampD(1 - c.profit * 12 / f.plan, .2, 1);
         f.gw -= cut;
         f.impaired += cut;
+        // 決算書：のれんの減損（特別損失。1.1.0+34）
+        books.add('gwImp', cut);
         corp.shock *= 1 - clampD(cut / math.max(1, cap), 0, .3);
         N(M('{0}が買ったときの見込みに届かず、のれんを{1}減損しました。株が売られました', [Nm(c.name), Y(cut)]), 'bad');
         chron('buy', M('{0}ののれんを{1}減損した', [Nm(c.name), Y(cut)]));
@@ -993,7 +995,7 @@ extension GameCorp on Game {
       }
       final share = e.value.share;
       final lost = b.rev * share * math.max(1, profileOf(indm[b.ind]!).payLag);
-      cash -= lost;
+      cfAdd('sp', -lost);
       b.power *= 1 - share * .8;
       corp.clients[e.key] = Client(co: 0, share: .1, since: year);
       N(M('大口の客の{0}が倒れ、「{1}」の売掛金{2}が戻らなくなりました', [Nm(c.name), I(b.ind), Y(lost)]), 'bad');
@@ -1010,7 +1012,7 @@ extension GameCorp on Game {
     if (nt != null) return nt;
     final cost = spreadCost(b);
     if (cash < cost) return M('お金が足りません');
-    cash -= cost;
+    cfAdd('grow', -cost);
     useT('deal');
     cl.share = math.max(.08, cl.share * .7);
     presXp('ei', 2);
