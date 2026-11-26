@@ -1,6 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 part of 'game.dart';
 
+/// 子どもが後継ぎになれる年（選ぶ・急死で継ぐ・解任で継ぐ・引退して譲る、どれも同じ線。1.1.0+38。前は選ぶのが18歳・継ぐのが20歳でずれていた）
+const heirAge = 18;
+
 /// 1か月すすめる・出来事・宿敵の動き
 extension GameTurn on Game {
   // ===== 1期すすめる =====
@@ -14,6 +17,8 @@ extension GameTurn on Game {
     for (final m in settleSmall()) {
       if (m.isNotEmpty) N(m);
     }
+    // 先月までの「話を聞いた」の控えは要らない（セーブが大きくならないように。1.1.0+38）
+    life.did.removeWhere((k, v) => k.startsWith('heard:') && v < turn);
     // 時代（景気は統計の成長率から。株価と技術の波は出来事から）
     econData.fcSeed = fcSeed;
     monthEcon(N);
@@ -418,6 +423,8 @@ extension GameTurn on Game {
     rivalReturns(N);
     storyMonthly(N);
     rivalScenes(N);
+    // 貸したお金の返済（1.1.0+38）
+    if (lent.isNotEmpty) lentMonthly(N);
     localMonthly(N);
     countryMonthly(N);
     crisisMonthly();
@@ -473,7 +480,7 @@ extension GameTurn on Game {
     peakRank = math.min(peakRank, me);
     if (over == null && won == null) {
       if (mode == 'world' && me == 1) won = M('{0}年、世界の企業ランキングで1位になりました', [year]);
-      if (mode == 'quad' && cap + wealth >= 1e15) won = M('{0}年、グループの時価総額が1000兆円に届きました（創業から{1}年）', [year, year - startYear]);
+      if (mode == 'quad' && score >= 1e15) won = M('{0}年、グループの時価総額が1000兆円に届きました（創業から{1}年）', [year, year - startYear]);
     }
     final rivMax = sh.rivMax;
     if (rivMax > 50 && over == null) {
@@ -516,13 +523,10 @@ extension GameTurn on Game {
     staff = [];
     cfTag = 'reset';
     cash = 1e7 * nom();
-    loans = [];
-    bankCtl = 0;
-    missed = 0;
+    // 前の会社のものは、会社を売ったときと同じく片付ける（1.1.0+38）
+    freshCompany();
     bankDone = false;
-    listed = false;
     sh = Shares();
-    region = 0;
     for (final c in cos) {
       c.stakePlayer = 0;
       if (c.parent == 'player') c.parent = null;
@@ -533,7 +537,7 @@ extension GameTurn on Game {
   void presDies(void Function(String, [String]) N) {
     Person? s;
     if (succ != null) {
-      s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= 20).firstOrNull;
+      s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= heirAge).firstOrNull;
     }
     final old = pres.name;
     if (s != null) {
@@ -541,10 +545,16 @@ extension GameTurn on Game {
       N(M('{0}が亡くなりました。遺言どおり、{1}が社長を継ぎました', [Nm(old), Nm(s.name)]), 'big');
     } else {
       final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
-      final best = cand.firstOrNull ?? kids.where((k) => k.age >= 20).firstOrNull ?? staff.firstOrNull;
+      final best = cand.firstOrNull ?? kids.where((k) => k.age >= heirAge).firstOrNull ?? staff.firstOrNull;
       if (best != null) {
+        final named = succ != null;
         takeOver(best);
-        N(M('{0}が急死。後継ぎが決まっておらず、{1}が急きょ社長になりました', [Nm(old), Nm(best.name)]), 'bad');
+        // 後継ぎを決めていたのに継げなかった（辞めた・亡くなった）ときは、そう書く（1.1.0+38。前はいつも「決まっておらず」）
+        N(
+            named
+                ? M('{0}が急死。決めていた後継ぎが継げず、{1}が急きょ社長になりました', [Nm(old), Nm(best.name)])
+                : M('{0}が急死。後継ぎが決まっておらず、{1}が急きょ社長になりました', [Nm(old), Nm(best.name)]),
+            'bad');
       } else {
         over = M('{0}が亡くなり、会社を継ぐ人がいませんでした', [Nm(old)]);
       }
@@ -707,6 +717,10 @@ extension GameTurn on Game {
   GameEvent evHostile(Company c, double th) {
     final r = c.rival!;
     final x = math.min(sh.float, 8.0);
+    return tagEv(_evHostile(c, th, r, x), 'hostile', {'c': c.id, 'th': th});
+  }
+
+  GameEvent _evHostile(Company c, double th, Rival r, double x) {
     return GameEvent(
         who: c,
         face: r.col,
@@ -728,7 +742,9 @@ extension GameTurn on Game {
         ]);
   }
 
-  GameEvent evPoach(Company c, Person p) => GameEvent(
+  GameEvent evPoach(Company c, Person p) => tagEv(_evPoach(c, p), 'poach', {'c': c.id, 'p': p.id})..poach = p.id;
+
+  GameEvent _evPoach(Company c, Person p) => GameEvent(
           who: c,
           face: c.rival!.col,
           title: M('引き抜きの誘い'),
@@ -751,7 +767,9 @@ extension GameTurn on Game {
             }),
           ]);
 
-  GameEvent evAlliance(Company c) => GameEvent(
+  GameEvent evAlliance(Company c) => tagEv(_evAlliance(c), 'alliance', {'c': c.id});
+
+  GameEvent _evAlliance(Company c) => GameEvent(
           who: c,
           face: c.rival!.col,
           title: M('提携の申し出'),
@@ -775,7 +793,9 @@ extension GameTurn on Game {
             }),
           ]);
 
-  GameEvent evPartnerLeave(Person p) => GameEvent(
+  GameEvent evPartnerLeave(Person p) => tagEv(_evPartnerLeave(p), 'pleave', {'p': p.id})..pl = p.id;
+
+  GameEvent _evPartnerLeave(Person p) => GameEvent(
           title: M('相棒が独立を言い出した'),
           text: M('{0}が「自分の会社を持ちたい」と言い出しました。創業から一緒にやってきた相棒です。株を{1}持っています。', [Nm(p.name), pct(p.stake)]),
           choices: [
@@ -819,7 +839,19 @@ extension GameTurn on Game {
       final b = pick(biz);
       final liar = staff.where((p) => p.trait == 'liar').firstOrNull;
       final what = pick(const ['品質の偽装', '帳簿のごまかし', '長時間労働', '顧客情報の流出']);
-      events.add(GameEvent(
+      events.add(evScandal(b, what, liar));
+    }
+    // 天才社員の売り込み
+    if (rnd() < .02) {
+      final p = mkPerson(1.6);
+      p.salary *= 2.5;
+      events.add(evStar(p));
+    }
+    rollEvents2(N);
+  }
+
+  GameEvent evScandal(Biz b, String what, Person? liar) => tagEv(
+      GameEvent(
           title: M('不祥事が発覚'),
           text: Cat([
             M('「{0}」で{1}が見つかりました。', [I(b.ind), M(what)]),
@@ -841,13 +873,12 @@ extension GameTurn on Game {
               buried.add(turn + ri(24, 60));
               return M('うまくもみ消せました。ただ、火種は残っています');
             }),
-          ]));
-    }
-    // 天才社員の売り込み
-    if (rnd() < .02) {
-      final p = mkPerson(1.6);
-      p.salary *= 2.5;
-      events.add(GameEvent(
+          ]),
+      'scandal',
+      {'b': b.id, 'what': what, if (liar != null) 'liar': liar.id});
+
+  GameEvent evStar(Person p) => tagEv(
+      GameEvent(
           title: M('大物の売り込み'),
           small: true,
           text: M('業界で名の知れた{0}（{1}歳）が、あなたの会社で働きたいと言ってきました。腕は確かと評判ですが、給料の要求も高い。', [Nm(p.name), p.age]),
@@ -865,11 +896,19 @@ extension GameTurn on Game {
               }
               return M('断りました');
             }),
-          ]));
-    }
+          ]),
+      'star',
+      {'p': p.toJson()});
+
+  /// 出来事の続き（労働組合から。1.1.0+38 で、出来事を作り直せるように分けた。並びは前と同じ）
+  void rollEvents2(void Function(String, [String]) N) {
     // 労働組合
-    if (staff.length >= 3 && rnd() < .017) {
-      events.add(GameEvent(title: M('労働組合の要求'), text: M('社員の代表が、給料を1割上げてほしいと言ってきました。'), choices: [
+    if (staff.length >= 3 && rnd() < .017) events.add(evUnion());
+    rollEvents3(N);
+  }
+
+  GameEvent evUnion() => tagEv(
+      GameEvent(title: M('労働組合の要求'), text: M('社員の代表が、給料を1割上げてほしいと言ってきました。'), choices: [
         Choice(M('給料を上げる'), M('毎月の人件費が1割増える。皆の忠誠が上がる'), () {
           for (final p in staff) {
             p.salary *= 1.1;
@@ -886,14 +925,22 @@ extension GameTurn on Game {
           }
           return M('要求を断りました');
         }),
-      ]));
-    }
+      ]),
+      'union');
+
+  void rollEvents3(void Function(String, [String]) N) {
     // 部下の独立
     final star = staff.where((p) => p.amb > 78 && Game.totOf(p) > 250 && p.tenure > 24 && biz.any((b) => b.mgr == p.id)).firstOrNull;
     if (star != null && rnd() < .017) {
       final b = biz.firstWhere((x) => x.mgr == star.id);
       star.ambKnown = true;
-      events.add(GameEvent(
+      events.add(evIndep(star, b));
+    }
+    rollEvents4(N);
+  }
+
+  GameEvent evIndep(Person star, Biz b) => tagEv(
+      GameEvent(
           title: M('独立したい'),
           text: M('「{0}」を任せている{1}が、自分の会社を作りたいと言ってきました。腕が良いぶん、敵に回すと手強い相手です。', [I(b.ind), Nm(star.name)]),
           choices: [
@@ -932,12 +979,23 @@ extension GameTurn on Game {
               fire(star, 'indep');
               return M('{0}は{1}を立ち上げ、あなたの客を奪い始めました', [Nm(star.name), Nm(c.name)]);
             }),
-          ]));
-    }
+          ]),
+      'indep',
+      {'p': star.id, 'b': b.id});
+
+  void rollEvents4(void Function(String, [String]) N) {
     // 大型の受注
     if (biz.isNotEmpty && rnd() < .017) {
       final b = pick(biz);
-      events.add(GameEvent(title: M('大型の受注'), small: true, text: M('「{0}」に、大口の取引の話が来ました。受ければ一気に伸びますが、現場はかなり無理をします。', [I(b.ind)]), choices: [
+      events.add(evOrder(b));
+    }
+    // 社長の病気
+    if (pres.age > 50 && rnd() < .01) events.add(evIll());
+    rollEvents5(N);
+  }
+
+  GameEvent evOrder(Biz b) => tagEv(
+      GameEvent(title: M('大型の受注'), small: true, text: M('「{0}」に、大口の取引の話が来ました。受ければ一気に伸びますが、現場はかなり無理をします。', [I(b.ind)]), choices: [
         Choice(M('受ける'), M('事業の力が1割5分上がる。部下全員の忠誠が下がる'), () {
           b.power *= 1.15;
           for (final p in staff) {
@@ -946,11 +1004,12 @@ extension GameTurn on Game {
           return M('受注しました。現場は大忙しです');
         }),
         Choice(M('断る'), M('何も起きない'), () => M('見送りました')),
-      ]));
-    }
-    // 社長の病気
-    if (pres.age > 50 && rnd() < .01) {
-      events.add(GameEvent(title: M('社長の体調'), text: M('{0}が倒れました。医者は「しばらく休むように」と言っています。', [Nm(pres.name)]), choices: [
+      ]),
+      'order',
+      {'b': b.id});
+
+  GameEvent evIll() => tagEv(
+      GameEvent(title: M('社長の体調'), text: M('{0}が倒れました。医者は「しばらく休むように」と言っています。', [Nm(pres.name)]), choices: [
         Choice(M('休む'), M('来月は社長の時間が半分になる'), () {
           rest = 1;
           return M('しばらく休むことにしました');
@@ -964,14 +1023,25 @@ extension GameTurn on Game {
           }
           return M('なんとか持ちこたえました');
         }),
-      ]));
-    }
+      ]),
+      'ill');
+
+  void rollEvents5(void Function(String, [String]) N) {
     // 宿敵からの買い取りの申し出
     final buyer = cos.where((c) => c.alive && c.rival != null && c.parent != 'player' && c.cash > 0).firstOrNull;
     if (buyer != null && biz.length > 1 && rnd() < .013) {
       final b = pick(biz);
       final price = sellValue(b) * 1.5;
-      events.add(GameEvent(
+      events.add(evBuyBiz(buyer, b, price));
+    }
+    // 株主総会
+    final h4 = hist.length >= 12 ? hist[hist.length - 12] : null;
+    if (listed && sh.own < 50 && h4 != null && pre < h4.pre * .8 && rnd() < .08) events.add(evAgmRough());
+    rollEvents6(N);
+  }
+
+  GameEvent evBuyBiz(Company buyer, Biz b, double price) => tagEv(
+      GameEvent(
           who: buyer,
           face: buyer.rival!.col,
           title: M('事業を売ってほしい'),
@@ -990,12 +1060,12 @@ extension GameTurn on Game {
               buyer.rel -= 10;
               return M('断りました');
             }),
-          ]));
-    }
-    // 株主総会
-    final h4 = hist.length >= 12 ? hist[hist.length - 12] : null;
-    if (listed && sh.own < 50 && h4 != null && pre < h4.pre * .8 && rnd() < .08) {
-      events.add(GameEvent(title: M('荒れる株主総会'), text: M('利益が落ちたことに、株主が怒っています。「社長は責任を取れ」という声も出ています。'), choices: [
+          ]),
+      'buyBiz',
+      {'c': buyer.id, 'b': b.id, 'price': price});
+
+  GameEvent evAgmRough() => tagEv(
+      GameEvent(title: M('荒れる株主総会'), text: M('利益が落ちたことに、株主が怒っています。「社長は責任を取れ」という声も出ています。'), choices: [
         Choice(M('配当を増やして鎮める'), M('{0}を株主に配る', [Y(extras ? meetingDividend() : math.max(cash * .1, 0))]), () {
           if (!extras) {
             cfTag = 'payout';
@@ -1011,32 +1081,50 @@ extension GameTurn on Game {
           }
           return M('どうにか押し切りました');
         }),
-      ]));
-    }
+      ]),
+      'agmRough');
+
+  void rollEvents6(void Function(String, [String]) N) {
     // 好景気の不動産話
+    // 1.1.0+38 から、銀行が貸せる会社にだけ来る（格付けD・銀行の管理中は来ない）。借りる額も借りられる上限まで
     if (econ > 1.1 && rnd() < .05 && cash > 0) {
-      events.add(GameEvent(title: M('銀行からの儲け話'), text: M('取引のある銀行が「土地を買えば必ず上がります。お金はいくらでも貸します」と言っています。'), choices: [
-        Choice(M('借りて土地を買う'), M('{0}を借りて土地に回す。景気が続けば大きく増え、崩れれば借金だけが残る', [Y(cash)]), () {
-          final a = math.max(cash, 1e7);
-          loanFromEvent(a);
-          land = land + a;
+      final a = landLoanAmt();
+      if (a > 0) events.add(evLand(a));
+    }
+    // 土地の値動き（1.1.0+38 から、景気の倍率だけでなく、その国の物価・成長・金利で動く。前は好景気なら毎月2%＝年27%上がった）
+    if (land > 0) {
+      land *= landMonthly();
+      if (rnd() < .0001) land = 0;
+    }
+    landSellMonthly(N);
+  }
+
+  /// 土地の話で借りる額（手元の現金と同じだけ・少なくとも1000万円。借りられる上限まで。借りられなければ 0）
+  double landLoanAmt() => math.min(math.max(cash, 1e7), borrowRoom());
+
+  /// 1か月の土地の値の倍。年の伸び＝物価の上がり方＋1%＋成長率が2%を超えた分の2倍−実質の金利が3%を超えた分の半分（年−15%〜＋20%に抑える）
+  double landMonthly() {
+    final infl = inflOf(home), gr = growthOf(home), rate = rateOf(home);
+    final yearly = clampD(infl + 1 + (gr - 2) * 2 - math.max(0.0, rate - infl - 3) * .5, -15, 20) / 100;
+    return math.pow(1 + yearly, 1 / 12).toDouble();
+  }
+
+  GameEvent evLand(double a) => tagEv(
+      GameEvent(title: M('銀行からの儲け話'), text: M('取引のある銀行が「土地を買えば必ず上がります。お金はお貸しします」と言っています。'), choices: [
+        Choice(M('借りて土地を買う'), M('{0}を借りて土地に回す。景気が続けば大きく増え、崩れれば借金だけが残る', [Y(a)]), () {
+          // 選ぶまでに格付けが落ちた・銀行の管理に入ったなら、話は流れる
+          final x = math.min(a, borrowRoom());
+          if (x <= 0) return M('銀行の態度が変わり、話は流れました');
+          loanFromEvent(x);
+          land = land + x;
           // 決算書：借りたお金で土地を買った（現金は通らない。1.1.0+34）
-          books.add('landNC', a);
+          books.add('landNC', x);
           return M('土地を買いました');
         }),
         Choice(M('断る'), M('何も起きない'), () => M('断りました')),
-      ]));
-    }
-    // 土地の値動き
-    if (land > 0) {
-      land *= econ > 1.1
-          ? 1.02
-          : econ < .95
-              ? .96
-              : 1.0017;
-      if (rnd() < .0001) land = 0;
-    }
-  }
+      ]),
+      'land',
+      {'a': a});
 
   /// 部下が会社を去る。[why] は社外に残すときの理由（quit 辞めた / poached 引き抜かれた / fired 解雇 / retired 引退）
   void fire(Person p, [String why = 'quit']) {
@@ -1115,8 +1203,12 @@ extension GameTurn on Game {
                 ? 'bad'
                 : 'good');
     final pp = staffById(x.by);
-    if (pp != null && m < .5) {
-      events.add(GameEvent(title: M('提案が外れた'), text: M('{0}の提案で作った「{1}」の新商品は不発でした。責任をどう取らせますか。', [Nm(pp.name), name]), choices: [
+    if (pp != null && m < .5) events.add(evDevMiss(pp, name));
+    if (pp != null && m > 2) pp.loy = math.min(99, pp.loy + 8);
+  }
+
+  GameEvent evDevMiss(Person pp, String name) => tagEv(
+      GameEvent(title: M('提案が外れた'), text: M('{0}の提案で作った「{1}」の新商品は不発でした。責任をどう取らせますか。', [Nm(pp.name), name]), choices: [
         Choice(M('責任者から外す'), M('忠誠が大きく下がる'), () {
           for (final bb in biz) {
             if (bb.mgr == pp.id) bb.mgr = null;
@@ -1128,10 +1220,9 @@ extension GameTurn on Game {
           pp.loy += 10;
           return M('{0}に「次で取り返せ」と伝えました', [Nm(pp.name)]);
         }),
-      ]));
-    }
-    if (pp != null && m > 2) pp.loy = math.min(99, pp.loy + 8);
-  }
+      ]),
+      'devMiss',
+      {'p': pp.id, 'name': name});
 
   // ===== 経営会議 =====
   Proposal? proposalFor(Person p) {
@@ -1429,10 +1520,20 @@ extension GameTurn on Game {
     }
     final restP = props.where((o) => staffById(o.by) != null && !staffById(o.by)!.auto).toList();
     if (restP.length >= 2 && restP[0].cost + restP[1].cost > cash * .6) {
-      final a = restP[0], b = restP[1];
-      final pa = staffById(a.by)!, pb = staffById(b.by)!;
-      String says(Proposal o) => M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]);
-      events.add(GameEvent(
+      events.add(evClash(restP[0], restP[1]));
+      restP.removeRange(0, 2);
+    }
+    for (final o in restP) {
+      events.add(evProp(o));
+    }
+  }
+
+  /// 経営会議で二人の案がぶつかった
+  GameEvent evClash(Proposal a, Proposal b) {
+    final pa = staffById(a.by)!, pb = staffById(b.by)!;
+    String says(Proposal o) => M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]);
+    return tagEv(
+        GameEvent(
           title: M('経営会議：意見がぶつかった'),
           text: M('{0}は「{1}」、{2}は「{3}」と言って譲りません。両方やるお金はありません。', [Nm(pa.name), a.l, Nm(pb.name), b.l]),
           lead: M('二人とも自分の案を譲りません。両方やるお金はありません。'),
@@ -1449,20 +1550,97 @@ extension GameTurn on Game {
           return doProposal(b);
         }),
         Choice(M('どちらも却下する'), M('二人とも不満を持つ'), () => Cat([rejectProposal(a), rejectProposal(b)], ja: '。', en: '. ')),
-      ]));
-      restP.removeRange(0, 2);
+      ]),
+        'clash',
+        {'a': propToJson(a), 'b': propToJson(b)});
+  }
+
+  /// 経営会議の提案（小さな知らせ）
+  GameEvent evProp(Proposal o) {
+    final p = staffById(o.by)!;
+    return tagEv(
+        GameEvent(title: M('経営会議の提案'), small: true, person: p, text: M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]), choices: [
+          Choice(M('承認する'), M('手は使わない。忠誠が少し上がる'), () => doProposal(o)),
+          Choice(M('却下する'), M(p.amb > 65 ? '忠誠が大きく下がる' : '忠誠が下がる'), () => rejectProposal(o)),
+          Choice(M('この人に全部まかせる'), M('これからの提案は自動で通す'), () {
+            p.auto = true;
+            return Cat([doProposal(o), M('これからは任せます')], ja: '。', en: '. ');
+          }),
+        ]),
+        'prop',
+        {'o': propToJson(o)});
+  }
+
+  /// 投資家に渡せる、期限を延ばす代わりの株（持ち株が30%を割らない分。5%まで。0以上）
+  double vcExtStake() => math.min(5.0, math.max(0.0, sh.own - 30));
+
+  /// 投資家が株を売る先（いちばん大きな宿敵。いなければ null＝取引先の会社）
+  Company? vcBuyer() => (cos.where((c) => c.alive && c.rival != null && c.parent != 'player').toList()..ssort((a, b) => b.cap.compareTo(a.cap))).firstOrNull;
+
+  /// 投資家との上場の約束の期限（1.1.0+38 で作り直した）。
+  /// ・買い戻す：お金が足りるときだけ出す（前は足りなくても出て、押すと何も起きず、毎月同じ出来事が来た）
+  /// ・あと1年：株を渡して期限を本当に1年延ばす。一度だけ（前は持ち株30%未満だと株が増え、投資家の株がマイナスになりえた）
+  /// ・社長の座を降りる：代わりの部下がいるときだけ出す（前は部下0人でも出て、何も起きなかった）
+  /// ・約束を果たせない：投資家は株を宿敵（いなければ取引先）に売る。約束はそこで終わる
+  GameEvent evVc() {
+    final cost = cap * sh.vc / 100 * 1.2;
+    final ext = vcExtStake();
+    final heir = (staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a))).firstOrNull;
+    final to = vcBuyer();
+    String sellOff() {
+      final x = sh.vc;
+      sh.vc = 0;
+      vcDeadline = 0;
+      vcExt = false;
+      final c = vcBuyer();
+      if (c != null) {
+        sh.riv[c.id] = (sh.riv[c.id] ?? 0) + x;
+        c.rel -= 5;
+        tieRec(c, 'h', M('投資家から株を{0}買い取られた', [pct(x)]));
+        return M('約束を果たせず、投資家は株{0}を{1}に売りました', [pct(x), Nm(c.name)]);
+      }
+      sh.ally += x;
+      return M('約束を果たせず、投資家は株{0}を取引先の会社に売りました', [pct(x)]);
     }
-    for (final o in restP) {
-      final p = staffById(o.by)!;
-      events.add(GameEvent(title: M('経営会議の提案'), small: true, person: p, text: M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]), choices: [
-        Choice(M('承認する'), M('手は使わない。忠誠が少し上がる'), () => doProposal(o)),
-        Choice(M('却下する'), M(p.amb > 65 ? '忠誠が大きく下がる' : '忠誠が下がる'), () => rejectProposal(o)),
-        Choice(M('この人に全部まかせる'), M('これからの提案は自動で通す'), () {
-          p.auto = true;
-          return Cat([doProposal(o), M('これからは任せます')], ja: '。', en: '. ');
-        }),
-      ]));
-    }
+
+    return tagEv(
+        GameEvent(vc: true, title: M('投資家が上場を迫る'), text: M('「3年以内に上場する」という約束の期限が来ました。投資家は株{0}を持っています。', [pct(sh.vc)]), choices: [
+          if (cash >= cost)
+            Choice(M('株を買い戻す'), M('{0}を払い、投資家の株をすべて引き取る', [Y(cost)]), () {
+              final c2 = cap * sh.vc / 100 * 1.2;
+              if (cash < c2) return Cat([M('お金が足りず、買い戻せませんでした'), sellOff()], ja: '。', en: '. ');
+              cfAdd('payout', -c2);
+              // 買い戻した株は消す（株の数が減り、残った株主の割合が上がる）
+              corp.nSh *= (100 - sh.vc) / 100;
+              sh.vc = 0;
+              normSh();
+              vcDeadline = 0;
+              vcExt = false;
+              return M('投資家の株を買い戻しました');
+            }),
+          if (!vcExt && ext > 0)
+            Choice(M('あと1年待ってもらう'), M('投資家に株を{0}渡して、期限を1年延ばす（一度だけ）', [pct(ext)]), () {
+              final x = vcExtStake();
+              if (x <= 0) return Cat([M('渡せる株が無く、待ってもらえませんでした'), sellOff()], ja: '。', en: '. ');
+              sh.own -= x;
+              sh.vc += x;
+              vcDeadline = turn + 12;
+              vcExt = true;
+              return M('期限が1年延びました');
+            }),
+          Choice(M('約束を果たせないと伝える'), M(to != null ? '投資家は株{0}を{1}に売る（宿敵が株を持つ）' : '投資家は株{0}を取引先の会社に売る', [pct(sh.vc), Nm(to?.name ?? '')]), sellOff),
+          if (heir != null)
+            Choice(M('社長の座を降りる'), M('投資家が選んだ部下（{0}）が社長になる。期限は2年延びる', [Nm(heir.name)]), () {
+              final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
+              final best = cand.firstOrNull;
+              if (best == null) return Cat([M('代わりの人がいませんでした'), sellOff()], ja: '。', en: '. ');
+              final old = pres.name;
+              takeOver(best);
+              vcDeadline = turn + 24;
+              return M('{0}は社長を降り、{1}が社長になりました', [Nm(old), Nm(best.name)]);
+            }),
+        ]),
+        'vc');
   }
 
   // ===== お金の縛り =====
@@ -1474,35 +1652,7 @@ extension GameTurn on Game {
         N(M('社風が「{0}」に変わりました', [D(CULT[culture]!.nJa)]), 'good');
       }
     }
-    if (!listed && vcDeadline != 0 && turn >= vcDeadline && sh.vc > 0 && !events.any((e) => e.vc)) {
-      final cost = cap * sh.vc / 100 * 1.2;
-      events.add(GameEvent(vc: true, title: M('投資家が上場を迫る'), text: M('「3年以内に上場する」という約束の期限が来ました。投資家は株{0}を持っています。', [pct(sh.vc)]), choices: [
-        Choice(M('株を買い戻す'), M('{0}を払い、投資家の株をすべて引き取る', [Y(cost)]), () {
-          if (cash < cost) return M('お金が足りません。投資家はあと1年だけ待つと言いました');
-          cfAdd('payout', -cost);
-          sh.own += sh.vc;
-          sh.vc = 0;
-          vcDeadline = 0;
-          return M('投資家の株を買い戻しました');
-        }),
-        Choice(M('あと1年待ってもらう'), M('投資家に株を5%渡して、期限を1年延ばす'), () {
-          final x = math.min(5, sh.own - 30);
-          sh.own -= x;
-          sh.vc += x;
-          vcDeadline = turn + 12;
-          return M('期限が1年延びました');
-        }),
-        Choice(M('社長の座を降りる'), M('投資家が選んだ部下が社長になる'), () {
-          final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
-          final best = cand.firstOrNull;
-          if (best == null) return M('代わりの人がおらず、投資家は株を市場で売り払いました');
-          final old = pres.name;
-          takeOver(best);
-          vcDeadline = turn + 24;
-          return M('{0}は社長を降り、{1}が社長になりました', [Nm(old), Nm(best.name)]);
-        }),
-      ]));
-    }
+    if (!listed && vcDeadline != 0 && turn >= vcDeadline && sh.vc > 0 && !events.any((e) => e.vc)) events.add(evVc());
     if (vcDeadline != 0 && !listed && turn == vcDeadline - 12) N(M('投資家との上場の約束まで、あと1年です'), 'bad');
     if (tie != null) {
       final hit = biz.where((b) => tie!.inds.contains(b.ind)).firstOrNull;
@@ -1522,11 +1672,22 @@ extension GameTurn on Game {
       // 自分と同じ業種にいる会社からは来ない（受けた翌月に「同じ商売を始めるとは」で切られていた。1.1.0+37）
       final mine = <String>{for (final b in biz) b.ind};
       final c = pickOr(cos.where((x) => x.alive && x.rival == null && x.parent != 'player' && x.tier == 0 && x.cap > cap * 2 && !x.biz.any((b) => mine.contains(b.ind))).toList());
-      if (c != null) {
-        final money = cap * .12 + 1e7 * nom();
-        final inds = c.biz.map((b) => b.ind).toList();
-        final cats = <String>{for (final i in inds) indm[i]!.cat}.toList();
-        events.add(GameEvent(
+      if (c != null) events.add(evTieOffer(c, cap * .12 + 1e7 * nom()));
+    }
+    final burn = math.max(0.0, -cashPre());
+    // 持ち株が10%を切っていると、宿敵の出資の話は来ない（1.1.0+38。前は渡す株がマイナスになりえた）
+    if (biz.isNotEmpty && cash < burn * 3 + 1e6 && rnd() < .15 && !events.any((e) => e.rivfund) && rivFundStake() > 0) {
+      final c = cos.where((x) => x.alive && x.rival != null && x.parent != 'player' && x.cash > cap * .3).firstOrNull;
+      if (c != null) events.add(evRivFund(c, math.max(cap * .25, burn * 12)));
+    }
+  }
+
+  /// 取引先からの出資の話
+  GameEvent evTieOffer(Company c, double money) {
+    final inds = c.biz.map((b) => b.ind).toList();
+    final cats = <String>{for (final i in inds) indm[i]!.cat}.toList();
+    return tagEv(
+        GameEvent(
             title: M('取引先からの出資の話'),
             text: M('取引のある{0}が「{1}を出資するので、株を8%もらいたい。注文も回します」と言っています。ただし{0}と同じ業種（{2}）に入ると、取引を切られます。',
                 [Nm(c.name), Y(money), J(inds.take(4).map(I))]),
@@ -1534,22 +1695,26 @@ extension GameTurn on Game {
               Choice(M('受ける'), M('{0}が入る。同じ分類の事業の力が少し上がる', [Y(money)]), () {
                 if (sh.own < 40) return M('持ち株が足りず、話は流れました');
                 cfAdd('equity', money);
-                sh.own -= 8;
+                // 新しい株を8%渡す（全員の割合が薄まり、株の数が増える。1.1.0+38。前はあなたの株だけが減り、株の数は変わらなかった）
+                newShares(8);
                 sh.ally += 8;
                 tie = Tie(co: c.id, inds: inds, cats: cats);
                 c.rel += 15;
                 return M('{0}の出資を受けました', [Nm(c.name)]);
               }),
               Choice(M('断る'), M('何も起きない'), () => M('断りました')),
-            ]));
-      }
-    }
-    final burn = math.max(0.0, -cashPre());
-    if (biz.isNotEmpty && cash < burn * 3 + 1e6 && rnd() < .15 && !events.any((e) => e.rivfund)) {
-      final c = cos.where((x) => x.alive && x.rival != null && x.parent != 'player' && x.cash > cap * .3).firstOrNull;
-      if (c != null) {
-        final money = math.max(cap * .25, burn * 12);
-        events.add(GameEvent(
+            ]),
+        'tieOffer',
+        {'c': c.id, 'money': money});
+  }
+
+  /// 宿敵の出資で渡す株（20%。持ち株が10%を割らない分まで。0以上。1.1.0+38）
+  double rivFundStake() => math.min(20.0, math.max(0.0, sh.own - 10));
+
+  /// 宿敵からの出資の話
+  GameEvent evRivFund(Company c, double money) {
+    return tagEv(
+        GameEvent(
             rivfund: true,
             who: c,
             face: c.rival!.col,
@@ -1557,19 +1722,23 @@ extension GameTurn on Game {
             text: M('{0}が「資金に困っているそうだな。{1}出してやろう。そのかわり株を20%もらう」と言っています。', [Nm(c.presName), Y(money)]),
             choices: [
               Choice(M('受ける'), M('お金は助かるが、宿敵があなたの株を20%持つ'), () {
-                cfAdd('equity', money);
-                final x = math.min(20.0, sh.own - 10);
-                sh.own -= x;
+                final x = rivFundStake();
+                if (x <= 0) return M('持ち株が足りず、話は流れました');
+                // 渡す株が20%に足りなければ、出資もその分だけ（1.1.0+38）
+                final m = money * x / 20;
+                cfAdd('equity', m);
+                // 新しい株を渡す（全員の割合が薄まり、株の数が増える。1.1.0+38）
+                newShares(x);
                 sh.riv[c.id] = (sh.riv[c.id] ?? 0) + x;
-                return M('{0}の出資を受けました。株を{1}握られています', [Nm(c.name), pct(x)]);
+                return M('{0}の出資を受けました。株を{1}握られています', [Nm(c.name), pct(sh.riv[c.id]!)]);
               }),
               Choice(M('断る'), M('自力でしのぐ'), () {
                 c.rel -= 5;
                 return M('断りました');
               }),
-            ]));
-      }
-    }
+            ]),
+        'rivfund',
+        {'c': c.id, 'money': money});
   }
 
   void dealsMonthly(void Function(String, [String]) N) {
@@ -1594,7 +1763,15 @@ extension GameTurn on Game {
           .toList());
       if (c != null) {
         final type = pick(const ['sales', 'codev', 'outsrc']);
-        events.add(GameEvent(
+        events.add(evDealOffer(c, type));
+      }
+    }
+    dealsMonthly2(N);
+  }
+
+  /// 組みたいという話
+  GameEvent evDealOffer(Company c, String type) => tagEv(
+        GameEvent(
             who: c.rival != null ? c : null,
             face: c.rival?.col,
             title: M('組みたいという話'),
@@ -1611,9 +1788,12 @@ extension GameTurn on Game {
                 c.rel -= 5;
                 return M('断りました');
               }),
-            ]));
-      }
-    }
+            ]),
+        'deal',
+        {'c': c.id, 'type': type},
+      );
+
+  void dealsMonthly2(void Function(String, [String]) N) {
     for (final c in subs()) {
       if (c.fromStaff == null && !c.listed) continue;
       if (rnd() < .01) {
@@ -1623,8 +1803,13 @@ extension GameTurn on Game {
         c.cash -= math.max(0, c.cash * .3);
         N(M('子会社{0}の社長{1}が、独断で大きな投資をしました', [Nm(c.name), Nm(c.presName)]));
       }
-      if (c.rel < 10 && rnd() < .006 && !events.any((e) => e.subco == c.id)) {
-        events.add(GameEvent(subco: c.id, title: M('子会社の社長が反発'), text: M('{0}の社長{1}が「親会社の口出しは迷惑だ」と言い出しました。', [Nm(c.name), Nm(c.presName)]), choices: [
+      if (c.rel < 10 && rnd() < .006 && !events.any((e) => e.subco == c.id)) events.add(evSubRebel(c));
+    }
+  }
+
+  /// 子会社の社長が反発
+  GameEvent evSubRebel(Company c) => tagEv(
+        GameEvent(subco: c.id, title: M('子会社の社長が反発'), text: M('{0}の社長{1}が「親会社の口出しは迷惑だ」と言い出しました。', [Nm(c.name), Nm(c.presName)]), choices: [
           Choice(M('社長を替える'), M('子会社の力が1割落ちるが、言うことを聞くようになる'), () {
             for (final b in c.biz) {
               b.power *= .9;
@@ -1639,10 +1824,10 @@ extension GameTurn on Game {
             c.eff *= .95;
             return M('{0}には口を出さないことにしました', [Nm(c.name)]);
           }),
-        ]));
-      }
-    }
-  }
+        ]),
+        'subRebel',
+        {'c': c.id},
+      );
 
   void dirtyMonthly(void Function(String, [String]) N) {
     if (cooked > 0) {
@@ -1693,33 +1878,44 @@ extension GameTurn on Game {
             if (x.ind == b.ind) x.power *= 1.1;
           }
           tieRec(foe, 'h', M('「{0}」の開発の中身を盗まれた', [I(b.ind)]));
-          events.add(GameEvent(
-              who: foe,
-              face: foe.rival!.col,
-              title: M('情報が盗まれた'),
-              text: M('「{0}」の主力の開発者が突然辞め、半年後、{1}から同じような商品が出ました。', [I(b.ind), Nm(foe.name)]),
-              choices: [
-                Choice(M('訴える'), M('2年後に判決。勝てば賠償金が入る'), () {
-                  suits.add(Suit(at: turn + 24, co: foe.id, amt: math.max(foe.cap * .01, b.rev * 6)));
-                  foe.rel -= 20;
-                  tieRec(foe, 'g', M('情報を盗まれて訴えた'));
-                  return M('{0}を訴えました', [Nm(foe.name)]);
-                }),
-                Choice(M('やり返す'), M('こちらも相手の中身を盗む（社長の時間は使わない）'), () {
-                  // 1.1.0+28：使った分だけを戻す（先に引くと、手が打てなかったときに時間がマイナスになっていた）
-                  final h0 = hUsed;
-                  final r = doDirty('spy', foe);
-                  hUsed = h0;
-                  return r;
-                }),
-                Choice(M('黙って次の商品で勝負する'), M('評判は守られる'), () {
-                  rep = rep + 3;
-                  return M('騒がず、次の商品で取り返すことにしました');
-                }),
-              ]));
+          events.add(evStolen(foe, b));
         }
       }
     }
+    dirtyMonthly2(N);
+  }
+
+  /// 情報が盗まれた
+  GameEvent evStolen(Company foe, Biz b) => tagEv(
+        GameEvent(
+            who: foe,
+            face: foe.rival!.col,
+            title: M('情報が盗まれた'),
+            text: M('「{0}」の主力の開発者が突然辞め、半年後、{1}から同じような商品が出ました。', [I(b.ind), Nm(foe.name)]),
+            choices: [
+              Choice(M('訴える'), M('2年後に判決。勝てば賠償金が入る'), () {
+                suits.add(Suit(at: turn + 24, co: foe.id, amt: math.max(foe.cap * .01, b.rev * 6)));
+                foe.rel -= 20;
+                tieRec(foe, 'g', M('情報を盗まれて訴えた'));
+                return M('{0}を訴えました', [Nm(foe.name)]);
+              }),
+              Choice(M('やり返す'), M('こちらも相手の中身を盗む（社長の時間は使わない）'), () {
+                // 1.1.0+28：使った分だけを戻す（先に引くと、手が打てなかったときに時間がマイナスになっていた）
+                final h0 = hUsed;
+                final r = doDirty('spy', foe);
+                hUsed = h0;
+                return r;
+              }),
+              Choice(M('黙って次の商品で勝負する'), M('評判は守られる'), () {
+                rep = rep + 3;
+                return M('騒がず、次の商品で取り返すことにしました');
+              }),
+            ]),
+        'stolen',
+        {'c': foe.id, 'b': b.id},
+      );
+
+  void dirtyMonthly2(void Function(String, [String]) N) {
     if (suits.isNotEmpty && turn >= suits[0].at) {
       final s = suits.removeAt(0);
       final c = coById(s.co);

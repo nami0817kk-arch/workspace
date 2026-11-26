@@ -559,10 +559,16 @@ extension GamePeople on Game {
     return M('{0}の給料を相場まで上げました（毎月 {1} 増える）。やる気が上がりました', [Nm(p.name), Y(add)]);
   }
 
+  /// 今月もうその人の話を聞いたか
+  bool heardThisMonth(Person p) => life.did['heard:${p.id}'] == turn;
+
   /// 話を聞く（社長の時間 1時間）。隠れた人柄・暮らしが1つ分かり、能力の幅が少し縮み、やる気が少し上がる。困っていることを話してくれる
   String talkTo(Person p) {
+    // 同じ人の話を聞くのは月に1回まで（1.1.0+38。前は何度でも聞けて、やる気が70まで上がった）
+    if (heardThisMonth(p)) return M('{0}の話は今月もう聞きました。来月また聞けます', [Nm(p.name)]);
     final nt = spendT('talk');
     if (nt != null) return nt;
+    life.did['heard:${p.id}'] = turn;
     final parts = <String>[];
     if (p.real) {
       final order = ['amb', 'hon', 'fam', 'str', 'coop', 'health'];

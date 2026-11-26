@@ -143,7 +143,7 @@ extension GameView on Game {
       if (me == 1) return M('世界1位です。2位との差は{0}', [Y(rk[0].cap - (rk.length > 1 ? rk[1].cap : 0))]);
       // 1.1.0+30 から、世界1位は遠い目標なので、次の順位の節目（500・200・100・50・10・3・1位）までの差と、主な業種での順位を出す
       final next = rankMarks.reversed.firstWhere((m) => m < me, orElse: () => 1);
-      final gap = math.max(0.0, rk[next - 1].cap - (cap + wealth));
+      final gap = math.max(0.0, rk[next - 1].cap - score);
       final head = (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
       if (head != null) {
         final rivals = cos.where((c) => c.alive && c.parent != 'player' && c.biz.any((x) => x.ind == head.ind)).map((c) => c.biz.firstWhere((x) => x.ind == head.ind).rev);
@@ -152,7 +152,7 @@ extension GameView on Game {
       }
       return M('次の目標：世界{0}位以内（あと{1}）。今は{2}位', [next, Y(gap), me]);
     }
-    if (mode == 'quad') return M('1000兆円まで：あと{0}', [Y(math.max(0, 1e15 - cap - wealth))]);
+    if (mode == 'quad') return M('1000兆円まで：あと{0}', [Y(math.max(0, 1e15 - score))]);
     return M('終わりなし：好きなだけ育てる');
   }
 

@@ -75,7 +75,9 @@ void main() {
     expect(g.over, isNull);
     g.calcAll();
     final cap0 = g.cap;
-    expect(cap0, greaterThan(1e7));
+    // 1.1.0+38 で 1e7 → 5e6。1990年に始めた会社は当たり前のIT（POS）を入れて始めるようになり、種7の5年目の時価総額が 999.6万円になった
+    // （ここで見たいのは「社債を出しても時価総額が変わらない」ことで、盤面の大きさはその前提にすぎない）
+    expect(cap0, greaterThan(5e6));
     const a = 5e8;
     // 利息0の社債（利息で利益が減る分を除いて、借金の引き方だけを見る）
     g.loans.add(Loan(id: g.loanSeq + 1000, lender: 'bond', amt: a, orig: a, rate: 0, left: 60, term: 60, bullet: true, at: g.turn));

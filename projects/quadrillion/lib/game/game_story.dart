@@ -103,12 +103,17 @@ extension GameStory on Game {
     if (r.ties.length > 6) r.ties.removeAt(0);
   }
 
-  GameEvent _scene(Company c, String title, String line, List<Object?> args, String note) => GameEvent(
-      who: c,
-      face: c.rival!.col,
-      title: title,
-      text: Cat([M(line, args), note], ja: '\n', en: '\n'),
-      choices: [Choice(M('うなずく'), M('物語は次へ進む'), () => M('{0}との因縁を胸に刻みました', [Nm(c.presName)]))]);
+  GameEvent _scene(Company c, String title, String line, List<Object?> args, String note) {
+    final done = M('{0}との因縁を胸に刻みました', [Nm(c.presName)]);
+    return infoEv(
+        GameEvent(
+            who: c,
+            face: c.rival!.col,
+            title: title,
+            text: Cat([M(line, args), note], ja: '\n', en: '\n'),
+            choices: [Choice(M('うなずく'), M('物語は次へ進む'), () => done)]),
+        done);
+  }
 
   /// 毎月の物語の進み（出会い・張り合う・和解・組んだ）。乱数は使わない
   void storyMonthly(void Function(String, [String]) N) {
@@ -289,7 +294,13 @@ extension GameStory on Game {
     final cost = oustDividend();
     final p = oustChance();
     final motion = M('業績の悪化を受けて、社長の解任動議が出ました。味方の株は{0}、動議に回りそうな株は{1}です', [pct(f), pct(h)]);
-    events.add(GameEvent(
+    events.add(evMotion(review, eval, motion, board, target, cost, p));
+  }
+
+  /// 取締役会：解任動議（文と額は開いた月のものを材料に持つ）
+  GameEvent evMotion(String review, String eval, String motion, Voice board, double target, double cost, double p) {
+    return tagEv(
+        GameEvent(
         title: M('取締役会：解任動議'),
         text: Cat([review, eval, motion], ja: '\n', en: '\n'),
         lead: review,
@@ -307,19 +318,22 @@ extension GameStory on Game {
             if (rnd() < p) return Cat([M('押し切れず、動議は可決されました'), oust()], ja: '。', en: '. ');
             return M('強気で押し切り、動議は否決されました');
           }),
-        ]));
+        ]),
+        'motion',
+        {'review': review, 'eval': eval, 'motion': motion, 'bw': board.who, 'br': board.role, 'bs': board.say, 'target': target, 'cost': cost, 'p': p});
   }
 
-  GameEvent _note(String title, List<Object?> parts, {String? lead, List<Voice> voices = const [], String? tail}) =>
-      GameEvent(title: title, text: Cat(parts, ja: '\n', en: '\n'), lead: lead, voices: voices, tail: tail, choices:[Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]);
+  GameEvent _note(String title, List<Object?> parts, {String? lead, List<Voice> voices = const [], String? tail}) => infoEv(
+      GameEvent(title: title, text: Cat(parts, ja: '\n', en: '\n'), lead: lead, voices: voices, tail: tail, choices: [Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]),
+      M('取締役会が終わりました'));
 
   /// 取締役会で社長を解任する。後継ぎ、なければ一番の部下、子、それもいなければ外から呼ぶ。ゲームは続く
   String oust() {
     Person? s;
-    if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= 20).firstOrNull;
+    if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= heirAge).firstOrNull;
     if (s == null) {
       final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
-      s = cand.firstOrNull ?? kids.where((k) => k.age >= 20).firstOrNull ?? staff.firstOrNull;
+      s = cand.firstOrNull ?? kids.where((k) => k.age >= heirAge).firstOrNull ?? staff.firstOrNull;
     }
     final outside = s == null;
     s ??= mkPerson(.8);

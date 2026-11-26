@@ -48,6 +48,7 @@ part 'game_pres.dart';
 part 'game_traits.dart';
 part 'game_fin.dart';
 part 'game_names.dart';
+part 'game_events.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -381,6 +382,23 @@ class Game {
   /// [subR] は子会社の売上の持ち分（[rev] に含む）。どちらも現金にはならず、現金に入るのは子会社の配当だけ（1.1.0+35。[cashPre]）
   double pre = 0, interest = 0, hq = 0, subP = 0, subR = 0, rev = 0, cap = 1, g = 0, lastTax = 0;
   double wealth = 0, land = 0;
+
+  /// 今の会社の持ち株を売って財産にしたお金の合計（1.1.0+38）。そのお金は会社の時価総額の一部だったので、勝ち負けの数（[score]）では二重に数えない。
+  /// 会社を売る・倒産して出直すと 0 に戻る（前の会社の時価総額はもう数えないので、売って得たお金は財産として数える）
+  double soldOut = 0;
+
+  /// 土地を売りに出していて、売れる月（0 は売りに出していない。1.1.0+38）
+  int landSell = 0;
+
+  /// 宿敵などに貸したお金（1.1.0+38。game_mid.dart）
+  List<Lend> lent = [];
+
+  /// 投資家の上場の約束を、一度先に延ばしてもらったか（2回目は無い。1.1.0+38）
+  bool vcExt = false;
+
+  /// 勝ち負けの数（グループの時価総額＋あなたの財産。ただし今の会社の持ち株を売ったお金は時価総額に入っているので引く）。
+  /// 世界ランキングの自社の行・1000兆円の判定・終わりのまとめは、どれもこの数（1.1.0+38。前は持ち株を売るたびに増えた）
+  double get score => cap + math.max(0.0, wealth - soldOut);
   bool holding = false;
   int cooked = 0, dirty = 0, rep = 0, rest = 0, gen = 1, serial = 0;
 
@@ -483,7 +501,7 @@ class Game {
   double econFor(Industry ind) => 1 + (econ - 1) * ind.sens;
   double mkt(Industry ind) {
     final y = yr();
-    return ind.size / 4 * eraF(ind, y) * nomOf(y) * econFor(ind) * (ind.cat == 'net' || ind.cat == 'fut' ? techBoom : 1) * (extras ? socialF(ind, y) : 1);
+    return ind.size / 4 * eraF(ind, y) * nomOf(y) * econFor(ind) * (ind.cat == 'net' || ind.cat == 'fut' ? techBoom : 1) * (extras ? socialF(ind, y, home) : 1);
   }
 
   double capexOf(Industry ind) {
@@ -585,7 +603,8 @@ class Game {
     year = cfg.year;
     q = 1;
     reg = regFor(cfg.year.toDouble());
-    home = cfg.home;
+    // その年にまだ統計の無い国（1980年のロシアなど）では始めない。日本にする（1.1.0+38）
+    home = cfg.year >= econData.availableFrom(cfg.home) ? cfg.home : 'jp';
     pres = President(name: 'x', age: 22, traits: cfg.traits.toList(), ab: {});
     // 名前を決めていても、仕組みの名前を作る乱数は今までどおり引く（並びをずらさない。1.1.0+37）
     final auto = nm();
@@ -922,6 +941,8 @@ class Game {
 
   void calcAll() {
     econData.fcSeed = fcSeed;
+    // 手放した事業の償却と特許を外す（1.1.0+38。乱数は使わない）
+    lifePrune();
     perK = clampD(1 - (rateOf(home) - 3) * .03, .7, 1.15);
     final tt = totals();
     final T = tt.T, sm = tt.sm;
@@ -1075,7 +1096,7 @@ class Game {
     final assets = biz.fold(0.0, (s, b) => s + b.rev * .4) + sb.fold(0.0, (s, c) => s + c.rev * .3 * pctOf(c) / 100);
     final ts = rev > 0 ? biz.fold(0.0, (s, b) => s + (techCats.contains(indm[b.ind]!.cat) ? b.rev : 0)) / rev : 0.0;
     // 借金（debt）は社債を含む。1.1.0+34 までは、ここでさらに社債（bond）を引いていて、社債の分を2回引いていた（1.1.0+35 で直した）
-    var cp = math.max(0, p * .9 * 12) * per(gg) * (1 + .6 * ts) * (listed ? 1 : .6) + assets + cash - debt + stakes + land;
+    var cp = math.max(0, p * .9 * 12) * per(gg) * (1 + .6 * ts) * (listed ? 1 : .6) + assets + cash - debt + stakes + land + lentSum();
     if (scandal > 0) cp *= .8;
     if (cooked > 0) cp *= 1.3;
     // 上場している会社は、うわさ・決算の上ぶれ下ぶれ・減損でも動く（1.1.0+29）
@@ -1212,6 +1233,12 @@ class Game {
         'ach': ach,
         'everInd': everInd.toList(),
         'books': books.toJson(),
+        // まだ決めていない出来事（1.1.0+38。前は保存せず、開き直すと特許の訴えや株主の要求を罰なしで飛ばせた）
+        'events': [for (final e in events) ?e.toJson()],
+        if (soldOut != 0) 'soldOut': soldOut,
+        if (landSell != 0) 'landSell': landSell,
+        if (lent.isNotEmpty) 'lent': lent.map((e) => e.toJson()).toList(),
+        if (vcExt) 'vcExt': true,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -1324,6 +1351,10 @@ class Game {
       ..ach = mi('ach')
       ..everInd = {for (final e in (j['everInd'] as List? ?? [])) e as String};
     s.events = [];
+    s.soldOut = d('soldOut');
+    s.landSell = i('landSell');
+    s.lent = [for (final e in (j['lent'] as List? ?? [])) Lend.fromJson((e as Map).cast<String, dynamic>())];
+    s.vcExt = j['vcExt'] == true;
     // 地域の重み（1.1.0+26 から保存する。月の初めに求めた値なので、読み込んだ月の値で作り直すと、続きの進み方がわずかに変わっていた）
     final rg = j['reg'] as List?;
     s.reg = rg != null && rg.length == 3 ? [for (final x in rg) (x as num).toDouble()] : regFor(s.yr());
@@ -1369,6 +1400,11 @@ class Game {
     s.ensureFaces();
     // 決算書の記録は 1.1.0+34 から。それより前のセーブは、読み込んだ月から記録する（前の年は「記録なし」）
     if (!s.books.on) s.finStart();
+    // まだ決めていない出来事を、同じ作り方で作り直す（1.1.0+38。相手がもういない出来事は落とす。古いセーブは空）
+    for (final e in (j['events'] as List? ?? [])) {
+      final ev = s.evRebuild((e as Map).cast<String, dynamic>());
+      if (ev != null) s.events.add(ev);
+    }
     return s;
   }
 }

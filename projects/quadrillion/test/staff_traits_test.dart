@@ -385,6 +385,8 @@ void main() {
       var talks = 0;
       while (g.trHidden(p) > 0 && talks < 40) {
         g.hUsed = 0;
+        // 1.1.0+38 から、同じ人の話を聞くのは月に1回まで。1回ずつ月を替える
+        g.turn++;
         g.talkTo(p);
         talks++;
       }

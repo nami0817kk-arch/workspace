@@ -18,8 +18,9 @@ import 'widgets.dart';
 Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 0, children: c);
 
 /// 社長の時間を使うボタン。かかる時間の札（「8時間」）を付け、時間が足りなければ薄くして、押すと足りない理由を出す（[k] は行動の種類。game_real.dart の hoursOf）
-Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {String k = 'act', bool enabled = true, bool primary = false, bool more = false}) {
-  final short = !ctl.game!.canT(k);
+/// [dim] は、今は打てない手を薄く見せる（押すと、打てないわけが出る。1.1.0+38）
+Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {String k = 'act', bool enabled = true, bool primary = false, bool more = false, bool dim = false}) {
+  final short = !ctl.game!.canT(k) || dim;
   return Btn(label, () {
     if (!ctl.noAp(k)) onTap();
     // 1行に収め、入りきらないときは字だけを詰める。英語は語の途中で折れず2行になりやすく、
@@ -1049,7 +1050,10 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
         _apBtn(ctl, tr('商品を作る'), () => openDevelop(ctl, b), more: true),
         if (b.model != 'fc')
           _apBtn(ctl, s.crewNeedPeople(b) > 0 ? tr('現場の人を増やす（{0}人足りない）', [s.crewNeedPeople(b)]) : tr('現場の人を増やす'), () => openCrew(ctl, b), more: true),
-        _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act'), k: 'ad'),
+        // 広告を打っている最中は、打ち直せない（残りの月を出す。1.1.0+38）
+        b.ad > 0
+            ? Btn(tr('広告中（あと{0}か月）', [b.ad]), null, small: true, enabled: false, key: ValueKey('ad-on-${b.id}'))
+            : _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act'), k: 'ad'),
         _apBtn(ctl, tr('海外に出る'), () => openEnter(ctl, b), more: true),
       ]),
       _grpHead(tr('戦う@@grp'), Icons.flash_on),
@@ -1072,7 +1076,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
         if (cs.isNotEmpty)
           _wrap([
             b.attack > 0
-                ? Btn(tr('値下げ合戦中（あと{0}期）', [b.attack]), null, small: true, enabled: false)
+                ? Btn(tr('値下げ合戦中（あと{0}か月）', [b.attack]), null, small: true, enabled: false)
                 : _apBtn(ctl, tr('値下げ合戦を仕掛ける（相手：{0}）', [nmL(cs[0].c.name)]), () => ctl.act(() => s.priceWar(b), mark: 'act'), k: 'war'),
             if (!s.inAssoc(b.ind)) Btn(tr('業界団体に入る'), () => ctl.act(() => s.joinAssoc(b), mark: 'act'), small: true),
           ]),
@@ -1087,7 +1091,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = fa
       if (s.lifeOn) ...[
         _grpHead(tr('設備と技術'), Icons.build_outlined),
         Wrap(key: ValueKey('grp-life-${b.id}'), spacing: 6, runSpacing: 0, children: [
-          _apBtn(ctl, tr('設備を新しくする {0}（古さ {1}年）', [yen(s.renewCost(b)), ((s.life.eqAge[b.id] ?? 0) / 12).floor()]), () => ctl.act(() => s.renewEquip(b)), k: 'build'),
+          _apBtn(ctl, tr('設備を新しくする {0}（古さ {1}年）', [yen(s.renewCost(b)), ((s.life.eqAge[b.id] ?? 0) / 12).floor()]), () => ctl.act(() => s.renewEquip(b)), k: 'build', dim: s.renewWhy(b) != null),
           if (s.techBehind(b) > 0) _apBtn(ctl, tr('新しい世代の技術に乗り換える {0}', [yen(s.techCost(b))]), () => ctl.act(() => s.upgradeTech(b)), k: 'dev'),
           if (s.patentInd(ind) && (s.life.uni[b.id] ?? 0) <= s.turn) _apBtn(ctl, tr('大学と組む {0}', [yen(s.uniCost())]), () => ctl.act(() => s.uniLab(b)), k: 'deal'),
           if (s.losingSites(b) case final ls when ls.isNotEmpty && s.unitTotal(b) > 1)
@@ -1243,7 +1247,7 @@ List<Widget> presPanels(GameController ctl) {
       ]),
     ],
   ])));
-  final succs = [...s.staff, ...s.kids.where((k) => k.age >= 18)];
+  final succs = [...s.staff, ...s.kids.where((k) => k.age >= heirAge)];
   out.add(Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
     CardTitle(tr('後継ぎ')),
@@ -1605,7 +1609,7 @@ List<Widget> stockTab(GameController ctl, {bool cos = true}) {
                     ? tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。準備（監査と社内の決まり）に2〜3年かかります')
                     : tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。条件：年の利益 {0} 以上・創業2年以上', [yen(3e8 * s.nom())]))),
             _wrap([
-              _apBtn(ctl, tr('投資家から集める（{0}・持ち株−10%）', [yen(s.cap * .1)]), () => ctl.act(s.vcRaise), k: 'vc'),
+              _apBtn(ctl, tr('投資家から集める（{0}・全員の割合−10%）', [yen(s.cap * .1)]), () => ctl.act(s.vcRaise), k: 'vc'),
               if (s.unitsOn)
                 Btn(tr('上場の準備を見る'), () => ctl.setStockSeg('ipo'), small: true, more: true, key: const ValueKey('to-ipo'))
               else
@@ -1655,7 +1659,7 @@ List<Widget> stockTab(GameController ctl, {bool cos = true}) {
   out.add(H2(tr('売り抜け')));
   out.add(Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Muted(tr('勝ち負けは「今の会社の時価総額＋あなたの財産」で測ります。今の財産 {0}', [yen(s.wealth)])),
+    Muted(tr('勝ち負けは「今の会社の時価総額＋あなたの財産」で測ります。持ち株を売ったお金は時価総額に入っているので、二重には数えません。今の財産 {0}・勝ち負けの数 {1}', [yen(s.wealth), yen(s.score)])),
     const SizedBox(height: 6),
     _wrap([
       if (s.listed) Btn(tr('持ち株を5%売る（約{0}）', [yen(s.cap * .045)]), () => ctl.act(() => s.sellOwn(5)), small: true, shrink: true),
@@ -2647,7 +2651,8 @@ Widget bizNeedsPanel(GameController ctl, Biz b) {
         child: Row(children: [
           Expanded(
             child: Text.rich(TextSpan(children: [
-              TextSpan(text: '$label　', style: ts(size: 12.5, color: Pal.mute)),
+              // 英語の画面に全角の空白を出さない（1.1.0+38）
+              TextSpan(text: '$label${tr('　')}', style: ts(size: 12.5, color: Pal.mute)),
               TextSpan(text: val, style: ts(size: 12.5, bold: true, color: bad ? Pal.down : Pal.ink)),
             ])),
           ),

@@ -245,7 +245,7 @@ class SetupScreen extends StatelessWidget {
               (2000, '2000年', 'ネットの到来から。IT の成り上がり'),
               (2025, '2025年', 'AI の時代から未来へ'),
             ])
-              ChoiceBtn(tr(o.$2), () => set(() => st.year = o.$1), on: st.year == o.$1, subs: [tr(o.$3)]),
+              ChoiceBtn(tr(o.$2), () => set(() => ctl.setYear(o.$1)), on: st.year == o.$1, subs: [tr(o.$3)]),
           ]),
           H2(tr('始める国')),
           _opt([
@@ -401,6 +401,8 @@ class SetupScreen extends StatelessWidget {
               if (ctl.load(i)) {
                 ctl.tab = 'town';
                 ctl.render();
+                // まだ決めていない出来事があれば、続きの最初に出す（1.1.0+38）
+                pendingFirst(ctl);
               }
             }, primary: true, small: true),
         ]),
@@ -649,8 +651,10 @@ class EndScreen extends StatelessWidget {
                 child: Column(children: [
                   stat(tr('創業から'), tr('{0}年（{1}年〜）', [years, s.startYear])),
                   stat(tr('世界ランキングの最高位'), s.peakRank >= 999 ? '―' : tr('{0}位', [s.peakRank])),
-                  stat(tr('時価総額の最大'), yen(s.maxCap)),
-                  stat(tr('財産の最大'), yen(s.maxWealth)),
+                  // 勝ち負けの数（世界ランキングの自社の行・1000兆円の判定と同じ数。1.1.0+38）
+                  stat(tr('勝ち負けの数（時価総額＋財産）'), yen(s.score)),
+                  // 勝ち負けの数を足したぶん、最大の2つは1行にまとめる（まとめを長くしない。1.1.0+38）
+                  stat(tr('最大の時価総額・財産'), '${yen(s.maxCap)}${tr('・')}${yen(s.maxWealth)}'),
                 ]),
               ),
               if (marks.isNotEmpty) ...[

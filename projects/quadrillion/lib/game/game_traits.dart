@@ -725,7 +725,7 @@ extension GameTraits on Game {
     if (leaders.length >= 2 && !events.any((e) => e.title == _quarrelTitle) && tr() < .025 * (anyTr('charisma') ? .5 : 1) * (anyTr('mediate') ? .5 : 1)) {
       final a = _tpick(leaders);
       final b = _tpick(leaders.where((x) => x != a).toList());
-      events.add(_quarrel(a, b));
+      events.add(quarrelEv(a, b));
     }
     // 口が軽い人がいると、買収や新商品の話が漏れる
     final leak = staff.where((p) => p.away == 0 && p.has('leaky')).firstOrNull;
@@ -752,6 +752,9 @@ extension GameTraits on Game {
 
   /// 派閥の人（頭と、その派閥に入っている人）
   List<Person> _members(Person l) => staff.where((o) => o.fac == l.id).toList();
+
+  /// 派閥の揉めごと（セーブから作り直せるように、種類と材料を付ける。1.1.0+38）
+  GameEvent quarrelEv(Person a, Person b) => tagEv(_quarrel(a, b), 'quarrel', {'a': a.id, 'b': b.id});
 
   GameEvent _quarrel(Person a, Person b) {
     final h = anyTr('mediate') ? .5 : 1.0;

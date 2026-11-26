@@ -654,8 +654,14 @@ List<Widget> _bankView(GameController ctl) {
           Btn(tr('社債を出す（約{0}）', [yen(s.bondSize())]), () {
             if (!ctl.noAp('bond')) ctl.act(s.issueBond);
           }, small: true, enabled: s.canBond(), ap: hr(s, 'bond')),
-          if (s.land > 0) Btn(tr('土地を売る（今の値 {0}）', [yen(s.land)]), () => ctl.act(s.sellLand), small: true, shrink: true),
+          // 土地は仲介に頼むと3か月ほどで売れる（手数料3%）。急ぐなら値引きしてすぐ売る（1.1.0+38）
+          if (s.land > 0 && s.landSell == 0) ...[
+            Btn(tr('土地を売りに出す（今の値 {0}・3か月ほど・手数料3%）', [yen(s.land)]), () => ctl.act(s.sellLand), key: const ValueKey('land-sell'), small: true, shrink: true),
+            Btn(tr('土地をすぐ売る（15%引き {0}）', [yen(s.land * (1 - GameActions.landQuickCut))]), () => ctl.act(s.sellLandNow), key: const ValueKey('land-quick'), small: true, shrink: true),
+          ],
         ]),
+        if (s.land > 0 && s.landSell > 0)
+          Muted(tr('土地を売りに出しています（今の値 {0}・あと{1}か月ほどで売れます）', [yen(s.land), math.max(0, s.landSell - s.turn)]), size: 11.5),
       ]),
     ),
   ];

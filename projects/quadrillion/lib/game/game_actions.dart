@@ -14,7 +14,6 @@ extension GameActions on Game {
     if (nb0 != null) return nb0;
     final free = biz.isEmpty && !everBiz;
     cfAdd('capex', -c);
-    capSpend(c, profileOf(ind).life);
     useT('start');
     everBiz = true;
     var p = c * newPow;
@@ -22,6 +21,8 @@ extension GameActions on Game {
     final early = yr() - ind.b < 3;
     final nb = Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2);
     biz.add(nb);
+    // 償却はその事業にひも付ける（1.1.0+38）
+    capSpend(c, profileOf(ind).life, nb);
     // 新しい事業を始めるのは一度きりの山（1か月の上限に数えない）
     presXp('kai', 5, big: true);
     presXp('ei', 2, big: true);
@@ -483,6 +484,8 @@ extension GameActions on Game {
   }
 
   String adv(Biz b) {
+    // 打っている最中に打ち直しても、残りの月が6か月に戻るだけで払い損になる（1.1.0+38。押せないようにした）
+    if (b.ad > 0) return M('広告を打っている最中です（あと{0}か月）', [b.ad]);
     final cost = invBase(b) * .25;
     if (cash < cost) return M('お金が足りません');
     final nt = needT('ad');
@@ -594,7 +597,8 @@ extension GameActions on Game {
   }
 
   String sellBiz(Biz b) {
-    final nt = needT('sell');
+    // 人たらしは時間が倍かかるので、確かめるのも倍の時間で（1.1.0+38。前は1回分だけ見て、上限を超えて使えた）
+    final nt = needT('sell', hasT('charm') ? 2 : 1);
     if (nt != null) return nt;
     final v = sellValue(b);
     cfAdd('bizSale', v);
@@ -833,13 +837,37 @@ extension GameActions on Game {
     return null;
   }
 
+  /// 土地を売るときの仲介の手数料・すぐ売るときの値引き・買い手が見つかるまでの月（1.1.0+38。前は時間も手数料もなく、すぐ全額で売れた）
+  static const landFee = .03, landQuickCut = .15, landMonths = 3;
+
+  /// 土地を売りに出す（仲介に頼み、3か月ほどで買い手が見つかる。売れた月の値から手数料3%を引いた額が入る）
   String sellLand() {
-    final v = land;
-    if (v <= 0) return M('土地を持っていません');
+    if (land <= 0) return M('土地を持っていません');
+    if (landSell > 0) return M('土地は売りに出しています（あと{0}か月）', [math.max(0, landSell - turn)]);
+    landSell = turn + landMonths;
+    return M('土地を売りに出しました。買い手が見つかるまで{0}か月ほどかかります（仲介の手数料{1}%）', [landMonths, jsNum(landFee * 100)]);
+  }
+
+  /// 土地を値引きして今すぐ売る（今の値の15%引き。手数料込み）
+  String sellLandNow() {
+    if (land <= 0) return M('土地を持っていません');
+    final v = land * (1 - landQuickCut);
     cfAdd('land', v);
     land = 0;
+    landSell = 0;
     calcAll();
-    return M('土地を{0}で売りました', [Y(v)]);
+    return M('土地を値引きして、すぐに{0}で売りました', [Y(v)]);
+  }
+
+  /// 売りに出した土地が、売れる月になったら売る（毎月。乱数は使わない）
+  void landSellMonthly(void Function(String, [String]) N) {
+    if (landSell == 0 || turn < landSell) return;
+    landSell = 0;
+    if (land <= 0) return;
+    final v = land * (1 - landFee);
+    cfAdd('land', v);
+    N(M('売りに出していた土地が、{0}で売れました（仲介の手数料{1}を引いた額）', [Y(v), Y(land * landFee)]), 'good');
+    land = 0;
   }
 
   String vcRaise() {
@@ -847,16 +875,20 @@ extension GameActions on Game {
     if (turn - (lastOffer ?? -99) < 12) return M('投資家から集めるのは1年に1回までです');
     final nt = needT('vc');
     if (nt != null) return nt;
-    lastOffer = turn;
     if (sh.own <= 40) return M('これ以上持ち株を減らすと経営権が危うくなります');
+    lastOffer = turn;
     final money = cap * .1;
     cfAdd('equity', money);
-    sh.own -= 10;
+    // 新しい株を投資家に渡す（全員の割合が1割薄まり、株の数が増える。1.1.0+38。前はあなたの株だけが10減り、株の数は変わらなかった）
+    newShares(10);
     sh.vc += 10;
     useT('vc');
     presXp('zai', 2);
     final first = vcDeadline == 0;
-    if (first) vcDeadline = turn + 36;
+    if (first) {
+      vcDeadline = turn + 36;
+      vcExt = false;
+    }
     calcAll();
     return M('投資家から{0}を集めました。持ち株は{1}に。{2}', [Y(money), pct(sh.own), first ? M('条件は「3年以内に上場すること」です') : M('上場の約束は{0}年まで', [year + ((vcDeadline - turn + q - 1) / 12).floor()])]);
   }
@@ -1230,21 +1262,9 @@ extension GameActions on Game {
     biz = [];
     staff = keep;
     sh = Shares(own: 100 - pt, pt: pt);
-    listed = false;
-    // 借金は買い手が引き継ぐ
-    loans = [];
-    bankCtl = 0;
-    missed = 0;
-    vcDeadline = 0;
-    tie = null;
-    deals = [];
-    // 上場の準備と、途中の買収の話は前の会社のもの（1.1.0+37。前は新しい会社に残った）
-    corp.ipo = null;
-    corp.deals.clear();
-    corp.clients.clear();
+    // 借金・上場の準備・途中の買収の話などは前の会社のもの。買い手が引き継ぐ（片付けるものは倒産して出直すときと同じ。1.1.0+38）
+    freshCompany();
     myCo = nn ?? '';
-    holding = false;
-    cooked = 0;
     everBiz = false;
     serial++;
     wealth = wealth + price * .5;
@@ -1262,6 +1282,61 @@ extension GameActions on Game {
     ], ja: '。', en: '. ');
   }
 
+  /// 会社を売った・倒産して出直したときに、前の会社のものを片付ける（1.1.0+38。前は出直したときに、上場の約束・持ち株会社・粉飾・不祥事・
+  /// 上場の準備・買収の話・提携・取引先の縛り・訴え・売掛・土地・減価償却・特許などが新しい会社に残った）。
+  /// 社長個人のもの（財産・評判・世間の顔・家族・社外の人・競業しない約束・社史・社風）は残す
+  void freshCompany() {
+    loans = [];
+    bankCtl = 0;
+    missed = 0;
+    listed = false;
+    region = 0;
+    vcDeadline = 0;
+    vcExt = false;
+    lastOffer = null;
+    tie = null;
+    deals = [];
+    corp.ipo = null;
+    corp.deals.clear();
+    corp.clients.clear();
+    corp.nSh = 1e4;
+    corp.px.clear();
+    corp.why.clear();
+    corp.noise = 1;
+    corp.shock = 1;
+    corp.demand = null;
+    corp.tight = false;
+    corp.tightAmt = 0;
+    corp.lastQ = 0;
+    corp.expQ = 0;
+    holding = false;
+    cooked = 0;
+    scandal = 0;
+    buried.clear();
+    suits.clear();
+    ar = 0;
+    land = 0;
+    landSell = 0;
+    lent.clear();
+    soldOut = 0;
+    ytdPre = 0;
+    ytdTax = 0;
+    trade.trapped.clear();
+    trade.sup.clear();
+    trade.adapt.clear();
+    trade.fx.clear();
+    if (lifeOn) {
+      lf.deps.clear();
+      lf.patents.clear();
+      lf.eqAge.clear();
+      lf.techGen.clear();
+      lf.uni.clear();
+      lf.brand = 10;
+      // 新しい会社も、その年に当たり前のITは入れて始める（始めるときと同じ）
+      lf.it = itStdCount();
+    }
+  }
+
   String breakNoncomp() {
     if (noncomp == null) return M('約束はありません');
     noncomp!.broken = true;
@@ -1276,10 +1351,18 @@ extension GameActions on Game {
     if (x <= 0) return M('売れる株がありません');
     final v = cap * x / 100 * .9;
     wealth = wealth + v;
+    // 売ったお金は時価総額の一部が財産に移っただけ。勝ち負けの数は増えない（1.1.0+38。前は売るたびに増え、19回で約1.9倍になった）
+    soldOut += v;
     sh.own -= x;
     sh.float += x;
     calcAll();
     return M('持ち株を{0}売り、{1}を自分の財産にしました', [pct(x), Y(v)]);
+  }
+
+  /// 社長の財産から払う（持ち株を売ったお金から先に使ったことにする。1.1.0+38）
+  void spendWealth(double a) {
+    wealth -= a;
+    soldOut = math.max(0.0, math.min(soldOut - a, wealth));
   }
 
   String goPrivate() {
@@ -1290,13 +1373,15 @@ extension GameActions on Game {
     final nt = spendT('private');
     if (nt != null) return nt;
     cfAdd('payout', -cost);
-    sh.own += out;
     sh.float = 0;
     for (final i in sh.riv.keys.toList()) {
       final c = coById(i);
       if (c != null) c.cash += cap * sh.riv[i]! / 100 * 1.3;
       sh.riv[i] = 0;
     }
+    // 買い戻した株は消す。株の数が減り、残った株主（あなた・相棒・味方）の割合がその分上がる（1.1.0+38）
+    corp.nSh *= (100 - out) / 100;
+    normSh();
     listed = false;
     calcAll();
     return M('市場の株をすべて買い戻し、非上場に戻しました。乗っ取られる心配はなくなります');
@@ -1340,6 +1425,17 @@ extension GameActions on Game {
     for (final i in sh.riv.keys.toList()) {
       sh.riv[i] = sh.riv[i]! * k;
     }
+  }
+
+  /// 新しい株を出せる（増資・投資家から集める・味方に渡すのどれも、前に出してから1年たった。1.1.0+38）
+  bool offerOk() => turn - (lastOffer ?? -99) >= 12;
+
+  /// 新しい株を出して、出したあとの割合で [x]% を新しい持ち主に渡す（今の持ち主は全員、市場の株も同じ割合で薄まり、株の数が増える。1.1.0+38）。
+  /// 渡した先の割合（sh.vc など）に [x] を足すのは呼ぶ側
+  void newShares(double x) {
+    final k = 1 - x / 100;
+    _dilute(k);
+    sh.float *= k;
   }
 
   String publicOffer() {
@@ -1399,6 +1495,8 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません');
     cfAdd('payout', -cost);
     sh.float -= x;
+    // 買い戻した株は消すので、株の数も減る（1.1.0+38。前は株の数が変わらず、自社株買いで株価が下がった）
+    corp.nSh *= (100 - x) / 100;
     normSh();
     liarCheck();
     return M('自社株を{0}買い戻しました', [pct(x)]);
@@ -1433,10 +1531,18 @@ extension GameActions on Game {
     return M('{0}がホワイトナイトになり、株を{1}持ってくれました', [Nm(ally.name), pct(x)]);
   }
 
+  /// 新しい株を味方に渡して、乗っ取りの割合を薄める。増資と同じく1年に1回まで・社長の時間を使う（1.1.0+38。
+  /// 前は出来事や臨時の会議から、時間も年の上限も通らずに時価総額の13.5%が入った）。株の数も増える
   String doDilute() {
+    if (turn - (lastOffer ?? -99) < 12) return M('新しい株を出すのは1年に1回までです');
+    final nt = spendT('offer');
+    if (nt != null) return nt;
+    lastOffer = turn;
     cfAdd('equity', cap * .15 * .9);
-    sh.ally += 15;
-    normSh();
+    // 15%分の新しい株（出したあとの割合で 15/115）
+    const x = 15 / 115 * 100;
+    newShares(x);
+    sh.ally += x;
     liarCheck();
     calcAll();
     return M('新しい株を味方に渡し、相手の割合を薄めました');
@@ -1699,7 +1805,7 @@ extension GameActions on Game {
 
   List<RankRow> rankList() {
     final L = cos.where((c) => c.alive && c.parent != 'player').map((c) => RankRow(c.name, c.cap, c: c)).toList();
-    L.add(RankRow(myLabel(), cap + wealth, me: true));
+    L.add(RankRow(myLabel(), score, me: true));
     L.ssort((a, b) => b.cap.compareTo(a.cap));
     return L;
   }
@@ -1711,7 +1817,7 @@ extension GameActions on Game {
 
   String retire() {
     Person? s;
-    if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ).firstOrNull;
+    if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= heirAge).firstOrNull;
     if (s == null) return M('先に後継ぎを決めてください');
     final old = pres.name;
     takeOver(s);

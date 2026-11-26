@@ -20,6 +20,32 @@ part of 'game.dart';
 /// - 間隔: 場面のあと [rsGap] か月は起きない。同じ宿敵とは [rsEach] か月あける。同じ種類の場面は同じ宿敵と [rsKind] か月あける。
 ///   ほかの選ぶ出来事がある月には出さない。
 
+/// 宿敵に貸したお金（1.1.0+38。前は「貸す」と言いながら出ていくだけで返ってこなかった）。
+/// 期日に利息を付けて返ってくる。相手が倒れた・買われて消えたら返ってこない。返ってきたら預かった株も返す
+class Lend {
+  int co;
+  double amt, rate;
+  int due;
+
+  /// 担保に預かった株の割合（返ってきたら返す。返ってこなければそのまま持つ）
+  double stake;
+
+  /// 一度、返すのを1年待ったか
+  bool waited;
+  Lend({required this.co, required this.amt, required this.rate, required this.due, this.stake = 0, this.waited = false});
+  Map<String, dynamic> toJson() => {'co': co, 'amt': amt, 'rate': rate, 'due': due, if (stake != 0) 'stake': stake, if (waited) 'w': true};
+  factory Lend.fromJson(Map<String, dynamic> j) => Lend(
+      co: (j['co'] as num).round(),
+      amt: (j['amt'] as num).toDouble(),
+      rate: (j['rate'] as num).toDouble(),
+      due: (j['due'] as num).round(),
+      stake: (j['stake'] as num?)?.toDouble() ?? 0,
+      waited: j['w'] == true);
+
+  /// 期日に返ってくる額（元本＋利息）
+  double get back => amt * (1 + rate * 2);
+}
+
 /// 国ごとの事件の選択肢。得と損を数で持つ
 class CeOpt {
   /// 呼び名（日本語の鍵）
@@ -458,8 +484,19 @@ extension GameMid on Game {
       N(M('【{0}：{1}】{2}（{3}）', [C(c), M(d.title), M(d.text), chips]), d.kind == 'bad' ? 'bad' : 'big');
       return null;
     }
+    return evCe(d, s, unit, rev0);
+  }
+
+  /// 国の選ぶ事件（[s] 規模のぶれ・[unit] 1単位の値段・[rev0] その国の売上。起きた月の値を材料に持つ）
+  GameEvent? evCe(CeDef d, double s, double unit, double rev0) {
+    final c = d.c;
+    final top = ceTop(c);
+    if (top == null) return null;
     final n = ceBiz(c).length + locals().where((x) => x.loc == c).length;
-    final top = ceTop(c)!;
+    return tagEv(_evCe(d, s, unit, rev0, c, n, top), 'ce', {'d': d.id, 's': s, 'unit': unit, 'rev0': rev0});
+  }
+
+  GameEvent _evCe(CeDef d, double s, double unit, double rev0, String c, int n, String top) {
     return GameEvent(
         title: M('{0}：{1}', [C(c), M(d.title)]),
         text: Cat([M(d.text), M('{0}に出ている「{1}」など{2}つの事業に響きます。', [C(c), I(top), n])]),
@@ -534,6 +571,40 @@ extension GameMid on Game {
   /// 助けを求められたときに貸す額（相手の売上3か月分。少なくとも1000万円×物価）
   double helpCost(Company c) => math.max(c.rev * 3, 1e7 * nom());
 
+  /// 助けに貸すときの年の利息（その国の金利＋3%）
+  double helpRate() => math.max(0.0, rateOf(home)) / 100 + .03;
+
+  /// 貸したお金の残り（決算書の持ち物・時価総額に入れる）
+  double lentSum() => lent.fold(0.0, (s, l) => s + l.amt);
+
+  /// 期日が来た貸し金を返してもらう（毎月。乱数は使わない）。相手が倒れていれば戻らず、払えなければ1年待つ（2回目は担保の株を持ったまま諦める）
+  void lentMonthly(void Function(String, [String]) N) {
+    for (final l in lent.toList()) {
+      final c = coById(l.co);
+      if (c == null || !c.alive) {
+        lent.remove(l);
+        N(M('お金を貸していた{0}がなくなり、貸した{1}は戻りませんでした', [Nm(c?.name ?? '?'), Y(l.amt)]), 'bad');
+        continue;
+      }
+      if (turn < l.due) continue;
+      if (c.cash >= l.back) {
+        lent.remove(l);
+        c.cash -= l.back;
+        cfAdd('stock', l.back);
+        c.stakePlayer = math.max(0, c.stakePlayer - l.stake);
+        N(M('{0}が、貸したお金を利息を付けて返してくれました（{1}）', [Nm(c.name), Y(l.back)]), 'good');
+      } else if (!l.waited) {
+        // 一度だけ1年待つ（利息はそのまま。次に払えなければ諦める）
+        l.due = turn + 12;
+        l.waited = true;
+        N(M('{0}は貸したお金をまだ返せず、1年待ってほしいと言っています', [Nm(c.name)]), 'bad');
+      } else {
+        lent.remove(l);
+        N(M('{0}は貸したお金を返せませんでした。担保に預かった株はそのまま持ちます', [Nm(c.name)]), 'bad');
+      }
+    }
+  }
+
   /// 今その宿敵と起こせる場面の種類と重み（恨みが多いと攻める場面、恩が多いと歩み寄る場面）
   Map<String, int> sceneWeights(Company c) {
     final r = c.rival;
@@ -566,16 +637,42 @@ extension GameMid on Game {
 
   /// 張り合う場面を作る（条件がそろわなければ null）。場面の入り口で起きること（相手が入ってくる・人が抜ける）はここで効く
   GameEvent? rivalScene(Company c, String k) {
+    final out = <String, dynamic>{'c': c.id, 'kind': k};
+    final e = _rivalScene(c, k, null, out);
+    return e == null ? null : tagEv(e, 'rs', out);
+  }
+
+  /// セーブから張り合う場面を作り直す（入り口で起きることは、もう起きたので繰り返さない。1.1.0+38）
+  GameEvent? evRivalScene(Company c, String k, Map<String, dynamic> a) {
+    final e = _rivalScene(c, k, a, {});
+    return e == null ? null : tagEv(e, 'rs', a);
+  }
+
+  /// [re] はセーブから作り直すときの材料（null なら初めて作る＝入り口で起きることを効かせ、材料を [out] に入れる）
+  GameEvent? _rivalScene(Company c, String k, Map<String, dynamic>? re, Map<String, dynamic> out) {
     final r = c.rival;
     if (!extras || r == null || biz.isEmpty) return null;
-    final top = (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
+    Biz? byId(String n) => biz.where((b) => b.id == (re![n] as num?)?.round()).firstOrNull;
+    final top = re == null ? (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first : (byId('b') ?? biz.first);
     switch (k) {
       case 'enter':
-        final b = (biz.where((b) => !c.biz.any((x) => x.ind == b.ind)).toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
-        if (b == null) return null;
-        final x = CoBiz(ind: b.ind, power: b.power * .35);
-        c.biz.add(x);
-        tieRec(c, 'h', M('「{0}」に乗り込まれた', [I(b.ind)]));
+        final Biz b;
+        final CoBiz x;
+        if (re == null) {
+          final b0 = (biz.where((b) => !c.biz.any((x) => x.ind == b.ind)).toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
+          if (b0 == null) return null;
+          b = b0;
+          x = CoBiz(ind: b.ind, power: b.power * .35);
+          c.biz.add(x);
+          tieRec(c, 'h', M('「{0}」に乗り込まれた', [I(b.ind)]));
+          out['b'] = b.id;
+        } else {
+          final b0 = byId('b');
+          final xx = b0 == null ? null : c.biz.where((y) => y.ind == b0.ind).firstOrNull;
+          if (b0 == null || xx == null) return null;
+          b = b0;
+          x = xx;
+        }
         final cost = invBase(b) * .25;
         return _rs(c, k, M('{0}（{1}）が、あなたの「{2}」と同じ商売を始めました。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('広告で迎え撃つ'), M('{0}で6か月の広告を打つ。相手の出足をくじくが、関係は悪くなる', [Y(cost)]), () {
@@ -601,10 +698,17 @@ extension GameMid on Game {
         ]);
       case 'poach':
         final b = top;
-        final lost = crewOf(b) * .08;
-        b.crew = crewOf(b) - lost;
-        tieRec(c, 'h', M('「{0}」の現場の人を引き抜かれた', [I(b.ind)]));
-        calcAll();
+        final double lost;
+        if (re == null) {
+          lost = crewOf(b) * .08;
+          b.crew = crewOf(b) - lost;
+          tieRec(c, 'h', M('「{0}」の現場の人を引き抜かれた', [I(b.ind)]));
+          calcAll();
+          out['b'] = b.id;
+          out['lost'] = lost;
+        } else {
+          lost = (re['lost'] as num?)?.toDouble() ?? 0;
+        }
         final cost = hireCost(b, crewUnits.first);
         return _rs(c, k, M('{0}（{1}）に、「{2}」の現場の人をまとめて引き抜かれました。現場の力が8%落ちています。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('引き抜き返す'), M('{0}で相手の人を引き抜く。現場は元に戻り、相手は弱るが、関係は悪くなる', [Y(cost)]), () {
@@ -635,8 +739,9 @@ extension GameMid on Game {
           }),
         ]);
       case 'bid':
-        final t = bidTarget(c);
-        if (t == null) return null;
+        final t = re == null ? bidTarget(c) : coById((re['t'] as num?)?.round());
+        if (t == null || !t.alive) return null;
+        out['t'] = t.id;
         final cost = bidCost(t);
         void absorb() {
           for (final x in t.biz) {
@@ -675,6 +780,7 @@ extension GameMid on Game {
         ]);
       case 'pact':
         final b = top;
+        out['b'] = b.id;
         final cost = devCost(b, 1);
         String joint(double mine) {
           b.pipe.add(Pipe(k: 'dev', cost: cost * 1.5, left: ri(devMonths[1].$1, devMonths[1].$2), sz: 1));
@@ -709,7 +815,7 @@ extension GameMid on Game {
           }),
         ]);
       case 'expose':
-        tieRec(c, 'h', M('不祥事を暴かれた'));
+        if (re == null) tieRec(c, 'h', M('不祥事を暴かれた'));
         final cost = math.max(rev * .1, 1e6 * nom());
         return _rs(c, k, M('{0}（{1}）が、あなたの会社の古い不始末を記者に流しました。', [Nm(c.presName), Nm(c.name)]), [
           Choice(M('謝罪会見を開く'), M('{0}をかけて謝る。株価に3か月響く', [Y(cost)]), () {
@@ -745,14 +851,17 @@ extension GameMid on Game {
         final x = c.biz.length > 1 ? (c.biz.where((y) => mine.contains(y.ind)).toList()..ssort((a, b) => a.power.compareTo(b.power))).firstOrNull : null;
         final cheap = x == null ? 0.0 : x.power * .5;
         return _rs(c, k, M('{0}（{1}）の資金繰りが苦しくなり、あなたに助けを求めてきました。', [Nm(c.presName), Nm(c.name)]), [
-          Choice(M('お金を貸す'), M('{0}を貸す。見返りに相手の株を5%受け取り、大きな恩を売る', [Y(cost)]), () {
+          // 1.1.0+38 から、本当に貸す（2年後に利息を付けて返ってくる。株5%は担保に預かり、返ってきたら返す。相手が倒れたら戻らない）
+          Choice(M('お金を貸す'), M('{0}を貸す（2年後に年{1}%の利息を付けて返ってくる。相手が倒れたら戻らない）。担保に株を5%預かり、大きな恩を売る', [Y(cost), pctD(helpRate() * 100)]), () {
             if (cash < cost) return M('お金が足りず、貸せませんでした');
             cfAdd('stock', -cost);
             c.cash += cost;
-            if (floatOf(c) >= 5) c.stakePlayer += 5;
+            final st = floatOf(c) >= 5 ? 5.0 : 0.0;
+            c.stakePlayer += st;
+            lent.add(Lend(co: c.id, amt: cost, rate: helpRate(), due: turn + 24, stake: st));
             c.rel += 25;
             tieRec(c, 'f', M('苦しいときにお金を貸した'));
-            tieRec(c, 'f', M('株を5%預かった'));
+            if (st > 0) tieRec(c, 'f', M('株を5%預かった'));
             return M('{0}にお金を貸しました。{1}は深く頭を下げました', [Nm(c.name), Nm(c.presName)]);
           }),
           if (x != null)

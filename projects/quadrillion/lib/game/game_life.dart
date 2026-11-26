@@ -12,9 +12,12 @@ part of 'game.dart';
 class Dep {
   double m;
   int left;
-  Dep(this.m, this.left);
-  Map<String, dynamic> toJson() => {'m': m, 'l': left};
-  factory Dep.fromJson(Map<String, dynamic> j) => Dep((j['m'] as num).toDouble(), (j['l'] as num).round());
+
+  /// どの事業の設備か（事業の番号。null は会社全体のもの＝ITや、1.1.0+38 より前のセーブの口）。事業を手放すと一緒に外れる
+  int? b;
+  Dep(this.m, this.left, [this.b]);
+  Map<String, dynamic> toJson() => {'m': m, 'l': left, if (b != null) 'b': b};
+  factory Dep.fromJson(Map<String, dynamic> j) => Dep((j['m'] as num).toDouble(), (j['l'] as num).round(), (j['b'] as num?)?.round());
 }
 
 /// 特許（業種・切れる月・他社に使わせているか）
@@ -63,6 +66,9 @@ class LifeState {
   /// 一度だけ出す知らせ（社会の流れ・ITの段・技術の世代など）
   Set<String> told = {};
 
+  /// 月に1回までの手を最後に打った月（talk 取材・講演 / donate 寄付 / heard:人の番号 話を聞く → その月の turn。1.1.0+38）
+  Map<String, int> did = {};
+
   LifeState();
   Map<String, dynamic> toJson() => {
         'seed': seed,
@@ -85,6 +91,7 @@ class LifeState {
         'assoc': assocUntil,
         'ctax': ctaxLeft,
         'told': told.toList(),
+        if (did.isNotEmpty) 'did': did,
       };
   static Map<int, int> _mi(Object? o) => {for (final e in ((o as Map?) ?? {}).entries) int.parse('${e.key}'): (e.value as num).round()};
   factory LifeState.fromJson(Map<String, dynamic>? j) {
@@ -110,7 +117,8 @@ class LifeState {
       ..bio = j['bio'] == null ? null : Person.fromJson((j['bio'] as Map).cast<String, dynamic>())
       ..assocUntil = (j['assoc'] as num?)?.round() ?? 0
       ..ctaxLeft = (j['ctax'] as num?)?.round() ?? 0
-      ..told = {for (final e in (j['told'] as List? ?? [])) e as String};
+      ..told = {for (final e in (j['told'] as List? ?? [])) e as String}
+      ..did = {for (final e in ((j['did'] as Map?) ?? {}).entries) '${e.key}': (e.value as num).round()};
     return s;
   }
 }
@@ -118,14 +126,24 @@ class LifeState {
 /// 時代ごとのIT（入る年・名前）。入ってから5年たつと「入れて当たり前」になり、入れていない会社は効率で負ける
 const List<(int, String)> itEras = [(1982, 'POSレジ'), (1990, '社内のシステム'), (1998, 'ネット通販'), (2010, 'スマホ'), (2023, 'AI')];
 
-/// 宣伝の手段（時代ごと）
-String adMediaOf(double y) => y < 1996
-    ? 'テレビ・新聞・雑誌'
-    : y < 2008
-        ? 'テレビとネット'
-        : 'ネットとSNS';
+/// 新しいITや宣伝の手段が広まるのが、日本より何年遅いか（文化の近さの組 [CULT_GROUP] ごと。1.1.0+38。前はどの国も日本と同じ年だった）。
+/// 国ごとの細かい年は無いので、組ごとの目安（米英などは同じ・欧州と台湾韓国は1年・中国と東南アジア・中南米は3〜4年・インドとアフリカは5〜6年）
+int techLag(String c) =>
+    const {'jp': 0, 'kr': 1, 'tw': 1, 'cn': 3, 'sg': 0}[c] ??
+    const {'an': 0, 'eu': 1, 'ea': 1, 'sea': 4, 'la': 4, 'ru': 4, 'me': 3, 'in': 5, 'af': 6}[CULT_GROUP[c]] ??
+    3;
 
-/// 社会の移り変わり（名前・始まる年・強くなりきる年・分類ごとの追い風と逆風）
+/// 宣伝の手段（時代ごと）。[c] の国では [techLag] だけ遅れて広まる
+String adMediaOf(double y, [String c = 'jp']) {
+  final yy = y - techLag(c);
+  return yy < 1996
+      ? 'テレビ・新聞・雑誌'
+      : yy < 2008
+          ? 'テレビとネット'
+          : 'ネットとSNS';
+}
+
+/// 社会の移り変わり（名前・始まる年・強くなりきる年・分類ごとの追い風と逆風）。年は日本のもの。ほかの国は [socialLag] だけずらす
 const List<(String, int, int, Map<String, double>)> socialTrends = [
   ('女性の社会進出', 1986, 2010, {'food': .06, 'live': .06}),
   ('少子高齢化', 1995, 2025, {'med': .15, 'live': .05, 'fun': -.05}),
@@ -133,13 +151,43 @@ const List<(String, int, int, Map<String, double>)> socialTrends = [
   ('在宅勤務', 2020, 2024, {'net': .08, 'link': -.03}),
 ];
 
-/// 社会の移り変わりで、その業種の市場が何倍になるか（1 がそのまま）
-double socialF(Industry ind, double y) {
+/// 社会の移り変わりが、その国では日本より何年遅いか（負は早い）。[i] は [socialTrends] の番号。
+/// 文化の近さの組ごとの目安（1.1.0+38）：女性の社会進出は米英・欧州・旧社会主義の国が早く、少子高齢化は欧州が早くアジアの新興国・インド・アフリカは遅い。
+/// 在宅勤務（感染症の年）はどの国も同じ
+int socialLag(int i, String c) {
+  const byCtry = <String, List<int>>{
+    'jp': [0, 0, 0, 0],
+    'cn': [-15, 15, 10, 0],
+    'kr': [5, 10, 0, 0],
+    'tw': [3, 8, 0, 0],
+    'sg': [0, 10, 0, 0],
+    'it': [-8, -5, -5, 0],
+    'de': [-12, -5, -10, 0],
+  };
+  const byGroup = <String, List<int>>{
+    'an': [-15, 10, -5, 0],
+    'eu': [-10, 0, -5, 0],
+    'ru': [-20, 0, 10, 0],
+    'ea': [3, 10, 0, 0],
+    'sea': [5, 25, 10, 0],
+    'la': [5, 25, 10, 0],
+    'in': [20, 35, 15, 0],
+    'me': [25, 35, 15, 0],
+    'af': [10, 40, 15, 0],
+  };
+  final l = byCtry[c] ?? byGroup[CULT_GROUP[c]] ?? const [0, 0, 0, 0];
+  return i < l.length ? l[i] : 0;
+}
+
+/// 社会の移り変わりで、その業種の市場が何倍になるか（1 がそのまま）。[c] の国の年のずれを入れる
+double socialF(Industry ind, double y, [String c = 'jp']) {
   var f = 1.0;
-  for (final t in socialTrends) {
+  for (var i = 0; i < socialTrends.length; i++) {
+    final t = socialTrends[i];
     final d = t.$4[ind.cat];
-    if (d == null || y < t.$2) continue;
-    f *= 1 + d * clampD((y - t.$2) / math.max(1, t.$3 - t.$2), 0, 1);
+    final s = t.$2 + socialLag(i, c);
+    if (d == null || y < s) continue;
+    f *= 1 + d * clampD((y - s) / math.max(1, t.$3 - t.$2), 0, 1);
   }
   return f;
 }
@@ -181,6 +229,9 @@ extension GameLife on Game {
     lf.start = cfg.start;
     lf.workYears = cfg.start == 'work' ? clampI(cfg.workYears, 1, 15) : 0;
     lf.workCat = cfg.start == 'work' ? (cfg.workCat ?? 'live') : null;
+    // 始めた年にもう当たり前のIT（出てから5年）は、はじめから入れてある（元手のうち。1.1.0+38。前は0から始まり、
+    // 2000年に始めると2段・2025年は4段遅れの扱いで、毎月の売上から2〜4%を引かれていた）
+    lf.it = itStdCount();
     // 経歴は段3の人の作り方で（乱数は別の並びに差し替えて引く）
     final r0 = rng, u0 = uidCounter;
     rng = _LifeRandom(this);
@@ -216,16 +267,29 @@ extension GameLife on Game {
 
   // ===== 税 =====
   /// 店・工場などにお金を使った（耐用年数で毎月の減価償却に分ける）
-  void capSpend(double cost, double lifeYears) {
+  /// [b] はその設備の事業（ITなど会社全体のものは null。1.1.0+38 から、事業を手放すと償却も一緒に外れる）
+  void capSpend(double cost, double lifeYears, [Biz? b]) {
     if (!lifeOn || cost <= 0) return;
     final n = math.max(12, (lifeYears * 12).round());
-    lf.deps.add(Dep(cost / n, n));
+    lf.deps.add(Dep(cost / n, n, b?.id));
     if (lf.deps.length > 400) {
-      // 古い小さな口をまとめる（セーブが大きくならないように）
+      // 古い小さな口をまとめる（セーブが大きくならないように）。同じ事業の口どうしを先にまとめる
       lf.deps.sort((a, b) => a.left.compareTo(b.left));
-      final a = lf.deps.removeAt(0), b = lf.deps.removeAt(0);
-      lf.deps.add(Dep(a.m + b.m, math.max(a.left, b.left)));
+      final a = lf.deps.removeAt(0);
+      final j = lf.deps.indexWhere((x) => x.b == a.b);
+      final c = lf.deps.removeAt(j < 0 ? 0 : j);
+      lf.deps.add(Dep(a.m + c.m, math.max(a.left, c.left), a.b == c.b ? a.b : null));
     }
+  }
+
+  /// 手放した事業（売った・分社した・閉じた・相手に渡った）の設備の償却と、その業種の特許を外す（1.1.0+38）。
+  /// 特許は事業と一緒に相手へ移る扱い（前は売ったあとも20年のあいだ使用料が入り、償却も決算書の設備も残った）。乱数は使わない
+  void lifePrune() {
+    if (!lifeOn) return;
+    final ids = {for (final b in biz) b.id};
+    final inds = {for (final b in biz) b.ind};
+    lf.deps.removeWhere((d) => d.b != null && !ids.contains(d.b));
+    lf.patents.removeWhere((p) => !inds.contains(p.ind));
   }
 
   /// 今月の減価償却（税の計算で利益から引く）
@@ -264,17 +328,21 @@ extension GameLife on Game {
     }
     if (lf.ctaxLeft > 0) lf.ctaxLeft--;
     // 社会の移り変わり（始まったときに一度だけ）
-    for (final t in socialTrends) {
-      if (y >= t.$2 && y < t.$2 + 1 && lf.told.add('soc:${t.$1}')) {
+    // （1.1.0+38 から、国ごとの年のずれを入れる）
+    for (var i = 0; i < socialTrends.length; i++) {
+      final t = socialTrends[i];
+      final s0 = t.$2 + socialLag(i, home);
+      if (y >= s0 && y < s0 + 1 && lf.told.add('soc:${t.$1}')) {
         N(M('世の中の流れ：「{0}」が進み始めました。業種によって追い風と逆風になります', [M(t.$1)]), 'big');
         chron('era', M('「{0}」が進み始めた', [M(t.$1)]));
       }
     }
-    // 時代のIT（入ってきたとき・当たり前になったとき）
+    // 時代のIT（入ってきたとき・当たり前になったとき。国ごとの広まる年のずれを入れる。1.1.0+38）
     for (var i = 0; i < itEras.length; i++) {
       final e = itEras[i];
-      if (y >= e.$1 && lf.told.add('it:$i') && y < e.$1 + 1) N(M('新しいIT「{0}」が出てきました。早く入れた会社から効率が上がります', [M(e.$2)]), 'big');
-      if (y >= e.$1 + 5 && lf.it <= i && y < e.$1 + 6 && lf.told.add('itStd:$i') && biz.isNotEmpty) {
+      final y0 = itYear(i);
+      if (y >= y0 && lf.told.add('it:$i') && y < y0 + 1) N(M('新しいIT「{0}」が出てきました。早く入れた会社から効率が上がります', [M(e.$2)]), 'big');
+      if (y >= y0 + 5 && lf.it <= i && y < y0 + 6 && lf.told.add('itStd:$i') && biz.isNotEmpty) {
         N(M('「{0}」はもう当たり前になりました。入れていないと効率で負けます', [M(e.$2)]), 'bad');
       }
     }
@@ -389,14 +457,24 @@ extension GameLife on Game {
 
   double renewCost(Biz b) => math.max(unitTotal(b), 1) * unitCapexAvg(b) * .35;
 
+  /// 設備を新しくできないわけ（耐用年数の半分を過ぎるまでは、払っても古さが少し戻るだけなので押せない。1.1.0+38）。できれば null
+  String? renewWhy(Biz b) {
+    final life = profileOf(indm[b.ind]!).life;
+    final age = lf.eqAge[b.id] ?? 0;
+    if (age < life * 12 * .5) return M('設備はまだ新しいです（古さ{0}年・耐用{1}年の半分を過ぎてから）', [(age / 12).floor(), jsNum(jsRound(life))]);
+    return null;
+  }
+
   /// 設備を新しくする
   String renewEquip(Biz b) {
+    final why = renewWhy(b);
+    if (why != null) return why;
     final cost = renewCost(b);
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('build');
     if (nt != null) return nt;
     cfAdd('capex', -cost);
-    capSpend(cost, profileOf(indm[b.ind]!).life);
+    capSpend(cost, profileOf(indm[b.ind]!).life, b);
     lf.eqAge[b.id] = 0;
     presXp('kai', 2);
     calcAll();
@@ -461,7 +539,7 @@ extension GameLife on Game {
     final nt = spendT('dev');
     if (nt != null) return nt;
     cfAdd('capex', -cost);
-    capSpend(cost, profileOf(indm[b.ind]!).techLife);
+    capSpend(cost, profileOf(indm[b.ind]!).techLife, b);
     lf.techGen[b.id] = techCur(indm[b.ind]!);
     presXp('kai', 4);
     calcAll();
@@ -470,10 +548,16 @@ extension GameLife on Game {
 
   // ===== IT =====
   /// 今出ているITの段
-  int itAvail() => itEras.where((e) => yr() >= e.$1).length;
+  int itAvail() => [for (var i = 0; i < itEras.length; i++) i].where((i) => yr() >= itYear(i)).length;
+
+  /// その段のITが、自分の国に出てくる年（日本の年＋[techLag]。1.1.0+38）
+  int itYear(int i) => itEras[i].$1 + techLag(home);
+
+  /// 今の年に、もう当たり前（出てから5年）になっている段の数
+  int itStdCount() => [for (var i = 0; i < itEras.length; i++) i].where((i) => yr() >= itYear(i) + 5).length;
 
   /// 当たり前になったのに入れていない段の数
-  int itBehind() => lifeOn && biz.isNotEmpty ? math.max(0, itEras.where((e) => yr() >= e.$1 + 5).length - lf.it) : 0;
+  int itBehind() => lifeOn && biz.isNotEmpty ? math.max(0, itStdCount() - lf.it) : 0;
 
   double itCost() => ((2e7 * (1 + biz.length) + 0) * nom() + math.max(0.0, rev) * .6) * (anyTr('novelty') ? .8 : 1);
 
@@ -495,7 +579,8 @@ extension GameLife on Game {
   // ===== 宣伝の手段 =====
   /// 今の時代の宣伝の効き（一般の客には今の手段がよく効き、会社の客にはテレビの時代は効きにくい）
   double adMediaF({bool b2b = false}) {
-    final y = yr();
+    // 国ごとの広まる年のずれを入れる（1.1.0+38）
+    final y = yr() - techLag(home);
     if (b2b) return y < 1996 ? .85 : 1;
     return y < 1996
         ? 1
@@ -562,6 +647,10 @@ extension GameLife on Game {
 
   GameEvent evSued(Biz b) {
     final settle = math.max(0.0, b.rev) * 2;
+    return tagEv(_evSued(b, settle), 'sued', {'b': b.id});
+  }
+
+  GameEvent _evSued(Biz b, double settle) {
     return GameEvent(title: M('特許で訴えられた'), text: M('「{0}」が他社の特許に触れていると訴えられました。', [I(b.ind)]), choices: [
       Choice(M('和解する'), M('{0}を払って終わらせる', [Y(settle)]), () {
         cfAdd('sp', -settle);
@@ -586,11 +675,19 @@ extension GameLife on Game {
     return M('業界団体の役職に就きました（2年）。人脈と評判が広がります');
   }
 
+  /// 月に1回までの手を、今月もう打ったか（1.1.0+38）
+  bool didThisMonth(String k) => lf.did[k] == turn;
+
+  /// 評判・ブランドを上げる手の効き目。高くなるほど上がりにくい（100に近いほど0に近づく。1.1.0+38。前は同じ月に何度でも打てて、1か月で100まで届いた）
+  double _gain(double now, double add) => math.min(100, now + add * math.max(0.0, 1 - now / 100));
+
   String giveTalk() {
+    if (didThisMonth('talk')) return M('取材・講演は月に1回までです。来月また受けられます');
     final nt = spendT('media');
     if (nt != null) return nt;
-    lf.fame = math.min(100, lf.fame + 4);
-    lf.brand = math.min(100, lf.brand + 2);
+    lf.did['talk'] = turn;
+    lf.fame = _gain(lf.fame, 4);
+    lf.brand = _gain(lf.brand, 2);
     if (lr() < .05) {
       lf.brand = math.max(0, lf.brand - 10);
       scandal = math.max(scandal, 3);
@@ -601,13 +698,15 @@ extension GameLife on Game {
 
   double donateCost() => math.max(1e7 * nom(), cap * .001);
   String donate() {
+    if (didThisMonth('donate')) return M('寄付は月に1回までです。来月また寄付できます');
     final cost = donateCost();
     if (cash < cost) return M('お金が足りません');
     final nt = spendT('donate');
     if (nt != null) return nt;
+    lf.did['donate'] = turn;
     cfAdd('misc', -cost);
-    lf.fame = math.min(100, lf.fame + 6);
-    lf.brand = math.min(100, lf.brand + 3);
+    lf.fame = _gain(lf.fame, 6);
+    lf.brand = _gain(lf.brand, 3);
     return M('{0}を寄付しました。評判が上がりました', [Y(cost)]);
   }
 
@@ -651,7 +750,7 @@ extension GameLife on Game {
     } else {
       sh.vc += lost;
     }
-    if (lf.guarantee) wealth = 0;
+    if (lf.guarantee) spendWealth(wealth);
     bankCtl = 36;
     bankDone = true;
     missed = 12;
