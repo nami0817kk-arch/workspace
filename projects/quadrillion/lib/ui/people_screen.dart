@@ -649,7 +649,8 @@ Widget _actions(GameController ctl, Person p, Biz? job, {required bool isCand, r
           key: ValueKey('p-deleg-${p.id}'),
           small: true,
         ),
-      Btn(tr('話を聞く'), () => ctl.act(() => s.talkTo(p)), key: ValueKey('p-talk-${p.id}'), small: true),
+      // 同じ人の話は月に1回まで。聞いたあとは薄くして、押すとわけを出す（1.1.0+38）
+      Btn(tr('話を聞く'), () => ctl.act(() => s.talkTo(p)), key: ValueKey('p-talk-${p.id}'), small: true, dim: s.heardThisMonth(p)),
       if (s.trOn && p.real) Btn(tr('叱る'), () => ctl.act(() => s.scold(p)), key: ValueKey('p-scold-${p.id}'), small: true, enabled: p.away == 0),
       Btn(
         tr(p.partner ? '相棒と別れる' : '解雇'),

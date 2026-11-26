@@ -193,6 +193,10 @@ extension GameLocal on Game {
     final r = f.rival!;
     final cost = localBuybackCost(c);
     final sale = c.cap * c.stakePlayer / 100 * 1.3;
+    return tagEv(_evLocalHostile(c, f, th, r, cost, sale), 'locHostile', {'c': c.id, 'f': f.id, 'th': th});
+  }
+
+  GameEvent _evLocalHostile(Company c, Company f, double th, Rival r, double cost, double sale) {
     return GameEvent(
         who: f,
         face: r.col,
@@ -346,12 +350,15 @@ extension GameLocal on Game {
           f: () => doBuyback(math.min(sh.float, 8)),
         );
       }
-      o['dil'] = (
-        l: M('新しい株を出して薄める'),
-        say: M('味方に新しい株を渡して、相手の割合を薄めましょう。お金も入ります'),
-        d: M('味方に新しい株を15%分渡し、相手の割合を薄める。自分の割合も下がる'),
-        f: doDilute,
-      );
+      // 新しい株を出すのは1年に1回まで（ふだんの増資と同じ。1.1.0+38。前は会議からなら何度でも、時間も使わずに出せた）
+      if (offerOk()) {
+        o['dil'] = (
+          l: M('新しい株を出して薄める'),
+          say: M('味方に新しい株を渡して、相手の割合を薄めましょう。お金も入ります'),
+          d: M('味方に新しい株を15%分渡し、相手の割合を薄める。自分の割合も下がる'),
+          f: doDilute,
+        );
+      }
       final fc = foe;
       if (fc != null && fc.rival != null) {
         o['talk'] = (
@@ -382,7 +389,7 @@ extension GameLocal on Game {
         say: M('社長が自ら身を切る姿を見せれば、社員も客もついてきます'),
         d: M('あなたの財産から{0}を返上する。騒ぎが少し早く収まり、部下の忠誠が上がる', [Y(presRefund())]),
         f: () {
-          wealth -= presRefund();
+          spendWealth(presRefund());
           scandal = math.max(0, scandal - 4);
           for (final p in staff) {
             p.loy = math.min(99, p.loy + 3);
@@ -427,9 +434,10 @@ extension GameLocal on Game {
         o['sell'] = (
           l: M('資産を売る'),
           say: M('稼がない資産は売りましょう。身軽になれば立て直せます'),
-          d: land > 0 ? M('土地を{0}で売る', [Y(land)]) : M('一番稼がない事業を売る'),
+          // 急ぐので、土地は値引きしてすぐ売る（1.1.0+38）
+          d: land > 0 ? M('土地を値引きして{0}ですぐ売る', [Y(land * (1 - GameActions.landQuickCut))]) : M('一番稼がない事業を売る'),
           f: () {
-            if (land > 0) return sellLand();
+            if (land > 0) return sellLandNow();
             if (biz.length < 2) return M('売れる資産がありませんでした');
             final w = (biz.toList()..ssort((a, b) => a.profit.compareTo(b.profit)))[0];
             final v = sellValue(w);
@@ -456,35 +464,20 @@ extension GameLocal on Game {
           return M('給料と維持費を削りました');
         },
       );
-      if (listed) {
+      // 増資・投資家から集めるのは、ふだんの手と同じ（1年に1回まで・社長の時間を使う。1.1.0+38。前は会議からなら制限なしで入った）
+      if (listed && offerOk()) {
         o['equity'] = (
           l: M('新しい株を出して集める'),
           say: M('株を出せば返さなくていいお金が入ります。今は背に腹は代えられません'),
           d: M('新しい株を市場に出して{0}を集める。持ち株が薄まる', [Y(cap * .1 * .95)]),
-          f: () {
-            final money = cap * .1 * .95;
-            const k = 100 / 110;
-            _dilute(k);
-            sh.float = sh.float * k + 10 * k;
-            cfAdd('equity', money);
-            calcAll();
-            return M('新しい株を出し、{0}を集めました', [Y(money)]);
-          },
+          f: publicOffer,
         );
-      } else if (sh.own > 40) {
+      } else if (!listed && sh.own > 40 && offerOk()) {
         o['equity'] = (
           l: M('投資家から集める'),
           say: M('投資家に株を渡せば、返さなくていいお金が入ります'),
           d: M('株を10%渡して{0}を集める。上場の約束がつく', [Y(cap * .1)]),
-          f: () {
-            final money = cap * .1;
-            cfAdd('equity', money);
-            sh.own -= 10;
-            sh.vc += 10;
-            if (vcDeadline == 0) vcDeadline = turn + 36;
-            calcAll();
-            return M('投資家から{0}を集めました', [Y(money)]);
-          },
+          f: vcRaise,
         );
       }
     }
@@ -492,7 +485,8 @@ extension GameLocal on Game {
   }
 
   /// 臨時の会議の出来事を作る（案が2つそろわなければ null）
-  GameEvent? crisisMeeting(String kind, {Company? foe, double near = 0}) {
+  /// [why0] はセーブから作り直すときの、開いた月の状況の文（1.1.0+38）
+  GameEvent? crisisMeeting(String kind, {Company? foe, double near = 0, String? why0}) {
     final voices = crisisVoices();
     final opts = crisisOptions(kind, foe: foe);
     final picks = <({Person? p, String who, String role, String kind, String k})>[];
@@ -504,7 +498,7 @@ extension GameLocal on Game {
       picks.add((p: v.p, who: v.who, role: v.role, kind: v.kind, k: k));
     }
     if (picks.length < 2) return null;
-    final why = switch (kind) {
+    final why = why0 ?? switch (kind) {
       'takeover' => M('{0}（{1}）の持ち分が{2}になり、{3}%に近づいています', [Nm(foe!.presName), Nm(foe.name), pct(sh.riv[foe.id] ?? 0), jsNum(near)]),
       'scandal' => M('不祥事で信用が揺らぎ、株価も下がっています（あと{0}か月は響きます）', [scandal]),
       _ => M('赤字が続き、手元の資金はあと{0}か月分ほどしかありません', [cashPre() < 0 ? jsNum(math.min(99, (math.max(0.0, cash) / -cashPre()).floorToDouble())) : 0]),
@@ -540,6 +534,11 @@ extension GameLocal on Game {
         return M('結論を出さずに会議を打ち切りました');
       }),
     ];
+    return tagEv(_crisisEv(kind, foe, title, why, picks, opts, choices), 'crisis', {'kind': kind, if (foe != null) 'foe': foe.id, 'near': near, 'why': why});
+  }
+
+  GameEvent _crisisEv(String kind, Company? foe, String title, String why, List<({Person? p, String who, String role, String kind, String k})> picks,
+      Map<String, ({String l, String say, String d, String Function() f})> opts, List<Choice> choices) {
     return GameEvent(
         em: kind,
         who: kind == 'takeover' ? foe : null,

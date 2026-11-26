@@ -1107,6 +1107,15 @@ String stopReason(Game s) {
   return tr('「{0}」が起きたので、{1}で止めました', [tx(s.events.first.title), when]);
 }
 
+/// まだ決めていない出来事（小さな知らせのほか）があれば、それを出す（1.1.0+38。開き直したセーブの出来事。続きからを押したとき）。
+/// 月を進めたときに残っていた出来事は、月の報告のあとにほかの出来事と一緒に出る（nextEvent）
+bool pendingFirst(GameController ctl) {
+  final s = ctl.game!;
+  if (s.over != null || !s.events.any((e) => !e.small)) return false;
+  nextEvent(ctl);
+  return true;
+}
+
 void doNext(GameController ctl) {
   final s = ctl.game!;
   final before = ReportBase.of(s);
@@ -1270,7 +1279,8 @@ void nextEvent(GameController ctl) {
     ctl.closeSheet();
     return;
   }
-  showEvent(ctl, s.events.removeAt(i), then: () => nextEvent(ctl));
+  // 出来事は選んだときにリストから外す（見せている間に閉じても、セーブに残り、開き直すとまた出る。1.1.0+38）
+  showEvent(ctl, s.events[i], then: () => nextEvent(ctl));
 }
 
 /// 出来事1つを小窓で見せる（選んだら結果を見せ、[then] へ）
@@ -1308,6 +1318,8 @@ void showEvent(GameController ctl, GameEvent e, {required VoidCallback then}) {
         const SizedBox(height: 8),
         for (final c in e.choices)
           ChoiceBtn(c.l, () {
+            // 2度押し（同じ小窓が残っているあいだにもう一度押す）では、2回効かせない
+            if (!ctl.game!.events.remove(e)) return;
             final snap = ctl.snap();
             final m = c.f();
             ctl.buzzAfter(snap, [LogEntry(m)]);
@@ -1315,7 +1327,8 @@ void showEvent(GameController ctl, GameEvent e, {required VoidCallback then}) {
             ctl.showSheet((_) => ToastBody(msg: m, onOk: then));
           }, subs: [c.s]),
         if (e.small) ChoiceBtn(tr('あとで決める'), () {
-          ctl.game!.events.add(e);
+          // 出来事はリストに残ったまま（「今月やること」に出る）
+          ctl.save();
           ctl.closeSheet();
         }, subs: [tr('「今月やること」に残る。決めないまま次の月へ進むと見送る')]),
       ]));
@@ -1324,7 +1337,7 @@ void showEvent(GameController ctl, GameEvent e, {required VoidCallback then}) {
 /// 「今月やること」から小さな知らせを開く
 void openSmallEvent(GameController ctl, GameEvent e) {
   final s = ctl.game!;
-  if (!s.events.remove(e)) return;
+  if (!s.events.contains(e)) return;
   showEvent(ctl, e, then: () {
     ctl.save();
     ctl.closeSheet();

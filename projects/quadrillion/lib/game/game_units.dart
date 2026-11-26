@@ -415,7 +415,7 @@ extension GameUnits on Game {
     final cost = unitCapexAt(b, s) * got;
     cfAdd('capex', -cost);
     // 減価償却と設備の古さ（1.1.0+30）
-    capSpend(cost, prof(b).life);
+    capSpend(cost, prof(b).life, b);
     eqMix(b, got.toDouble());
     if (KIND_LEAD_JA[k] != null) b.leads -= got;
     b.opened += got;
@@ -541,7 +541,7 @@ extension GameUnits on Game {
     final nt = spendT('build');
     if (nt != null) return nt;
     cfAdd('capex', -cost);
-    capSpend(cost, 20);
+    capSpend(cost, 20, b);
     final left = ri(6, 9);
     b.pipe.add(Pipe(k: 'hub', c: area, cost: cost, left: left));
     calcAll();

@@ -39,21 +39,25 @@ String yen(double v) => L.en ? yenEn(v) : yenJa(v);
 String yenEn(double v) {
   if (!v.isFinite) return '-';
   final a = v.abs(), s = v < 0 ? '-' : '';
-  if (a >= 1e15) return '$s¥${trim(a / 1e15)}Q';
-  if (a >= 1e12) return '$s¥${trim(a / 1e12)}T';
-  if (a >= 1e9) return '$s¥${trim(a / 1e9)}B';
-  if (a >= 1e6) return '$s¥${trim(a / 1e6)}M';
-  if (a >= 1e3) return '$s¥${trim(a / 1e3)}K';
+  // 一つ下の桁で丸めると1000になる額（999.5K など）は、上の桁にする（1.1.0+38。前は「¥1,000K」と出た）
+  bool up(double unit, double below) => a >= unit || jsRound(a / below) >= 1e3;
+  if (up(1e15, 1e12)) return '$s¥${trim(a / 1e15)}Q';
+  if (up(1e12, 1e9)) return '$s¥${trim(a / 1e12)}T';
+  if (up(1e9, 1e6)) return '$s¥${trim(a / 1e9)}B';
+  if (up(1e6, 1e3)) return '$s¥${trim(a / 1e6)}M';
+  if (up(1e3, 1)) return '$s¥${trim(a / 1e3)}K';
   return '$s¥${jsNum(jsRound(a))}';
 }
 
 String yenJa(double v) {
   if (!v.isFinite) return '-';
   final a = v.abs(), s = v < 0 ? '-' : '';
-  if (a >= 1e16) return '$s${trim(a / 1e16)}京円';
-  if (a >= 1e12) return '$s${trim(a / 1e12)}兆円';
-  if (a >= 1e8) return '$s${trim(a / 1e8)}億円';
-  if (a >= 1e4) return '$s${commas(jsRound(a / 1e4))}万円';
+  // 一つ下の桁で丸めると1万になる額（9,999.5万円など）は、上の桁にする（1.1.0+38。前は「10,000万円」と出た）
+  bool up(double unit, double below) => a >= unit || jsRound(a / below) >= 1e4;
+  if (up(1e16, 1e12)) return '$s${trim(a / 1e16)}京円';
+  if (up(1e12, 1e8)) return '$s${trim(a / 1e12)}兆円';
+  if (up(1e8, 1e4)) return '$s${trim(a / 1e8)}億円';
+  if (up(1e4, 1)) return '$s${commas(jsRound(a / 1e4))}万円';
   return '$s${jsNum(jsRound(a))}円';
 }
 

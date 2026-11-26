@@ -124,6 +124,9 @@ void main() {
 
   test('時代のIT：当たり前になったITを入れていないと利益率が落ち、入れると戻る', () {
     final g = _withBiz(year: 1992);
+    // 1.1.0+38 から、始めた年に当たり前のIT（1992年なら POS）は入れて始める。ここでは入れていない会社を見るので、外しておく
+    expect(g.life.it, 1);
+    g.life.it = 0;
     expect(g.itBehind(), 1, reason: 'POS（1982）が当たり前');
     final b = g.biz.first;
     g.calcAll();

@@ -112,6 +112,10 @@ const Map<String, String> lifeEn = {
   '業界団体の役職に就く': 'Take an association post',
   '取材・講演': 'Interviews and talks',
   '寄付 {0}': 'Donate {0}',
+  '取材・講演は月に1回までです。来月また受けられます': 'Interviews and talks are once a month. Try again next month',
+  '寄付は月に1回までです。来月また寄付できます': 'You can donate once a month. Try again next month',
+  '{0}の話は今月もう聞きました。来月また聞けます': 'You already talked with {0} this month. Try again next month',
+  '設備はまだ新しいです（古さ{0}年・耐用{1}年の半分を過ぎてから）': 'The equipment is still new (age {0} yrs; renew after half its {1}-yr life)',
   '名前が知られるほど人脈とブランドが育ちますが、時間を取られ、失言すると会社の評判ごと落ちます。': 'The better known you are, the more your network and brand grow, but it takes time, and a gaffe drags the company down with you.',
   // ===== 税金の画面 =====
   '減価償却と消費税': 'Depreciation and consumption tax',

@@ -95,8 +95,9 @@ List<Widget> presLifePanels(GameController ctl) {
         // ボタンは押せる範囲が 44pt あるので、行のあいだは空けない
         Wrap(spacing: 6, runSpacing: 0, children: [
           Btn(tr('業界団体の役職に就く'), () => ctl.act(s.takeIndustryPost), key: const ValueKey('pres-assoc'), small: true, ap: s.hrs('assoc').round(), enabled: s.turn >= l.assocUntil),
-          Btn(tr('取材・講演'), () => ctl.act(s.giveTalk), key: const ValueKey('pres-talk'), small: true, ap: s.hrs('media').round()),
-          Btn(tr('寄付 {0}', [yen(s.donateCost())]), () => ctl.act(s.donate), key: const ValueKey('pres-donate'), small: true, ap: s.hrs('donate').round()),
+          Btn(tr('取材・講演'), () => ctl.act(s.giveTalk), key: const ValueKey('pres-talk'), small: true, ap: s.hrs('media').round(), dim: s.didThisMonth('talk')),
+          // 取材・講演と寄付は月に1回まで。打ったあとは薄くして、押すとわけを出す（1.1.0+38）
+          Btn(tr('寄付 {0}', [yen(s.donateCost())]), () => ctl.act(s.donate), key: const ValueKey('pres-donate'), small: true, ap: s.hrs('donate').round(), dim: s.didThisMonth('donate')),
         ]),
         if (open('pres-public')) ...[
           const SizedBox(height: 4),
@@ -145,13 +146,13 @@ List<Widget> taxLifePanels(GameController ctl) {
         CardTitle(tr('時代のIT')),
         const SizedBox(height: 4),
         for (var i = 0; i < itEras.length; i++)
-          if (s.yr() >= itEras[i].$1)
+          if (s.yr() >= s.itYear(i))
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
               child: Row(children: [
                 Icon(l.it > i ? Icons.check_circle : Icons.radio_button_unchecked, size: 15, color: l.it > i ? Pal.goldtx : Pal.mute),
                 const SizedBox(width: 6),
-                Expanded(child: Text(tr('{0}（{1}年〜）', [de(itEras[i].$2), itEras[i].$1]), style: ts(size: 12.5))),
+                Expanded(child: Text(tr('{0}（{1}年〜）', [de(itEras[i].$2), s.itYear(i)]), style: ts(size: 12.5))),
               ]),
             ),
         if (s.itBehind() > 0) Muted(tr('当たり前になったITを入れていないので、利益率が{0}落ちています', ['${s.itBehind()}%']), size: 11.5),
@@ -161,7 +162,7 @@ List<Widget> taxLifePanels(GameController ctl) {
             alignment: Alignment.centerLeft,
             child: Btn(tr('「{0}」を入れる {1}', [de(itEras[avail - 1].$2), yen(s.itCost())]), () => ctl.act(s.adoptIT), key: const ValueKey('money-it-btn'), small: true, ap: s.hrs('it').round()),
           ),
-        Muted(tr('宣伝の手段も時代で変わります。今よく効くのは「{0}」です。', [de(adMediaOf(s.yr()))]), size: 11.5),
+        Muted(tr('宣伝の手段も時代で変わります。今よく効くのは「{0}」です。', [de(adMediaOf(s.yr(), s.home))]), size: 11.5),
       ]),
     ),
     if (l.patents.isNotEmpty)
@@ -244,7 +245,7 @@ List<(String, List<(String, String)>)> traitRows(Industry i) {
 List<(int, double)> marketSeries(Game s, Industry i) {
   final out = <(int, double)>[];
   for (var y = s.startYear; y <= s.startYear + 60; y += 2) {
-    final v = i.size / 4 * eraF(i, y.toDouble()) * nomOf(y.toDouble()) * socialF(i, y.toDouble()) * 12;
+    final v = i.size / 4 * eraF(i, y.toDouble()) * nomOf(y.toDouble()) * socialF(i, y.toDouble(), s.home) * 12;
     out.add((y, v));
   }
   return out;

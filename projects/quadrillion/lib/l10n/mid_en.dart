@@ -2,6 +2,13 @@
 library;
 
 const Map<String, String> midEn = {
+  // ===== 宿敵に貸したお金（1.1.0+38） =====
+  '{0}を貸す（2年後に年{1}%の利息を付けて返ってくる。相手が倒れたら戻らない）。担保に株を5%預かり、大きな恩を売る':
+      'Lend {0} (repaid in 2 years with {1}% a year; lost if they fail). Hold 5% of their shares as collateral and earn a big favor',
+  '{0}が、貸したお金を利息を付けて返してくれました（{1}）': '{0} repaid your loan with interest ({1})',
+  '{0}は貸したお金をまだ返せず、1年待ってほしいと言っています': "{0} can't repay your loan yet and asks for one more year",
+  '{0}は貸したお金を返せませんでした。担保に預かった株はそのまま持ちます': "{0} couldn't repay your loan. You keep the shares you held as collateral",
+  'お金を貸していた{0}がなくなり、貸した{1}は戻りませんでした': '{0}, which owed you money, is gone. Your {1} is lost',
   // ===== 経営会議の新しい提案 =====
   '「{0}」で広告を打ちたい': "I want to run ads for {0}",
   '6か月のあいだ客が増えます。終われば元に戻ります': "More customers for 6 months. It wears off afterwards",

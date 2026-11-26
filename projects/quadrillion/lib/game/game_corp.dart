@@ -604,9 +604,13 @@ extension GameCorp on Game {
       N(M('株主総会を開きました。議案はすべて通りました'));
       return;
     }
-    final want = math.max(0.0, cash * .2);
     corp.demand = 'pay';
-    events.add(GameEvent(
+    events.add(evAgmDemand(math.max(0.0, cash * .2)));
+  }
+
+  /// 株主総会：物言う株主の要求
+  GameEvent evAgmDemand(double want) {
+    return tagEv(GameEvent(
       title: M('株主総会：物言う株主の要求'),
       text: M('市場の株を持つ投資家が、貯めこんだ現金を株主に返すよう求めています（{0}の配当か自社株買い）。断ると社長の選び直しの議案が出され、株価も下がります。', [Y(want)]),
       choices: [
@@ -628,7 +632,7 @@ extension GameCorp on Game {
           return M('要求を断りました。社長の選任は僅差で通りましたが、株は売られました');
         }),
       ],
-    ));
+    ), 'agm', {'want': want});
   }
 
   // ===== 上場 =====

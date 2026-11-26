@@ -183,10 +183,10 @@ extension GameReal on Game {
   bool canT(String k) => down == 0 && hLeft() >= hrs(k);
 
   /// 時間が足りないときの文（足りれば null）
-  String? needT(String k) {
+  String? needT(String k, [double times = 1]) {
     if (freeTime) return null;
     if (down > 0) return M('社長は倒れて休んでいます（あと{0}か月）', [down]);
-    if (hLeft() < hrs(k)) return M('今月の社長の時間が足りません（{0}時間かかります・残り{1}時間）', [jsRound(hrs(k)), jsRound(hLeft())]);
+    if (hLeft() < hrs(k) * times) return M('今月の社長の時間が足りません（{0}時間かかります・残り{1}時間）', [jsRound(hrs(k) * times), jsRound(hLeft())]);
     return null;
   }
 

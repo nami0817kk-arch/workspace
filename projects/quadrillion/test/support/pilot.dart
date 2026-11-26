@@ -836,7 +836,7 @@ class Pilot {
       await tab('stock');
       final v = s.cap * .1;
       await money('投資家から集める', v, () async {
-        await pressText(tr('投資家から集める（{0}・持ち株−10%）', [yen(v)]));
+        await pressText(tr('投資家から集める（{0}・全員の割合−10%）', [yen(v)]));
         await drain();
       });
       mark('投資家から集める');

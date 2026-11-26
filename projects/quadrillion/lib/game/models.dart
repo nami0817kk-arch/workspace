@@ -1177,7 +1177,7 @@ class Voice {
   const Voice({this.name, required this.who, required this.role, required this.kind, required this.say});
 }
 
-/// 選ぶ出来事（保存しない）
+/// 選ぶ出来事（1.1.0+38 から、種類と材料をセーブに入れ、読むときに作り直す）
 class GameEvent {
   final String title, text;
   final List<Choice> choices;
@@ -1201,6 +1201,61 @@ class GameEvent {
   /// 小さな知らせ（1.1.0+30。企画書「会議と出来事」）。月の終わりに小窓で手を止めず、「今月やること」に入れる。
   /// 選ばないまま次の月へ進むと、断る・見送る方で片付く
   bool small;
+
+  /// セーブに入れるための種類と材料（1.1.0+38。game_events.dart の [GameEvents.evRebuild] で作り直す）。
+  /// [k] が無い出来事は保存しない（開き直すと消える）
+  String? k;
+  Map<String, dynamic> a = const {};
+
+  /// セーブに入れる形（選択肢の中身は保存できないので、種類と材料だけ。読むときに同じ作り方で作り直す）
+  Map<String, dynamic>? toJson() => k == null
+      ? null
+      : {
+          'k': k,
+          if (a.isNotEmpty) 'a': a,
+          if (small) 'small': true,
+          if (poach != null) 'poach': poach,
+          if (pl != null) 'pl': pl,
+          if (subco != null) 'subco': subco,
+          if (vc) 'vc': true,
+          if (rivfund) 'rivfund': true,
+          if (em != null) 'em': em,
+          // 見せた文（開いた月の額のまま見せるため。作り直した出来事の文をこれで置き換える）
+          'd': {
+            't': title,
+            'x': text,
+            if (lead != null) 'l': lead,
+            if (tail != null) 'tl': tail,
+            'c': [
+              for (final c in choices) [c.l, c.s],
+            ],
+          },
+        };
+
+  /// 見せる文だけを [d]（toJson の 'd'）に置き換えた出来事（選択肢の中身はそのまま。数が合わなければ自分を返す）
+  GameEvent withText(Map<String, dynamic>? d) {
+    final cs = (d?['c'] as List?) ?? const [];
+    if (d == null || cs.length != choices.length) return this;
+    return GameEvent(
+        title: d['t'] as String? ?? title,
+        small: small,
+        text: d['x'] as String? ?? text,
+        choices: [for (var i = 0; i < choices.length; i++) Choice((cs[i] as List)[0] as String, (cs[i] as List)[1] as String, choices[i].f)],
+        who: who,
+        face: face,
+        person: person,
+        poach: poach,
+        pl: pl,
+        subco: subco,
+        vc: vc,
+        rivfund: rivfund,
+        em: em,
+        lead: d['l'] as String?,
+        voices: voices,
+        tail: d['tl'] as String?)
+      ..k = k
+      ..a = a;
+  }
   GameEvent(
       {required this.title,
       this.small = false,

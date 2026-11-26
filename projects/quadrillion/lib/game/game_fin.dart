@@ -236,7 +236,8 @@ double finEquity(Map<String, double> v) => fv(v, 'b:cap') + fv(v, 'b:re') + fv(v
 extension GameFin on Game {
   /// 今の持ち物と借金（決算書の貸借対照表の元）
   Map<String, double> finStocks() {
-    var stk = 0.0, sub = 0.0, gw = 0.0;
+    // 貸したお金も、株と同じ「投資」の持ち物に入れる（1.1.0+38）
+    var stk = lentSum(), sub = 0.0, gw = 0.0;
     for (final c in cos) {
       if (!c.alive) continue;
       final p = pctOf(c);

@@ -405,6 +405,12 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 社長の名前の今の案（書き換えていなければ、始める国を替えたときに案も替える）
   String? nameIdea;
 
+  /// 始める年代を替える。選んでいた国がその年にまだ無ければ（2000年のロシア→1980年など）、日本に戻す（1.1.0+38）
+  void setYear(int y) {
+    setup.year = y;
+    if (y < econData.availableFrom(setup.home)) setHome('jp');
+  }
+
   /// 始める国を替える（社長の名前を書き換えていなければ、その国の名前の案にする）
   void setHome(String c) {
     setup.home = c;
@@ -485,6 +491,11 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 手を打つ（結果の文があれば見せる）。[mark] を渡すと、手を使えたときに案内のその段を済みにする
   void act(String? Function() fn, {String? mark}) {
     hideSheet();
+    // 終わったあと（倒産・乗っ取りなど）の盤面は見るだけ。手は打てない（1.1.0+38。前は事業を売るなどができて、保存もされた）
+    if (game?.over != null) {
+      showSheet((_) => ToastBody(msg: M('ゲームは終わりました。盤面は見るだけで、手は打てません'), onOk: closeSheet));
+      return;
+    }
     final hBefore = game?.hUsed;
     final before = snap();
     final m = fn();
@@ -595,11 +606,22 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 裏で保存する。木にするところまでをここで済ませ（この時点の中身が保存される）、文字にするのは別 Isolate。
   /// 文字になったときに、もっと新しい保存が済んでいれば書かない
+  /// 終わった（over）会社を一度保存した控え。終わったあとの盤面で何か動いても、2回目からは書かない（1.1.0+38）
+  Game? _overSaved;
+
+  /// この会社は終わっていて、終わった姿をもう保存したか（初めてなら控えて false）
+  bool _overLocked(Game g) {
+    if (g.over == null) return false;
+    if (identical(_overSaved, g)) return true;
+    _overSaved = g;
+    return false;
+  }
+
   Future<void> saveOff() async {
     _clearPending();
     final g = game;
     final p = prefs;
-    if (g == null || p == null) return;
+    if (g == null || p == null || _overLocked(g)) return;
     final sw = Stopwatch()..start();
     final seq = ++_saveSeq;
     final k = slot;
@@ -641,7 +663,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     _clearPending();
     final g = game;
     final p = prefs;
-    if (g == null || p == null) return;
+    if (g == null || p == null || _overLocked(g)) return;
     final sw = Stopwatch()..start();
     _saveSeq++;
     g.noteInds();
@@ -708,6 +730,8 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     slot = startSlot;
     newSlot = null;
     _resetOpen();
+    // その年にまだ無い国のまま始めない（1.1.0+38）
+    if (setup.year < econData.availableFrom(setup.home)) setHome('jp');
     game = Game.newGame(setup, rng: newRandom());
     startGuide(game!);
     tab = 'town';
