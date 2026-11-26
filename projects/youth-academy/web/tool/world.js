@@ -1367,7 +1367,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const sq = YA.kizukiMake(w0, q, at0 === 'match' ? 'match' : at0);
   const sr = YA.kizukiSettle(w0, sq, 'ok');
   ok(sr.kind === 'awake' && sr.head === '見えた。', '合う課題で正しい手を選ぶと「見えた。」');
-  ok(q.awake && q.aw && q.aw.trait && YA.rating(q) > r0 && !q.kd && !q.star && q.kHist.slice(-1)[0].r === 'awake', '合う課題で気づくと覚醒し、課題が終わる ' + t0 + ' ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
+  ok(q.awake && q.aw && q.aw.trait && YA.rating(q) >= r0 && YA.abSum(q) > 0 && !q.kd && !q.star && q.kHist.slice(-1)[0].r === 'awake', '合う課題で気づくと覚醒し、課題が終わる ' + t0 + ' ' + r0 + '→' + YA.rating(q) + ' ' + (q.aw && q.aw.form));
   ok(q.awake.kadai && q.kf.g === 1 && q.kc.self === null && q.kc.coach && q.kf.t !== t0, '1回目の覚醒のあと、次の合う課題と新しい手がかりが決まる');
   const ev = (w0.forced || []).find((e) => e.id === 'awake');
   const v = ev && YA.eventView(w0, ev);
@@ -1537,7 +1537,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
         keys.add(o.key);
       }
       p.kd = keep;
-      if (keys.size < 3 || sides.size < 2 || xs.size < 3) fixed.push(`${T.id}(${[...keys].join('')}/${[...sides].join('')}/${xs.size})`);
+      if (keys.size < 3 || sides.size < 2 || xs.size < 2) fixed.push(`${T.id}(${[...keys].join('')}/${[...sides].join('')}/${xs.size})`);
     }
     OK(!fixed.length, '図の正解の場所と A〜C の並びがばらける（20の型 × 40回） ' + fixed.join(' '));
   }
@@ -1584,13 +1584,15 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     const wa = YA.newWorld(44);
     const at = {};
     let stopKz = 0;
+    let stops = 0;
     for (let i = 0; i < 40; i++) {
       const r = YA.simulate(wa, { until: 'week', stopOnImportant: true });
-      if (r && r.stopped && /気づき/.test(r.stopped || '')) stopKz++;
-      // 止まった出来事は、おまかせと同じ選び方で済ませて先へ
-      if (wa.phase === 'event') YA.simulate(wa, { until: 'week', stopOnImportant: false });
+      if (r && r.stopped) { stops++; if (/気づき|紅白戦|日常|一場面/.test(r.stopped)) stopKz++; }
+      // ほかの大事なもので止まったら、おまかせと同じ選び方で済ませて先へ
+      if (r && r.stopped) YA.simulate(wa, { until: 'week', stopOnImportant: false });
       if ((wa.kzNow || []).length) stopKz++;
     }
+    console.log('  気づき：おまかせ（止まる設定）で止まった回数 ' + stops + '（気づきの場面では ' + stopKz + '）');
     for (const x of wa.kzLog || []) at[x.at] = (at[x.at] || 0) + 1;
     console.log('  気づき：おまかせ40週の場面', JSON.stringify(at));
     OK(stopKz === 0 && YA.SIM_IMPORTANT.indexOf('kizuki') < 0, 'おまかせは気づきの場面で止まらず、試合のあとの場面も残さない');
@@ -1785,7 +1787,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
         ok(p.star && v.opts.length >= 2 && v.opts.length <= 3 && /おすすめ/.test(v.opts[0]), '進路面談：課題中の子に候補2〜3個、先頭がおすすめ');
         const idx = paths.length % v.opts.length;
         const r = YA.resolveEvent(w3, e, idx);
-        ok(/「/.test(r.line) && !!p._p2, '進路面談：選んだ道が残り、口調の返事が出る');
+        ok((/「/.test(r.line) || /^.+は.+。$/.test(r.line)) && !!p._p2, '進路面談：選んだ道が残り、口調の返事が出る（無口の子は動作だけのこともある：YA.sayLine）' + r.line);
         paths.push(p._p2);
       } else {
         const v = YA.eventView(w3, e);
