@@ -95,9 +95,9 @@ final List<FinLine> bsLiabLines = [
   FinLine('equity', '純資産の合計', finEquity, good: 1, lv: 2, info: const ['equity']),
   FinLine('gap', '合わない差', (v) => _g(v, 'b:gap'), hideZero: true),
   FinLine('le', '負債と純資産の合計', (v) => finLiabs(v) + finEquity(v), lv: 3),
-  // 参考（表の外）：子会社の借金の持ち分と、それを足したグループの借金。子会社がお金を借りていなければ出さない（1.1.0+39）
-  FinLine('subDebt', '参考：子会社の借金', (v) => _g(v, 'b:subDebt'), good: -1, lv: 1, hideZero: true, info: const ['grpdebt']),
-  FinLine('grpDebt', '参考：グループ借金', (v) => _g(v, 'b:subDebt') > 0 ? finLiabs(v) + _g(v, 'b:subDebt') : 0, good: -1, lv: 1, hideZero: true),
+  // 参考（表の外）：負債に子会社の借金の持ち分を足したグループの借金（「i」で説明）。子会社がお金を借りていなければ出さない（1.1.0+39。
+  // iPhone で貸借対照表が長くならないよう1行にした）
+  FinLine('grpDebt', '参考：グループ借金', (v) => _g(v, 'b:subDebt') > 0 ? finLiabs(v) + _g(v, 'b:subDebt') : 0, good: -1, lv: 1, hideZero: true, info: const ['grpdebt']),
 ];
 
 /// キャッシュフロー計算書の行

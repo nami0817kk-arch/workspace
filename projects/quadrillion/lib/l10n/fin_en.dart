@@ -92,7 +92,6 @@ const Map<String, String> finEn = {
   '純資産の合計': 'Total equity',
   '合わない差': 'Unreconciled difference',
   '負債と純資産の合計': 'Total liabilities & equity',
-  '参考：子会社の借金': "Memo: subs' debt",
   '参考：グループ借金': 'Memo: group debt',
   'グループの借金@@term': 'Group debt',
   '自社の借金に、株を過半持つ子会社の借金のうち持ち分の分を足したものです。銀行は格付け・借りられる上限・金利をこれで見ます。子会社が借りすぎると、親の格付けも下がります。':

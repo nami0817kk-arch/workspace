@@ -21,7 +21,8 @@ Game _grown() {
     // 1.1.0+35 から子会社・現地法人の利益は配当しか現金に入らず、種 2024 の12年目は子会社の無い盤面になった。事業7・子会社2の種 2025 を使う
     // 1.1.0+38 で種 2025 → 2027。倒産して出直したときに前の会社のもの（仕入れ先への前払い・上場の約束など）を片付けるようになり、
     // 2025 の盤面（9年目に出直す）は12年目に事業3つになった。2027 は事業11・子会社4
-    final g = grownGame(seed: 2027, years: 12, search: false);
+    // 1.1.0+39 で種 2027 → 2028。格付けを子会社の借金の持ち分も入れて見るようになり、2027 は6年目に民事再生して事業1つになった。2028 は事業8・子会社4
+    final g = grownGame(seed: 2028, years: 12, search: false);
     _json = jsonEncode(g.toJson());
   }
   return Game.fromJson(jsonDecode(_json!) as Map<String, dynamic>, rng: ParkMiller(3))
@@ -103,7 +104,10 @@ void main() {
           final screens = (pos.maxScrollExtent + pos.viewportDimension) / pos.viewportDimension;
           lens.add('${v.$1} ${screens.toStringAsFixed(2)}');
           // 英語は「お金」の切り替えの札が2行に折り返す（今ある札の英語が長い）ので、その分だけ許す
-          if (size == const Size(844, 390) && _firstLook.contains(v.$1) && screens > (lang == 'en' ? 2.6 : 2.05)) tooLong.add('${v.$1} ${screens.toStringAsFixed(2)}');
+          // 1.1.0+39 から、貸借対照表だけは 2.5（英語 2.8）画面分まで。盤面を種 2028 に替えたら、子会社の株・評価差額などの行がそろう会社になり
+          // （前の 2027 の盤面にはそろっていなかった）、そこに参考の「グループ借金」の1行を足して 844×390 で 2.39 画面分になった。資産と負債の2つの表を縦に並べるので、ほかの面より長い
+          final lim = v.$1 == 'bs' ? (lang == 'en' ? 2.8 : 2.5) : (lang == 'en' ? 2.6 : 2.05);
+          if (size == const Size(844, 390) && _firstLook.contains(v.$1) && screens > lim) tooLong.add('${v.$1} ${screens.toStringAsFixed(2)}');
           // 上から下まで送りながら、英語の画面に日本語が残っていないか・崩れていないかを見る
           var i = 0;
           while (true) {
