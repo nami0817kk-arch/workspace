@@ -653,8 +653,8 @@ class EndScreen extends StatelessWidget {
                   stat(tr('世界ランキングの最高位'), s.peakRank >= 999 ? '―' : tr('{0}位', [s.peakRank])),
                   // 勝ち負けの数（世界ランキングの自社の行・1000兆円の判定と同じ数。1.1.0+38）
                   stat(tr('勝ち負けの数（時価総額＋財産）'), yen(s.score)),
-                  stat(tr('時価総額の最大'), yen(s.maxCap)),
-                  stat(tr('財産の最大'), yen(s.maxWealth)),
+                  // 勝ち負けの数を足したぶん、最大の2つは1行にまとめる（まとめを長くしない。1.1.0+38）
+                  stat(tr('最大の時価総額・財産'), '${yen(s.maxCap)}${tr('・')}${yen(s.maxWealth)}'),
                 ]),
               ),
               if (marks.isNotEmpty) ...[

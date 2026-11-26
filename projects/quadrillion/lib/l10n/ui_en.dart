@@ -340,6 +340,7 @@ const Map<String, String> uiEn = {
   '土地を売りに出しています（今の値 {0}・あと{1}か月ほどで売れます）': 'Land is for sale (worth {0}; sells in about {1} mo)',
   '広告中（あと{0}か月）': 'Ad running ({0} mo left)',
   '勝ち負けの数（時価総額＋財産）': 'Score (value + wealth)',
+  '最大の時価総額・財産': 'Peak value / wealth',
   '現場の人は加盟店が集めます': 'Franchisees hire their own staff',
   '現場の力 ': 'Staffing ',
   '　人が足りず、{0}の一部が止まっている': '  Understaffed: some {0} are idle',
