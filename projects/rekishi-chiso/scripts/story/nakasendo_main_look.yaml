@@ -1,0 +1,212 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：中山道の旅は何泊何日か（scripts/nakasendo-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/1 12:00 公開予定）。rujin_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-26。out/story/nakasendo/main/<名>.jpg）と、英泉・広重の木曽街道・東海道の版画（パブリックドメイン、額のカード）。
+#   江戸後期（1830年代）の中山道：笠・合羽・振り分け荷物の旅人、茅葺きと板葺きの宿場、杉と檜の山、石畳。字・紋・のぼりの字は描かない。実在の人物の顔は描かない（名指さない旅人）。
+script: scripts/nakasendo-story.yaml
+out: nakasendo_story_main
+art_dir: out/story/nakasendo/main
+main_art_dir: out/story/nakasendo/main
+ai_disclosure: この動画の情景と人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 碓氷峠を越えた日に50キロ, now: null, dates: {}}
+  1: {label: 第1章 江戸から京都まで宿はいくつ？, now: null, dates: {16: 1835年5月4日}}
+  2: {label: 第2章 1日に何里歩いた？, now: 1835年5月5日, dates: {27: null, 28: 1835年5月5日, 29: 1835年5月6日, 31: 1685年, 34: 1835年5月7日, 36: 1834年, 37: 1835年5月7日, 38: null}}
+  3: {label: 第3章 木曽の桟は危なかったのか？, now: 1835年5月8日, dates: {43: 1834年4月, 45: 1711年, 46: null, 47: 1863年, 48: 1843年, 49: 1835年5月8日, 50: 1835年5月9日, 52: 1685年, 55: null, 56: 1634年, 57: 1967年, 58: 1835年5月9日, 59: null}}
+  4: {label: 第4章 鳥居峠の先に何がある？, now: 1835年5月10日, dates: {65: 1843年, 67: 1835年5月10日, 68: null}}
+  5: {label: 第5章 和田峠の宿代はいくら？, now: 1835年5月11日, dates: {73: null, 77: 寛永のころ, 78: null, 79: 1828年, 81: 1835年5月11日}}
+  6: {label: 第6章 碓氷峠を越えた日、何里歩いた？, now: 1835年5月12日, dates: {90: 1835年5月13日, 91: 1828年, 92: 2025年, 93: null, 95: 1623年, 96: 2024年, 97: 1835年5月13日, 101: 1810年, 102: null}}
+  7: {label: 第7章 店まであと何日？, now: 1835年5月14日, dates: {108: 1835年5月15日, 110: null}}
+  8: {label: まとめ 中山道は江戸から京都まで何泊何日か, now: null, dates: {}}
+no_tag_from: 118
+
+references:
+  - "西村市郎右衛門安則『木曾日記 一』（末永國紀・本村希代・奥田以在の翻刻と解題、同志社商学 58巻1号）"
+  - "中井源左衛門光基「初下り諸事手扣」（青柳周一・西川雄也の翻刻、滋賀大学経済学部附属史料館研究紀要 57号）"
+  - "貝原益軒『木曽路之記』（宝永6年＝1709年刊、国立国会図書館デジタルコレクション）"
+  - "日本大百科全書「宿場（五街道宿駅一覧）」（宿村大概帳による）・国土交通省・群馬県・長和町・日本山岳会・林野庁・文化庁・埼玉県・中津川市史・谷釜尋徳（2020）"
+
+credits:
+  paintings/kazu_itabashi_eisen.jpg: 渓斎英泉《木曽街道六十九次 板橋之駅》1835〜37年ごろ（国立国会図書館）
+  paintings/sakoku_edo_nihonbashi_hiroshige.jpg: 歌川広重《東海道五十三次 日本橋 朝之景》1833〜34年ごろ
+  paintings/kazu_kyoto_sanjo_hiroshige.jpg: 歌川広重《東海道五十三次之内 京師 三条大橋》1833年ごろ（メトロポリタン美術館）
+  paintings/mitsunari_sekigahara_kisokaido_hiroshige.jpg: 歌川広重・溪斎英泉《木曽海道六拾九次之内 関ヶ原》江戸後期
+  paintings/kazu_yabuhara_eisen.jpg: 渓斎英泉《木曽海道六十九次 薮原 鳥居峠硯ノ清水》1835〜37年ごろ（国立国会図書館）
+  paintings/kazu_narai_eisen.jpg: 渓斎英泉《木曽街道六十九次 奈良井宿名産店之図》1835〜37年ごろ（国立国会図書館）
+  paintings/shingen_suwa_lake_eisen.jpg: 渓斎英泉《木曽街道 塩尻峠 諏訪ノ湖水眺望》1830年代
+  paintings/kazu_okegawa_eisen.jpg: 渓斎英泉《木曽街道六十九次 桶川宿曠原之景》1835〜37年ごろ（国立国会図書館）
+ai:
+  N01: {scene: 夕暮れの山の峠道を一人で歩く笠の旅人の後ろ姿、遠くに煙を上げる浅間山, pan: h, crops: &c {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N02: {scene: 崖の途切れた所に架けた板の橋（両わきに石垣）、下に木曽川の急流、蔦（人物なし）, pan: h, crops: *c}
+  N03: {scene: 雪の峠の小屋の前、焚火と大釜の粥を旅人に配る人々、牛と馬, pan: h, crops: *c}
+  N04: {scene: 夜の旅籠の座敷、行灯の明かりで帳面に筆で書く旅の商人（横顔は小さく）, pan: h, crops: *c}
+  N05: {scene: 朝の近江の商家（白壁と蔵）の前で、人々に見送られて旅立つ笠の商人, pan: h, crops: *c}
+  N06: {scene: 琵琶湖を見下ろす峠道を歩く旅人たち（晴れた朝）, pan: h, crops: *c}
+  N07: {scene: 雨で水があふれた川べりの土手の道と、倒れた麦の畑、笠と合羽の旅人, pan: h, crops: *c}
+  N08: {scene: 大きな川（木曽川）の渡し舟、旅人を乗せた舟と竿を差す船頭, pan: h, crops: *c}
+  N09: {scene: 夜の山あいの旅籠の暗い座敷、布団で目を開けている旅人と太い天井の梁, pan: h, crops: *c}
+  N10: {scene: 雨の山道の石畳を登る笠と合羽の旅人たち、杉の林, pan: v, crops: *c}
+  N11: {scene: 山道を行く駕籠と二人の駕籠かき、後ろを歩く旅人, pan: h, crops: *c}
+  N12: {scene: 木曽の山あいの宿場町の通り、格子と出し梁の旅籠が並ぶ（昼）, pan: h, crops: *c}
+  N13: {scene: 急流の中の白い花崗岩の大きな岩と松（寝覚の床、人物なし）, pan: h, crops: *c}
+  N14: {scene: 山あいの関所の木の門と番所、門の前の旅人と役人（遠景）, pan: h, crops: *c}
+  N15: {scene: 峠の尾根の山道を行く旅人の後ろ姿、遠くに雪の残る御嶽山, pan: h, crops: *c}
+  N16: {scene: 長い宿場町の通りと、櫛や漆器を並べた店先（奈良井）, pan: h, crops: *c}
+  N17: {scene: 高い峠の尾根道、雲と遠くの山並み、小さな旅人の列, pan: h, crops: *c}
+  N18: {scene: 峠の茶屋の店先で餅を焼く人と休む旅人, pan: h, crops: *c}
+  N19: {scene: 旅籠の帳場で銭を数える商人と宿の主人（行灯）, pan: h, crops: *c}
+  N20: {scene: 杉林の中の急な下り坂の石の道を下る旅人, pan: v, crops: *c}
+  N21: {scene: 石垣と木の門の関所、番所の前の役人と旅人（昼）, pan: h, crops: *c}
+  N22: {scene: 夕方の平らな街道を、馬子の引く馬に乗って行く旅の商人, pan: h, crops: *c}
+  N23: {scene: 関東の平野の広い宿場町の通り、旅籠と人通り（晴れ）, pan: h, crops: *c}
+  N24: {scene: 夕暮れの関東の村の商家に着いた笠の旅人と、迎える店の者, pan: h, crops: *c}
+  TH1: {scene: 雪の残る峠の山道に杖を突いて立つ商人、遠くに木曽の山並み（サムネと同じ絵）, pan: h, crops: *c}
+  TH2: {scene: 崖の途切れた所の板の橋を渡る商人、下に急流（サムネと同じ絵）, pan: h, crops: *c}
+  NEND: {scene: 終了画面。夕暮れの山あいの街道の遠景（右半分に余白）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:N01 wide
+- 1 ai:N02 wide
+- 2 ai:N03 wide
+- 3 ai:N17 left
+- 4 ai:N04 wide
+- 5 ai:N12 wide
+- 6 ai:N07 right
+- 7 ai:N06 wide
+- 8 frame:paintings/sakoku_edo_nihonbashi_hiroshige.jpg
+- 9 frame:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+- 10 frame:paintings/kazu_itabashi_eisen.jpg
+- 11 frame:paintings/mitsunari_sekigahara_kisokaido_hiroshige.jpg
+- 12 ai:N06 right
+- 13 ai:N17 wide
+- 14 ai:N08 left
+- 15 ai:N04 left
+- 16 ai:N05 wide
+- 17 ai:N04 right
+- 18 ai:N05 left
+- 19 ai:N05 right
+- 20 ai:N04 wide
+- 21 ai:N19 wide
+- 22 ai:N12 right
+- 23 ai:N19 right
+- 24 ai:N06 left
+- 25 ai:N06 wide
+- 26 ai:N06 right
+- 27 frame:paintings/mitsunari_sekigahara_kisokaido_hiroshige.jpg
+- 28 ai:N06 left
+- 29 ai:N07 wide
+- 30 ai:N04 wide
+- 31 ai:N15 right
+- 32 ai:N11 wide
+- 33 ai:N20 left
+- 34 ai:N08 wide
+- 35 ai:N09 wide
+- 36 ai:N09 right
+- 37 ai:N08 right
+- 38 ai:N10 left
+- 39 ai:N12 left
+- 40 ai:N02 left
+- 41 ai:N10 wide
+- 42 ai:N10 right
+- 43 ai:N11 wide
+- 44 ai:N11 right
+- 45 ai:N22 left
+- 46 ai:N23 left
+- 47 ai:N12 right
+- 48 ai:N12 wide
+- 49 ai:N10 left
+- 50 ai:N02 wide
+- 51 ai:TH2 wide
+- 52 ai:N04 left
+- 53 ai:N02 wide
+- 54 ai:TH2 left
+- 55 ai:N02 left
+- 56 ai:N13 wide
+- 57 ai:N13 left
+- 58 ai:N14 left
+- 59 ai:N14 wide
+- 60 ai:N15 left
+- 61 ai:N15 wide
+- 62 frame:paintings/kazu_yabuhara_eisen.jpg
+- 63 ai:N15 right
+- 64 ai:N16 left
+- 65 frame:paintings/kazu_narai_eisen.jpg
+- 66 ai:N16 wide
+- 67 ai:N16 right
+- 68 ai:N12 left
+- 69 ai:N17 wide
+- 70 ai:N19 left
+- 71 frame:paintings/shingen_suwa_lake_eisen.jpg
+- 72 ai:N12 wide
+- 73 ai:N17 left
+- 74 ai:TH1 wide
+- 75 ai:N17 wide
+- 76 ai:N10 right
+- 77 ai:N18 wide
+- 78 ai:N18 left
+- 79 ai:N03 left
+- 80 ai:N03 wide
+- 81 ai:N17 wide
+- 82 ai:N04 wide
+- 83 ai:N19 wide
+- 84 ai:N19 right
+- 85 ai:N04 left
+- 86 ai:N19 left
+- 87 ai:N20 wide
+- 88 ai:N01 left
+- 89 ai:N01 wide
+- 90 ai:N01 right
+- 91 ai:N03 left
+- 92 ai:N20 right
+- 93 ai:N20 wide
+- 94 ai:N11 left
+- 95 ai:N21 wide
+- 96 ai:N20 wide
+- 97 ai:N22 wide
+- 98 ai:N22 right
+- 99 ai:N20 left
+- 100 ai:N23 left
+- 101 ai:N04 right
+- 102 ai:N23 wide
+- 103 ai:N22 left
+- 104 ai:N23 wide
+- 105 ai:N23 right
+- 106 ai:N23 left
+- 107 frame:paintings/kazu_okegawa_eisen.jpg
+- 108 ai:N24 left
+- 109 ai:N24 wide
+- 110 frame:paintings/kazu_kyoto_sanjo_hiroshige.jpg
+- 111 ai:N05 left
+- 112 ai:N01 wide
+- 113 ai:N22 wide
+- 114 frame:paintings/sakoku_edo_nihonbashi_hiroshige.jpg
+- 115 ai:N17 wide
+- 116 ai:N19 wide
+- 117 ai:N04 left
+- 118 ai:N10 wide
+- 119 ai:N01 left
+- 120 ai:N24 right
+- 121 ai:N24 wide
+- end ai:NEND wide
+focus: {}
+fx:
+  N04: {lamp: {region: [0.3, 0.2, 0.6, 0.6]}}
+  N19: {lamp: {region: [0.3, 0.2, 0.6, 0.6]}}
+  N03: {fire: {region: [0.35, 0.55, 0.65, 0.95]}}
+figures: []
+parts:
+- {type: quote, from: 20, to: 20, label: 史料, text: 来て見れハこゝもはたごハ百五十, source: 西村安則『木曾日記』1835年5月4日（同志社商学の翻刻）}
+- {type: quote, from: 50, to: 50, label: 史料, text: 命を的にかけはしぞうき, source: 西村安則『木曾日記』1835年5月9日（同志社商学の翻刻）}
+- {type: quote, from: 54, to: 54, label: 史料, text: 今は尾州より此橋を堅固にかけ給て／聊あやうき事なし, source: 貝原益軒『木曽路之記』1709年刊（国立国会図書館デジタルコレクション）}
+- {type: quote, from: 83, to: 83, label: 史料, text: これ迄八百五拾文にてありしに／今宵ハ八百七拾弐文なり, source: 西村安則『木曾日記』1835年5月11日（同志社商学の翻刻）}
+- {type: quote, from: 98, to: 98, label: 史料, text: けふハ十三里ほとの道なれハ／殊に心もいそかしく, source: 西村安則『木曾日記』1835年5月13日（同志社商学の翻刻）}
+- {type: versus3, from: 74, to: 74, items: [[長和町, 約1600m], [明治9年の新道, 1570m], [明治29年の掘り下げ後, 1531m]], every: 2.5}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 18, note: 日記の道の地図}
+- {line: 28, note: 1日ずつの道のりの棒}
+- {line: 54, note: 益軒の札}
+- {line: 74, note: 和田峠の高さのくい違い}
+- {line: 83, note: 和田の宿代の札}
+- {line: 114, note: 江戸から京都の計算}
+- {end: true, note: 終了画面}

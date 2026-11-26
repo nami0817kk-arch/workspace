@@ -1,0 +1,162 @@
+# 物語完結型ショート 菅原道真の最期 s4（2026-11-26）。本編 scripts/michizane-story.yaml（11/30 19:00 公開予定、https://youtu.be/QF_rRUkAfhg）から。12/1 17:30 に予約。
+# 形式は choujou_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 菅原道真_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/michizane/main/ の M）の切り出しだけ。新しい絵は作らない。
+# 切り口：道真の死のあと都で続いた死と、朝廷が左遷の詔書を捨てさせたこと（本編 第4章、michizane-12・13・31・14・15・32）。
+# hook＝都の人々は皇太子の死を何のしわざと言ったか（答えはこのショートの中：菅帥の霊魂の恨み）。
+# tease＝2代の皇太子を失った都で、5年後に何が襲われたか（答えは本編 第5章：清涼殿の落雷。michizane-16）。
+# 数え直し：時平 延喜9年＝909年4月4日、39歳（死 903 から6年後）。源光 延喜13年＝913年3月12日（季節は言わない）。保明 延喜23年＝923年3月21日、21歳（死から20年後）。
+#   詔 4月20日＝保明の死の約1か月後。慶頼王 3歳で皇太子、延長3年＝925年に5歳で死去（母は時平の娘、michizane-32）。925→930＝5年後。
+#   源光が道真のあとの右大臣になったのは『日本紀略』昌泰4年正月25日条（michizane-01 の出典「以大納言源朝臣光任右大臣」）。
+#   保明の母（穏子）が時平の妹であることは事実カードに無いので言わない。
+# 理解テスト：①菅原道真の死のあと、都で続いた死の話 ②909年から925年、京都 ③時平39歳、源光は泥の中へ、皇太子保明21歳の死を、人々は道真の霊の恨みと言い、醍醐天皇は道真を右大臣に戻して左遷の詔書を捨てさせた ④それでも次の皇太子、時平の孫の慶頼王も5歳で亡くなった
+title: "菅原道真｜都で続いた死"
+yt_title: "菅原道真が死んだあと、都で続いた死　皇太子の死を人々は「菅帥の霊魂の恨み」と言い、朝廷は左遷の詔書を捨てさせた"
+description: |-
+  901年、右大臣の菅原道真は大宰府へ流され、903年にそこで亡くなりました。左遷を言い渡したのは醍醐天皇、そのとき、左大臣だったのは藤原時平です。
+  延喜9年（909）、時平が39歳で亡くなります。延喜13年（913）には、道真のあとに右大臣となった源光が、狩りの最中に馬で泥の中へ駆け込み、遺骸は見つかりませんでした（『日本紀略』）。
+  延喜23年（923）3月21日、醍醐天皇の皇太子・保明親王が21歳で亡くなると、『日本紀略』は「世を挙げて言った、菅帥の霊魂の恨みのしわざだ」と書きました。1か月後、醍醐天皇は道真を右大臣に戻し、左遷の詔書を捨てさせます。それでも、次の皇太子で時平の孫の慶頼王も、延長3年（925）に5歳で亡くなりました。
+  本編では、左遷の日、大宰府での2年、59歳の死、清涼殿の雷、そして学問の神様になるまでを、当時の記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#菅原道真"
+- "#日本史"
+- "#平安時代"
+- "#怨霊"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/michizane
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: michizane_story_s4
+header:
+  tag: "菅原道真（学問の神様）"
+  title: "皇太子の死は、《誰の》しわざ？"
+now:
+- {at: "909年", text: "909年　京都", point: 0}
+- {at: "913年", text: "913年　京都", point: 1}
+- {at: "923年", text: "923年　京都の内裏", point: 2}
+- {at: "925年", text: "925年　京都の内裏", point: 3}
+timeline:
+- {label: "909"}
+- {label: "913"}
+- {label: "923"}
+- {label: "925"}
+cards:
+  - type: table
+    title: 道真の死のあと、都で
+    from: 909年
+    until: 菅帥の霊魂
+    items:
+      - {at: "909年", text: "909年　時平　39歳"}
+      - {at: "913年", text: "913年　源光　泥の中へ"}
+      - {at: "923年", text: "923年　皇太子保明　21歳"}
+    text_y: 0.70
+shots:
+  M18_1:
+    kind: "ai"
+    file: "michizane/main/M18.jpg"
+    focus: [0.55, 0.55]
+    move: "in"
+    must: "M18"
+  M03_2:
+    kind: "ai"
+    file: "michizane/main/M03.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "M03"
+  M16_3:
+    kind: "ai"
+    file: "michizane/main/M16.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "M16"
+  M17_4:
+    kind: "ai"
+    file: "michizane/main/M17.jpg"
+    focus: [0.38, 0.5]
+    move: "right"
+    must: "M17"
+  M18_5:
+    kind: "ai"
+    file: "michizane/main/M18.jpg"
+    focus: [0.3, 0.55]
+    move: "left"
+    must: "M18"
+  M18_6:
+    kind: "ai"
+    file: "michizane/main/M18.jpg"
+    focus: [0.75, 0.55]
+    move: "right"
+    must: "M18"
+  M19_7:
+    kind: "ai"
+    file: "michizane/main/M19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "M19"
+  M16_8:
+    kind: "ai"
+    file: "michizane/main/M16.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "M16"
+  M02_9:
+    kind: "ai"
+    file: "michizane/main/M02.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "M02"
+lines:
+  # fact: michizane-14
+- 語り: "菅原道真が死んで20年。皇太子が亡くなると、都の人々は、道真の霊の、恨みのしわざだと言った。"
+  shot: M18_1
+  tone: 強調
+  pause: 0.12
+  # fact: michizane-01, michizane-12
+- 語り: "道真に左遷を言い渡したのは、醍醐天皇。そのときの左大臣は、藤原時平だった。"
+  shot: M03_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: michizane-12
+- 語り: "909年、その時平が、39歳で亡くなる。"
+  shot: M16_3
+  tone: 重い
+  pause: 0.12
+  # fact: michizane-13, michizane-31, michizane-01
+- 語り: "913年。道真のあとに右大臣となった源光は、狩りの最中に、馬で、泥の中へ駆け込んだ。遺骸は、見つからなかった。"
+  shot: M17_4
+  tone: 重い
+  pause: 0.12
+  # fact: michizane-14
+- 語り: "そして923年、醍醐天皇の皇太子、保明親王が、21歳で亡くなった。"
+  shot: M18_5
+  tone: 重い
+  pause: 0.12
+  # fact: michizane-14
+- 語り: "『日本紀略』は書く。人々の泣く声は、雷のようだった。世を挙げて言った。菅帥の霊魂の、恨みのしわざだ。"
+  shot: M18_6
+  tone: 重い
+  pause: 0.12
+  # fact: michizane-15
+- 語り: "1か月後、醍醐天皇は、道真を右大臣に戻し、道真を流した、あの詔書を、捨てさせた。"
+  shot: M19_7
+  tone: 強調
+  pause: 0.12
+  # fact: michizane-32
+- 語り: "けれど、次の皇太子、3歳の慶頼王も、925年に、5歳で亡くなる。母は、時平の娘だった。"
+  shot: M16_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第5章（michizane-16：930年、清涼殿の落雷）
+- 語り: "2代の皇太子を失った都で、5年後、今度は何が、襲われたのか。"
+  shot: M02_9
+  tone: 疑問
+  pause: 0.15

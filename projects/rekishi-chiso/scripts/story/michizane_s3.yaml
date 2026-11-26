@@ -1,0 +1,154 @@
+# 物語完結型ショート 菅原道真の最期 s3（2026-11-26）。本編 scripts/michizane-story.yaml（11/30 19:00 公開予定、https://youtu.be/QF_rRUkAfhg）から。12/1 15:30 に予約。
+# 形式は choujou_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 菅原道真_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/michizane/main/ の M・IEND）の切り出しだけ。新しい絵は作らない。
+# 切り口：903年の死と、葬る途中で動かなくなった車（本編 第3章、michizane-09・10・11・01）。
+# hook＝道真の遺骸を運ぶ車に何が起きたか（答えはこのショートの中：途中で止まり動かず、その場所に葬った。本文に牛は出ない）。
+# tease＝道真の死のあと、都で何が起きたか（答えは本編 第4章：時平39歳の死・源光・2人の皇太子。michizane-12〜15・32）。
+# 数え直し：延喜3年2月25日＝903年3月26日（ユリウス暦）。数え 903−845+1＝59。左遷 901年正月25日 → 2年と1か月あまり。
+#   旧暦2月なので季節を言うなら春。言わない。
+# 「牛が座り込んだ」は、よく知られた話として言い、本文（『北野天神縁起』・『歴代編年集成』）は「車」と分けて言う。牛の姿は絵巻の絵（michizane-10 の要約）。
+# 理解テスト：①菅原道真の死と葬りの話 ②903年2月25日、大宰府で59歳で死に、三笠郡の四堂のあたりへ運ばれる途中 ③死の前に詩を1巻にまとめて都の紀長谷雄に送った ④車が止まって動かず、その場所に葬った。その上に安楽寺、今の太宰府天満宮が建った
+title: "菅原道真｜動かなくなった車"
+yt_title: "菅原道真の遺骸を運ぶ車は、途中で止まって動かなくなった　59歳の死と、太宰府天満宮のはじまり"
+description: |-
+  延喜3年、903年の2月25日。右大臣から大宰府へ流された菅原道真は、流された先で亡くなりました。数えで59歳。流されてから2年と1か月あまりで、都へ戻ることはありませんでした。
+  死を前に、道真は大宰府で作った詩を1巻にまとめ、都の紀長谷雄に送っています。のちの『菅家後集』です。
+  遺骸は三笠郡の四堂のあたりに葬られるはずでしたが、『北野天神縁起』によれば、運ぶ車が途中で止まって動かなくなり、その場所に葬られました。よく知られた「牛が座り込んだ」という話は、この場面の本文には出てきません。その墓の上に建ったのが安楽寺、今の太宰府天満宮です。
+  本編では、左遷の日、大宰府での2年、都で続いた死と清涼殿の雷、そして学問の神様になるまでを、当時の記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#菅原道真"
+- "#日本史"
+- "#平安時代"
+- "#太宰府天満宮"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/michizane
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: michizane_story_s3
+header:
+  tag: "菅原道真（学問の神様）"
+  title: "遺骸を運ぶ車に、《何が》起きた？"
+now:
+- {at: "903年の2月25日", text: "903年2月25日　大宰府", point: 0}
+timeline:
+- {label: "903"}
+cards:
+  - type: table
+    title: 葬る途中で止まったのは
+    from: よく知られた話
+    until: その墓の上
+    items:
+      - {at: "よく知られた話", text: "よく知られた話　牛が座り込む"}
+      - {at: "本文に", text: "北野天神縁起　車が止まる"}
+    text_y: 0.70
+shots:
+  M14_1:
+    kind: "ai"
+    file: "michizane/main/M14.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "M14"
+  M08_2:
+    kind: "ai"
+    file: "michizane/main/M08.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "M08"
+  M03_3:
+    kind: "ai"
+    file: "michizane/main/M03.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "M03"
+  M10_4:
+    kind: "ai"
+    file: "michizane/main/M10.jpg"
+    focus: [0.68, 0.5]
+    move: "in"
+    must: "M10"
+  IEND_5:
+    kind: "ai"
+    file: "michizane/main/IEND.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "IEND"
+  M14_6:
+    kind: "ai"
+    file: "michizane/main/M14.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "M14"
+  M14_7:
+    kind: "ai"
+    file: "michizane/main/M14.jpg"
+    focus: [0.22, 0.55]
+    move: "left"
+    must: "M14"
+  M15_8:
+    kind: "ai"
+    file: "michizane/main/M15.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "M15"
+  M18_9:
+    kind: "ai"
+    file: "michizane/main/M18.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "M18"
+lines:
+  # fact: michizane-10
+- 語り: "菅原道真の遺骸を運ぶ車は、葬る場所に着く前に、止まって、動かなくなった。"
+  shot: M14_1
+  tone: 強調
+  pause: 0.12
+  # fact: michizane-09
+- 語り: "延喜3年、903年の2月25日。道真は、流された先の大宰府で、亡くなった。数えで59歳。"
+  shot: M08_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: michizane-01, michizane-09
+- 語り: "右大臣から、突然、大宰府へ流されて、2年と1か月あまり。都へ戻ることは、なかった。"
+  shot: M03_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: michizane-11
+- 語り: "死を前に、道真は、大宰府で作った詩を、1巻にまとめ、都の紀長谷雄に送った。のちの『菅家後集』だ。"
+  shot: M10_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: michizane-10
+- 語り: "遺骸は、三笠郡の、四堂のあたりに、葬られるはずだった。"
+  shot: IEND_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: michizane-10
+- 語り: "『北野天神縁起』によれば、運ぶ車が、途中で止まり、動かなくなった。そこで、その場所に葬った。"
+  shot: M14_6
+  tone: 重い
+  pause: 0.12
+  # fact: michizane-10
+- 語り: "よく知られた話では、車を引く牛が、座り込んだとされる。けれど、この場面の本文に、牛は出てこない。牛が横たわる姿は、のちの絵巻の絵だ。"
+  shot: M14_7
+  tone: 強調
+  pause: 0.12
+  # fact: michizane-10
+- 語り: "その墓の上に建ったのが、安楽寺。いまの、太宰府天満宮だ。"
+  shot: M15_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第4章（michizane-12〜15・32：時平の死、源光、2人の皇太子、詔書を捨てさせる）
+- 語り: "では、道真が死んだあと、都では、何が起きたのか。"
+  shot: M18_9
+  tone: 疑問
+  pause: 0.15
