@@ -7,6 +7,23 @@ const Map<String, String> corpEn = {
   '{0}に国の支援が入り、借金が半分になりました': '{0} got government support and its debt was halved',
   '宿敵の{0}が借金を返せずに倒れました': 'Your rival {0} went bankrupt, unable to repay its debt',
   '{0}が借金を返せずに倒れました': '{0} went bankrupt, unable to repay its debt',
+  // ===== 子会社の資金が尽きた（1.1.0+39） =====
+  '子会社の資金が尽きた': 'A subsidiary ran out of cash',
+  '子会社{0}の現金が尽き、借金を返せなくなりました（足りない分 {1}・子会社の借金 {2}）。銀行はもう貸してくれません。親会社として助けるか、倒れさせるかを決めてください。':
+      'Your subsidiary {0} has run out of cash and cannot repay its debt (short by {1}; its debt: {2}). The banks will lend no more. As the parent, decide whether to rescue it or let it fail.',
+  '倒れさせる': 'Let it fail',
+  '子会社は倒産し、持ち株の値打ち{0}が特別損失になる。評判とブランド、部下の忠誠が少し下がる':
+      'It goes bankrupt and your stake worth {0} is booked as an extraordinary loss. Reputation, brand and staff loyalty dip a little',
+  '{0}を入れて助ける': 'Rescue it with {0}',
+  '増資で入れ、持ち株は{0}に増える。うち{1}は銀行から借りる': 'Paid in as new shares; your stake rises to {0}. {1} of it is borrowed from the bank',
+  '増資で入れ、持ち株は{0}に増える。借金はグループの数に入ったまま': "Paid in as new shares; your stake rises to {0}. Its debt stays in your group figures",
+  '{0}はもう子会社ではありません': '{0} is no longer your subsidiary',
+  'お金が足りず、{0}を助けられませんでした': "You didn't have the money to rescue {0}",
+  '{0}に{1}を入れて助けました（うち{2}は銀行から借りました）。持ち株は{3}になりました': 'You rescued {0} with {1} ({2} of it borrowed). Your stake is now {3}',
+  '{0}に{1}を入れて助けました。持ち株は{2}になりました': 'You rescued {0} with {1}. Your stake is now {2}',
+  '子会社{0}を倒産させた': 'Let subsidiary {0} go bankrupt',
+  '子会社{0}は倒産しました。持ち株の値打ち{1}を特別損失にしました。会社の評判と部下の気持ちが少し下がりました':
+      'Subsidiary {0} went bankrupt. Your stake worth {1} was booked as an extraordinary loss. Reputation and staff morale dipped a little',
   '{0}による{1}の買収は、独禁法の審査で止められました': "Antitrust review blocked {0}'s takeover of {1}",
   '{0}が{1}を{2}で買収し、さらに大きくなりました': '{0} bought {1} for {2} and grew even bigger',
   // ===== 株価 =====

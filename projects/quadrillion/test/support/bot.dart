@@ -40,7 +40,8 @@ Size centerAs(Size s) => s.width < 700 ? Size(s.width + 82, s.height) : s;
 
 final _choice = RegExp('断る|謝罪|送り出す|上げる|自社株|ホワイト');
 
-/// 出来事は決まった選び方で片付ける（試作の自動プレイと同じ）
+/// 出来事は決まった選び方で片付ける（試作の自動プレイと同じ）。
+/// 子会社の資金が尽きた出来事（1.1.0+39）は、助けられるときだけ「助ける」が最後に付くので、助けられるなら助け、無理なら倒れさせる
 void resolveEvents(Game s) {
   while (s.events.isNotEmpty) {
     final e = s.events.removeAt(0);

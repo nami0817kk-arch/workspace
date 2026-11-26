@@ -62,6 +62,7 @@ final List<FinLine> plLines = [
   FinLine('spp', 'そのほかの特別利益（賠償金など）', (v) => _g(v, 'c:sp+'), good: 1, lv: 4, fold: 'fs-sp', hideZero: true),
   FinLine('spl', '特別損失', finSpLoss, good: -1, lv: 1, fold: 'fs-sp'),
   FinLine('gwImp', 'のれんの減損', (v) => _g(v, 'gwImp'), good: -1, lv: 4, fold: 'fs-sp', hideZero: true, info: const ['gw']),
+  FinLine('subLoss', '子会社の倒産', (v) => _g(v, 'subLoss'), good: -1, lv: 4, fold: 'fs-sp', hideZero: true),
   FinLine('spm', '罰金・災害・和解など', (v) => -_g(v, 'c:sp-'), good: -1, lv: 4, fold: 'fs-sp', hideZero: true),
   FinLine('unc', '分類していない出入り', (v) => -_g(v, 'c:unc'), good: -1, lv: 4, fold: 'fs-sp', hideZero: true),
   FinLine('pretax', '税引前当期純利益', finPretax, good: 1, lv: 2),
@@ -94,6 +95,9 @@ final List<FinLine> bsLiabLines = [
   FinLine('equity', '純資産の合計', finEquity, good: 1, lv: 2, info: const ['equity']),
   FinLine('gap', '合わない差', (v) => _g(v, 'b:gap'), hideZero: true),
   FinLine('le', '負債と純資産の合計', (v) => finLiabs(v) + finEquity(v), lv: 3),
+  // 参考（表の外）：子会社の借金の持ち分と、それを足したグループの借金。子会社がお金を借りていなければ出さない（1.1.0+39）
+  FinLine('subDebt', '参考：子会社の借金', (v) => _g(v, 'b:subDebt'), good: -1, lv: 1, hideZero: true, info: const ['grpdebt']),
+  FinLine('grpDebt', '参考：グループ借金', (v) => _g(v, 'b:subDebt') > 0 ? finLiabs(v) + _g(v, 'b:subDebt') : 0, good: -1, lv: 1, hideZero: true),
 ];
 
 /// キャッシュフロー計算書の行

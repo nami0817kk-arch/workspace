@@ -24,7 +24,7 @@ const finCfInv = ['capex', 'land', 'stock', 'bizSale'];
 const finCfFin = ['borrow', 'repay', 'equity', 'payout'];
 
 /// 貸借対照表の鍵（'b:' を付けて持つ）
-const finBsKeys = ['cash', 'ar', 'pp', 'trap', 'eq', 'land', 'stk', 'sub', 'gw', 'loan', 'bond', 'cap', 're', 'rev', 'gap', 'mcap'];
+const finBsKeys = ['cash', 'ar', 'pp', 'trap', 'eq', 'land', 'stk', 'sub', 'gw', 'loan', 'bond', 'subDebt', 'cap', 're', 'rev', 'gap', 'mcap'];
 
 /// 事業ごとの損益の列（売上・原価・人件費・家賃・広告・ほかの固定費・その他・利益）
 const finBizCols = 8;
@@ -212,8 +212,8 @@ double finOrd(Map<String, double> v) => finOpInc(v) + finNonOp(v);
 /// 特別利益（事業の売却・借金の減免・そのほか）
 double finSpGain(Map<String, double> v) => fv(v, 'c:bizSale') + math.max(0.0, fv(v, 'debtG')) + fv(v, 'c:sp+') + math.max(0.0, fv(v, 'c:unc'));
 
-/// 特別損失（のれんの減損・罰金や災害など。正の数）
-double finSpLoss(Map<String, double> v) => fv(v, 'gwImp') - fv(v, 'c:sp-') - math.min(0.0, fv(v, 'debtG')) - math.min(0.0, fv(v, 'c:unc'));
+/// 特別損失（のれんの減損・子会社の倒産・罰金や災害など。正の数）
+double finSpLoss(Map<String, double> v) => fv(v, 'gwImp') + fv(v, 'subLoss') - fv(v, 'c:sp-') - math.min(0.0, fv(v, 'debtG')) - math.min(0.0, fv(v, 'c:unc'));
 
 /// 税引前当期純利益
 double finPretax(Map<String, double> v) => finOrd(v) + finSpGain(v) - finSpLoss(v);
@@ -262,6 +262,8 @@ extension GameFin on Game {
       'gw': math.min(gw, sub),
       'loan': debt - bond,
       'bond': bond,
+      // 子会社の借金の持ち分（貸借対照表には載らない参考の数。子会社の株は時価で持ち、その借金は株の値打ちから引かれている。1.1.0+39）
+      'subDebt': subDebtShare(),
     };
   }
 
@@ -321,7 +323,8 @@ extension GameFin on Game {
     // 土地・株: 払った・受け取った額と、借りて買った土地・のれんの減損で説明できない増減が評価差額
     // （子会社の株は、利益の持ち分（現金にならない利益。'eqInc'）で増え、受け取った配当の分だけ減る。1.1.0+35）
     final revL = st['land']! - (b['land'] ?? 0) + g('c:land') - g('landNC');
-    final revI = inv1 - (b['inv'] ?? 0) + g('c:stock') + g('gwImp') - g('eqInc') + g('c:div');
+    // （子会社を倒産させたときの持ち株の値打ち（'subLoss'）は、評価差額ではなく特別損失に入れる。1.1.0+39）
+    final revI = inv1 - (b['inv'] ?? 0) + g('c:stock') + g('gwImp') + g('subLoss') - g('eqInc') + g('c:div');
     // 借金: 借りた・返した額で説明できない減りが借金の減免
     final debtG = (b['debt'] ?? 0) + g('c:borrow') + g('c:repay') + g('landNC') - debt1;
     f.add('dep', dep);

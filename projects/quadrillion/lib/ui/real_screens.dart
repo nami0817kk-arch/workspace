@@ -570,6 +570,9 @@ List<Widget> _bankView(GameController ctl) {
   final room = s.borrowRoom();
   final x = s.debtMultiple();
   final r = s.rating();
+  // 子会社の借金の持ち分（1.1.0+39。子会社がいれば、グループの借金として出す）
+  final subD = s.subDebtShare();
+  final hasSubs = s.subs().isNotEmpty;
   final rows = [
     for (final l in s.loans)
       Container(
@@ -590,13 +593,19 @@ List<Widget> _bankView(GameController ctl) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(child: CardTitle(tr('借金と銀行'))),
+          if (hasSubs) Info(ctl, const ['grpdebt']),
           Tag(tr('格付け {0}', [r]), key: const ValueKey('bank-rating'), kind: r == 'A' ? TagKind.good : r == 'D' ? TagKind.bad : r == 'C' ? TagKind.gold : TagKind.plain),
         ]),
         const SizedBox(height: 4),
         Grid2([
           Kv(tr('借金の合計'), yen(s.debt)),
           Kv(tr('年の利益'), yen(s.annualProfit())),
-          Kv(tr('借金は利益の'), s.debt <= 0 ? '―' : (x >= 99 ? tr('赤字') : tr('{0}倍', [x.toStringAsFixed(1)]))),
+          if (hasSubs) ...[
+            Kv(tr('子会社の借金（持ち分）'), yen(subD), key: const ValueKey('bank-subdebt')),
+            Kv(tr('グループの借金'), yen(s.groupDebt), key: const ValueKey('bank-grpdebt')),
+          ],
+          // 「赤字」は年の利益が無いときだけ（1.1.0+39。子会社の借金が入ると、黒字でも99倍を超えることがある）
+          Kv(tr('借金は利益の'), s.groupDebt <= 0 ? '―' : (s.annualProfit() <= 0 ? tr('赤字') : tr('{0}倍', [x.toStringAsFixed(1)]))),
           Kv(tr('借りられる上限'), yen(s.borrowLimit())),
           Kv(tr('あと借りられる'), yen(room)),
           Kv(tr('担保の値打ち'), yen(s.collateral())),
@@ -607,6 +616,7 @@ List<Widget> _bankView(GameController ctl) {
         Muted(
             tr('上限は年の利益の約3倍と、店・工場・土地の値打ちの4割で決まります。現金は入りません。借金が利益の3倍・5倍・8倍を超えるごとに金利が上がり、格付けが下がります。C は残りの半分まで、D は貸してもらえません'),
             size: 11.5),
+        if (hasSubs) Padding(padding: const EdgeInsets.only(top: 2), child: Muted(tr('子会社がいるので、格付け・上限・金利は、子会社の借金と利益と担保の持ち分を足したグループの数で見ます'), size: 11.5)),
         if (s.bankCtl > 0) Padding(padding: const EdgeInsets.only(top: 4), child: Text(tr('メインバンクが経営に口を出しています（あと{0}か月）。新しく借りられません', [s.bankCtl]), style: ts(size: 12.5, color: Pal.down, bold: true))),
       ]),
     ),

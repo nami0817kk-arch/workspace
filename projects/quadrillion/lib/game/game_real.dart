@@ -243,6 +243,16 @@ extension GameReal on Game {
   double get debt => loans.fold(0.0, (s, l) => s + l.amt);
   double get bond => loans.where((l) => l.lender == 'bond').fold(0.0, (s, l) => s + l.amt);
 
+  /// 子会社（株を過半持つ会社・現地法人）の借金のうち、持ち分の分（1.1.0+39）。
+  /// 借りられる上限と格付けは、子会社の利益の持ち分を含む年の利益で見るので、借金と担保も同じ数え方でグループに入れる
+  double subDebtShare() => subs().fold(0.0, (s, c) => s + finOf(c).debt * pctOf(c) / 100);
+
+  /// 子会社の担保（店などの値打ちの6割。CPU の会社の借りられる上限と同じ数え方）のうち、持ち分の分（1.1.0+39）
+  double subCollShare() => subs().fold(0.0, (s, c) => s + c.biz.fold(0.0, (t, b) => t + (b.u + b.uy) * coUnitCapex(b.ind) * .6) * pctOf(c) / 100);
+
+  /// グループの借金（自社の借金＋子会社の借金の持ち分。1.1.0+39）。格付け・借りられる残り・金利はこれで見る
+  double get groupDebt => debt + subDebtShare();
+
   /// 毎月の利息
   double loanInterest() => loans.fold(0.0, (s, l) => s + l.interest) * (hasT('careful') ? .9 : 1);
 
@@ -263,17 +273,21 @@ extension GameReal on Game {
 
   /// 担保の値打ち（店・工場・土地。現金は入れない）
   /// 1.1.0+26 から、店・ライン・設備などは、持っている数×初期投資の6割（建物と設備の値打ち）で見る
-  double collateral() => biz.fold(0.0, (s, b) => s + math.min(unitsOn ? unitTotal(b) * unitCapexAvg(b) * .6 : b.power * .6, sellValue(b))) + land;
+  /// 1.1.0+39 から、子会社の担保の持ち分も入れる（借金をグループで見るのに合わせた）
+  double collateral() => biz.fold(0.0, (s, b) => s + math.min(unitsOn ? unitTotal(b) * unitCapexAvg(b) * .6 : b.power * .6, sellValue(b))) + land + subCollShare();
 
-  /// 借金が年の利益の何倍か（利益が無ければ大きな数）
+  /// グループの借金が年の利益の何倍か（利益が無ければ大きな数）。1.1.0+39 から子会社の借金の持ち分を入れる
   double debtMultiple() {
     final a = annualProfit();
-    if (debt <= 0) return 0;
-    return a > 0 ? debt / a : 99;
+    final d = groupDebt;
+    if (d <= 0) return 0;
+    return a > 0 ? d / a : 99;
   }
 
-  /// 格付け（0=A〜3=D）。借金が利益の何倍か、赤字か、返せなかったことがあるかで決まる
+  /// 格付け（0=A〜3=D）。グループの借金が利益の何倍か、赤字か、返せなかったことがあるかで決まる。
+  /// 1.1.0+39 から、子会社の借金の持ち分も入れる（前は利益に子会社の持ち分を入れながら借金は親だけで見ていて、借りすぎた子会社を持っても格付けが下がらなかった）
   int ratingIdx() {
+    final debt = groupDebt;
     if (debt <= 0 && missed == 0) return 0;
     final x = debtMultiple();
     var r = x < 3
@@ -314,13 +328,14 @@ extension GameReal on Game {
   double borrowRoom() {
     final r = ratingIdx();
     if (r >= 3 || bankCtl > 0) return 0;
-    final room = math.max(0.0, borrowLimit() - debt);
+    // 上限はグループの数（子会社の利益・担保の持ち分を含む）なので、借金もグループで引く（1.1.0+39）
+    final room = math.max(0.0, borrowLimit() - groupDebt);
     return r == 2 ? room * .5 : room;
   }
 
-  /// 新しく借りるときの金利（その国のその年の金利＋上乗せ。借金が利益の3倍・5倍・8倍を超えるごとに上がる）
+  /// 新しく借りるときの金利（その国のその年の金利＋上乗せ。グループの借金が利益の3倍・5倍・8倍を超えるごとに上がる）
   double loanRate([double extra = 0]) {
-    final after = annualProfit() > 0 ? (debt + extra) / annualProfit() : 99.0;
+    final after = annualProfit() > 0 ? (groupDebt + extra) / annualProfit() : 99.0;
     var r = math.max(0.0, rateOf(home)) / 100 + .02;
     for (final s in debtSteps) {
       if (after > s.$1) r += s.$2;
@@ -438,7 +453,7 @@ extension GameReal on Game {
     // 1.1.0+30 から、借金が利益の4倍を超える会社（B でも）には、上限を超えていなくても1割5分を迫る（借りまくって不況を迎えると苦しくなるように）
     final k = r >= 2
         ? .25
-        : r == 1 && (debt > borrowLimit() || debtMultiple() > 4)
+        : r == 1 && (groupDebt > borrowLimit() || debtMultiple() > 4)
             ? .15
             : 0.0;
     if (k == 0) return;
