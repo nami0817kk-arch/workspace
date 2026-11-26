@@ -1,0 +1,153 @@
+# 物語完結型ショート 万里の長城の兵の暮らし s5（2026-11-26）。本編 scripts/choujou-story.yaml（11/29 19:00 公開予定、https://youtu.be/tQAYVSoXwAU）から。11/30 19:30 に予約。
+# 形式は joguo_s1〜s5・sekimap_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 万里の長城の兵の暮らし_facts_20261122.yaml）だけ。
+# 絵：本編の AI 絵（out/story/choujou/main/ の C・R）の切り出しだけ。新しい絵は作らない。
+# 切り口：病の名簿と傷寒の処方、死んだ兵を送る小さな木の棺（槥）、38銭、割り符、届くまで3か月か4か月（本編 第7章、choujou-18・37・39・40・29）。
+# hook＝長城で死んだ兵はどう帰ったか（答えはこのショートの中：小さな木の棺に入れて故郷へ送られた）。
+# tease＝「塞の上はつらい」と書いた役人は、家族に何を願ったか（答えは本編 第7章：暑い時だから、着る物も食べる物も十分に。choujou-43）。
+# 数え直し：槥38銭、下級の役人の月給600銭 → 600÷38＝15.8→16分の1ほど。五鳳4年＝前54年。
+# 理解テスト：①漢の長城で病気になり死んだ兵の話 ②2000年あまり前、居延の塞（前54年の札） ③病は名簿に書かれ、薬の処方もあった。死んだ兵は小さな木の棺で故郷へ ④棺は1つ38銭、持ち物は割り符に書いて一緒に送り、届くまで3か月か4か月、半年もあり得た
+title: "万里の長城｜故郷へ帰る小さな棺"
+yt_title: "万里の長城で死んだ兵は、小さな木の棺で故郷へ送られた　棺は1つ38銭、届くまで少なくとも3か月"
+description: |-
+  2000年あまり前、漢の時代の長城の兵は、遠い故郷から1年の任期で来ていました。病気の兵の名簿には「第三十一隧の兵、王章、4月1日、傷寒を病む」のように、病名と日付が書かれています。
+  紀元前54年の札には、病で死んだ兵を小さな木の棺に入れて送る、とあります。役所はその棺をいつも備え、ある月の帳面には残りが6つ。1つ38銭で買った記録もあり、下級の役人のひと月の給料の16分の1ほどでした。持ち物は3つに割る割り符に書いて棺と一緒に送り、故郷に届くまで少なくとも3か月から4か月、半年かかることもあり得たと見積もられています。
+  本編では、兵の故郷から毎朝の見回り、のろし、食べ物、秋の弓の試験、家族への手紙まで、木の札の記録で長城の兵の暮らしをたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#万里の長城"
+- "#中国史"
+- "#世界史"
+- "#木簡"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/choujou
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: choujou_story_s5
+header:
+  tag: "万里の長城（漢の兵）"
+  title: "死んだ兵は、《どう》帰った？"
+now:
+- {at: "2000年あまり前", text: "前1世紀　漢の長城", point: 0}
+- {at: "紀元前54年", text: "前54年　居延の塞", point: 1}
+timeline:
+- {label: "前1世紀"}
+- {label: "前54"}
+cards:
+  - type: table
+    title: 小さな木の棺（札の記録）
+    from: 役所は
+    until: 服と持ち物は
+    items:
+      - {at: "残りの棺が6つ", text: "残り　6つ"}
+      - {at: "1つ38銭", text: "1つ　38銭"}
+    text_y: 0.70
+shots:
+  C20_1:
+    kind: "ai"
+    file: "choujou/main/C20.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "C20"
+  C04_2:
+    kind: "ai"
+    file: "choujou/main/C04.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "C04"
+  C19_3:
+    kind: "ai"
+    file: "choujou/main/C19.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "C19"
+  C19_4:
+    kind: "ai"
+    file: "choujou/main/C19.jpg"
+    focus: [0.75, 0.45]
+    move: "left"
+    must: "C19"
+  R02_5:
+    kind: "ai"
+    file: "choujou/main/R02.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "R02"
+  R01_6:
+    kind: "ai"
+    file: "choujou/main/R01.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R01"
+  C20_7:
+    kind: "ai"
+    file: "choujou/main/C20.jpg"
+    focus: [0.75, 0.5]
+    move: "right"
+    must: "C20"
+  C04_8:
+    kind: "ai"
+    file: "choujou/main/C04.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "C04"
+  C18_9:
+    kind: "ai"
+    file: "choujou/main/C18.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "C18"
+lines:
+  # fact: choujou-39
+- 語り: "長城で死んだ兵は、小さな木の棺で、故郷へ送られた。"
+  shot: C20_1
+  tone: 重い
+  pause: 0.12
+  # fact: choujou-18
+- 語り: "2000年あまり前の、漢の時代。長城の兵は、遠い故郷から、1年の任期で来ていた。"
+  shot: C04_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: choujou-37
+- 語り: "病気の兵の名簿には、病名と日付が書かれた。第三十一隧では、王章という兵が、4月1日に、傷寒を病んだ。"
+  shot: C19_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: choujou-37
+- 語り: "傷寒は、寒さに当たって起こると考えられた、熱の病だ。その薬の処方も、居延から見つかっている。"
+  shot: C19_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: choujou-39
+- 語り: "紀元前54年の札には、病で死んだ兵を、小さな木の棺に入れて送る、とある。"
+  shot: R02_5
+  tone: 重い
+  pause: 0.12
+  # fact: choujou-39, choujou-29
+- 語り: "役所は、その棺を、いつも備えていた。ある月の帳面には、残りの棺が6つ。棺を1つ38銭で買った記録もある。下級の役人の、ひと月の給料の、16分の1ほどだ。"
+  shot: R01_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: choujou-40
+- 語り: "服と持ち物は、3つに割る割り符に書き、棺と一緒に送った。"
+  shot: C20_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: choujou-40
+- 語り: "居延から故郷まで、棺が届くのに、少なくとも3か月か4か月。半年かかることもあり得た、と見積もる研究がある。"
+  shot: C04_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第7章（choujou-43：宣の手紙。暑い時だから、着る物も食べる物も十分に）
+- 語り: "では、家族に、つらさを書き送った役人は、その手紙で、何を願ったのか。"
+  shot: C18_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,218 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：八丈島の流人の暮らし（scripts/rujin-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（11/30 12:00 公開予定）。choujou_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-26）。R01〜R16 は /u/0、R17〜R23 は /u/0 の上限のあと /u/2（ユーザーの許可）で作った（out/story/rujin/main/<名>.jpg）。
+#   江戸時代の八丈島：黒い溶岩の磯・ソテツとビロウ・玉石垣・茅葺き・円錐形の火山。字・紋は描かない。実在の人物の顔は描かない（名指さない流人・島の人）。
+#   R15 は右端に洋服の袖のような手が入るので right は使わない。CEND は R01 を左右反転して作った（人物・字が無い風景なので反転してよい）。
+script: scripts/rujin-story.yaml
+out: rujin_story_main
+art_dir: out/story/rujin/main
+main_art_dir: out/story/rujin/main
+ai_disclosure: この動画の情景と人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 牢屋も、配給もない, now: null, dates: {}}
+  1: {label: 第1章 どうやって島へ送られたのか, now: null, dates: {7: 1606年, 8: null, 18: 1860年4月, 20: null, 22: 1781年, 25: null}}
+  2: {label: 第2章 島に着いたら、どこに住んだのか, now: null, dates: {29: 1860年7月, 30: null, 33: 1814年, 34: 1723年, 37: null}}
+  3: {label: 第3章 何を食べていたのか, now: null, dates: {47: 1834年, 48: null, 53: 1723年, 54: 1811年, 56: null}}
+  4: {label: 第4章 飢饉の年は、どうなったのか, now: null, dates: {59: 1691年, 60: 1700年, 61: null, 63: 1767年, 64: 1832年, 65: null, 67: 1771年, 68: null}}
+  5: {label: 第5章 流人は、どんな仕事をしたのか, now: null, dates: {73: 1853年, 76: null, 81: 1826年, 82: null}}
+  6: {label: 第6章 水汲み女と、流人の子どもたち, now: null, dates: {94: 1766年, 95: 1860年, 96: null, 97: 1869年, 98: null}}
+  7: {label: 第7章 逃げた者は、どうなったのか, now: null, dates: {105: 1860年10月, 106: 1836年, 107: 1838年, 109: null}}
+  8: {label: 第8章 島から帰れたのか, now: null, dates: {115: 1862年, 116: 1864年9月, 117: null, 118: 1861年, 119: null, 121: 1868年, 123: 1869年, 124: 1880年, 126: 1882年, 127: 1887年, 128: null}}
+  9: {label: まとめ 八丈島の流人は、どう暮らしたのか, now: null, dates: {}}
+no_tag_from: 134
+
+references:
+  - "工藤航平「八丈島流人アーカイブズの概要調査報告」（東京都公文書館 調査研究年報 第5号、2019）"
+  - "山本清司「関東幕領に於ける遠島刑」（法政史学 第14号、1961）・千葉徳爾（東北地理 32巻4号、1980）・松尾寿（山陰地域研究 第7号、1991）"
+  - "西木浩一（東京都公文書館 調査研究年報、2025）・小粥祐子（同、2019）・東京都公文書館「所蔵資料を読む」（2024）"
+  - "東京都八丈支庁『八丈島 事業概要』・岡山県東京事務所・東京国税局「島酒」・八丈町・青野誠（2019・2021）・大隈三好『江戸時代流人の生活』（1970）"
+
+credits: {}
+ai:
+  R01: {scene: 夕暮れの海に浮かぶ八丈島（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R02: {scene: 江戸の河口で帆船へ乗せられる流人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R03: {scene: 荒れた外洋を進む一枚帆の帆船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R04: {scene: 三宅島の浜で風を待つ流人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R05: {scene: 八丈島の磯に上がる流人と迎える島役人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R06: {scene: 名主の家で掟を言い渡される流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R07: {scene: 玉石垣の村の道と茅葺きの家, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R08: {scene: 掘っ立て小屋に座り込む流人, pan: zoom, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R09: {scene: 冬の山でアシタバを摘む流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R10: {scene: 磯で網を引く漁師と流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R11: {scene: 段々畑でサツマイモを掘る島の人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R12: {scene: 暴風のあとの荒れた畑と村, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R13: {scene: 灯の下で帳面に書く流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R14: {scene: 小屋で木の仏像を彫る年配の流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R15: {scene: 土間の甕と蒸し桶とサツマイモ（焼酎）, pan: h, crops: {wide: [1.12, 0.42, 0.5], left: [1.25, 0.35, 0.5]}}
+  R16: {scene: 頭に水桶を載せて坂を行く島の女, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R17: {scene: 夕暮れの小屋の前に座る流人と島の女と子の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R18: {scene: 夜の磯で漁船を押し出す男たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R19: {scene: 夜明け前の外洋を行く小さな漁船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R20: {scene: 沖へ去る帆船を岩の上から見送る女と子, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R21: {scene: 林の中の苔むした墓（無地）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R22: {scene: 磯の岩に座り海を見る年老いた流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R23: {scene: 座敷で書状を読み上げる役人と頭を下げる流人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  CEND: {scene: 終了画面。夕暮れの八丈島（R01 の左右反転、右に余白）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:R05 wide
+- 1 ai:R08 wide
+- 2 ai:R01 wide
+- 3 ai:R09 wide
+- 4 ai:R13 wide
+- 5 ai:R03 wide
+- 6 ai:R01 left
+- 7 ai:R02 wide
+- 8 ai:R02 left
+- 9 ai:R02 right
+- 10 ai:R13 left
+- 11 ai:R02 wide
+- 12 ai:R03 wide
+- 13 ai:R04 wide
+- 14 ai:R03 right
+- 15 ai:R04 left
+- 16 ai:R04 right
+- 17 ai:R09 left
+- 18 ai:R03 left
+- 19 ai:R04 wide
+- 20 ai:R03 wide
+- 21 ai:R03 left
+- 22 ai:R04 right
+- 23 ai:R08 left
+- 24 ai:R08 wide
+- 25 ai:R05 wide
+- 26 ai:R07 left
+- 27 ai:R05 right
+- 28 ai:R06 wide
+- 29 ai:R07 wide
+- 30 ai:R06 left
+- 31 ai:R10 wide
+- 32 ai:R13 wide
+- 33 ai:R13 right
+- 34 ai:R07 right
+- 35 ai:R11 left
+- 36 ai:R07 wide
+- 37 ai:R01 wide
+- 38 ai:R01 left
+- 39 ai:R03 wide
+- 40 ai:R10 right
+- 41 ai:R08 right
+- 42 ai:R08 wide
+- 43 ai:R09 wide
+- 44 ai:R09 left
+- 45 ai:R11 right
+- 46 ai:R10 wide
+- 47 ai:R09 right
+- 48 ai:R02 wide
+- 49 ai:R02 right
+- 50 ai:R08 left
+- 51 ai:R04 wide
+- 52 ai:R11 wide
+- 53 ai:R12 right
+- 54 ai:R11 right
+- 55 ai:R07 wide
+- 56 ai:R12 wide
+- 57 ai:R12 left
+- 58 ai:R13 wide
+- 59 ai:R12 right
+- 60 ai:R12 wide
+- 61 ai:R12 left
+- 62 ai:R09 wide
+- 63 ai:R13 right
+- 64 ai:R12 right
+- 65 ai:R08 wide
+- 66 ai:R12 wide
+- 67 ai:R04 wide
+- 68 ai:R15 wide
+- 69 ai:R15 left
+- 70 ai:R14 wide
+- 71 ai:R06 right
+- 72 ai:R13 wide
+- 73 ai:R02 left
+- 74 ai:R15 wide
+- 75 ai:R15 left
+- 76 ai:R13 left
+- 77 ai:R10 left
+- 78 ai:R07 left
+- 79 ai:R13 right
+- 80 ai:R14 left
+- 81 ai:R08 left
+- 82 ai:R14 wide
+- 83 ai:R13 wide
+- 84 ai:R17 wide
+- 85 ai:R16 left
+- 86 ai:R16 wide
+- 87 ai:R16 right
+- 88 ai:R06 wide
+- 89 ai:R13 left
+- 90 ai:R16 left
+- 91 ai:R06 right
+- 92 ai:R11 left
+- 93 ai:R06 left
+- 94 ai:R11 right
+- 95 ai:R16 wide
+- 96 ai:R17 left
+- 97 ai:R20 wide
+- 98 ai:R13 right
+- 99 ai:R20 right
+- 100 ai:R22 wide
+- 101 ai:R18 wide
+- 102 ai:R01 wide
+- 103 ai:R13 left
+- 104 ai:R06 wide
+- 105 ai:R05 left
+- 106 ai:R18 right
+- 107 ai:R19 wide
+- 108 ai:R02 right
+- 109 ai:R13 wide
+- 110 ai:R02 left
+- 111 ai:R10 left
+- 112 ai:R22 left
+- 113 ai:R09 right
+- 114 ai:R23 wide
+- 115 ai:R23 left
+- 116 ai:R03 right
+- 117 ai:R04 wide
+- 118 ai:R21 wide
+- 119 ai:R14 left
+- 120 ai:R21 right
+- 121 ai:R05 wide
+- 122 ai:R07 wide
+- 123 ai:R01 left
+- 124 ai:R23 right
+- 125 ai:R08 right
+- 126 ai:R03 left
+- 127 ai:R13 left
+- 128 ai:R01 wide
+- 129 ai:R07 left
+- 130 ai:R05 wide
+- 131 ai:R10 wide
+- 132 ai:R15 left
+- 133 ai:R22 wide
+- 134 ai:R08 wide
+- 135 ai:R13 wide
+- 136 ai:R01 right
+- end ai:CEND wide
+focus: {}
+fx:
+  R13: {lamp: {region: [0.55, 0.25, 0.68, 0.55]}}
+  R01: {water: {region: [0.0, 0.6, 1.0, 1.0]}}
+  R15: {smoke: {region: [0.45, 0.0, 0.75, 0.4]}}
+figures: []
+parts:
+- {type: quote, from: 24, to: 24, label: 史料, text: 百姓衆門を朝夕両度宛相廻／給物乞請致助命誠乞食同様之体, source: 天明元年「流人渡島始末の請書」（山本清司 1961 が引く）}
+- {type: quote, from: 60, to: 60, label: 史料, text: この年餓死人過半これあり, source: 末吉村の過去帳（千葉徳爾 1980 が引く）}
+- {type: quote, from: 75, to: 75, label: 史料, text: 米穀一粒ノ費ナク／農業家作ニ大益ヲ得タリ, source: 『八丈実記』（東京国税局「島酒」が引く）}
+- {type: quote, from: 90, to: 90, label: 史料, text: 慶長ノムカシ地代官奥山氏／流人ニ水汲ト名ケテ婦女ヲ免セシ, source: 『八丈実記』（松尾寿 1991 が引く）}
+- {type: quote, from: 98, to: 98, label: 史料, text: 赦免ノ已後ハ望ノ如ク本国エ／妻子ヲ呼出ス事ヲ願ヘハ即チ聞届玉フ, source: 『八丈実記』（松尾寿 1991 が引く）}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 6, note: 地図}
+- {line: 24, note: 史料の札 乞食同様}
+- {line: 34, note: 享保8年の棒グラフ}
+- {line: 38, note: 数え始めの数直線}
+- {line: 61, note: 末吉村の死者}
+- {line: 90, note: 八丈実記の札}
+- {line: 107, note: 島抜けの地図}
+- {end: true, note: 終了画面}
