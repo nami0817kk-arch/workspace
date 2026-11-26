@@ -1,0 +1,171 @@
+# 物語完結型ショート 渋沢栄一のその後 s2（2026-11-26）。本編 scripts/shibusawa-story.yaml（12/2 19:00 公開予定、https://youtu.be/xSMj5-ITDdk）から。12/3 12:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 渋沢栄一_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/shibusawa/main/ の K）の切り出しだけ。新しい絵は作らない。
+# 切り口：駿府の宝台院の再会が、記録ごとに時刻が変わる（本編 第1章、shibusawa-16・17・18・19・21）。
+# hook＝駿府の再会は何時だったか（答えはこのショートの中：日記は23日の10時ごろ、『雨夜譚』は翌々日の夕方、昭和5年の談話は夜）。
+# tease＝なぜ慶喜は渋沢を水戸の昭武のもとへ行かせなかったか（答えは本編 第2章：大久保一翁が明かした慶喜の配慮。shibusawa-22）。
+# 暦：明治元年12月は旧暦（12月19日＝1869年1月31日、23日＝2月4日）。季節は言わない。「いま」の札は和暦で書く（西暦の年は 1869）。
+# 数え直し：明治元年12月（1869）→『雨夜譚』明治20年（1887）＝18年後。→ 昭和5年（1930）＝61年後。
+# 理解テスト：①渋沢栄一と旧主・徳川慶喜の再会の話 ②明治元年12月、パリから戻った渋沢が、駿府の宝台院で慶喜に会った
+#   ③記録ごとに時刻が違う：日記は23日の10時ごろ、18年後の『雨夜譚』は夕方、61年後の談話は夜。慶喜は「愚痴を聞くために会ったのではない」
+#   ④再会のあと、慶喜は渋沢を駿府に留めた
+title: "渋沢栄一｜記録で変わる再会"
+yt_title: "渋沢栄一と徳川慶喜、駿府の寺での再会は何時だったのか　日記は10時ごろ、61年後の談話では夜になっていた"
+description: |-
+  明治元年の12月、パリから戻った渋沢栄一は、駿府（のちの静岡）の宝台院で、謹慎していた旧主・徳川慶喜と再会しました。
+  渋沢の日記には、23日の10時ごろ宝台院へ参り、お目にかかったとあります。ところが、18年後の明治20年に語った『雨夜譚』では、着いた翌々日の夕方。61年後、昭和5年の『竜門雑誌』の談話では、夜になり、行灯のそばに慶喜が現れて、「今日は、そんな愚痴を聞くために会ったのではない」と言います。
+  年を経た語りほど、同じ再会が、くわしく、劇的になっていきます。どれも渋沢の側から見た場面です。月日は当時の暦（旧暦）のままです。
+  本編では、この再会から、慶喜の伝記に渋沢がかけた年月を、記録の順にたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#渋沢栄一"
+- "#徳川慶喜"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shibusawa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shibusawa_story_s2
+header:
+  tag: "渋沢栄一と徳川慶喜（明治元年）"
+  title: "駿府での再会は、《何時》だった？"
+now:
+- {at: "明治元年", text: "明治元年12月　駿府", point: 0}
+- {at: "18年後", text: "明治20年　雨夜譚", point: 1}
+- {at: "昭和5年", text: "昭和5年　談話", point: 2}
+- {at: "確かなのは", text: "明治元年12月　駿府", point: 0}
+timeline:
+- {label: "1869"}
+- {label: "1887"}
+- {label: "1930"}
+cards:
+  - type: table
+    title: 駿府の再会　記録の書き方
+    from: 10時ごろ夕方
+    until: 確かなのは
+    items:
+      - {at: "10時ごろ夕方", text: "日記　23日の10時ごろ"}
+      - {at: "夕方そして夜", text: "雨夜譚　翌々日の夕方"}
+      - {at: "そして夜", text: "昭和の談話　夜　行灯のそば"}
+    text_y: 0.72
+shots:
+  K02_1:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.5, 0.45]
+    move: "in"
+    must: "K02"
+  K23_2:
+    kind: "ai"
+    file: "shibusawa/main/K23.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "K23"
+  K01_3:
+    kind: "ai"
+    file: "shibusawa/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K01"
+  K24_4:
+    kind: "ai"
+    file: "shibusawa/main/K24.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "K24"
+  K02_5:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "K02"
+  K03_6:
+    kind: "ai"
+    file: "shibusawa/main/K03.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K03"
+  K03_7:
+    kind: "ai"
+    file: "shibusawa/main/K03.jpg"
+    focus: [0.3, 0.45]
+    move: "in"
+    must: "K03"
+  K02_8:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.35, 0.45]
+    move: "right"
+    must: "K02"
+  K24_9:
+    kind: "ai"
+    file: "shibusawa/main/K24.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "K24"
+  K04_10:
+    kind: "ai"
+    file: "shibusawa/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K04"
+lines:
+  # fact: shibusawa-17, shibusawa-18, shibusawa-19
+- 語り: "明治元年、駿府の寺で渋沢栄一が旧主の徳川慶喜と再会した場面は、記録によって時刻が変わる。"
+  shot: K02_1
+  tone: 強調
+  pause: 0.12
+  # 本編 第1章（パリへ渡った・留守のあいだに幕府が倒れた）
+- 語り: "渋沢は、慶喜の弟、昭武に付き従ってパリへ渡り、その留守に、幕府は倒れた。"
+  shot: K23_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-16
+- 語り: "日記によれば、明治元年の12月19日。帰国した渋沢は、昭武の手紙を持って駿府に着いた。"
+  shot: K01_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-17
+- 語り: "日記には、23日の10時ごろ、宝台院へ参り、お目にかかった、とある。"
+  shot: K24_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-18
+- 語り: "ところが、18年後に語った『雨夜譚』では、着いた翌々日の夕方に出向いた、となっている。"
+  shot: K02_5
+  tone: 強調
+  pause: 0.12
+  # fact: shibusawa-19
+- 語り: "61年後、昭和5年の談話では、夜。行灯のそばに、ひょろりと現れたのが、慶喜だった。"
+  shot: K03_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-19
+- 語り: "嘆く渋沢に、慶喜は言った。今日は、そんな愚痴を聞くために会ったのではない。"
+  shot: K03_7
+  tone: 強調
+  pause: 0.12
+- 語り: "10時ごろ、夕方、そして夜。年を経た語りほど、再会はくわしく、劇的になっていく。"
+  shot: K02_8
+  tone: 重い
+  pause: 0.12
+  # fact: shibusawa-21
+- 語り: "確かなのは、再会のあと、慶喜が渋沢を駿府に留めたことだ。"
+  shot: K24_9
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第2章（shibusawa-22 大久保一翁が明かした慶喜の配慮）
+- 語り: "では、なぜ慶喜は、渋沢を水戸の昭武のもとへ行かせなかったのか。"
+  shot: K04_10
+  tone: 疑問
+  pause: 0.15

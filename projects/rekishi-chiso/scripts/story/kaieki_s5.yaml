@@ -1,0 +1,154 @@
+# 物語完結型ショート 改易 s5（2026-11-26）。本編 scripts/kaieki-story.yaml（12/2 12:00 公開予定、https://youtu.be/G-kXIiOdUrU）から。12/3 18:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 江戸の改易_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/kaieki/main/ の K）の切り出しだけ。新しい絵は作らない。
+# 切り口：家康の六男、松平忠輝の改易と、流されて67年後に諏訪で亡くなるまで（本編 第2章、kaieki-54・55・56・20）。
+# hook＝家康の息子はなぜ領地を失ったか（答えはこのショートの中：大坂の陣で遅れたとされる／キリシタン・外国貿易との関わりの説）。tease＝7年後に改易された家康の孫、忠直の家はそのあとどうなったか（答えは本編 第2章・第7章：子の光長が高田へ、1681年の越後騒動でふたたび改易。kaieki-58・73）。
+# 数え直し：元和2年＝1616、天和3年＝1683、1683−1616＝67年。1616−1615＝翌年。1623−1616＝7年。石高は日本大百科全書の60万石だけを言う（61万・75万・45万は言わない）。
+# 理解テスト：①家康の六男、松平忠輝の話 ②1616年、越後の高田60万石の城主が改易された ③理由は大坂の陣で遅れたこととされ、キリシタンや外国貿易との関わりの説もある ④伊勢の朝熊・飛騨の高山・信濃の諏訪へと移され、1683年、改易から67年後に諏訪で亡くなった
+title: "改易｜家康の息子、松平忠輝"
+yt_title: "家康の六男、松平忠輝はなぜ改易されたのか　60万石を失い、流された先で67年後に亡くなるまで"
+description: |-
+  元和2年、1616年。大坂の陣が終わった翌年に改易されたのは、家康の六男、越後の高田の城主、松平忠輝でした。日本大百科全書では、60万石の大名です。
+  理由は、大坂の陣で戦いに遅れたこととされます。ただ、ブリタニカ国際大百科事典は、キリシタンや外国との貿易に深く関わっていたため、という説も挙げています。
+  忠輝は伊勢の朝熊に流され、のちに飛騨の高山、信濃の諏訪へと移されて、天和3年、1683年、諏訪で亡くなりました。改易から、67年後のことでした。
+  本編では、江戸幕府に取りつぶされた大名の数と、いちばん多かった理由、そして数が減っていったわけを、研究ごとの数字で積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#改易"
+- "#松平忠輝"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/kaieki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaieki_story_s5
+header:
+  tag: "松平忠輝（家康の六男）"
+  title: "家康の息子は、なぜ《領地》を失った？"
+now:
+- {at: "元和2年", text: "1616年　越後の高田", point: 0}
+- {at: "伊勢の朝熊", text: "1616年　伊勢の朝熊", point: 0}
+- {at: "天和3年", text: "1683年　信濃の諏訪", point: 1}
+timeline:
+- {label: "1616"}
+- {label: "1683"}
+cards:
+  - type: table
+    title: 松平忠輝
+    from: 元和2年
+    until: では
+    items:
+      - {at: "元和2年", text: "1616年　改易（60万石）"}
+      - {at: "天和3年", text: "1683年　諏訪で亡くなる"}
+    text_y: 0.70
+shots:
+  K06_1:
+    kind: "ai"
+    file: "kaieki/main/K06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K06"
+  K23_2:
+    kind: "ai"
+    file: "kaieki/main/K23.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "K23"
+  K06_3:
+    kind: "ai"
+    file: "kaieki/main/K06.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "K06"
+  K01_4:
+    kind: "ai"
+    file: "kaieki/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K01"
+  K17_5:
+    kind: "ai"
+    file: "kaieki/main/K17.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "K17"
+  K21_6:
+    kind: "ai"
+    file: "kaieki/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K04"
+  K07_7:
+    kind: "ai"
+    file: "kaieki/main/K07.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K07"
+  K13_8:
+    kind: "ai"
+    file: "kaieki/main/K13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K13"
+  K12_9:
+    kind: "ai"
+    file: "kaieki/main/K12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K12"
+lines:
+  # fact: kaieki-54
+- 語り: "家康の六男、忠輝は、領地を取り上げられてから、67年後に、流された先で亡くなった。"
+  shot: K06_1
+  tone: 強調
+  pause: 0.12
+  # fact: kaieki-54, kaieki-20
+- 語り: "元和2年、1616年。大坂の陣の、翌年だ。"
+  shot: K23_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-54, kaieki-55, kaieki-57
+- 語り: "越後の高田の城主、松平忠輝が、改易された。日本大百科全書では、60万石の大名だ。"
+  shot: K06_3
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-55
+- 語り: "家康の息子が、それほどの領地を、失ったのだ。"
+  shot: K01_4
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-56
+- 語り: "理由は、大坂の陣で、戦いに遅れたこととされる。"
+  shot: K17_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-56
+- 語り: "ただ、ブリタニカの事典は、キリシタンや、外国との貿易に、深く関わっていたため、という説も挙げている。"
+  shot: K21_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-54
+- 語り: "忠輝は、伊勢の朝熊に流された。のちに、飛騨の高山、信濃の諏訪へと、移されていく。"
+  shot: K07_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-54
+- 語り: "天和3年、1683年。忠輝は、諏訪で亡くなった。改易から、67年後のことだった。"
+  shot: K13_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第2章・第7章（kaieki-58 光長は高田へ・kaieki-73 1681年に越後騒動で改易）
+- 語り: "では、7年後に改易された、家康の孫、松平忠直の家は、そのあと、どうなったのか。"
+  shot: K12_9
+  tone: 疑問
+  pause: 0.15
