@@ -1,0 +1,156 @@
+# 物語完結型ショート 改易 s4（2026-11-26）。本編 scripts/kaieki-story.yaml（12/2 12:00 公開予定、https://youtu.be/G-kXIiOdUrU）から。12/3 16:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 江戸の改易_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/kaieki/main/ の K）の切り出しだけ。新しい絵は作らない。
+# 切り口：堀田正信が家綱に幕政批判の書き付けを出し、無断で佐倉へ帰って改易、20年後に家綱の死を聞いて自ら命を絶った（本編 第6章、kaieki-70・71）。
+# hook＝将軍に意見した大名はどうなったか（答えはこのショートの中）。tease＝家綱の死のあと、改易の的になったのは誰か（答えは本編 第7章：徳川の一門と譜代。kaieki-11・74）。
+# 数え直し：万治3年＝1660、延宝8年＝1680、1680−1660＝20年。石高は世界大百科の「10万石余の返上を申し出た」だけ（11万石は言わない）。家綱の死の月日は事実カードに無いので言わない。
+# 理解テスト：①下総佐倉の大名、堀田正信の話 ②1660年、老中の政治を批判する書き付けを将軍家綱に出し、許しなく佐倉へ帰った ③10万石あまりの領地を返したいとまで申し出た ④領地を取り上げられ大名家に預けられて移され、1680年5月20日、家綱の死を聞いて自ら命を絶った（改易から20年）
+title: "改易｜堀田正信の書き付け"
+yt_title: "将軍家綱に老中の政治を批判した堀田正信　許しなく佐倉へ帰って改易、20年後に自ら命を絶った"
+description: |-
+  万治3年、1660年。下総の佐倉の大名、堀田正信は、老中の松平信綱たちの政治を批判する書き付けを、4代将軍の家綱に差し出し、許しを得ずに佐倉へ帰りました。書き付けでは、10万石あまりの領地を返したい、とまで申し出ています。
+  幕府は正信の領地を取り上げました。正信は、信濃の飯田の脇坂家に預けられ、のちに若狭の小浜の酒井家、阿波の徳島の蜂須賀家へと移されます。
+  延宝8年、1680年の5月20日。家綱の死を聞いた正信は、自ら命を絶ちました。改易から、20年後のことでした。
+  本編では、江戸幕府に取りつぶされた大名の数と、いちばん多かった理由、そして数が減っていったわけを、研究ごとの数字で積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#改易"
+- "#堀田正信"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/kaieki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaieki_story_s4
+header:
+  tag: "堀田正信の改易（1660年）"
+  title: "将軍に《意見》した大名は、どうなった？"
+now:
+- {at: "万治3年", text: "1660年　江戸", point: 0}
+- {at: "佐倉へ帰った", text: "1660年　下総の佐倉", point: 0}
+- {at: "信濃の飯田", text: "1660年　信濃の飯田", point: 0}
+- {at: "延宝8年", text: "1680年", point: 1}
+timeline:
+- {label: "1660"}
+- {label: "1680"}
+cards:
+  - type: table
+    title: 堀田正信
+    from: 万治3年
+    until: では
+    items:
+      - {at: "万治3年", text: "1660年　書き付けを出す"}
+      - {at: "取り上げた", text: "1660年　改易"}
+      - {at: "延宝8年", text: "1680年　自ら命を絶つ"}
+    text_y: 0.70
+shots:
+  K10_1:
+    kind: "ai"
+    file: "kaieki/main/K10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K10"
+  K16_2:
+    kind: "ai"
+    file: "kaieki/main/K16.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "K16"
+  K04_3:
+    kind: "ai"
+    file: "kaieki/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K04"
+  K17_4:
+    kind: "ai"
+    file: "kaieki/main/K17.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "K17"
+  K02_5:
+    kind: "ai"
+    file: "kaieki/main/K02.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K02"
+  K06_6:
+    kind: "ai"
+    file: "kaieki/main/K06.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "K06"
+  K19_7:
+    kind: "ai"
+    file: "kaieki/main/K19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K19"
+  K10_8:
+    kind: "ai"
+    file: "kaieki/main/K10.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "K10"
+  K01_9:
+    kind: "ai"
+    file: "kaieki/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K01"
+lines:
+  # fact: kaieki-70
+- 語り: "将軍に、老中たちの政治を批判する書き付けを出した大名、堀田正信は、領地を失い、20年後、自ら命を絶った。"
+  shot: K10_1
+  tone: 強調
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "万治3年、1660年。下総の佐倉の大名、堀田正信は、老中の松平信綱たちの政治を批判する書き付けを、4代将軍の家綱に差し出した。"
+  shot: K16_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-71
+- 語り: "その中で、10万石あまりの領地を、返したい、とまで申し出ている。"
+  shot: K04_3
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "そして、許しを得ずに、佐倉へ帰った。"
+  shot: K17_4
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "幕府は、正信の領地を取り上げた。"
+  shot: K02_5
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "正信は、信濃の飯田の脇坂家に預けられ、のちに、若狭の小浜の酒井家、阿波の徳島の蜂須賀家へと、移されていく。"
+  shot: K06_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "延宝8年、1680年。正信は、将軍の家綱が亡くなったことを、聞いた。"
+  shot: K19_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-70
+- 語り: "その年の5月20日、正信は、自ら命を絶った。改易から、20年後だった。"
+  shot: K10_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第7章（kaieki-11 綱吉の時代は徳川の一門と譜代が中心・kaieki-74）
+- 語り: "では、家綱の死のあと、改易の的になったのは、誰だったのか。"
+  shot: K01_9
+  tone: 疑問
+  pause: 0.15

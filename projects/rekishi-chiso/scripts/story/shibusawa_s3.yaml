@@ -1,0 +1,166 @@
+# 物語完結型ショート 渋沢栄一のその後 s3（2026-11-26）。本編 scripts/shibusawa-story.yaml（12/2 19:00 公開予定、https://youtu.be/xSMj5-ITDdk）から。12/3 15:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 渋沢栄一_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/shibusawa/main/ の K）の切り出しだけ。新しい絵は作らない。
+# 切り口：駿府に留められて腹を立てた渋沢と、大久保一翁が明かしたわけ（本編 第2章、shibusawa-21・22・23・24）。
+# hook＝なぜ旧主の任命を突き返したか（答えはこのショートの中：水戸の昭武のもとへ行くつもりで、駿府に留められたことに腹を立てた）。
+# tease＝朝敵と名指しされた慶喜は、そのあとどんな位に就いたか（答えは本編 第4章：明治35年に公爵。shibusawa-27）。
+# 暦：明治元年12月・明治2年1月16日は旧暦（1869年2月26日）。季節は言わない。地名は明治2年6月まで駿府。
+# 理解テスト：①渋沢栄一と旧主・徳川慶喜の話 ②明治元年12月、駿府で再会した慶喜に勘定組頭に任じられた
+#   ③水戸の昭武のもとへ行くつもりで、書き付けを突き返した。大久保一翁は、水戸へ行けば妬みで害が及ぶと案じた慶喜の計らいだと明かした。それでも役は断った
+#   ④駿府に残り、明治2年1月16日に商法会所を開いて頭取になった
+title: "渋沢栄一｜突き返した書き付け"
+yt_title: "渋沢栄一は、旧主・徳川慶喜の任命を突き返した　水戸へ行かせなかったわけを、大久保一翁が明かす"
+description: |-
+  明治元年の12月、駿府の宝台院で旧主・徳川慶喜と再会した渋沢栄一は、藩の勘定組頭に任じられました。けれど、水戸にいる慶喜の弟・昭武のもとへ行くつもりだった渋沢は、役目を命じる書き付けを、その場で突き返してしまいます。
+  わけを明かしたのは、藩の重役、大久保一翁でした。『雨夜譚』によれば、一翁は「水戸へ行けば、あちらの者たちの妬みを買い、お前の身に害が及ぶおそれもある」と言い、昭和5年の談話では、それは殿様がご自身で取り計らったことだと語られています。
+  それでも渋沢は、役に就けば給金のために仕えることになると言い張って、勘定組頭を断りました。駿府に残った渋沢は、明治2年1月16日、商法会所を開き、その頭取になります。月日は当時の暦（旧暦）のままです。
+  本編では、この駿府の日々から、慶喜の伝記に渋沢がかけた年月をたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#渋沢栄一"
+- "#徳川慶喜"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shibusawa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shibusawa_story_s3
+header:
+  tag: "渋沢栄一と徳川慶喜（明治元年）"
+  title: "旧主の任命を、なぜ《突き返した》？"
+now:
+- {at: "明治元年", text: "明治元年12月　駿府", point: 0}
+- {at: "明治2年", text: "明治2年1月　駿府", point: 0}
+timeline:
+- {label: "1869"}
+cards:
+  - type: table
+    title: 駿府に残った渋沢
+    from: それでも渋沢は
+    until: 人々のお金を
+    items:
+      - {at: "それでも渋沢は", text: "勘定組頭　断り続ける"}
+      - {at: "残った渋沢は", text: "明治2年1月16日　商法会所の頭取"}
+    text_y: 0.72
+shots:
+  K02_1:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "K02"
+  K24_2:
+    kind: "ai"
+    file: "shibusawa/main/K24.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "K24"
+  K01_3:
+    kind: "ai"
+    file: "shibusawa/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K01"
+  K03_4:
+    kind: "ai"
+    file: "shibusawa/main/K03.jpg"
+    focus: [0.3, 0.45]
+    move: "in"
+    must: "K03"
+  K03_5:
+    kind: "ai"
+    file: "shibusawa/main/K03.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "K03"
+  K02_6:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.35, 0.45]
+    move: "right"
+    must: "K02"
+  K04_7:
+    kind: "ai"
+    file: "shibusawa/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K04"
+  K05_8:
+    kind: "ai"
+    file: "shibusawa/main/K05.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "K05"
+  K05_9:
+    kind: "ai"
+    file: "shibusawa/main/K05.jpg"
+    focus: [0.72, 0.5]
+    move: "in"
+    must: "K05"
+  K15_10:
+    kind: "ai"
+    file: "shibusawa/main/K15.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K15"
+lines:
+  # fact: shibusawa-21, shibusawa-23
+- 語り: "旧主の徳川慶喜から役目を命じられた渋沢栄一は、その書き付けを、その場で突き返した。"
+  shot: K02_1
+  tone: 強調
+  pause: 0.12
+  # fact: shibusawa-17, shibusawa-21
+- 語り: "明治元年の12月、駿府の宝台院で再会した渋沢は、藩のお金を預かる勘定組頭に任じられた。"
+  shot: K24_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-22, shibusawa-23
+- 語り: "渋沢は、水戸にいる慶喜の弟、昭武のもとへ行くつもりで、留められたことに腹を立てていた。"
+  shot: K01_3
+  tone: 重い
+  pause: 0.12
+  # fact: shibusawa-22
+- 語り: "わけを明かしたのは、藩の重役、大久保一翁だった。"
+  shot: K03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-22
+- 語り: "『雨夜譚』によれば、一翁は言った。水戸へ行けば、あちらの者たちの妬みを買い、お前の身に害が及ぶおそれもある。"
+  shot: K03_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-22
+- 語り: "昭和5年の談話では、一翁は、こうも言う。あの事は、殿様がご自身でお取り計らいになったことだ。"
+  shot: K02_6
+  tone: 強調
+  pause: 0.12
+  # fact: shibusawa-23
+- 語り: "それでも渋沢は、給金のために仕えることになる、と言い張って、役を断り続けた。"
+  shot: K04_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-24
+- 語り: "残った渋沢は、明治2年1月16日、商法会所を開いて頭取になった。"
+  shot: K05_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-24
+- 語り: "人々のお金を集めて商いを起こす、のちの会社づくりの、最初の一歩だった。"
+  shot: K05_9
+  tone: 強調
+  pause: 0.12
+  # tease：答えは本編 第4章（shibusawa-27 明治35年に公爵）
+- 語り: "では、朝敵とされた慶喜は、のちに、どんな位に就いたのか。"
+  shot: K15_10
+  tone: 疑問
+  pause: 0.15

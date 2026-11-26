@@ -1,0 +1,163 @@
+# 物語完結型ショート 改易 s3（2026-11-26）。本編 scripts/kaieki-story.yaml（12/2 12:00 公開予定、https://youtu.be/G-kXIiOdUrU）から。12/3 13:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 江戸の改易_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/kaieki/main/ の K）の切り出しだけ。新しい絵は作らない。
+# 切り口：会津の蒲生家、兄の忠郷と弟の忠知が2人とも跡継ぎなく亡くなり絶えた（本編 第3章、kaieki-27・52・12・13）。
+# hook＝跡継ぎのない大名家はどうなったか（答えはこのショートの中）。tease＝幕府はなぜ末期養子の禁を慶安4年に緩めたか（答えは本編 第6章：牢人を生む改易を減らすため＝通説、と研究で割れる。kaieki-33・34・35）。
+# 数え直し：寛永4年＝1627、寛永11年＝1634、1634−1627＝7年。忠知の石高は福田の「伊予松山24万石」（日本人名大辞典は松山20万石＋日野4万石＝24万石で合計は同じ）。月日は言わない。
+# 理解テスト：①会津60万石の蒲生家の話 ②1627年に兄の忠郷、1634年に弟の忠知が、跡継ぎのないまま亡くなった ③幕府は末期養子を認めず、会津60万石を取り上げ、弟には伊予松山24万石で家を継がせた ④弟も跡継ぎなく亡くなり、蒲生家は絶えた。跡継ぎがいないことは改易の理由でいちばん多かった（福田、75件）
+title: "改易｜蒲生家の2度の死"
+yt_title: "跡継ぎのない死が2度　会津60万石の蒲生家は、兄と弟が7年のうちに亡くなり、絶えた"
+description: |-
+  会津60万石の蒲生家では、寛永4年、1627年、当主の蒲生忠郷が跡継ぎのないまま亡くなりました。江戸の初め、幕府は、跡継ぎのいない当主が死の間際に急いで願い出る養子、末期養子を認めていませんでした。
+  幕府は会津の60万石を取り上げましたが、弟の忠知が、伊予の松山24万石で家を継ぐことを許されます。けれど寛永11年、1634年の8月18日、その忠知も30歳で、跡継ぎのないまま亡くなり、蒲生家は絶えました。
+  歴史学者の福田千鶴が、1708年までの106年間を数えると、跡継ぎがいないことによる大名の改易は75件。改易の理由の中で、いちばん多いものでした。
+  本編では、江戸幕府に取りつぶされた大名の数と、いちばん多かった理由、そして数が減っていったわけを、研究ごとの数字で積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#改易"
+- "#末期養子"
+- "#蒲生家"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/kaieki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaieki_story_s3
+header:
+  tag: "蒲生家の断絶（1627〜1634年）"
+  title: "跡継ぎのない大名家は、《どうなった》？"
+now:
+- {at: "寛永4年", text: "1627年　会津", point: 0}
+- {at: "伊予の松山", text: "1627年　伊予の松山", point: 0}
+- {at: "寛永11年", text: "1634年　伊予の松山", point: 1}
+- {at: "1708年", text: "1603〜1708年の改易", point: 2}
+timeline:
+- {label: "1627"}
+- {label: "1634"}
+- {label: "1708"}
+cards:
+  - type: table
+    title: 蒲生家
+    from: 寛永4年
+    until: 歴史学者の
+    items:
+      - {at: "寛永4年", text: "1627年　兄の忠郷が亡くなる"}
+      - {at: "伊予の松山", text: "60万石→24万石"}
+      - {at: "寛永11年", text: "1634年　弟の忠知が亡くなる"}
+    text_y: 0.70
+  - type: year
+    from: 75件
+    until: では
+    big: 75件
+    sub: 跡継ぎがいないことによる改易
+    text_y: 0.70
+shots:
+  K05_1:
+    kind: "ai"
+    file: "kaieki/main/K05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K05"
+  K04_2:
+    kind: "ai"
+    file: "kaieki/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K04"
+  K05_3:
+    kind: "ai"
+    file: "kaieki/main/K05.jpg"
+    focus: [0.25, 0.5]
+    move: "right"
+    must: "K05"
+  K02_4:
+    kind: "ai"
+    file: "kaieki/main/K02.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "K02"
+  K03_5:
+    kind: "ai"
+    file: "kaieki/main/K03.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K03"
+  K10_6:
+    kind: "ai"
+    file: "kaieki/main/K10.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K10"
+  K08_7:
+    kind: "ai"
+    file: "kaieki/main/K08.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K08"
+  K21_8:
+    kind: "ai"
+    file: "kaieki/main/K19.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "K19"
+  K14_9:
+    kind: "ai"
+    file: "kaieki/main/K14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "K14"
+lines:
+  # fact: kaieki-52
+- 語り: "会津60万石の蒲生家は、兄も弟も、跡継ぎのないまま亡くなり、7年のうちに絶えた。"
+  shot: K05_1
+  tone: 強調
+  pause: 0.12
+  # fact: kaieki-27
+- 語り: "江戸の初め、幕府は、末期養子を認めなかった。跡継ぎのいない当主が、死の間際に、急いで願い出る養子だ。"
+  shot: K04_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-52
+- 語り: "寛永4年、1627年。会津の蒲生忠郷が、跡継ぎのないまま亡くなった。"
+  shot: K05_3
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-52
+- 語り: "幕府は、会津の60万石を取り上げた。"
+  shot: K02_4
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-52
+- 語り: "ただ、弟の忠知が、家を継ぐことは許された。忠知は、伊予の松山へ移り、24万石の大名になった。"
+  shot: K03_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaieki-52
+- 語り: "寛永11年、1634年。その忠知も、30歳で、跡継ぎのないまま亡くなった。"
+  shot: K10_6
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-52
+- 語り: "蒲生家は、ここで絶えた。"
+  shot: K08_7
+  tone: 重い
+  pause: 0.12
+  # fact: kaieki-12, kaieki-13
+- 語り: "歴史学者の福田千鶴さんが、1708年までの106年間を数えると、跡継ぎがいないことによる大名の改易は、75件だった。改易の理由の中で、いちばん多い。"
+  shot: K21_8
+  tone: 強調
+  pause: 0.12
+  # tease：答えは本編 第6章（kaieki-33 通説・kaieki-34 福田・kaieki-35 三宅）
+- 語り: "では、幕府は、なぜ、末期養子の禁を、慶安4年に緩めたのか。"
+  shot: K14_9
+  tone: 疑問
+  pause: 0.15

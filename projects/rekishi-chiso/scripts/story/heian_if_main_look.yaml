@@ -1,0 +1,241 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも現代人が平安貴族の家に生まれたら（scripts/heian-if-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/3 12:00 公開）。ashigaru_if_main_look.yaml を写した。
+# 絵の方針：AI 絵（Gemini）。A01〜E01・END はこの回のために作る（out/story/heian_if/main/<名>.jpg）。25枚。
+#   時代は平安中期（1000年ごろ）の京都。寝殿造・束帯・直衣・狩衣・十二単。中国風・江戸風の建物と服、字・家紋は描かない。実在の人物の顔に似せない。
+script: scripts/heian-if-story.yaml
+out: heian_if_story_main
+art_dir: out/story/heian_if/ph
+main_art_dir: out/story/heian_if/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 お風呂は5日に1度, now: 平安時代, dates: {}}
+  1: {label: 第1章 部屋は白一色, now: 1008年, dates: {9: 1008年3月, 10: 1008年9月10日, 16: 1008年9月11日, 23: 1008年9月, 27: 1008年11月1日, 28: null}}
+  2: {label: 第2章 12歳で大人？, now: 999年, dates: {30: 999年2月9日, 32: 999年11月1日, 33: null, 39: 980年, 40: 1003年, 41: 1006年, 44: null}}
+  3: {label: 第3章 朝起きたら何をする？, now: null, dates: {53: 998〜1021年, 56: null, 62: 927年, 64: null, 67: 950年, 69: null}}
+  4: {label: 第4章 家から出られない日, now: null, dates: {74: 1010年8月, 75: null, 77: 1013年, 78: 1004年2月, 79: null, 81: 1004年2月, 82: 1013年5月, 84: 1011年11月, 85: null, 88: 999年9月, 89: null}}
+  5: {label: 第5章 わざと遠回りして泊まる, now: null, dates: {97: 1008年2月, 98: null, 99: 936年, 100: null, 104: 1004年6月, 105: 1004年7月, 106: 1005年2月, 108: null, 109: 1000年, 110: null}}
+  6: {label: 第6章 出世は誰が決める？, now: null, dates: {119: 986年, 120: 990年, 121: null, 123: 996年, 124: null, 126: 995年, 128: null}}
+  7: {label: まとめ もしも平安貴族の家に生まれたら, now: null, dates: {}}
+
+references:
+  - "藤原師輔『九条殿遺誡』（群書類従 巻475）・『延喜式』巻16 陰陽寮・紫式部『紫式部日記』・清少納言『枕草子』"
+  - "中島和歌子「『御堂関白記』の陰陽道」（国文学研究資料館紀要40、2014）・同「四十五日の方違は大将軍神を忌むことをめぐって」（2017）"
+  - "深澤瞳「帝の御物忌と臣下の参籠」（大妻国文34、2003）・同「『蜻蛉日記』中巻における兼家の物忌記事」（大妻国文36、2005）"
+  - "井上幸治（日経BOOKプラス 2024）・倉本一宏（現代ビジネス 2022・2024）・小倉慈司（千葉市 2017）・国立天文台・文化庁・文部科学省・国立国会図書館「本の万華鏡」・各種の歴史事典"
+no_tag_from: 138
+
+ai:
+  A01: {scene: 湯殿で湯帷子の若い貴族が桶の湯を浴びる後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A02: {scene: 早朝、烏帽子の若い貴族が銅鏡で顔を見る, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A03: {scene: 文机に広げた巻物の暦（具注暦）と筆・灯り, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A04: {scene: 寝殿造の庭と池、朝霧, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A05: {scene: 夜明け前の大内裏の門と牛車, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A06: {scene: 白一色の産室で祈る白装束の女房と僧, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A07: {scene: 庭に並ぶ陰陽師と、縁側で祈る僧, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A08: {scene: 赤子を抱いて笑う初老の貴族、火鉢, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A09: {scene: 夜の祝宴、膳と公卿、御簾の女房, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 裳着：十二単の少女の裳の腰ひもを結ぶ, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 元服：少年に冠をかぶせる, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 夜の殿上の間で会議する公卿たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 黒漆の台盤の膳と別々の調味料, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 縁側で西を向いて手を洗う若い貴族, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C01: {scene: 固く閉ざされた門と引き返す牛車, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C02: {scene: 御簾を下ろして籠もる貴族の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C03: {scene: 月夜の大路を進む牛車, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C04: {scene: 式盤で占う陰陽師, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C05: {scene: 夜の祭壇に降り出した大雨, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D01: {scene: 夜の清涼殿で巻紙に名を書き入れる大臣, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D02: {scene: 夜明け、知らせを待った人々が帰っていく家, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D05: {scene: 銀の小皿の三つの餅（三日夜餅）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D06: {scene: 寝殿造の大邸宅の俯瞰, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  E01: {scene: 脇息にもたれ椀の水を飲む老いた貴族, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  END: {scene: 夕暮れの寝殿造の池（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:A01 wide
+  - 1 ai:A01 right
+  - 2 ai:A02 wide
+  - 3 ai:A04 wide
+  - 4 ai:C01 wide
+  - 5 ai:C02 wide
+  - 6 ai:D06 wide
+  - 7 ai:A06 wide
+  - 8 ai:A04 left
+  - 9 ai:D06 right
+  - 10 ai:A06 right
+  - 11 ai:A06 left
+  - 12 ai:A03 right
+  - 13 ai:A07 wide
+  - 14 ai:A07 right
+  - 15 ai:A06 wide
+  - 16 ai:A08 left
+  - 17 ai:A06 right
+  - 18 ai:A03 wide
+  - 19 ai:A03 left
+  - 20 ai:A08 right
+  - 21 ai:A06 left
+  - 22 ai:A07 left
+  - 23 ai:A09 wide
+  - 24 ai:A09 left
+  - 25 ai:A08 wide
+  - 26 ai:A08 right
+  - 27 ai:A09 right
+  - 28 ai:B01 left
+  - 29 ai:B01 right
+  - 30 ai:B01 wide
+  - 31 ai:B01 left
+  - 32 ai:A05 wide
+  - 33 ai:B01 right
+  - 34 ai:C02 left
+  - 35 ai:A09 left
+  - 36 ai:B02 wide
+  - 37 ai:A05 left
+  - 38 ai:B02 right
+  - 39 ai:B02 left
+  - 40 ai:B03 wide
+  - 41 ai:B03 right
+  - 42 ai:B03 left
+  - 43 ai:A03 left
+  - 44 ai:D05 left
+  - 45 ai:D05 wide
+  - 46 ai:A02 wide
+  - 47 ai:B05 right
+  - 48 ai:A03 wide
+  - 49 ai:A02 left
+  - 50 ai:A02 right
+  - 51 ai:B05 wide
+  - 52 ai:C02 right
+  - 53 ai:A03 wide
+  - 54 ai:C02 left
+  - 55 ai:A04 right
+  - 56 ai:A03 right
+  - 57 ai:B04 wide
+  - 58 ai:B04 left
+  - 59 ai:A09 wide
+  - 60 ai:E01 wide
+  - 61 ai:B05 left
+  - 62 ai:A05 wide
+  - 63 ai:A05 left
+  - 64 ai:B03 wide
+  - 65 ai:B03 right
+  - 66 ai:A04 left
+  - 67 ai:A03 right
+  - 68 ai:A03 wide
+  - 69 ai:A09 right
+  - 70 ai:C04 wide
+  - 71 ai:C01 wide
+  - 72 ai:C04 left
+  - 73 ai:C04 right
+  - 74 ai:C01 left
+  - 75 ai:C02 wide
+  - 76 ai:A03 wide
+  - 77 ai:C02 right
+  - 78 ai:A03 left
+  - 79 ai:A03 right
+  - 80 ai:C02 left
+  - 81 ai:A05 right
+  - 82 ai:C03 wide
+  - 83 ai:A08 left
+  - 84 ai:C02 wide
+  - 85 ai:C02 right
+  - 86 ai:B03 left
+  - 87 ai:A05 left
+  - 88 ai:B03 right
+  - 89 ai:C01 right
+  - 90 ai:A03 wide
+  - 91 ai:C01 wide
+  - 92 ai:C03 left
+  - 93 ai:C03 right
+  - 94 ai:C04 wide
+  - 95 ai:C04 left
+  - 96 ai:C03 wide
+  - 97 ai:D06 right
+  - 98 ai:C03 right
+  - 99 ai:C03 left
+  - 100 ai:A04 right
+  - 101 ai:A04 wide
+  - 102 ai:C03 wide
+  - 103 ai:C04 right
+  - 104 ai:C04 wide
+  - 105 ai:C05 wide
+  - 106 ai:D06 left
+  - 107 ai:C05 right
+  - 108 ai:C04 right
+  - 109 ai:A03 left
+  - 110 ai:D01 wide
+  - 111 ai:D02 wide
+  - 112 ai:B03 wide
+  - 113 ai:A05 wide
+  - 114 ai:D01 left
+  - 115 ai:D01 right
+  - 116 ai:D02 left
+  - 117 ai:C01 right
+  - 118 ai:D02 right
+  - 119 ai:A04 right
+  - 120 ai:D02 wide
+  - 121 ai:B03 left
+  - 122 ai:C02 left
+  - 123 ai:D01 wide
+  - 124 ai:A03 right
+  - 125 ai:D02 left
+  - 126 ai:A05 right
+  - 127 ai:B03 right
+  - 128 ai:D06 wide
+  - 129 ai:A04 wide
+  - 130 ai:A03 left
+  - 131 ai:A04 left
+  - 132 ai:A06 wide
+  - 133 ai:B01 right
+  - 134 ai:A02 wide
+  - 135 ai:B03 wide
+  - 136 ai:C01 left
+  - 137 ai:A03 wide
+  - 138 ai:A01 wide
+  - 139 ai:END left
+  - end ai:END wide
+
+figures: []
+
+focus: {}
+
+fx:
+  A01: {mist: {region: [0.0, 0.0, 1.0, 0.5]}}
+  A02: {lamp: {region: [0.0, 0.0, 0.5, 0.7]}}
+  A03: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+  A04: {mist: {region: [0.0, 0.3, 1.0, 0.8]}}
+  C02: {lamp: {region: [0.0, 0.0, 0.6, 0.7]}}
+  END: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 13, to: 13, label: 史料, text: 陰陽師は　世にいる限り／呼び集められた, source: 紫式部『紫式部日記』（1008年。今の言葉に）}
+  - {type: versus3, from: 18, to: 19, every: 4,
+     items: [[紫式部日記, 物の怪と祈りを詳しく], [権記（藤原行成）, 仏法の霊験と短く]]}
+  - {type: quote, from: 26, to: 26, label: 史料, text: この宮のおしっこに濡れるのは／うれしいことだなあ, source: 紫式部『紫式部日記』（道長の言葉。今の言葉に）}
+  - {type: quote, from: 49, to: 49, label: 史料, text: 起きたら　まず／自分の星の名を7回唱えよ, source: 藤原師輔『九条殿遺誡』（今の言葉に）}
+  - {type: versus3, from: 64, to: 65, every: 4,
+     items: [[延喜式（927年）, 昼前に帰る太鼓], [実際の公卿（井上幸治）, 夕方6時ごろに帰る]]}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 物忌みは　今日と明日／だから西の門を閉じた, source: 藤原道長『御堂関白記』1010年8月24日（今の言葉に）}
+  - {type: versus3, from: 89, to: 91, every: 4,
+     items: [[辞典の説明, 柳の札を冠や簾に], [御堂関白記, 物忌みの札は1つも無い]]}
+  - {type: quote, from: 101, to: 101, label: 史料, text: 方違えに行ったのに／もてなしのない家, source: 清少納言『枕草子』（今の言葉に）}
+  - {type: quote, from: 117, to: 117, label: 史料, text: 明け方まで／門をたたく音はしない, source: 清少納言『枕草子』（今の言葉に）}
+  - {type: versus3, from: 124, to: 125, every: 4,
+     items: [[後の説話集, 詩を見て天皇が嘆いた], [同じ時代の記録, 996年に越前の長官に]]}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 13, note: 第1章 紫式部日記の札}
+  - {line: 18, note: 第1章 誕生の食い違い}
+  - {line: 41, note: 第2章 公卿になった年齢の図}
+  - {line: 49, note: 第3章 九条殿遺誡の札}
+  - {line: 68, note: 第3章 出勤の日数の図}
+  - {line: 78, note: 第4章 物忌みの数の図}
+  - {line: 90, note: 第4章 物忌みの札の食い違い}
+  - {line: 95, note: 第5章 天一神の図}
+  - {line: 125, note: 第6章 為時の話の食い違い}
+  - {end: true, note: 終了画面の空き}

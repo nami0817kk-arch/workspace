@@ -1,0 +1,166 @@
+# 物語完結型ショート 渋沢栄一のその後 s1（2026-11-26）。本編 scripts/shibusawa-story.yaml（12/2 19:00 公開予定、https://youtu.be/xSMj5-ITDdk）から。12/3 9:30 に予約。
+# 形式は nakasendo_s1〜s5・majogari_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 渋沢栄一_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/shibusawa/main/ の K）の切り出しだけ。新しい絵は作らない。主役は渋沢（慶喜の生涯は説明しない）。
+# 切り口：慶喜の「どうぞ止めてくれ」と、死後という条件（本編 序章・第3章、shibusawa-01・02・03・04・12・13・25）。
+# hook＝旧主の伝記を頼むと慶喜は何と答えたか（答えはこのショートの中：どうぞ止めてくれ。のちに死後の公表を条件に許す）。
+# tease＝語りたがらない慶喜から、どうやって本人の話を聞き出したか（答えは本編 第5章：昔夢会。shibusawa-07〜10）。
+# 数え直し：明治26年（1893）の夏から秋 → 大正6年（1917）11月22日＝24年あまり（2か月〜5か月）。命日：1913-11-22 の4年後＝4度目の命日。
+#   明治26年は新暦（明治6年から）。季節は言わない。
+# 理解テスト：①渋沢栄一と旧主・徳川慶喜の伝記の話 ②明治26年、帝国ホテルの宴会のあと、福地源一郎に伝記を頼んだ
+#   ③慶喜の思いが曲げて受け取られているのが残念で。慶喜は「どうぞ止めてくれ」と断ったが、渋沢はあきらめず、死後に公にする条件で許された
+#   ④大正6年11月22日、慶喜の4度目の命日に8冊の印刷が仕上がり、墓の前に捧げられた
+title: "渋沢栄一｜どうぞ止めてくれ"
+yt_title: "「どうぞ止めてくれ」　渋沢栄一が頼んだ伝記を、最後の将軍・徳川慶喜は初め断った"
+description: |-
+  明治26年、帝国ホテルの宴会のあとで、渋沢栄一は、福地源一郎に、旧主・徳川慶喜の伝記を頼みました。慶喜の本当の思いが、世の中にひどく曲げて受け取られているのを、残念に思ったからだと、資料集はまとめています。
+  ところが、人を通して伺うと、慶喜は初め許さず、「どうぞ止めてくれ」と答えました（『徳川慶喜公伝』の渋沢の自序）。のちに慶喜は許しましたが、世の中に公にするのは、死んだあと、しかるべき時がたってから、という条件付きでした。
+  全8冊の印刷が仕上がったのは、大正6年11月22日。慶喜の4度目の命日でした。
+  本編では、駿府の寺での再会から、慶喜本人に話を聞いた「昔夢会」、墓の前の8冊まで、渋沢が旧主の伝記にかけた年月をたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#渋沢栄一"
+- "#徳川慶喜"
+- "#明治"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shibusawa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shibusawa_story_s1
+header:
+  tag: "渋沢栄一と徳川慶喜（明治〜大正）"
+  title: "旧主の伝記を頼むと、慶喜は《何と》？"
+now:
+- {at: "明治26年", text: "1893年　帝国ホテル", point: 0}
+- {at: "大正6年", text: "1917年　東京", point: 1}
+timeline:
+- {label: "1893"}
+- {label: "1917"}
+cards:
+  - type: year
+    from: 大正6年
+    until: 頼んでから24年
+    big: 1917年
+    sub: 4度目の命日に8冊
+    text_y: 0.82
+shots:
+  K02_1:
+    kind: "ai"
+    file: "shibusawa/main/K02.jpg"
+    focus: [0.33, 0.5]
+    move: "in"
+    must: "K02"
+  K07_2:
+    kind: "ai"
+    file: "shibusawa/main/K07.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "K07"
+  K08_3:
+    kind: "ai"
+    file: "shibusawa/main/K08.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "K08"
+  K22_4:
+    kind: "ai"
+    file: "shibusawa/main/K22.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "K22"
+  K03_5:
+    kind: "ai"
+    file: "shibusawa/main/K03.jpg"
+    focus: [0.3, 0.45]
+    move: "left"
+    must: "K03"
+  K04_6:
+    kind: "ai"
+    file: "shibusawa/main/K04.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K04"
+  K22_7:
+    kind: "ai"
+    file: "shibusawa/main/K22.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "K22"
+  K19_8:
+    kind: "ai"
+    file: "shibusawa/main/K19.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "K19"
+  K18_9:
+    kind: "ai"
+    file: "shibusawa/main/K18.jpg"
+    focus: [0.32, 0.5]
+    move: "in"
+    must: "K18"
+  K13_10:
+    kind: "ai"
+    file: "shibusawa/main/K13.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K13"
+lines:
+  # fact: shibusawa-03
+- 語り: "渋沢栄一が旧主の伝記を作りたいと伺うと、最後の将軍、徳川慶喜はこう答えた。どうぞ、止めてくれ。"
+  shot: K02_1
+  tone: 強調
+  pause: 0.12
+  # fact: shibusawa-25
+- 語り: "渋沢は、もとは慶喜の家来。静岡の慶喜を、毎年、欠かさず訪ねていた。"
+  shot: K07_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-02
+- 語り: "明治26年、帝国ホテルの宴会のあとで、渋沢は、福地源一郎に、慶喜の伝記を頼んだ。"
+  shot: K08_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-01
+- 語り: "慶喜の本当の思いが、ひどく曲げて受け取られているのが、残念だったからだ。"
+  shot: K22_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-13
+- 語り: "大坂城から江戸へ退いた慶喜は、逆賊と言われ、臆病者と罵られていた。"
+  shot: K03_5
+  tone: 重い
+  pause: 0.12
+  # fact: shibusawa-03
+- 語り: "慶喜は初め、許さなかった。それでも渋沢は、あきらめない。"
+  shot: K04_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-04
+- 語り: "慶喜は、のちに許した。ただし条件付きで。世の中に公にするのは、死んだあと、しかるべき時がたってから。"
+  shot: K22_7
+  tone: 強調
+  pause: 0.12
+  # fact: shibusawa-12
+- 語り: "全8冊の印刷が仕上がったのは、大正6年の11月22日。慶喜の4度目の命日だった。"
+  shot: K19_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: shibusawa-12, shibusawa-02（数え直し：1893年の夏から秋 → 1917年11月＝24年あまり）
+- 語り: "頼んでから24年あまり。断られた伝記は、谷中の慶喜の墓の前に捧げられた。"
+  shot: K18_9
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第5章（shibusawa-07〜10 昔夢会）
+- 語り: "では、語りたがらない慶喜から、渋沢は、どう話を聞き出したのか。"
+  shot: K13_10
+  tone: 疑問
+  pause: 0.15

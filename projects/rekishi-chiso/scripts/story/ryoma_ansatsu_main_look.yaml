@@ -1,0 +1,402 @@
+# 物語型の本編の見た目と絵の割り当て：坂本龍馬の暗殺（scripts/ryoma-ansatsu-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/3 19:00 公開予定）。majogari_main_look.yaml を写した。絵は Gemini（写実の油彩）。暗殺の場面・血・遺体は描かない。
+# プロンプトは scratchpad/main-ryoma-ansatsu/ryoma_ansatsu_prompts.py、この yaml は ryoma_ansatsu_look.py で書き出す。
+script: scripts/ryoma-ansatsu-story.yaml
+out: ryoma_ansatsu_story_main
+art_dir: out/story/ryoma_ansatsu/main
+main_art_dir: out/story/ryoma_ansatsu/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 近江屋で龍馬を斬ったのは誰か
+    now: null
+    dates: {}
+  1:
+    label: 第1章 近江屋の夜　十津川の者と名乗った客
+    now: 慶応3年11月15日
+    dates:
+      10: 慶応3年11月
+      11: 慶応3年12月4日
+      12: 慶応3年11月15日
+      13: 慶応3年11月
+      16: null
+  2:
+    label: 第2章 「敵は新選組に決まった」　鞘と下駄
+    now: 慶応3年11月
+    dates:
+      21: 慶応3年11月24日
+      23: 慶応3年11月18日
+      26: null
+      27: 2010年
+      29: null
+      30: 1915年
+      31: 1926年
+      33: 2010年
+      34: 慶応3年12月
+      35: 慶応3年12月7日
+      36: null
+  3:
+    label: 第3章 明治3年の口書　見張りだった今井信郎
+    now: 明治3年
+    dates:
+      39: 明治3年2月
+      41: 明治3年
+      43: 慶応3年
+      44: 明治3年
+      51: 明治3年4月
+      53: 明治3年9月20日
+      55: 明治5年1月
+      56: 2010年
+      57: null
+  4:
+    label: 第4章 明治33年の雑誌の談話「斬ったのは自分だ」
+    now: 明治33年
+    dates:
+      62: 1924年
+      67: null
+      71: 明治42年
+      72: null
+  5:
+    label: 第5章 大正4年の遺言と3人目の名前
+    now: 大正4年8月5日
+    dates:
+      76: 1917年
+      77: 1930年
+      79: null
+      82: 2010年
+      84: null
+      87: 1912年
+      88: null
+      90: 1926年
+      91: null
+  6:
+    label: 第6章 薩摩が黒幕だったのか
+    now: null
+    dates:
+      93: 2018年
+      95: 慶応3年11月
+      97: 慶応3年11月19日
+      99: 1912年
+      101: null
+  7:
+    label: まとめ 近江屋で龍馬を斬ったのは誰だったのか
+    now: null
+    dates: {}
+no_tag_from: 108
+references:
+- 岩崎英重編『坂本龍馬関係文書』第一・第二（日本史籍協会 1926。今井信郎・大石鍬次郎の口書、申渡、寺村左膳手記、菅野覚兵衛・清岡半四郎・小野淳輔書翰、田中光顕談話ほか）・『谷干城遺稿』（1912）・『大久保利通文書』第二・瑞山会『維新土佐勤王史』（1912）
+- 結城礼一郎（1924）・渡辺修二郎『坂本竜馬言行録』（1913）・井上通泰『南天荘墨宝』（1930）・景浦直孝（1915）・菊地明「坂本龍馬 近江屋事件の現在」（『国立国会図書館月報』596、2010）・桐野作人『龍馬暗殺』（2018）と中村武生の書評・高知県の発表（2017）・宮川禎一（2016）
+credits:
+  paintings/ryoma_portrait_standing_ueno.jpg: 坂本龍馬の肖像写真（1866〜67年ごろ）
+  paintings/ryoma_nakaoka_shintaro.jpg: 中岡慎太郎の肖像写真（1866年ごろ）
+ai:
+  R01:
+    scene: 冬の夜の近江屋の表
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  R02:
+    scene: 近江屋の二階の部屋
+    pan: h
+    crops: *id001
+  R03:
+    scene: 名札を受け取る従僕
+    pan: h
+    crops: *id001
+  R05:
+    scene: 日記を書く土佐の重役
+    pan: h
+    crops: *id001
+  R06:
+    scene: 夜道を駆ける2人の侍
+    pan: h
+    crops: *id001
+  R07:
+    scene: 畳の上の刀の鞘
+    pan: h
+    crops: *id001
+  R08:
+    scene: 土間の下駄
+    pan: h
+    crops: *id001
+  R09:
+    scene: 鞘を囲む侍たち
+    pan: h
+    crops: *id001
+  R10:
+    scene: 藩の屋敷の門
+    pan: h
+    crops: *id001
+  R11:
+    scene: 料理屋の座敷の侍
+    pan: h
+    crops: *id001
+  R12:
+    scene: 明治3年の取り調べ
+    pan: h
+    crops: *id001
+  R13:
+    scene: 言い渡し
+    pan: h
+    crops: *id001
+  R14:
+    scene: 昔を語る老人と若い記者
+    pan: h
+    crops: *id001
+  R15:
+    scene: 明治の新聞社の編集部
+    pan: h
+    crops: *id001
+  R16:
+    scene: 追悼の会で語る老人
+    pan: h
+    crops: *id001
+  R17:
+    scene: 床で打ち明ける老人
+    pan: h
+    crops: *id001
+  R18:
+    scene: 新聞を読む大正の人々
+    pan: h
+    crops: *id001
+  R19:
+    scene: 古い文書の束
+    pan: h
+    crops: *id001
+  R20:
+    scene: 冬の夜明けの東山
+    pan: h
+    crops: *id001
+  R21:
+    scene: 夜の町を行く侍の列
+    pan: h
+    crops: *id001
+  IEND:
+    scene: 冬の夜明けの東山と京の町（終了画面）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:R14 wide
+- 1 ai:R12 wide
+- 2 ai:R14 right
+- 3 ai:R15 wide
+- 4 frame:paintings/ryoma_portrait_standing_ueno.jpg
+- 5 ai:R19 wide
+- 6 ai:R01 wide
+- 7 ai:R02 wide
+- 8 ai:R01 right
+- 9 ai:R02 left
+- 10 frame:paintings/ryoma_nakaoka_shintaro.jpg
+- 11 ai:R19 left
+- 12 ai:R03 wide
+- 13 ai:R05 wide
+- 14 ai:R05 left
+- 15 ai:R21 wide
+- 16 ai:R06 wide
+- 17 ai:R06 left
+- 18 ai:R02 right
+- 19 ai:R21 left
+- 20 ai:R05 right
+- 21 ai:R19 right
+- 22 ai:R07 wide
+- 23 ai:R10 wide
+- 24 ai:R09 wide
+- 25 ai:R09 left
+- 26 ai:R07 left
+- 27 ai:R19 wide
+- 28 ai:R09 right
+- 29 ai:R16 left
+- 30 ai:R15 right
+- 31 ai:R01 left
+- 32 ai:R08 wide
+- 33 ai:R08 left
+- 34 ai:R11 wide
+- 35 ai:R11 right
+- 36 ai:R12 left
+- 37 ai:R12 wide
+- 38 ai:R21 right
+- 39 ai:R12 right
+- 40 ai:R05 wide
+- 41 ai:R03 left
+- 42 ai:R02 right
+- 43 ai:R01 right
+- 44 ai:R03 wide
+- 45 ai:R02 wide
+- 46 ai:R06 right
+- 47 ai:R12 left
+- 48 ai:R13 wide
+- 49 ai:R12 wide
+- 50 ai:R07 right
+- 51 ai:R05 left
+- 52 ai:R12 right
+- 53 ai:R13 left
+- 54 ai:R19 left
+- 55 ai:R13 wide
+- 56 ai:R20 wide
+- 57 ai:R14 wide
+- 58 ai:R15 wide
+- 59 ai:R14 left
+- 60 ai:R12 left
+- 61 ai:R14 wide
+- 62 ai:R15 left
+- 63 ai:R15 right
+- 64 ai:R14 left
+- 65 ai:R21 wide
+- 66 ai:R15 wide
+- 67 ai:R16 wide
+- 68 ai:R14 right
+- 69 ai:R16 right
+- 70 ai:R05 right
+- 71 ai:R18 left
+- 72 ai:R19 wide
+- 73 ai:R17 wide
+- 74 ai:R18 wide
+- 75 ai:R17 left
+- 76 ai:R16 right
+- 77 ai:R19 left
+- 78 ai:R12 left
+- 79 ai:R17 right
+- 80 ai:R07 wide
+- 81 ai:R07 left
+- 82 ai:R19 right
+- 83 ai:R21 right
+- 84 ai:R09 left
+- 85 ai:R21 wide
+- 86 ai:R10 left
+- 87 ai:R19 left
+- 88 ai:R05 wide
+- 89 ai:R17 left
+- 90 ai:R11 left
+- 91 ai:R21 right
+- 92 ai:R10 wide
+- 93 ai:R19 wide
+- 94 ai:R10 left
+- 95 ai:R09 wide
+- 96 ai:R05 wide
+- 97 ai:R19 right
+- 98 ai:R10 right
+- 99 ai:R05 left
+- 100 ai:R03 right
+- 101 ai:R20 wide
+- 102 ai:R03 wide
+- 103 ai:R21 wide
+- 104 ai:R13 wide
+- 105 ai:R14 wide
+- 106 ai:R07 wide
+- 107 ai:R12 wide
+- 108 frame:paintings/ryoma_portrait_standing_ueno.jpg
+- 109 ai:R01 wide
+- 110 ai:R20 left
+- end ai:IEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 14
+  to: 14
+  label: 史料
+  text: 何者とも知れない7人が来て／うち3人が二階へ上がった
+  source: 寺村左膳の手記（慶応3年）
+- type: quote
+  from: 16
+  to: 16
+  label: 史料
+  text: 賊の言葉は「こなくそ」と／「もうよい」だけ
+  source: 谷干城の講演（『谷干城遺稿』1912）
+- type: quote
+  from: 21
+  to: 21
+  label: 史料
+  text: 敵は　会津に属する／新選組に決まった
+  source: 菅野覚兵衛の手紙（慶応3年11月24日）
+- type: quote
+  from: 46
+  to: 46
+  label: 史料
+  text: 捕らえよ／手に余れば討ち取れ
+  source: 今井信郎の口書（明治3年）
+- type: quote
+  from: 53
+  to: 53
+  label: 史料
+  text: 手を下さずといえども／この事件に関わった
+  source: 刑部省の申し渡し（明治3年9月20日）
+- type: quote
+  from: 62
+  to: 62
+  label: 史料
+  text: 事実も多少飾り／大いに芝居がかりで
+  source: 結城礼一郎の本（1924年）
+- type: quote
+  from: 69
+  to: 69
+  label: 史料
+  text: 斬った自慢をする世の中／当てにならぬ
+  source: 谷干城の講演（『谷干城遺稿』1912）
+- type: quote
+  from: 71
+  to: 71
+  label: 史料
+  text: 暗殺にあらず／職務として捕らえに向かった
+  source: 今井信郎の回答（明治42年）
+- type: versus3
+  from: 72
+  to: 72
+  items:
+  - - 1870年 口書
+    - 見張り
+  - - 1900年 雑誌
+    - 自分が斬った
+  - - 1909年 回答
+    - 命令で格闘
+  every: 1.6
+- type: versus3
+  from: 81
+  to: 81
+  items:
+  - - 薩摩の者・谷干城
+    - 原田左之助
+  - - 今井の談話 1900年
+    - 渡辺吉太郎
+  - - 渡辺の書き物
+    - 世良敏郎
+  every: 1.6
+- type: quote
+  from: 85
+  to: 85
+  label: 史料
+  text: 佐々木唯三郎が頭／榎本対馬の命令か　分からない
+  source: 勝海舟の日記（人から聞いた話）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 10
+  note: 中岡の額
+- line: 18
+  note: 客の人数の表
+- line: 33
+  note: 鞘と下駄の表
+- line: 39
+  note: 口書の7人
+- line: 72
+  note: 今井の話の変化
+- line: 81
+  note: 鞘の持ち主
+- end: true
+  note: 終了画面
