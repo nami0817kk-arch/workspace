@@ -72,7 +72,7 @@ for (const r of runs) {
       matchInj: st.w.inbox.filter((n) => n.year === y + 1 && /試合で怪我/.test(n.text)).length,
       awake: st.w.awakeN && st.w.awakeN.y === yy ? st.w.awakeN.n : 0, kgive: st.w.kadaiN && st.w.kadaiN.y === yy ? st.w.kadaiN.give || 0 : 0 });
   }
-  ok(st.w.alumni.length >= 12 * Math.min(2, r.years), `卒業生が積み上がる seed${r.seed}`);
+  ok(st.w.alumni.length >= (YA.GRADE_N || 11) * Math.min(2, r.years), `卒業生が積み上がる seed${r.seed}（${st.w.alumni.length}人）`);
 }
 console.log(`回した年数 ${all.length}（${((Date.now() - t0) / 1000).toFixed(0)}秒）`);
 
