@@ -476,6 +476,13 @@ void main() {
 
     test('1.0.0+22 のセーブ：年の差12歳超・東南アジアの絵の東アジアの人だけ、読み込んだときに選び直す。合っている顔はそのまま', () {
       final g = _grownIn('jp');
+      // 東アジアの男の人が3人いる盤面にする（1.1.0+37 で育て方の決まりが変わり、育った盤面の部下の顔ぶれが変わった。足りない分は雇い足す）
+      bool eaMan(Person p) => faceRegion(p.name, home: 'jp') == 'ea' && faceSex(p.name) == 'm';
+      for (var i = 0; i < 200 && g.staff.where(eaMan).length < 3; i++) {
+        final p = g.mkPerson(.5);
+        if (eaMan(p)) g.staff.add(p);
+      }
+      g.ensureFaces();
       final j = g.toJson();
       final staff = (j['staff'] as List).cast<Map<String, dynamic>>();
       final eaM = staff.where((p) => faceRegion(p['name'] as String, home: 'jp') == 'ea' && faceSex(p['name'] as String) == 'm').toList();
