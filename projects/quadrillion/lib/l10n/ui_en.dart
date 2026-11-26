@@ -773,4 +773,25 @@ const Map<String, String> uiEn = {
   '{0}の決算書': '{0} financial statements',
   '「株」で他社の株を買えます。市場で買えるのは3分の1まで。その先は買う話（TOB）で上乗せを払い、当局の審査を通ると子会社になります。66.7%で合併できます。':
       'Buy shares of other firms in Shares. On the market you can buy up to a third; beyond that, a tender offer with a premium and an antitrust review makes them a subsidiary. 66.7% lets you merge.',
+
+  // ===== 見た目の作り直し（1.1.0+40。事業の画面・右の帯） =====
+  '責任者 {0}': 'Manager {0}',
+  '並べ替え：{0}': 'Sort: {0}',
+  '維持費 {0}／月': 'Upkeep {0}/mo',
+  '前年': 'Last yr',
+  '{0}pt': '{0}pt',
+  '利益（月）': 'Profit/mo',
+  '上限 約{0}': 'Max ~{0}',
+  '現場の力': 'Operations',
+  '人が足りない': 'Understaffed',
+  '人が余っている': 'Overstaffed',
+  '足りている': 'Fully staffed',
+  '月を進めると、ここに線が引かれます': 'Lines appear as months pass',
+  '売上と利益の推移（{0}か月）。今月は売上{1}・利益{2}。押すと、その月の値が出ます':
+      'Sales and profit over {0} months. This month: sales {1}, profit {2}. Tap to see a month\'s values',
+  '打ち手': 'Moves',
+  '売上と利益の推移@@biz': 'Sales & profit',
+  '右の帯をたたむ': 'Collapse the side panel',
+  '今月 {0}件': 'This month: {0}',
+  '今月やること {0}件・押すと右の帯を開く': 'To do this month: {0}. Tap to open the side panel',
 };
