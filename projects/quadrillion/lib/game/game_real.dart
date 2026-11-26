@@ -571,8 +571,10 @@ extension GameReal on Game {
   /// 払えなくなる線（毎月の決まった支払い：経費の半月分＋今月の返済）。残りがこれを下回る月に印を付ける
   double dangerLine() => math.max(0.0, rev - subR - (pre - subP) - interest) * .5 + loanPrincipal();
 
-  /// 子会社が今月払う配当の総額（株主みんなへ。利益の4割。子会社の手元の現金を超えては払えない。1.1.0+35）
-  double subPayout(Company c) => c.profit > 0 ? math.min(c.profit * .4, math.max(0.0, c.cash)) : 0.0;
+  /// 子会社が今月払う配当の総額（株主みんなへ。利益の4割。1.1.0+35）
+  /// （子会社の手元の現金からは引かない。子会社は利益を自分の現金に積んで店などを増やす今までの動きのまま。
+  ///   配当の分まで子会社の現金から引くと、税と返済のあとに現金が足りなくなり、育った子会社が次々に払えなくなった）
+  double subPayout(Company c) => c.profit > 0 ? c.profit * .4 : 0.0;
 
   /// 今月、子会社から受け取る配当（持ち分の分）
   double subDivs() => subs().fold(0.0, (s, c) => s + subPayout(c) * pctOf(c) / 100);

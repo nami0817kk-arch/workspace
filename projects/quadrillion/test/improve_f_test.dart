@@ -407,7 +407,9 @@ void main() {
     });
 
     testWidgets('押して遊ぶ役で、育った会社（10年目から）を$_midYears年回す', (tester) async {
-      final g = grownGame(years: 10);
+      // 1.1.0+35 から子会社・現地法人の利益は配当しか現金に入らず、種 2024 の10年目は事業3つの小さな会社になった（育った会社にならない）。
+      // 10年目に事業15・子会社4の種 2027 を使う
+      final g = grownGame(years: 10, seed: 2027);
       final p = await Pilot.launch(tester, game: g, seed: 41);
       p.logTag = '中盤';
       final end = g.turn + _midYears * 12;

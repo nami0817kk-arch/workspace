@@ -375,12 +375,10 @@ extension GameTurn on Game {
     cfAdd('ar', -(ar1 - ar));
     ar = ar1;
     lastTax = tax;
-    // 子会社の配当（利益の4割を株主みんなに払う。子会社の現金から出る。1.1.0+35）
+    // 子会社の配当（利益の4割の、持ち分の分。1.1.0+35）
     for (final c in subs()) {
       final d = subPayout(c);
-      if (d <= 0) continue;
-      c.cash -= d;
-      cfAdd('div', d * pctOf(c) / 100);
+      if (d > 0) cfAdd('div', d * pctOf(c) / 100);
     }
     if (scandal > 0) scandal--;
     // 借金の元本を返す・不況の貸しはがし・足りない分の手当て（1.1.0+25）

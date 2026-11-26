@@ -60,19 +60,14 @@ void main() {
     }
   });
 
-  test('子会社は配当の分だけ現金が減り、手元の現金を超えては払えない', () {
+  test('現金になる月の利益は、子会社の利益の持ち分を除き、配当（利益の4割の持ち分）を足したもの', () {
     final g = _played(seed: 6);
-    final c = _makeSub(g, 100);
-    final want = c.profit * .4;
-    c.cash = want * .5;
-    expect(g.subPayout(c), closeTo(want * .5, 1));
-    c.cash = -1;
-    expect(g.subPayout(c), 0);
-    expect(g.subDivs(), 0);
-    c.cash = want * 3;
-    expect(g.subPayout(c), closeTo(want, 1));
-    // 現金になる分は、利益から子会社の持ち分を除き、配当を足したもの
+    final c = _makeSub(g, 60);
+    final want = c.profit * .4 * .6;
+    expect(g.subDivs(), closeTo(want, 1));
+    expect(g.subP, closeTo(c.profit * .6, 1));
     expect(g.cashPre(), closeTo(g.pre - g.subP + want, 1));
+    expect(g.cashPre(), lessThan(g.pre), reason: '持ち分の利益の6割は現金にならない');
   });
 
   test('時価総額は借金（社債を含む）を1回だけ引く：社債を出して現金が増えても、時価総額は変わらない', () {

@@ -41,7 +41,10 @@ void growMonth(Game g, {int bizTarget = 26}) {
   _shape(g, bizTarget);
   // 1.1.0+27 から人件費（毎年の見直し・辞めた人の穴埋め）が重くなり、借りずに回すと20〜30の事業まで育たない。
   // 元手が足りないときだけ借りる打ち方（'some'）で育てる
-  botMonth(g, units: true, borrow: 'some');
+  // 1.1.0+35 から、子会社・現地法人の利益は配当（4割の持ち分）しか現金に入らない（それまでは持ち分の利益が全部入り、さらに4割が配当で入っていた）。
+  // 分社・現地法人を早くから持つこの組み立て役は手元のお金が細り、'some' では16の種のどれも事業20に届かなくなった（最多で8）。
+  // 借りられるだけ借りる打ち方（'max'）にすると、16の種のうち事業20以上・子会社・現地法人の盤面になる種がある（2037 で事業26）
+  botMonth(g, units: true, borrow: 'max');
 }
 
 void _shape(Game g, int bizTarget) {
@@ -194,7 +197,10 @@ MidStats measureMid({int seed = 2024, int year = 1985, int from = 10, int to = 3
     }
     _shape(g, 26);
     // botMonth は月を進める前に出来事を片付けるので、進めたあとに残っている出来事が「今月来たもの」
-    botMonth(g, units: true);
+    // 1.1.0+35 から、子会社・現地法人の利益は配当しか現金に入らない。借りない打ち方（それまでの既定の 'none'）では、
+    // 分社・現地法人を早く持つこの役は手元のお金が細り、投資家の上場の催促と同じ助言が何年も続く筋になった（助言が先月と同じ月 26.9% → 48.8%・最長 11 → 48か月）。
+    // 組み立て役（growMonth）と同じ 'max' にそろえる（22.4%・最長10か月・単調な月 3.2%）
+    botMonth(g, units: true, borrow: 'max');
     if (m < from * 12) {
       prev = g.advice().map(msgKey).join('|');
       continue;

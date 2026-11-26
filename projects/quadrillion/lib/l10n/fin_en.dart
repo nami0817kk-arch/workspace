@@ -182,8 +182,8 @@ const Map<String, String> finEn = {
   '本業でいくら稼いだかです。売上から、原価・人件費・家賃・広告・本社の経費・減価償却などを引いたものです。利息や、一度きりの売却益・罰金などは入りません。':
       'What the core business earned: sales minus cost of sales, labor, rent, ads, head office, depreciation and so on. Interest and one-off items such as sale gains or fines are not included.',
   '経常利益@@term': 'Ordinary profit',
-  '営業利益に、使用料などを足し、借金の利息を引いたものです。子会社の利益の持ち分は営業利益に入っているので、子会社からの配当は足しません（配当は現金の入りとして、キャッシュフロー計算書に出ます）。ふだんの年に会社が稼ぐ力を表します。':
-      'Operating profit plus royalties and other income, minus interest on debt. Our share of subsidiaries\' profit is already in operating profit, so their dividends are not added again (they appear as cash received in the cash flow statement). It shows what the company earns in a normal year.',
+  '営業利益に、使用料などを足し、借金の利息を引いたものです。子会社の利益の持ち分は営業利益に入っているので、子会社からの配当は足しません。ふだんの年に会社が稼ぐ力を表します。':
+      'Operating profit plus royalties and other income, minus interest on debt. Our share of subsidiaries\' profit is already in operating profit, so their dividends are not added again. It shows what the company earns in a normal year.',
   '粗利@@term': 'Gross profit',
   '売上から売上原価（仕入れ・材料）を引いたものです。粗利が厚いほど、家賃や人件費を払ったあとに利益が残りやすくなります。':
       'Sales minus cost of sales (purchases and materials). The thicker it is, the more profit is left after rent and labor.',
