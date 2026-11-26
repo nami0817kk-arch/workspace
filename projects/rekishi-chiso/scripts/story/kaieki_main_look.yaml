@@ -1,0 +1,204 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：江戸260年の大名の改易（scripts/kaieki-story.yaml）。chiso/storymain.py が読む。
+# 11-26 作成（12/2 12:00 公開予定）。nakasendo_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-26。out/story/kaieki/main/<名>.jpg）だけ。江戸前期（1600〜1700年ごろ）の城・御殿・武家屋敷・裃の武士。
+#   実在の人物の顔は描かない（後ろ姿・遠景・名指さない武士）。字・紋・のぼりの字は描かない。
+script: scripts/kaieki-story.yaml
+out: kaieki_story_main
+art_dir: out/story/kaieki/main
+main_art_dir: out/story/kaieki/main
+ai_disclosure: この動画の情景と人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 いちばん多い理由は跡継ぎ, now: null, dates: {}}
+  1: {label: 第1章 取りつぶされた大名は何家？, now: null, dates: {}}
+  2: {label: 第2章 戦が終わると何が変わった？, now: 1615年, dates: {25: 1616年, 28: 1683年, 29: 1623年2月, 31: null}}
+  3: {label: 第3章 跡継ぎがいないとどうなる？, now: null, dates: {35: 1607年3月, 36: 1627年, 37: null, 38: 1633年9月, 39: 1634年8月, 40: null, 45: 1629年9月, 46: null}}
+  4: {label: 第4章 将軍の身内でも改易？, now: null, dates: {49: 1622年, 51: null, 55: 1637年, 56: null, 57: 1631年, 58: 寛永10年12月, 59: null}}
+  5: {label: 第5章 家臣の争いで国を失う？, now: null, dates: {64: 1640年, 67: 1659年, 68: 1868年, 69: null}}
+  6: {label: 第6章 慶安4年に何が変わった？, now: 1651年4月, dates: {73: 1651年7月, 74: 1651年8月, 75: null, 77: 慶安4年12月, 78: null, 79: 1640年, 80: null, 83: 1660年, 85: 1680年5月, 86: null, 87: 1664年, 88: null}}
+  7: {label: 第7章 綱吉の時代に何が起きた？, now: null, dates: {93: 1681年, 96: 1687年, 97: 1680年, 98: 1701年, 99: 1683年, 100: null}}
+  8: {label: 第8章 江戸の後半、なぜ改易は減った？, now: null, dates: {107: 1758年, 109: 1786年, 111: null}}
+  9: {label: まとめ 改易の数と1651年からの変化, now: null, dates: {}}
+no_tag_from: 123
+
+references:
+  - "藤野保「改易」「大名」（改訂新版 世界大百科事典・日本大百科全書）、北原章男「浪人」、辻達也「天和の治」、高木昭作「本多正純」「宇都宮釣天井事件」「慶安事件」"
+  - "福田千鶴「近世前期大名相続の実態に関する基礎的研究」（史料館研究紀要 29号、1998）"
+  - "藤田恒春「大名「改易」の構造」（史泉 65号、1987）・三宅正浩「武家諸法度と諸士法度」（史林 105巻2号、2022）・南條範夫『大名廃絶録』（版元の紹介）"
+
+credits: {}
+ai:
+  K01: {scene: 江戸城の大広間に平伏する大名たち（遠景）, pan: h, crops: &c {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  K02: {scene: 城の大手門で上使の一行が城を受け取る, pan: h, crops: *c}
+  K03: {scene: 主家を失った家臣と家族が城下を去る列, pan: h, crops: *c}
+  K04: {scene: 書院で帳面を前に話し合う老中たち, pan: h, crops: *c}
+  K05: {scene: 病床の若い大名と枕元の家臣・医師, pan: h, crops: *c}
+  K06: {scene: 雪の越後の平城と去る駕籠, pan: h, crops: *c}
+  K07: {scene: 夜の山道を急ぐ提灯の大名行列, pan: h, crops: *c}
+  K08: {scene: 誰もいない御殿の書院と格天井, pan: h, crops: *c}
+  K09: {scene: 富士山を背にした駿府城, pan: h, crops: *c}
+  K10: {scene: 寺の一室に座る若い武士の後ろ姿, pan: h, crops: *c}
+  K11: {scene: 海に面した讃岐の高松城, pan: h, crops: *c}
+  K12: {scene: 広間で2組に分かれてにらみ合う家臣たち, pan: h, crops: *c}
+  K13: {scene: 出羽の山あいの小さな陣屋, pan: h, crops: *c}
+  K14: {scene: 江戸の長屋の前の浪人たち, pan: h, crops: *c}
+  K15: {scene: 夜の江戸で家を囲む捕り方, pan: h, crops: *c}
+  K16: {scene: 少年の将軍の前に平伏する老中たち, pan: h, crops: *c}
+  K17: {scene: 夜明けの街道を馬で急ぐ武士, pan: h, crops: *c}
+  K18: {scene: 増上寺の法会と警備の武士, pan: h, crops: *c}
+  K19: {scene: 江戸城の松の襖絵の長い廊下（人なし）, pan: h, crops: *c}
+  K20: {scene: 郡上八幡の城下と川べりに集まる百姓, pan: h, crops: *c}
+  K21: {scene: 系図の本を積んで確かめる学者の武士, pan: h, crops: *c}
+  K22: {scene: 江戸の武家屋敷の通りを歩く旗本, pan: h, crops: *c}
+  K23: {scene: 明け渡しの日の城門と天守を見上げる家臣, pan: h, crops: *c}
+  K24: {scene: 冬の寺の門と雪の境内（人なし）, pan: h, crops: *c}
+  KEND: {scene: 終了画面。夕暮れの城下町の遠景（右半分に余白）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:K01 wide
+- 1 ai:K21 wide
+- 2 ai:K23 left
+- 3 ai:K02 wide
+- 4 ai:K03 wide
+- 5 ai:K16 left
+- 6 ai:K21 right
+- 7 ai:K04 wide
+- 8 ai:K02 left
+- 9 ai:K04 left
+- 10 ai:K01 right
+- 11 ai:K23 wide
+- 12 ai:K04 right
+- 13 ai:K14 wide
+- 14 ai:K21 left
+- 15 ai:K03 left
+- 16 ai:K21 wide
+- 17 ai:K22 left
+- 18 ai:K22 wide
+- 19 ai:K21 right
+- 20 ai:K03 right
+- 21 ai:K23 right
+- 22 ai:K02 right
+- 23 ai:K23 left
+- 24 ai:K01 left
+- 25 ai:K06 wide
+- 26 ai:K06 left
+- 27 ai:K07 wide
+- 28 ai:K06 right
+- 29 ai:K17 right
+- 30 ai:K17 wide
+- 31 ai:K06 wide
+- 32 ai:K05 left
+- 33 ai:K05 wide
+- 34 ai:K04 left
+- 35 ai:K05 right
+- 36 ai:K23 wide
+- 37 ai:K03 wide
+- 38 ai:K05 left
+- 39 ai:K23 right
+- 40 ai:K21 wide
+- 41 ai:K21 left
+- 42 ai:K22 wide
+- 43 ai:K04 right
+- 44 ai:K05 wide
+- 45 ai:K05 right
+- 46 ai:K12 left
+- 47 ai:K16 wide
+- 48 ai:K12 wide
+- 49 ai:K08 wide
+- 50 ai:K02 left
+- 51 ai:K08 left
+- 52 ai:K08 right
+- 53 ai:K07 wide
+- 54 ai:K04 wide
+- 55 ai:K06 left
+- 56 ai:K09 wide
+- 57 ai:K10 wide
+- 58 ai:K24 wide
+- 59 ai:K22 left
+- 60 ai:K04 left
+- 61 ai:K12 right
+- 62 ai:K13 wide
+- 63 ai:K12 wide
+- 64 ai:K11 wide
+- 65 ai:K12 left
+- 66 ai:K13 left
+- 67 ai:K22 right
+- 68 ai:K13 wide
+- 69 ai:K12 right
+- 70 ai:K16 left
+- 71 ai:K15 wide
+- 72 ai:K16 wide
+- 73 ai:K15 left
+- 74 ai:K16 right
+- 75 ai:K14 wide
+- 76 ai:K14 left
+- 77 ai:K04 wide
+- 78 ai:K14 right
+- 79 ai:K21 left
+- 80 ai:K21 right
+- 81 ai:K04 right
+- 82 ai:K04 left
+- 83 ai:K17 wide
+- 84 ai:K17 left
+- 85 ai:K10 left
+- 86 ai:K05 wide
+- 87 ai:K05 right
+- 88 ai:K22 wide
+- 89 ai:K01 left
+- 90 ai:K01 right
+- 91 ai:K01 wide
+- 92 ai:K04 wide
+- 93 ai:K06 wide
+- 94 ai:K12 wide
+- 95 ai:K12 left
+- 96 ai:K06 right
+- 97 ai:K18 left
+- 98 ai:K19 wide
+- 99 ai:K04 left
+- 100 ai:K21 wide
+- 101 ai:K21 right
+- 102 ai:K21 left
+- 103 ai:K01 left
+- 104 ai:K21 wide
+- 105 ai:K21 right
+- 106 ai:K22 wide
+- 107 ai:K20 wide
+- 108 ai:K20 left
+- 109 ai:K04 right
+- 110 ai:K22 left
+- 111 ai:K22 right
+- 112 ai:K03 wide
+- 113 ai:K23 wide
+- 114 ai:K01 wide
+- 115 ai:K21 left
+- 116 ai:K03 left
+- 117 ai:K21 wide
+- 118 ai:K02 wide
+- 119 ai:K05 wide
+- 120 ai:K12 wide
+- 121 ai:K16 wide
+- 122 ai:K22 wide
+- 123 ai:K13 wide
+- 124 ai:K03 right
+- end ai:KEND wide
+focus: {}
+fx:
+  K04: {lamp: {region: [0.3, 0.2, 0.7, 0.6]}}
+  K05: {lamp: {region: [0.3, 0.2, 0.7, 0.6]}}
+  K21: {lamp: {region: [0.3, 0.2, 0.7, 0.6]}}
+figures: []
+parts:
+- {type: versus3, from: 14, to: 15, items: [[藤野保（関ヶ原を含む）, 224名], [北原章男（減封を含む）, 217家], [南條範夫（削封を含む）, 240家]], every: 2.5}
+- {type: quote, from: 52, to: 52, label: 要点, text: 釣天井で秀忠を殺す話は／偽りである, source: 高木昭作「本多正純」（日本大百科全書）}
+- {type: quote, from: 77, to: 77, label: 要点, text: 50歳未満の大名・旗本に／末期養子を認める, source: 慶安4年12月11日の伝達（福田千鶴 1998）}
+- {type: versus3, from: 75, to: 76, items: [[世界大百科事典（北原章男）, 40万か50万], [ブリタニカ, 40万人], [高木昭作, 大きすぎる]], every: 2.5}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 12, note: 224名の計算}
+- {line: 14, note: 数のくい違い}
+- {line: 40, note: 改易の理由の棒}
+- {line: 52, note: 釣天井の要点}
+- {line: 77, note: 慶安4年の緩和}
+- {line: 104, note: 廃絶録の15家}
+- {line: 122, note: 202件のその後}
+- {end: true, note: 終了画面}

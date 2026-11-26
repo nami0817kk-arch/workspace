@@ -1,0 +1,155 @@
+# 物語完結型ショート 魔女狩り s2（2026-11-26）。本編 scripts/majogari-story.yaml（12/1 19:00 公開予定、https://youtu.be/Og6XlEn7bdw）から。12/2 12:30 に予約。
+# 形式は rujin_s1〜s5・michizane_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 魔女狩り_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/majogari/main/ の W・TH）の切り出しだけ。新しい絵は作らない。
+# 切り口：9歳の証人ジェネット（本編 序章・第2章・第3章、majogari-11・19・20・12）。1634年の話は出さない（tease の答え）。
+# hook＝9歳の少女は誰の裁判に証人として立ったか（答えはこのショートの中：自分の母。兄の裁判でも）。
+# tease＝22年後、ジェネットの名前はどこに出てくるか（答えは本編 第7章：1634年、少年ロビンソンが名を挙げた中のジェネット・デイヴィス。majogari-24）。
+# 日付は当時のイングランドの暦（ユリウス暦）の記録のまま。1612→1634＝22年。季節は言わない。
+# 「9歳くらい」はポッツの about the age of nine yeares。悪魔学は1597年、ジェームズ1世（本編どおり「子どもや妻も」）。
+# 理解テスト：①ペンドルの魔女裁判の証人ジェネットの話 ②1612年8月18日、ランカスター城の巡回裁判で母エリザベスが裁かれた
+#   ③9歳くらいのジェネットが、机の上に立って母に不利な証言をした（母は叫んで止めようとし、外へ出された） ④母・兄・姉は死刑を言い渡された
+title: "ペンドルの魔女｜9歳の証人"
+yt_title: "9歳くらいの少女は、法廷の机の上に立ち、自分の母に不利な証言をした　1612年、ペンドルの魔女裁判"
+description: |-
+  1612年、イングランドのランカスター城。記録の日付で8月18日、巡回裁判で、エリザベス・デバイスが魔女として裁かれました。
+  訴える側が呼んだ証人は、エリザベスの娘ジェネット。裁判の記録を書いたトマス・ポッツによれば、年は9つくらいでした。娘の姿を見た母は、法廷で叫び声を上げて止めようとしましたが、判事は母を外へ連れ出させ、少女を机の上に立たせて証言させました。
+  このときの国王ジェームズ1世は、1597年の『悪魔学』に、王への反逆の罪なら子どもや妻も証人になれる、神への大逆の魔術ならなおのことだ、と書いています。
+  記録は、トマス・ポッツ『ランカシャーの魔女の驚くべき発見』（1613年）によります。日付は当時のイングランドの暦（ユリウス暦）のままです。
+  本編では、ピン1本から始まった訴えと、魔女を裁いたのは誰だったのか、そして22年後のジェネットを、記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#魔女狩り"
+- "#魔女裁判"
+- "#世界史"
+- "#イギリス史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/majogari
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: majogari_story_s2
+header:
+  tag: "ペンドルの魔女裁判（1612年）"
+  title: "9歳の少女は、《誰の》裁判に立った？"
+now:
+- {at: "8月18日", text: "1612年8月18日　ランカスター城", point: 0}
+timeline:
+- {label: "1612"}
+cards:
+  - type: table
+    title: ジェネットが証言した裁判
+    from: 判事は
+    until: このときの国王
+    items:
+      - {at: "判事は", text: "母　エリザベス"}
+      - {at: "兄のジェームズ", text: "兄　ジェームズ"}
+    text_y: 0.70
+shots:
+  TH2_1:
+    kind: "ai"
+    file: "majogari/main/TH2.jpg"
+    focus: [0.65, 0.5]
+    move: "in"
+    must: "TH2"
+  W10_2:
+    kind: "ai"
+    file: "majogari/main/W10.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "W10"
+  W12_3:
+    kind: "ai"
+    file: "majogari/main/W12.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "W12"
+  TH1_4:
+    kind: "ai"
+    file: "majogari/main/TH1.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "TH1"
+  TH2_5:
+    kind: "ai"
+    file: "majogari/main/TH2.jpg"
+    focus: [0.6, 0.45]
+    move: "right"
+    must: "TH2"
+  W01_6:
+    kind: "ai"
+    file: "majogari/main/W01.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "W01"
+  W09_7:
+    kind: "ai"
+    file: "majogari/main/W09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "W09"
+  TH3_8:
+    kind: "ai"
+    file: "majogari/main/TH3.jpg"
+    focus: [0.72, 0.5]
+    move: "right"
+    must: "TH3"
+  W26_9:
+    kind: "ai"
+    file: "majogari/main/W26.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "W26"
+lines:
+  # fact: majogari-19
+- 語り: "1612年、イングランドの魔女裁判で、9歳くらいの少女が、法廷の机の上に立って、自分の母に不利な証言をした。"
+  shot: TH2_1
+  tone: 強調
+  pause: 0.12
+  # fact: majogari-09, majogari-11（記録の日付）
+- 語り: "記録の日付で、8月18日。ランカスター城の巡回裁判で、エリザベス・デバイスが、魔女として裁かれた。"
+  shot: W10_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: majogari-19
+- 語り: "訴える側が呼んだ証人は、エリザベスの娘、ジェネット。記録を書いたトマス・ポッツによれば、年は、9つくらいだった。"
+  shot: W12_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: majogari-19
+- 語り: "娘の姿を見た母は、法廷で叫び声を上げ、娘を止めようとした。"
+  shot: TH1_4
+  tone: 重い
+  pause: 0.12
+  # fact: majogari-19
+- 語り: "判事は、母を外へ連れ出させ、少女を、机の上に立たせて、証言させた。ジェネットは、兄のジェームズの裁判でも、証言した。"
+  shot: TH2_5
+  tone: 重い
+  pause: 0.12
+  # fact: majogari-20
+- 語り: "このときの国王、ジェームズ1世は、1597年に、悪魔学という本を書いている。"
+  shot: W01_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: majogari-20
+- 語り: "そこには、こうある。王への反逆の罪なら、子どもや妻も、証人になれる。神への大逆の魔術なら、なおのことだ。"
+  shot: W09_7
+  tone: 強調
+  pause: 0.12
+  # fact: majogari-12
+- 語り: "死刑を言い渡された10人の中には、母のエリザベスと、兄のジェームズ、そして、姉のアリゾンがいた。"
+  shot: TH3_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第7章（majogari-24 1634年、ロビンソンが名を挙げたジェネット・デイヴィス）
+- 語り: "では、22年後。ジェネットの名前は、どこに出てくるのか。"
+  shot: W26_9
+  tone: 疑問
+  pause: 0.15

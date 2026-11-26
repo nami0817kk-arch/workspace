@@ -1,0 +1,168 @@
+# 物語完結型ショート 中山道の旅 s1（2026-11-26）。本編 scripts/nakasendo-story.yaml（12/1 12:00 公開予定、https://youtu.be/Vj8CBOvN-YM）から。12/2 9:00 に予約。
+# 形式は rujin_s1〜s5・michizane_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 中山道の旅_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/nakasendo/main/ の N）の切り出しだけ。新しい絵は作らない。
+# 切り口：碓氷峠を越えた日の13里18町あまり（本編 序章・第6章、naka-01・02・07・08・39・67）。
+# 向き：日記は近江→江戸（東へ）。「江戸から京都へ旅した」とは言わない。
+# hook＝峠を越えた日に何キロ歩いたか（答えはこのショートの中：約53キロ。途中の松井田〜安中は帰り馬）。
+# tease＝木曽の桟は本当に命をかけて渡る橋だったか（答えは本編 第3章：益軒の木曽路之記、naka-63）。
+# 数え直し：和田49里24町14間−軽井沢37里13町14間＝12里11町＝48.3km。軽井沢37里13町14間−新町23里30町40間＝13里18町34間＝53.1km。
+#   高宮〜鴻巣の10日（5日〜14日）のうちで最長。旧暦5月（夏）だが季節は言わない。
+# 理解テスト：①近江の商人 西村安則の中山道の旅 ②1835年5月13日、軽井沢から碓氷峠を越えて新町まで ③今日は13里ほどと気がせき、松井田で帰り馬を雇った ④日暮れに新町の定宿に着いた。約53キロで、数えた10日で最長
+title: "中山道｜峠を越えた日に53キロ"
+yt_title: "碓氷峠を越えたその日に、53キロ　1835年、中山道を東へ向かった近江の商人の、いちばん長い1日"
+description: |-
+  天保6年、1835年。近江の日野の商人、西村安則は、武蔵の吉川にある店へ向かって、中山道を東へ旅しました。その道中を書いたのが『木曾日記』です。
+  5月13日の朝、軽井沢を出た安則は、碓氷峠に登り、上野の方を見下ろしました。峠を下りて、松井田で帰り馬を安く雇い、安中で降りています。日記には「今日は十三里ほどの道なので、ことに気がせいた」とあります。
+  宿村大概帳の道のりで測ると、軽井沢から新町までは13里18町あまり、およそ53キロ。道のりを数えた10日のうちで、いちばん長い1日でした。
+  本編では、近江の日野から武蔵の吉川まで、木曽の桟・鳥居峠・和田峠・碓氷峠を越えた12日間を、宿場ごとに追っています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#中山道"
+- "#碓氷峠"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/nakasendo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nakasendo_story_s1
+header:
+  tag: "近江商人の中山道の旅（1835年）"
+  title: "峠を越えた日に、《何キロ》歩いた？"
+now:
+- {at: "1835年", text: "1835年　中山道", point: 0}
+- {at: "5月12日", text: "1835年5月12日　軽井沢", point: 0}
+- {at: "13日の朝", text: "1835年5月13日　碓氷峠", point: 0}
+- {at: "日が暮れて", text: "1835年5月13日　新町", point: 0}
+timeline:
+- {label: "1835"}
+cards:
+  - type: table
+    title: 安則の道のり（宿村大概帳で測る）
+    from: 宿村大概帳の道のりで
+    until: 日が暮れて
+    items:
+      - {at: "宿村大概帳の道のりで", text: "12日　和田→軽井沢　約48キロ"}
+      - {at: "13里18町", text: "13日　軽井沢→新町　約53キロ"}
+    text_y: 0.70
+shots:
+  N01_1:
+    kind: "ai"
+    file: "nakasendo/main/N01.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "N01"
+  N05_2:
+    kind: "ai"
+    file: "nakasendo/main/N05.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "N05"
+  N15_3:
+    kind: "ai"
+    file: "nakasendo/main/N15.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "N15"
+  N17_4:
+    kind: "ai"
+    file: "nakasendo/main/N17.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "N17"
+  N20_5:
+    kind: "ai"
+    file: "nakasendo/main/N20.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "N20"
+  N22_6:
+    kind: "ai"
+    file: "nakasendo/main/N22.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "N22"
+  N04_7:
+    kind: "ai"
+    file: "nakasendo/main/N04.jpg"
+    focus: [0.68, 0.5]
+    move: "in"
+    must: "N04"
+  N23_8:
+    kind: "ai"
+    file: "nakasendo/main/N23.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N23"
+  N24_9:
+    kind: "ai"
+    file: "nakasendo/main/N24.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "N24"
+  N02_10:
+    kind: "ai"
+    file: "nakasendo/main/N02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N02"
+lines:
+  # fact: naka-08, naka-67
+- 語り: "1835年、中山道を東へ向かった近江の商人は、碓氷峠を越えるその日に、50キロあまりを進んだ。"
+  shot: N01_1
+  tone: 強調
+  pause: 0.12
+  # fact: naka-01
+- 語り: "商人の名は、西村安則。近江の日野から、武蔵の吉川にある、自分の家の店へ向かう旅だった。"
+  shot: N05_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-02, naka-67
+- 語り: "5月12日の夜は、軽井沢に泊まった。この日も、和田から12里あまり、およそ48キロを歩いている。"
+  shot: N15_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-07
+- 語り: "13日の朝、安則は、碓氷峠に登り、上野の方を見下ろした、と日記に書いている。"
+  shot: N17_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-39
+- 語り: "峠から坂本へ下る刎石坂は、中山道の三大難所の1つとされる、急な坂だ。"
+  shot: N20_5
+  tone: 重い
+  pause: 0.12
+  # fact: naka-08
+- 語り: "松井田で、安則は、帰り馬を安い値で雇った。荷を下ろして戻る途中の馬だ。そして、安中で馬を降りた。"
+  shot: N22_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-08
+- 語り: "日記には、今日は13里ほどの道なので、ことに気がせいた、とある。"
+  shot: N04_7
+  tone: 重い
+  pause: 0.12
+  # fact: naka-67
+- 語り: "宿村大概帳の道のりで測ると、軽井沢から新町までは、13里18町あまり。およそ53キロだ。"
+  shot: N23_8
+  tone: 強調
+  pause: 0.12
+  # fact: naka-02, naka-08, naka-67
+- 語り: "日が暮れて、新町の定宿に着いた。道のりを数えた10日のうちで、いちばん長い1日だった。"
+  shot: N24_9
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第3章（naka-63 益軒の木曽路之記）
+- 語り: "では、木曽の桟は、本当に、命をかけて渡る橋だったのか。"
+  shot: N02_10
+  tone: 疑問
+  pause: 0.15

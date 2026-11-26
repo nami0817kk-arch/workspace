@@ -1,0 +1,164 @@
+# 物語完結型ショート 中山道の旅 s4（2026-11-26）。本編 scripts/nakasendo-story.yaml（12/1 12:00 公開予定、https://youtu.be/Vj8CBOvN-YM）から。12/2 16:30 に予約。
+# 形式は rujin_s1〜s5・michizane_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 中山道の旅_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/nakasendo/main/ の N）の切り出しだけ。新しい絵は作らない。
+# 切り口：高宮の「はたごは百五十」と和田の872文（本編 第1章・第5章、naka-01・02・03・04・05・68）。
+# hook＝宿代が5倍を超えたのはなぜか（答えはこのショートの中：何人分かは日記に書かれていない＝分からない、と言う）。
+# tease＝碓氷峠を越えた日に何キロ歩いたか（答えは本編 第6章：約53キロ、naka-08・67）。
+# 数え直し：高宮5月4日→和田5月11日＝7日後。872÷150＝5.81→「5倍を超える」。物差し 585文＝1万円→1文＝17.09円。
+#   150文＝2,564円→約2,600円、148文＝2,530円→約2,500円、872文＝14,906円→1万5千円ほど。旧暦5月（夏）だが季節は言わない。
+# 理解テスト：①近江の商人 西村安則の宿代の話 ②1835年5月、中山道の高宮と和田の宿 ③高宮は150文、和田では「これまで850文、今夜は872文」と言われた ④何人分かは書かれておらず分からない。もてなしは良かった
+title: "中山道｜宿代が5倍を超えた夜"
+yt_title: "最初の夜は150文、7日後は872文　1835年、中山道を旅した近江の商人の日記に残る、合わない宿代"
+description: |-
+  天保6年、1835年の5月4日。近江の日野の商人、西村安則は、武蔵の吉川の店へ向かって、中山道を東へ旅立ちました。その夜、高宮の宿で詠んだ狂歌には「はたごは百五十」とあります。日記の解説は『守貞謾稿』を引いて、中山道の商人宿は148文が相場だったとまとめています。
+  7日後の5月11日、和田峠を越えて和田の永井喜左衛門の家に泊まると、旅籠の代は、これまで850文だったのに今夜は872文だ、と言われました。高宮の5倍を超える額ですが、何人分の代なのかは、日記に書かれていません。もてなしは良かった、とも書いています。
+  江戸の大工の日当、およそ585文を今の1万円とする目安では、150文はおよそ2,600円、872文は1万5千円ほどです。
+  本編では、近江の日野から武蔵の吉川まで、12日間の旅を宿場ごとに追っています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#中山道"
+- "#宿場"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/nakasendo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nakasendo_story_s4
+header:
+  tag: "近江商人の中山道の旅（1835年）"
+  title: "宿代が、《5倍》を超えた？"
+now:
+- {at: "最初の夜", text: "1835年　中山道", point: 0}
+- {at: "1835年5月4日", text: "1835年5月4日　高宮", point: 0}
+- {at: "5月11日", text: "1835年5月11日　和田", point: 0}
+timeline:
+- {label: "1835"}
+cards:
+  - type: table
+    title: 日記に残る宿代
+    from: その夜
+    until: もっとも
+    items:
+      - {at: "その夜", text: "5月4日　高宮　百五十"}
+      - {at: "これまで850文", text: "5月11日　和田　872文"}
+    text_y: 0.70
+  - type: table
+    title: 今のお金の目安
+    from: 江戸の大工の日当
+    until: 碓氷峠を越えた日
+    items:
+      - {at: "江戸の大工の日当", text: "大工の日当　585文＝1万円"}
+      - {at: "150文は", text: "150文　約2600円"}
+      - {at: "872文は", text: "872文　約1万5千円"}
+    text_y: 0.70
+shots:
+  N19_1:
+    kind: "ai"
+    file: "nakasendo/main/N19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N19"
+  N05_2:
+    kind: "ai"
+    file: "nakasendo/main/N05.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "N05"
+  N04_3:
+    kind: "ai"
+    file: "nakasendo/main/N04.jpg"
+    focus: [0.68, 0.5]
+    move: "right"
+    must: "N04"
+  N12_4:
+    kind: "ai"
+    file: "nakasendo/main/N12.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N12"
+  N17_5:
+    kind: "ai"
+    file: "nakasendo/main/N17.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "N17"
+  N19_6:
+    kind: "ai"
+    file: "nakasendo/main/N19.jpg"
+    focus: [0.7, 0.5]
+    move: "in"
+    must: "N19"
+  N09_7:
+    kind: "ai"
+    file: "nakasendo/main/N09.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "N09"
+  N23_8:
+    kind: "ai"
+    file: "nakasendo/main/N23.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "N23"
+  N01_9:
+    kind: "ai"
+    file: "nakasendo/main/N01.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "N01"
+lines:
+  # fact: naka-04, naka-03
+- 語り: "最初の夜の宿代は、百五十。7日後の和田の宿では、872文と言われた。"
+  shot: N19_1
+  tone: 強調
+  pause: 0.12
+  # fact: naka-01
+- 語り: "1835年5月4日。近江の日野の商人、西村安則は、武蔵の吉川の店へ向かって、中山道を東へ旅立った。"
+  shot: N05_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-02, naka-04
+- 語り: "その夜、高宮の宿で詠んだ狂歌に、はたごは百五十、とある。旅籠の代が、150文だ。"
+  shot: N04_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-05
+- 語り: "日記の解説は、守貞謾稿を引いて、中山道の商人宿は、148文が相場だった、とまとめている。"
+  shot: N12_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-02, naka-03
+- 語り: "5月11日。安則は、和田峠を越えて、和田の永井喜左衛門の家に泊まった。"
+  shot: N17_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: naka-03
+- 語り: "日記には、旅籠の代は、これまで850文だったのに、今夜は872文だ、とある。"
+  shot: N19_6
+  tone: 重い
+  pause: 0.12
+  # fact: naka-04, naka-03
+- 語り: "高宮の5倍を超える額。何人分の代なのかは、日記に書かれていない。もっとも、もてなしは良かった、とも書いている。"
+  shot: N09_7
+  tone: 疑問
+  pause: 0.12
+  # fact: naka-68
+- 語り: "江戸の大工の日当、およそ585文を、今の1万円とする目安では、150文は、およそ2600円。872文は、1万5千円ほどだ。"
+  shot: N23_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第6章（naka-08・67 約53キロ）
+- 語り: "では、碓氷峠を越えた日、安則は、何キロを歩いたのか。"
+  shot: N01_9
+  tone: 疑問
+  pause: 0.15
