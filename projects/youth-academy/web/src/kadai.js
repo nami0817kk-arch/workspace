@@ -74,7 +74,7 @@
       why: () => null,
       score: (w, p) => (hasP(p, '人見知り', '寡黙', '繊細', 'プレッシャーに弱い') ? 0.35 : 0) + clamp((YA.ovr(p) - avg(p, ['オフザボール', '運動量']) - 0.5) / 4, 0, 0.5),
       best: (w, p) => (p.pos === 'GK' || p.pos === 'DF' ? '守備の合図役' : A(p, 'プレースキック') >= Math.max(A(p, 'パス'), 9) ? 'セットプレーのキッカー' : p.pos === 'FW' ? '前線の守備の先頭' : '声出し役'),
-      opts: () => ROLE_C.slice(),
+      opts: (w, p) => (p.pos === 'GK' ? ['守備の合図役', '声出し役'] : ROLE_C.slice()),
       label: (w, c) => c,
       cw: () => ['力はあるのに、試合で消える時間が長い。何か任せると変わるかもしれない', '試合になると、どこにいるのか分からなくなる子'],
       self: (w, p, c) => (c === 'セットプレーのキッカー' ? '蹴るのは好きなんです。でも、自分から言い出せなくて' : '試合だと、自分が何をしたらいいか分からなくなる時があって'),
@@ -188,7 +188,8 @@
   function coachClue(w, p) {
     const f = p.kf;
     const r = rngP(w, p, 'kc' + f.g);
-    const eye = w.coach ? w.coach.eye || 8 : 8;
+    // 見る目は指導者とスカウト担当の平均（scout.js の YA.eyeLevel。3〜18）
+    const eye = YA.eyeLevel ? YA.eyeLevel(w) : w.coach ? w.coach.eye || 8 : 8;
     const miss = r.chance(eye >= 14 ? 0.04 : eye >= 10 ? 0.1 : 0.2);
     const t = miss ? f.sec : f.t;
     const d = DEF(t);
@@ -352,7 +353,13 @@
     if (gave.indexOf(t) >= 0) t = (p.kc.more || []).length ? p.kf.t : (YA.KADAI.find((d) => gave.indexOf(d.k) < 0 && !d.why(w, p) && (!d.pick || d.best(w, p) != null)) || DEF('eye')).k;
     const d = DEF(t);
     if (d.why(w, p)) return null;
-    const c = d.pick ? (t === p.kf.t && (p.kHist || []).some((x) => x.t === t && x.r === 'half') ? (YA.kadaiOpts(w, p, t).find((x) => !(p.kHist || []).some((h) => h.t === t && h.c === x)) || p.kf.c) : t === p.kf.t && !((p.kHist || []).length) ? p.kf.c : d.best(w, p)) : null;
+    // 中身：見立てどおりの種類なら合う中身。前に試して「少し伸びた」だけの中身は避ける
+    const tried = (x) => (p.kHist || []).some((h) => h.t === t && h.c === x && h.r === 'half');
+    let c = null;
+    if (d.pick) {
+      c = t === p.kf.t ? p.kf.c : d.best(w, p);
+      if (tried(c)) c = YA.kadaiOpts(w, p, t).find((x) => !tried(x)) || c;
+    }
     if (d.pick && c == null) return null;
     return { t, c };
   };
@@ -616,8 +623,9 @@
     const left = YA.KADAI_MAX - act.length;
     const go = (p) => { const app = U().app; app.pSel = p.id; app.tab = 'players'; app.pOpen = true; app.pTab = 'rep'; rerender(); };
     return h('div', { class: 'card kband', style: 'flex:none;display:flex;align-items:center;gap:6px;padding:4px 8px;overflow-x:auto;overflow-y:hidden' },
-      h('b', { style: 'flex:none;font-size:12px;color:var(--navy)' }, '課題の5人'),
-      ...act.map((p) => { const s = YA.kadaiState(w, p); return h('button', { class: 'pitem kslot', style: 'flex:none;min-height:40px;padding:2px 7px;gap:5px;align-items:center', onclick: () => go(p) }, YA.faceEl(w, p, 26), h('span', { style: 'display:flex;flex-direction:column;align-items:flex-start;line-height:1.25' }, h('b', { style: 'font-size:12px' }, fam(p) + ' ', h('span', { class: 'chip trait', style: 'font-size:10.5px;padding:0 5px' }, DEF(p.kd.t).name)), h('span', { class: 'sub', style: 'font-size:11px' }, `${s.e}/${s.len}週・${s.word}`))); }),
-      left > 0 ? h('span', { class: 'sub', style: 'flex:none;font-size:11.5px;padding-left:4px' }, `課題を出せる枠があと${left}つ`) : null);
+      h('div', { style: 'flex:none;display:flex;flex-direction:column;line-height:1.3' }, h('b', { style: 'font-size:12px;color:var(--navy)' }, '課題の5人'),
+        left > 0 ? h('span', { class: 'sub kfree', style: 'font-size:10.5px;max-width:86px;white-space:normal' }, `課題を出せる枠があと${left}つ`) : null),
+      ...act.map((p) => { const s = YA.kadaiState(w, p); return h('button', { class: 'pitem kslot', style: 'flex:none;width:auto;min-height:40px;padding:2px 6px;gap:4px;align-items:center', onclick: () => go(p) }, YA.faceEl(w, p, 26), h('span', { style: 'display:flex;flex-direction:column;align-items:flex-start;line-height:1.25' }, h('b', { style: 'font-size:12px' }, fam(p) + ' ', h('span', { class: 'chip trait', style: 'font-size:10.5px;padding:0 5px' }, DEF(p.kd.t).short)), h('span', { class: 'sub', style: 'font-size:10.5px' }, `${s.e}/${s.len}週・${s.word}`))); }),
+      act.length ? null : h('span', { class: 'sub', style: 'flex:none;font-size:11.5px' }, '手がかりを見て、選手の詳しい画面（コーチの報告）から課題を出します'));
   };
 })();

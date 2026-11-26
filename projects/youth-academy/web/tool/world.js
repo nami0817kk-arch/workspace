@@ -94,7 +94,7 @@ function playYear(w, opts) {
 }
 function check(w) {
   const ps = Object.values(w.players);
-  ok(ps.length >= 34 && ps.length <= 44, '人数 ' + ps.length);
+  ok(ps.length >= 31 && ps.length <= 41, '人数 ' + ps.length); // 2026-11-26 から1学年11人（33人）
   const nums = ps.map((p) => p.num);
   ok(new Set(nums).size === nums.length, '背番号が重ならない');
   for (const p of ps) {
@@ -125,7 +125,7 @@ ok(w.year === 2 && w.week === 1, '卒業式で次の年へ');
 ok(w.alumni.length >= 12, '卒業生が名鑑へ');
 const cnt2 = { 1: 0, 2: 0, 3: 0 };
 Object.values(w.players).forEach((p) => cnt2[p.grade]++);
-ok(cnt2[1] === 12 && cnt2[3] >= 10, '学年が上がり新しい高1 ' + JSON.stringify(cnt2));
+ok(cnt2[1] === 11 && cnt2[3] >= 9, '学年が上がり新しい高1 ' + JSON.stringify(cnt2));
 ok(a0.events >= 12, '出来事が起きる ' + a0.events);
 ok(w.club.eval.length === 1 && 'SABCD'.includes(w.club.eval[0].letter), '年末の評価 ' + JSON.stringify(w.club.eval[0] && w.club.eval[0].letter));
 ok(w.rec.w + w.rec.d + w.rec.l >= 27 && w.rec.w + w.rec.d + w.rec.l <= 36, 'Aの試合は27〜36（1〜3月の新春フェスティバル・練習試合・夏のグループ戦を足した） ' + (w.rec.w + w.rec.d + w.rec.l));
@@ -873,7 +873,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       const rr = YA.rngOf(5);
       for (const id of YA.EVENTS2) {
         const d = YA.EVENTS.find((x) => x.id === id);
-        for (let wk = 1; wk <= 40; wk += 3) {
+        // 2週おきに見る（1学年11人にして、3週おきでは出せる子の見つかる数が11に減った）
+        for (let wk = 1; wk <= 40; wk += 2) {
           wr.week = wk;
           const pp = d.pick(wr, rr);
           if (!pp) continue;
@@ -1392,11 +1393,13 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   w0.week = 3;
   ok(YA.kadaiGive(w0, hz, hz.kf.t, hc).ok && hz.kd.fit === 'half', '種類だけ合う課題 ' + hz.kd.t);
   const ab0 = YA.abSum(hz);
-  for (let i = 1; i <= hz.kd.len + 1 && hz.kd; i++) { w0.week = 3 + i; YA.kadaiWeek(w0); }
+  const hl = hz.kd.len;
+  for (let i = 1; i <= hl + 1 && hz.kd; i++) { w0.week = 3 + i; YA.kadaiWeek(w0); }
   ok(!hz.kd && hz.kHist.slice(-1)[0].r === 'half' && YA.abSum(hz) > ab0, '種類だけ合うと、あきらめずに少し伸びる');
   // 合う課題でも、試合に出ないまま期間が終わると「気づけずに終わった」
   const mz = g[2];
-  for (let i = 1; i <= mz.kd.len + 1 && mz.kd; i++) { w0.week = 2 + i; YA.kadaiWeek(w0); }
+  // （上の週送りで、試合のないまま期間が過ぎていることもある）
+  if (mz.kd) { const ml = mz.kd.len; for (let i = 1; i <= ml + 1 && mz.kd; i++) { w0.week = 2 + i; YA.kadaiWeek(w0); } }
   ok(!mz.kd && mz.kHist.slice(-1)[0].r === 'miss' && !mz.awake, '試合に出さないまま終わると、気づけずに終わる');
   // 面談で本人の言葉が出る（入団から2〜3か月）
   const tz = ps.find((p) => p.kc && !p.kc.self && !p.kd);
@@ -1418,9 +1421,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(n1[0].o0 != null && Math.abs(n1[0].o0 - Math.round(YA.ovr(n1[0]) * 10) / 10) < 0.01, '年度はじめに総合力を控える');
   // 卒業後も、課題で覚醒した子は便りで追える
   wn.alumni.push({ name: '試験 卒業', year: 1, star: true, form: '闘将になる', status: 'pro', club: '試験FC', league: 'J2', apps: 12, goals: 3, retired: false });
-  wn.week = 20;
+  wn.year = 2; wn.week = 20;
   YA.alumniTick(wn);
-  ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業（1年目卒）/.test(t)), '課題で覚醒した卒業生が便りに出る');
+  ok(((wn.letters || {})[wn.year] || []).some((t) => /試験 卒業（1年目卒）/.test(t) && !/★/.test(t)), '課題で覚醒した卒業生が便りに出る（★は付けない）');
   JSON.parse(JSON.stringify(w0));
 }
 {
