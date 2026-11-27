@@ -29,6 +29,13 @@
     draw: ['{n}監督と目が合った。互いに、苦笑いだった。', '{n}監督は「決着は次ですね」と言って、握手の手を強く握った。', '引き分けのあと、{n}監督は黙って空を見上げていた。'],
     big: ['大差で勝った試合のあと、{n}監督は握手を拒んだ。', '大差で負けた試合のあと、{n}監督が「子どもたちに罪はない」と声をかけてきた。'],
   };
+  // 試合のあとの一言（次の週のはじめにお知らせへ。試合後の新聞 paper.js も同じ文を使う。wk はお知らせが出る週＝試合の次の週）
+  YA.rivalPostText = function (k, name, gf, ga, y, wk) {
+    const res2 = gf - ga >= 3 || ga - gf >= 3 ? 'big' : gf > ga ? 'win' : gf < ga ? 'lose' : 'draw';
+    if (res2 === 'big') return (gf > ga ? POST.big[0] : POST.big[1]).replace('{n}', sur(name));
+    const list = POST[res2];
+    return list[YA.hash(k + y + wk) % list.length].replace('{n}', sur(name));
+  };
   const rw0 = YA.rivalWeek;
   YA.rivalWeek = function (w) {
     const res = rw0 ? rw0.apply(this, arguments) : undefined;
@@ -44,9 +51,7 @@
         if (rc) {
           const d = defOf(rc.k);
           const res2 = g.gf - g.ga >= 3 || g.ga - g.gf >= 3 ? 'big' : g.gf > g.ga ? 'win' : g.gf < g.ga ? 'lose' : 'draw';
-          const list = POST[res2];
-          let line = list[YA.hash(rc.k + w.year + w.week) % list.length].replace('{n}', sur(d.name || ''));
-          if (res2 === 'big') line = g.gf > g.ga ? POST.big[0].replace('{n}', sur(d.name || '')) : POST.big[1].replace('{n}', sur(d.name || ''));
+          const line = YA.rivalPostText(rc.k, d.name || '', g.gf, g.ga, w.year, w.week);
           w.rivalRel[rc.k] = clamp((w.rivalRel[rc.k] || 0) + (res2 === 'big' && g.gf > g.ga ? -15 : res2 === 'win' ? -6 : res2 === 'lose' ? 4 : 2), -100, 100);
           const post = `${line}（${d.name}との関係：${YA.rivalRelName(w.rivalRel[rc.k])}）`;
           // 試合前のひとことと同じ1件に足す（2026-11-21「まとめる」：試合ごとに2件届いていた）

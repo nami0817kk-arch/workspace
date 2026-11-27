@@ -723,6 +723,7 @@
     const mem = h('div', {});
     if (sel.route) mem.append(h('div', { class: 'note', style: 'color:var(--ink)' }, `入団：${sel.route}${sel.joinY ? `（${sel.joinY}年目）` : ''}`));
     if (YA.scenesEl) { const sc = YA.scenesEl(sel); if (sc) mem.append(h('div', { class: 'h', style: 'margin-top:6px' }, '名場面'), sc); }
+    if (YA.pressEl) { const pe = YA.pressEl(w, sel); if (pe) mem.append(h('div', { class: 'h', style: 'margin-top:6px' }, `新聞の記事（${YA.PAPER_NAME}）`), pe); }
     if (!(sel.mem && sel.mem.length) && !sel.hist.length) mem.append(h('div', { class: 'note' }, 'まだ思い出はありません。出来事や試合で選んだことが、ここに残ります。'));
     if (sel.mem && sel.mem.length && YA.memLines) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'この子との記憶'), h('div', { class: 'note', style: 'color:var(--ink)' }, YA.memLines(sel).slice(0, 8).map((t) => h('div', {}, t))), YA.leanOf && YA.leanOf(sel).n ? h('div', { class: 'note' }, '育て方の傾き：' + Object.entries(YA.leanOf(sel).cnt).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${YA.KIND_LABEL[k]}${n}`).join('・') + '（覚醒の形の出やすさに効く）') : null);
     if (sel.hist.length) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 10).map((x) => h('div', {}, `${YA.ywName(x.y, x.w)}：${x.t}`))));
