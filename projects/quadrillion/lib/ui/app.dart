@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
@@ -70,35 +71,143 @@ class RootScreen extends StatelessWidget {
         Positioned.fill(child: SafeArea(bottom: false, child: ctl.game == null ? SetupScreen(ctl: ctl) : MainScreen(ctl: ctl))),
         // 勝ち負けが決まったら、小窓を閉じたあとに全画面のまとめを出す
         if (sheet == null && ctl.game != null && ctl.game!.ended && !ctl.endHidden) Positioned.fill(child: EndScreen(ctl: ctl)),
-        if (sheet != null)
-          Positioned.fill(
-            child: Container(
-              color: const Color(0x59282832),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: LayoutBuilder(builder: (context, c) {
-                    return Align(
-                      alignment: c.maxWidth >= 700 ? Alignment.center : Alignment.bottomCenter,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 620, maxHeight: c.maxHeight * .94),
-                        child: Material(
-                          color: Pal.panel,
-                          shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(14)),
-                          clipBehavior: Clip.antiAlias,
-                          child: SingleChildScrollView(
-                            key: ValueKey('sheet${ctl.sheetSeq}'),
-                            padding: const EdgeInsets.all(16),
-                            child: Builder(builder: sheet),
-                          ),
+        // 小窓は閉じたあとも沈み切るまで描くので、いつも置いておく
+        Positioned.fill(child: SheetLayer(key: const ValueKey('sheet-layer'), ctl: ctl)),
+      ]),
+    );
+  }
+}
+
+/// 小窓の出入りの動き
+class SheetMotion {
+  SheetMotion._();
+
+  /// 出てくる長さと、沈む長さ（テストの決まりでは 0 にして、1回の描画で開け閉めし切る。動きを確かめるテストだけ元に戻す）
+  static Duration duration = const Duration(milliseconds: 240);
+  static Duration reverseDuration = const Duration(milliseconds: 200);
+  static const curve = Curves.easeOutCubic;
+  static const reverseCurve = Curves.easeInCubic;
+
+  /// 後ろの幕の色（開き切ったとき）
+  static const scrim = Color(0x59282832);
+
+  /// 元の長さに戻す
+  static void reset() {
+    duration = const Duration(milliseconds: 240);
+    reverseDuration = const Duration(milliseconds: 200);
+  }
+}
+
+/// 小窓の層。開くと下から滑り出て、後ろの幕が薄く出る。閉じると沈み、幕も引く。
+/// 沈むあいだは最後の中身をそのまま見せる（中身を作り直さないので、ゲームが無くなっても落ちない）。押しても何も起きない
+class SheetLayer extends StatefulWidget {
+  final GameController ctl;
+  const SheetLayer({super.key, required this.ctl});
+  @override
+  State<SheetLayer> createState() => SheetLayerState();
+}
+
+class SheetLayerState extends State<SheetLayer> with SingleTickerProviderStateMixin {
+  late final AnimationController anim = AnimationController(vsync: this, duration: SheetMotion.duration, reverseDuration: SheetMotion.reverseDuration)
+    ..addStatusListener(_onStatus);
+  late final Animation<double> _curved = CurvedAnimation(parent: anim, curve: SheetMotion.curve, reverseCurve: SheetMotion.reverseCurve);
+
+  /// 狭い画面で、下の端から出入りするあいだだけ薄くする（はじめの3割ほどで濃くなり切る）
+  late final Animation<double> _edgeFade = CurvedAnimation(parent: anim, curve: const Interval(0, .35));
+
+  /// 今見せている小窓（閉じて沈むあいだも残す）
+  Widget? _card;
+
+  /// 閉じて沈んでいるところか
+  bool get closing => widget.ctl.sheet == null && _card != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _sync();
+  }
+
+  @override
+  void didUpdateWidget(SheetLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _sync();
+  }
+
+  void _sync() {
+    anim.duration = SheetMotion.duration;
+    anim.reverseDuration = SheetMotion.reverseDuration;
+    final open = widget.ctl.sheet != null;
+    final st = anim.status;
+    if (open && (st == AnimationStatus.dismissed || st == AnimationStatus.reverse)) {
+      anim.forward();
+    } else if (!open && (st == AnimationStatus.forward || st == AnimationStatus.completed)) {
+      anim.reverse();
+    }
+  }
+
+  void _onStatus(AnimationStatus st) {
+    if (st != AnimationStatus.dismissed || widget.ctl.sheet != null) return;
+    _card = null;
+    // 描いている途中（長さ0で閉じたとき）は、このあとの描画で消えるので描き直しは頼まない
+    if (mounted && SchedulerBinding.instance.schedulerPhase != SchedulerPhase.persistentCallbacks) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    anim.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ctl = widget.ctl;
+    final sheet = ctl.sheet;
+    if (sheet != null) {
+      _card = Material(
+        color: Pal.panel,
+        shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(Ui.sheetRadius)),
+        clipBehavior: Clip.antiAlias,
+        child: SingleChildScrollView(
+          key: ValueKey('sheet${ctl.sheetSeq}'),
+          padding: const EdgeInsets.all(Ui.sheetPad),
+          child: Builder(builder: sheet),
+        ),
+      );
+    }
+    final card = _card;
+    if (card == null || anim.isDismissed) return const SizedBox.shrink();
+    return IgnorePointer(
+      ignoring: sheet == null,
+      child: Stack(children: [
+        Positioned.fill(child: FadeTransition(key: const ValueKey('sheet-scrim'), opacity: _curved, child: const ColoredBox(color: SheetMotion.scrim))),
+        Positioned.fill(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: LayoutBuilder(builder: (context, c) {
+                final wide = c.maxWidth >= 700;
+                return Align(
+                  alignment: wide ? Alignment.center : Alignment.bottomCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 620, maxHeight: c.maxHeight * .94),
+                    // 狭い画面は下から滑り出る（下の余白12を越えて隠れ切るよう、高さの1.1倍ぶん下から）。広い画面は少しだけ上がりながら出る
+                    child: SlideTransition(
+                      key: const ValueKey('sheet-slide'),
+                      position: Tween(begin: Offset(0, wide ? .04 : 1.1), end: Offset.zero).animate(_curved),
+                      child: FadeTransition(
+                        opacity: wide ? _curved : _edgeFade,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(Ui.sheetRadius), boxShadow: Ui.sheetShadow),
+                          child: card,
                         ),
                       ),
-                    );
-                  }),
-                ),
-              ),
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
+        ),
       ]),
     );
   }
@@ -257,6 +366,16 @@ class MainScreen extends StatelessWidget {
 
   static const tabs = [('town', '街@@tab'), ('biz', '事業@@tab'), ('people', '人@@tab'), ('stock', '株@@tab'), ('num', '数字@@tab'), ('zukan', '図鑑@@tab')];
 
+  /// 下のタブのアイコン（選んでいないときは線の形、選んだら塗りの形）
+  static const tabIcons = {
+    'town': (Icons.location_city_outlined, Icons.location_city),
+    'biz': (Icons.work_outline, Icons.work),
+    'people': (Icons.people_outline, Icons.people),
+    'stock': (Icons.pie_chart_outline, Icons.pie_chart),
+    'num': (Icons.bar_chart_outlined, Icons.bar_chart),
+    'zukan': (Icons.menu_book_outlined, Icons.menu_book),
+  };
+
   @override
   Widget build(BuildContext context) {
     final s = ctl.game!;
@@ -302,10 +421,10 @@ class MainScreen extends StatelessWidget {
               onTap: () => openSettings(ctl),
               child: Material(
               color: Pal.panel2,
-              shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(8)),
+              shape: Ui.partShape(),
               child: InkWell(
                 key: const ValueKey('settings'),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(Ui.partRadius),
                 onTap: () => openSettings(ctl),
                 child: const Padding(padding: EdgeInsets.all(5), child: Icon(Icons.settings, size: 18, color: Pal.ink)),
               ),
@@ -319,16 +438,26 @@ class MainScreen extends StatelessWidget {
           FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
           if (s.wealth > 0) _stat(tr('財産 '), yen(s.wealth)),
           FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
-            for (var i = 0; i < s.apMax; i++)
-              Container(
-                width: 10,
-                height: 10,
-                margin: const EdgeInsets.only(right: 3),
-                decoration: BoxDecoration(color: i < s.ap ? Pal.gold : Pal.line, borderRadius: BorderRadius.circular(2)),
-              ),
-          ]),
+          // 手：金の四角（残り）と灰の四角（使った分）に、残りの数を数字でも添える
+          Semantics(
+            label: tr('今月の手 残り{0}/{1}', [s.ap, s.apMax]),
+            excludeSemantics: true,
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
+              for (var i = 0; i < s.apMax; i++)
+                Container(
+                  width: 10,
+                  height: 10,
+                  margin: const EdgeInsets.only(right: 3),
+                  decoration: BoxDecoration(
+                      color: i < s.ap ? Pal.gold : Pal.panel2,
+                      border: Border.all(color: i < s.ap ? const Color(0xFFD9A62E) : Pal.line),
+                      borderRadius: BorderRadius.circular(2)),
+                ),
+              const SizedBox(width: 2),
+              Text('${s.ap}/${s.apMax}', key: const ValueKey('ap-count'), style: ts(size: 12.5, bold: true, color: s.ap > 0 ? Pal.goldtx : Pal.mute)),
+            ]),
+          ),
         ]),
       ]),
     );
@@ -387,20 +516,13 @@ class MainScreen extends StatelessWidget {
             child: Row(children: [
               for (final t in tabs)
                 Expanded(
-                  child: InkWell(
-                    key: ValueKey('tab-${t.$1}'),
-                    onTap: () => ctl.setTab(t.$1),
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: minTap),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(tr(t.$2),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: ts(size: 13, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1)),
-                      ),
+                  child: Semantics(
+                    selected: ctl.tab == t.$1,
+                    child: InkWell(
+                      key: ValueKey('tab-${t.$1}'),
+                      borderRadius: BorderRadius.circular(Ui.radius),
+                      onTap: () => ctl.setTab(t.$1),
+                      child: TabItem(icon: tabIcons[t.$1]!, label: tr(t.$2), on: ctl.tab == t.$1),
                     ),
                   ),
                 ),
@@ -415,6 +537,36 @@ class MainScreen extends StatelessWidget {
         TextSpan(text: tx(k), style: ts(size: 12.5, color: Pal.mute)),
         TextSpan(text: v, style: ts(size: 12.5, color: c, bold: true)),
       ]));
+}
+
+/// 下のタブの1つ（アイコンの上に字）。選んでいるタブは、アイコンの後ろに金の塗りの丸札を敷き、字を金にする
+class TabItem extends StatelessWidget {
+  final (IconData, IconData) icon;
+  final String label;
+  final bool on;
+  const TabItem({super.key, required this.icon, required this.label, required this.on});
+  @override
+  Widget build(BuildContext context) => Container(
+        constraints: const BoxConstraints(minHeight: 54),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            width: 48,
+            height: 28,
+            // 消えるときも金のまま薄くなる（透明の黒を混ぜると途中で濁る）
+            decoration: BoxDecoration(color: on ? Pal.gold : Pal.gold.withValues(alpha: 0), borderRadius: BorderRadius.circular(14)),
+            child: Icon(on ? icon.$2 : icon.$1, size: 21, color: on ? const Color(0xFF1A1300) : Pal.mute),
+          ),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(label, textAlign: TextAlign.center, maxLines: 1, style: ts(size: 11.5, color: on ? Pal.goldtx : Pal.mute, bold: on, height: 1.2)),
+          ),
+        ]),
+      );
 }
 
 /// 勝ったあと、終わりなしのモードで続ける

@@ -73,7 +73,7 @@ void openSeek(GameController ctl) {
             markGuide(s, 'partner');
             ctl.save();
             openMeet(ctl);
-          }, subs: [pl.s]),
+          }, ap: 1, subs: [pl.s]),
         _cancel(ctl),
       ]));
 }
@@ -119,7 +119,7 @@ void openTrain(GameController ctl) {
   ctl.showSheet((_) => _col([
         H2(tr('腕を磨く'), top: true),
         _note(tr('手を1つ使い、社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。', [s.trainGain()])),
-        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), subs: [trainDesc[k]!]),
+        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), ap: 1, subs: [trainDesc[k]!]),
         _cancel(ctl),
       ]));
 }
@@ -158,7 +158,7 @@ void openStart(GameController ctl) {
             final m = s.startBiz(i.id);
             ctl.save();
             ctl.toast(m);
-          }, subs: [_indNote(s, i)]),
+          }, ap: s.biz.isEmpty && !s.everBiz ? 0 : 1, apShort: !(s.biz.isEmpty && !s.everBiz) && s.ap < 1, subs: [_indNote(s, i)]),
         _cancel(ctl),
       ]));
 }
@@ -167,12 +167,14 @@ void openModel(GameController ctl, String id, [Biz? b]) {
   final s = ctl.game!;
   final ind = indm[id]!;
   final ms = s.modelsFor(id);
+  // 最初の事業を始めるときは手を使わない
+  final free = b == null && s.biz.isEmpty && !s.everBiz;
   ctl.showSheet((_) => _col([
         H2(b != null ? tr('「{0}」の稼ぎ方を変える', [ind.name]) : tr('「{0}」をどう稼ぐか', [ind.name]), top: true),
         _note(b != null ? tr('切り替えると、混乱で力が1割5分落ちます。手を1つ使います。') : tr('元手 {0}。稼ぎ方は、あとから手を使って変えられます。', [yen(s.capexOf(ind))])),
         for (final m in ms)
           ChoiceBtn('${MODELN[m]}${b != null && b.model == m ? tr('（今）') : ''}', () => ctl.act(() => b != null ? s.changeModel(b, m) : s.startBiz(id, m)),
-              enabled: !(b != null && b.model == m), subs: [MODELD[m]!]),
+              enabled: !(b != null && b.model == m), ap: free ? 0 : 1, apShort: !free && s.ap < 1, subs: [MODELD[m]!]),
         _cancel(ctl),
       ]));
 }
@@ -185,7 +187,7 @@ void openPivot(GameController ctl, Biz b) {
         H2(tr('「{0}」の業態を変える', [from.name]), top: true),
         _note(tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。手を1つ使います。')),
         for (final i in list)
-          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), subs: [
+          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), ap: 1, apShort: s.ap < 1, subs: [
             tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
           ]),
         _cancel(ctl),
@@ -204,7 +206,9 @@ void openDirty(GameController ctl, Company c) {
                   ? actConfirmed(ctl, DIRTYN[k]!, tr(s.listed ? '決算の数字を飾ります。ばれる見込みは{0}%。ばれると上場廃止になり、信用は2年のあいだ地に落ちます。' : '決算の数字を飾ります。ばれる見込みは{0}%。ばれると信用は2年のあいだ地に落ちます。', [jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
                       tr('粉飾する'), () => s.doDirty(k, c))
                   : ctl.act(() => s.doDirty(k, c)),
-              enabled: !(s.cash < s.dirtyCost(k) || s.ap < 1),
+              enabled: s.cash >= s.dirtyCost(k),
+              ap: 1,
+              apShort: s.ap < 1,
               subs: ['${DIRTYD[k]}${k == 'cartel' && s.cartelBiz(c) != null ? tr('。対象は「{0}」', [indm[s.cartelBiz(c)!.ind]!.name]) : ''}']),
         _cancel(ctl),
       ]));
@@ -220,7 +224,7 @@ void openSell(GameController ctl) {
           Panel(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(nmL(c.name), style: ts(bold: true)),
+              Text(nmL(c.name), style: Ui.title),
               Muted(tr('時価総額 {0}', [yen(c.cap)])),
               const SizedBox(height: 4),
               Wrap(spacing: 6, runSpacing: 6, children: [
@@ -233,7 +237,9 @@ void openSell(GameController ctl) {
                           '${tr('{0}に、今の会社を{1}で売ります。事業と部下は手放し、新しい会社をゼロから始めます。', [nmL(c.name), yen(s.salePrice(nc))])}${nc ? tr('何年かは同じ業種に入れません。') : ''}',
                           tr('売る'),
                           () => s.sellCompany(c, nc)),
-                      small: true),
+                      small: true,
+                      ap: 1,
+                      apShort: s.ap < 1),
               ]),
             ]),
           ),
@@ -248,7 +254,7 @@ void openDeal(GameController ctl, Company c) {
         _note(tr('手を1つ使います。関係が悪すぎる相手とは組めません。')),
         for (final t in const ['sales', 'codev', 'outsrc'])
           ChoiceBtn(DEALN[t]!, () => ctl.act(() => s.makeDeal(c, t)),
-              enabled: s.dealOk(c, t).isEmpty, subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
+              enabled: s.dealOk(c, t).isEmpty, ap: 1, apShort: s.ap < 1, subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
         _cancel(ctl),
       ]));
 }
@@ -260,8 +266,8 @@ void openShape(GameController ctl, Biz b) {
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の形を変える', [ind.name]), top: true),
         _note(p != null ? tr('責任者は{0}です。手を1つ使います。', [nmL(p.name)]) : tr('先に責任者を置いてください。その人が社長になります。')),
-        ChoiceBtn(tr('分社する'), () => ctl.act(() => s.spinOff(b)), enabled: p != null, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
-        ChoiceBtn(tr('渡して独立させる'), () => ctl.act(() => s.releaseBiz(b)), enabled: p != null, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
+        ChoiceBtn(tr('分社する'), () => ctl.act(() => s.spinOff(b)), enabled: p != null, ap: 1, apShort: s.ap < 1, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
+        ChoiceBtn(tr('渡して独立させる'), () => ctl.act(() => s.releaseBiz(b)), enabled: p != null, ap: 1, apShort: s.ap < 1, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
         if (s.extras) ...[
           H3(tr('現地法人に分ける')),
           _note(s.localCountries(b).isEmpty
@@ -269,7 +275,7 @@ void openShape(GameController ctl, Biz b) {
               : tr('出ている国の分を、株100%の子会社（現地法人）にします。社長は自分の判断で動き、地元の規制が少し緩みます。')),
           for (final c in s.localCountries(b))
             ChoiceBtn(tr('{0}の分を現地法人にする', [cm[c]!.n]), () => openLocal(ctl, b, c),
-                enabled: !s.hasLocal(c, b.ind), subs: [tr('その国の市場 ×{0}・事業の力の{1}を移す', [(cw(c, s.yr()) / cw(s.home, s.yr())).toStringAsFixed(2), pct(cw(c, s.yr()) / s.reachOf(b) * 100)])]),
+                enabled: !s.hasLocal(c, b.ind), ap: 1, apShort: s.ap < 1, subs: [tr('その国の市場 ×{0}・事業の力の{1}を移す', [(cw(c, s.yr()) / cw(s.home, s.yr())).toStringAsFixed(2), pct(cw(c, s.yr()) / s.reachOf(b) * 100)])]),
         ],
         _cancel(ctl),
       ]));
@@ -284,9 +290,10 @@ void openLocal(GameController ctl, Biz b, String c) {
         _note(tr('手を1つ使います。社長を部下から選ぶか、現地で雇います（相棒は本社に残ります）。')),
         for (final p in s.localPresCands().take(6))
           ChoiceBtn(tr('{0}を社長にする', [nmL(p.name)]), () => ctl.act(() => s.makeLocal(b, c, p.id)),
-              enabled: s.ap > 0,
+              ap: 1,
+              apShort: s.ap < 1,
               subs: [[tr('{0}歳', [p.age]), for (final k in abKeys) '${ABN[k]} ${s.showAb(p, k)}'].join('　')]),
-        ChoiceBtn(tr('現地で社長を雇う'), () => ctl.act(() => s.makeLocal(b, c)), enabled: s.ap > 0, subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
+        ChoiceBtn(tr('現地で社長を雇う'), () => ctl.act(() => s.makeLocal(b, c)), ap: 1, apShort: s.ap < 1, subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
         _cancel(ctl),
       ]));
 }
@@ -307,15 +314,16 @@ void openEnter(GameController ctl, Biz b) {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Expanded(flex: 2, child: Text(x.n, style: ts(bold: true))),
+                  Expanded(flex: 2, child: Text(x.n, style: Ui.title)),
                   Flexible(flex: 3, child: Muted('${tr('市場 ×{0}', [(cw(x.c, y) / hw).toStringAsFixed(2)])}${cw(x.c, y + 10) > cw(x.c, y) * 1.4 ? tr('　これから伸びる') : ''}')),
                 ]),
                 const SizedBox(height: 4),
+                // ボタンは押せる範囲が 44pt あるので、行のあいだは空けない
                 if (ms.isNotEmpty)
-                  Wrap(spacing: 6, runSpacing: 6, children: [
+                  Wrap(spacing: 6, runSpacing: 0, children: [
                     for (final m in ms)
                       Btn('${ENTRYN[m]} ${yen(s.entryCost(b, x.c, m))}', () => ctl.act(() => s.enterCountry(b, x.c, m)),
-                          small: true, enabled: !(s.cash < s.entryCost(b, x.c, m) || s.ap < 1)),
+                          small: true, enabled: s.cash >= s.entryCost(b, x.c, m), ap: 1, apShort: s.ap < 1),
                   ])
                 else
                   Muted(tr('今は入れません')),
@@ -546,7 +554,7 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
             key: const ValueKey('stop-reason'),
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(Ui.partRadius)),
             child: Text(before.stop!, style: ts(size: 13.5, bold: true, color: Pal.goldtx)),
           ),
         H2(head, top: true),
