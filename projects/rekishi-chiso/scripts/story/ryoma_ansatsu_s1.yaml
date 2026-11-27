@@ -1,0 +1,164 @@
+# 物語完結型ショート 坂本龍馬の暗殺 s1（2026-11-27）。本編 scripts/ryoma-ansatsu-story.yaml（12/3 19:00 公開予定、https://youtu.be/GFeQhr4ubjU）から。12/4 9:30 に予約。
+# 形式は kaieki_s1〜s5・shibusawa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 近江屋事件_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/ryoma_ansatsu/main/ の R）の切り出しと、龍馬の肖像写真だけ。新しい絵は作らない。暗殺の場面・血・遺体は描かない。
+# 切り口：今井信郎の話が3通りに変わった（本編 序章・第3章・第4章、ryoma-ansatsu-01・12・02・25・27）。
+# 既出と重ねない：ryoma-if のショート（王政復古の24日前・吉井幸輔の避難の勧め）には触れない。
+# hook＝「龍馬を斬った」と語った男の話はどう変わったか（答えはこのショートの中：1870 見張り→1900 自分が斬った→1909 命令による格闘）。
+# tease＝口書で二階へ踏み込んだと名を挙げた3人は、そのときどうなっていたか（答えは本編 第3章の終わり：のちの戦いで死んでいた。ryoma-ansatsu-32）。
+# 数え直し：慶応3年＝1867、明治3年＝1870（1867→1870＝3年後）、明治33年＝1900（口書の1870→1900＝30年後）、明治42年＝1909（談話の1900→1909＝9年後）。
+#   供述・談話は「何年に誰が」を言う：1870年 今井の口書／1900年 近畿評論の談話／1924年 結城礼一郎の本／1909年 大阪新報への答え。季節は言わない。
+# 理解テスト：①元京都見廻組の今井信郎が、龍馬の暗殺について語った話 ②1867年に京都の近江屋で龍馬が斬られ、1870年の取り調べ、1900年の雑誌、1909年の新聞で語った
+#   ③1870年は見張り、1900年は自分が斬った（書いた記者は場面を芝居がかりで書いたと認めた）、1909年は命令で捕らえに行った格闘 ④同じ1人の話が3通りに変わった
+title: "坂本龍馬｜斬ったと語った男"
+yt_title: "坂本龍馬を斬ったのは自分だ　そう語った今井信郎の話は、見張り・自分が斬った・格闘と3通りに変わっていた"
+description: |-
+  坂本龍馬を斬ったのは、自分だ。明治33年、1900年の雑誌「近畿評論」で、元京都見廻組の今井信郎の、そう語る談話が載りました。
+  ところが、慶応3年、1867年に龍馬が京都の近江屋で斬られた3年後、明治3年、1870年の取り調べの口書では、今井は、自分は見張りをしていただけで、二階へ踏み込んだのはほかの3人だ、と答えていました。今井は、事件に関わったとして禁錮を言い渡されています。
+  1900年の談話を書いた記者の結城礼一郎は、1924年の本で、事実も多少飾り、斬った場面は大いに芝居がかりで書いた、と打ち明けました。そして明治42年、1909年、今井は大阪新報の記者に、あれは暗殺ではなく、命令で捕らえに向かって格闘したのだ、と言い直しています。
+  本編では、事件の直後の手紙から、取り調べの口書、雑誌の談話、48年後の遺言まで、書かれた年を添えて並べ、龍馬を斬った者にどこまで近づけるかを確かめています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#坂本龍馬"
+- "#今井信郎"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません（坂本龍馬の肖像写真を除く）。創作の台詞は入れていません。"
+art_dir: out/story/ryoma_ansatsu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ryoma_ansatsu_story_s1
+header:
+  tag: "今井信郎の話（1870〜1909年）"
+  title: "「斬った」男の話は、《どう変わった》？"
+now:
+- {at: "1867年", text: "1867年　京都の近江屋", point: 0}
+- {at: "3年後の1870年", text: "1870年　取り調べ", point: 0}
+- {at: "30年後の1900年", text: "1900年　雑誌の談話", point: 1}
+- {at: "1924年", text: "1924年　記者の本", point: 1}
+- {at: "9年後の1909年", text: "1909年　新聞の記者に", point: 2}
+timeline:
+- {label: "1870"}
+- {label: "1900"}
+- {label: "1909"}
+cards:
+  - type: table
+    title: 今井信郎の話
+    from: 3年後の1870年
+    until: では口書で
+    items:
+      - {at: "3年後の1870年", text: "1870年　見張りだった"}
+      - {at: "30年後の1900年", text: "1900年　自分が斬った"}
+      - {at: "9年後の1909年", text: "1909年　命令で格闘した"}
+    text_y: 0.70
+shots:
+  R14_1:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R14.jpg"
+    focus: [0.3, 0.5]
+    move: "in"
+    must: "R14"
+  P_2:
+    kind: real
+    image: paintings/ryoma_portrait_standing_ueno.jpg
+    crop: [0.05, 0.0, 0.95, 0.5]
+    focus: [0.5, 0.3]
+    move: in
+    credit: "坂本龍馬の肖像写真（1866〜67年ごろ）"
+    must: 坂本龍馬の肖像写真
+  R12_3:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R12.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R12"
+  R13_4:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R13.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "R13"
+  R14_5:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R14.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "R14"
+  R15_6:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R15.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "R15"
+  R18_7:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R18.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "R18"
+  R19_8:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R19.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R19"
+  R21_9:
+    kind: "ai"
+    file: "ryoma_ansatsu/main/R21.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "R21"
+lines:
+  # fact: ryoma-ansatsu-02, ryoma-ansatsu-01, ryoma-ansatsu-27
+- 語り: "龍馬を斬ったのは、自分だ。そう語った男の話は、1870年から1909年までに、3通りに変わっていた。"
+  shot: R14_1
+  tone: 強調
+  pause: 0.12
+  # fact: ryoma-ansatsu-42, ryoma-ansatsu-01, ryoma-ansatsu-36
+- 語り: "1867年、京都の近江屋で、龍馬が斬られた。"
+  shot: P_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: ryoma-ansatsu-01, ryoma-ansatsu-36
+- 語り: "その3年後の1870年。元京都見廻組の今井信郎は、取り調べで、自分は見張りだった、と答えた。"
+  shot: R12_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ryoma-ansatsu-01, ryoma-ansatsu-12
+- 語り: "二階へ踏み込んだのは、ほかの3人。今井は、事件に関わったとして、禁錮を言い渡された。"
+  shot: R13_4
+  tone: 重い
+  pause: 0.12
+  # fact: ryoma-ansatsu-02
+- 語り: "口書から30年後の1900年。近畿評論という京都の雑誌に、今井の談話が載る。龍馬を斬ったのは、自分だ。"
+  shot: R14_5
+  tone: 強調
+  pause: 0.12
+  # fact: ryoma-ansatsu-25
+- 語り: "けれど、この談話を書いた記者、結城礼一郎は、1924年の本で、斬った場面は、芝居がかりで書いた、と認めている。"
+  shot: R15_6
+  tone: 重い
+  pause: 0.12
+  # fact: ryoma-ansatsu-27
+- 語り: "談話から9年後の1909年。今井は、大阪新報の記者に言い直す。あれは暗殺ではない。命令で捕らえに向かい、格闘したのだ。"
+  shot: R18_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: ryoma-ansatsu-01, ryoma-ansatsu-02, ryoma-ansatsu-27
+- 語り: "見張りだった。自分が斬った。命令で格闘した。同じ1人の話が、3通りに変わっている。"
+  shot: R19_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第3章の終わり（ryoma-ansatsu-32 3人はのちの戦いで死んでいた）
+- 語り: "では、口書で、二階へ踏み込んだとされた3人は、そのとき、どうなっていたのか。"
+  shot: R21_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,271 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも本能寺の変が起きなかったら、織田家はどうなった？（scripts/honnouji-if-story.yaml）。chiso/storymain.py が読む。
+# 11-27 作成（12/4 12:00 公開予定）。hojo_main_look.yaml を写した。
+# 絵の方針：新しい Gemini の絵（11-27、/u/0）は G01〜G19 の14枚：
+#   G01=信長（想像図・右に上半身、左は夜の寺と炎）G02=岐阜城の広間で家督を受ける信忠と信長 G03=高遠城で塀の上に立つ信忠（春）G04=茶道具の前の信長
+#   G05=夜明け前の京、寺の門から出る武者 G06=煙の上がる二条の御殿と信忠の後ろ姿 G07=幼子を抱いて馬で急ぐ僧形の武士 G08=清洲城の広間の4人の重臣
+#   G09=城の奥の幼い若君と侍女・老臣 G10=金華山の岐阜城と長良川 G11=住吉の浜の軍船 G13=琵琶湖畔の安土城 G16=将棋の駒を作る藩士の手もと G19=終了画面の夕暮れの湖
+#   足りない所は北条の回の絵（out/story/hojo-if/main/ の H02〜H26。もとは前の回の Gemini の絵）を out/story/honnouji-if/main/ に写して使う（out/ は git に入らない）。
+#   実在の人物の顔は、実在の肖像（額）か、この回の想像図（信長 G01・G02・G04、信忠 G02・G03・G06）と前の回の秀吉 H05 だけ。切腹・遺骸の場面は描かない。
+script: scripts/honnouji-if-story.yaml
+out: honnouji_if_story_main
+art_dir: out/story/honnouji-if/ph
+main_art_dir: out/story/honnouji-if/main
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 本能寺の変の7年前、織田家の当主は誰だったのか, now: 天正3年,
+      dates: {1: 天正3年11月, 3: 天正10年6月, 4: null, 5: 天正10年6月, 8: 天正18年, 9: 慶長10年, 10: null}}
+  1: {label: 第1章 19歳で家督を継いだ信忠は、どんな当主だったのか, now: 弘治3年,
+      dates: {15: 天正3年, 17: 天正5年, 18: null, 20: 天正10年3月, 24: null}}
+  2: {label: 第2章 信長は、息子たちに何を託していたのか, now: 天正10年5月,
+      dates: {30: 永禄11年, 31: 天正10年5月, 36: 天正7年, 38: 天正9年, 40: 天正10年, 41: 天正10年5月, 43: 天正10年4月, 44: 天正10年5月}}
+  3: {label: 第3章 信忠は、なぜ逃げなかったのか, now: 天正10年5月,
+      dates: {49: 天正10年6月, 51: 天正7年, 52: 天正10年6月, 59: 天正8年, 60: 天正15年, 61: 天正10年6月}}
+  4: {label: 第4章 清洲で、本当は何が決まったのか, now: 天正10年6月,
+      dates: {64: null, 70: 天正10年6月, 71: 天正10年7月, 74: 天正10年10月, 76: 天正10年, 77: null}}
+  5: {label: 第5章 織田家は、どこで生き延びたのか, now: 天正11年,
+      dates: {82: 天正12年, 83: 天正18年, 84: 文禄元年, 85: null, 86: 慶長5年8月, 88: 慶長10年, 91: 元和元年, 92: 元禄8年, 93: 明和4年, 94: null}}
+  6: {label: 第6章 分岐1 織田家は誰が継いだのか, now: null, dates: {}}
+  7: {label: 第7章 分岐2 信雄と信孝、そして朝廷, now: null, dates: {121: 天正9年3月, 122: null}}
+  8: {label: まとめ もしも本能寺の変が起きなかったら, now: null, dates: {}}
+
+references:
+  - "太田牛一『信長公記』巻八・巻十二・巻十四・巻十五（Wikisource 我自刊我書本ほか）"
+  - "『尾張国遺存織田信長史料写真集』（1931）所収 天正10年5月7日付 織田信長朱印状（三七郎宛）　https://dl.ndl.go.jp/"
+  - "川上貢「将軍義昭の武家御城と織田信長の二条御新造」『リーフレット京都』No.121（京都市埋蔵文化財研究所・京都市考古資料館、1999）"
+  - "和田裕弘『織田信忠―天下人の嫡男』（中公新書、2019）・同 PRESIDENT Online の記事（2026）"
+  - "渡邊大門「本能寺の変がなければ、信雄と信孝はどうなった？」「信長が天下を託した嫡男・織田信忠」「清須会議の真相」ほか Yahoo!ニュース エキスパート（2026）"
+  - "呉座勇一「清須会議は秀吉の独壇場ではなかった？」（2026）／小林明「私たちが知る『清須会議』は創作ばかり！？」和樂web（2026、柴裕之『清須会議』の紹介）"
+  - "藤田達生「『三職推任』問題と仕組まれた信長入京」サライ.jp（2021）"
+  - "矢部健太郎「中近世移行期の皇位継承と武家権力」『國學院雜誌』120巻11号（2019）"
+  - "菊地浩之「信長の息子11人でただひとり大名家として存続…」（2026）"
+  - "宇陀市・丹波市（柏原藩年表・柏原藩陣屋跡）・天童市（天童織田藩のあらまし・天童と将棋駒）・奈良県（織田氏の末裔の藩）・桜井市・甘楽町・岐阜市・京都観光Navi（大雲院）・愛知県観光協会（野間大坊）"
+  - "日本人名大辞典・日本大百科全書・世界大百科事典・百科事典マイペディア・ブリタニカ国際大百科事典（コトバンク）"
+no_tag_from: 131
+
+ai:
+  G01: {scene: 織田信長（想像図）と、夜の京の寺の屋根と遠くの炎, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.2, 0.38, 0.5], right: [1.2, 0.64, 0.4]}}
+  G02: {scene: 岐阜城の広間で礼をする若い信忠と、座る信長（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.2, 0.66, 0.42]}}
+  G03: {scene: 春の山城で、塀の上に立って合図する若い武将（信忠の想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.55], right: [1.2, 0.68, 0.4]}}
+  G04: {scene: 茶の湯の道具の前に静かに座る信長（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.38, 0.6], right: [1.2, 0.68, 0.45]}}
+  G05: {scene: 夜明け前の京、寺の門から急いで出る武者たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G06: {scene: 煙の上がる二条の御殿と、縁側に立つ若い武将の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.45], right: [1.2, 0.66, 0.45]}}
+  G07: {scene: 夜明けの山道を、幼子を抱いて馬で急ぐ僧形の武士と供, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.2, 0.6, 0.4]}}
+  G08: {scene: 清洲城の広間で向き合う4人の重臣, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.55], right: [1.18, 0.62, 0.55]}}
+  G09: {scene: 城の奥の一室の幼い若君と、侍女と老臣, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.45, 0.5], right: [1.2, 0.62, 0.5]}}
+  G10: {scene: 夕方の金華山の岐阜城と長良川の城下, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.45]}}
+  G11: {scene: 住吉の浜に並ぶ軍船と兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.55]}}
+  G13: {scene: 夕暮れの琵琶湖畔の安土城の天主, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5], right: [1.18, 0.6, 0.45]}}
+  G16: {scene: 天童の藩士が将棋の駒を作る手もと（江戸後期）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.6]}}
+  G19: {scene: 終了画面用。夕暮れの湖と山並み（右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  H02: {scene: 霧の谷と陣の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.62, 0.5]}}
+  H03: {scene: 巻紙を開く手元と灯, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.55], right: [1.18, 0.62, 0.55]}}
+  H04: {scene: 机の上の文書と硯（読めない筆の跡）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  H05: {scene: 金の襖の御殿に座る秀吉（前の回の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H07: {scene: 夕暮れの石垣と堀, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.25, 0.4, 0.5]}}
+  H08: {scene: 街道を急ぐ使者, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  H09: {scene: 雨の境内の五輪塔の列（文字なし）, pan: v, crops: {wide: [1.12, 0.5, 0.5]}}
+  H11: {scene: 陣幕の内の床几と灯（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H12: {scene: 山の斜面に連なる陣幕と無地の旗, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H13: {scene: 丘の上の夜の城と、門を出る数騎, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H17: {scene: 秋の街道を行く輿と護衛（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H18: {scene: 夜通し進む輿と松明の行列, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.55]}}
+  H19: {scene: 京の御殿の遠景と町屋の屋根, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H23: {scene: 高台に並ぶ竹の柵と陣の囲い, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  H24: {scene: 灯のもとの文机と開いた書状, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  H25: {scene: 誰もいない広間とろうそく, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H26: {scene: 霧の朝の松並木の街道（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+
+credits:
+  paintings/nobunaga_portrait_chokoji.jpg: 狩野宗秀《織田信長像》1583年（長興寺蔵）
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: 《豊臣秀吉像》1600年（大阪市立美術館蔵）
+  paintings/ieyasu_portrait_toshodaigongen.jpg: 伝 狩野探幽《徳川家康像（東照大権現像）》江戸前期
+  paintings/hideyoshi_kiyosu_sanboshi_ehon_taikoki.jpg: 岡田玉山『絵本太閤記』三法師を抱く秀吉（1797〜1802年、後世の場面）
+  paintings/hideyoshi_daitokuji_funeral_yoshitoshi.jpg: 月岡芳年《紫野大徳寺焼香之図》1877年ごろ（三法師を抱く秀吉、後世の場面）
+  paintings/nobunaga_rakuchu_uesugi_left.jpg: 狩野永徳《洛中洛外図屏風》（上杉本）左隻
+  paintings/nobunaga_rakuchu_uesugi_right.jpg: 狩野永徳《洛中洛外図屏風》（上杉本）右隻
+  paintings/sekigahara_screen_gifu.jpg: 《関ヶ原合戦図屏風》江戸後期（岐阜市歴史博物館蔵）
+  paintings/hanbei_gifu_castle_zu.jpg: 《岐阜城図》（江戸時代）
+  paintings/nobunaga_azuchi_castle_zu.jpg: 《近江国蒲生郡安土城之図》（1855年原図の明治の写し）
+
+shots:
+  # 序章（0〜13）
+  - 0 ai:G01 wide
+  - 1 ai:G02 wide
+  - 2 ai:G04 wide
+  - 3 ai:G06 wide
+  - 4 ai:G01 left
+  - 5 ai:G05 wide
+  - 6 ai:G06 right
+  - 7 ai:G09 wide
+  - 8 ai:H05 wide
+  - 9 ai:H09 wide
+  - 10 ai:G10 wide
+  - 11 ai:G13 wide
+  - 12 ai:G02 right
+  - 13 ai:G03 wide
+  # 第1章（14〜28）
+  - 14 ai:G10 wide
+  - 15 ai:H08 wide
+  - 16 ai:H24 wide
+  - 17 ai:H02 wide
+  - 18 ai:H03 wide
+  - 19 ai:H04 wide
+  - 20 ai:G03 wide
+  - 21 ai:G03 right
+  - 22 ai:G02 wide
+  - 23 ai:H24 left
+  - 24 ai:H25 wide
+  - 25 ai:G09 wide
+  - 26 ai:G13 wide
+  - 27 ai:G02 right
+  - 28 ai:G11 wide
+  # 第2章（29〜47）
+  - 29 frame:paintings/nobunaga_portrait_chokoji.jpg
+  - 30 ai:H17 wide
+  - 31 ai:H24 wide
+  - 32 ai:H03 left
+  - 33 ai:G11 right
+  - 34 ai:H04 right
+  - 35 ai:G11 left
+  - 36 ai:H23 wide
+  - 37 ai:H03 wide
+  - 38 ai:H12 wide
+  - 39 ai:H07 wide
+  - 40 ai:H26 wide
+  - 41 ai:G13 wide
+  - 42 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 43 ai:H19 wide
+  - 44 ai:G13 left
+  - 45 ai:G04 right
+  - 46 ai:H26 left
+  - 47 ai:G05 wide
+  # 第3章（48〜62）
+  - 48 part:paintings/nobunaga_rakuchu_uesugi_left.jpg
+  - 49 ai:G05 right
+  - 50 ai:H08 wide
+  - 51 ai:H19 wide
+  - 52 ai:H18 wide
+  - 53 ai:G06 wide
+  - 54 ai:G06 right
+  - 55 ai:H25 wide
+  - 56 ai:H11 wide
+  - 57 ai:G01 wide
+  - 58 ai:G07 wide
+  - 59 ai:G09 wide
+  - 60 ai:H09 wide
+  - 61 ai:G06 left
+  - 62 ai:G08 wide
+  # 第4章（63〜78）
+  - 63 ai:G08 wide
+  - 64 ai:H24 wide
+  - 65 frame:paintings/hideyoshi_kiyosu_sanboshi_ehon_taikoki.jpg
+  - 66 ai:H03 wide
+  - 67 ai:H04 wide
+  - 68 ai:H04 left
+  - 69 ai:G08 left
+  - 70 ai:H12 wide
+  - 71 ai:H24 left
+  - 72 ai:H05 wide
+  - 73 ai:G10 wide
+  - 74 part:paintings/hideyoshi_daitokuji_funeral_yoshitoshi.jpg
+  - 75 ai:G13 wide
+  - 76 ai:G09 right
+  - 77 ai:G08 right
+  - 78 ai:H13 wide
+  # 第5章（79〜99）
+  - 79 ai:H23 wide
+  - 80 ai:H09 wide
+  - 81 ai:H25 wide
+  - 82 ai:H12 wide
+  - 83 ai:H26 wide
+  - 84 ai:G10 left
+  - 85 ai:H25 left
+  - 86 part:paintings/sekigahara_screen_gifu.jpg
+  - 87 ai:H09 wide
+  - 88 ai:H24 wide
+  - 89 ai:G06 right
+  - 90 ai:H07 wide
+  - 91 ai:H17 wide
+  - 92 ai:H26 left
+  - 93 ai:H18 wide
+  - 94 ai:H13 left
+  - 95 ai:H19 left
+  - 96 ai:H07 right
+  - 97 ai:G16 wide
+  - 98 ai:G10 wide
+  - 99 ai:G01 wide
+  # 第6章（100〜113）
+  - 100 ai:G13 wide
+  - 101 ai:G02 wide
+  - 102 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 103 ai:H25 wide
+  - 104 ai:H09 wide
+  - 105 ai:G02 right
+  - 106 ai:G09 wide
+  - 107 ai:H11 wide
+  - 108 ai:H03 wide
+  - 109 ai:G08 wide
+  - 110 ai:G09 left
+  - 111 ai:H24 wide
+  - 112 ai:G11 wide
+  - 113 ai:H19 wide
+  # 第7章（114〜127）
+  - 114 ai:H17 wide
+  - 115 ai:H23 wide
+  - 116 ai:G11 left
+  - 117 ai:H09 wide
+  - 118 ai:H12 wide
+  - 119 ai:H26 wide
+  - 120 ai:H19 left
+  - 121 ai:H24 wide
+  - 122 ai:H25 wide
+  - 123 ai:H04 wide
+  - 124 ai:H18 wide
+  - 125 ai:G13 wide
+  - 126 ai:G06 wide
+  - 127 ai:G05 wide
+  # まとめ（128〜134）
+  - 128 ai:G02 wide
+  - 129 ai:G13 left
+  - 130 ai:H24 wide
+  - 131 ai:G01 wide
+  - 132 ai:G06 right
+  - 133 ai:G01 left
+  - 134 ai:G19 left
+  - end ai:G19 wide
+figures: []
+
+focus:
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: {秀吉: [1.5, 0.5, 0.30]}
+
+fx:
+  G01: {sparks: {region: [0.0, 0.4, 0.45, 1.0]}}
+  G06: {smoke: {region: [0.0, 0.0, 0.6, 0.45]}}
+  H02: {mist: {region: [0, 0.35, 1, 0.85], alpha: 0.10, speed: 5}}
+  H03: {lamp: {region: [0.05, 0.2, 0.15, 0.5]}}
+  H26: {mist: {region: [0, 0.4, 1, 0.9], alpha: 0.10, speed: 5}}
+
+paint_fx: {}
+
+parts:
+  - {type: names, from: 9, to: 10, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[織田信忠, 19歳で当主になった嫡男, ai:G02, [0.55, 0.40]],
+             [三法師, 信忠の長男（のちの秀信）, ai:G09, [0.62, 0.48]],
+             [織田信長, 7年前に家督を譲った父, paintings/nobunaga_portrait_chokoji.jpg, [0.5, 0.62]]]}
+  - {type: quote, from: 2, to: 2, label: 史料, text: 御茶の湯道具ばかり召し置かれ, source: 『信長公記』巻八（天正3年11月28日条。読み下し）}
+  - {type: quote, from: 23, to: 23, label: 史料, text: 天下の儀も御与奪なさるべき, source: 『信長公記』巻十五（天正10年3月26日条。読み下し）}
+  - {type: quote, from: 32, to: 32, label: 史料, text: 万端、山城守に対し／君臣父母の思いをなし馳走すべき, source: 信長朱印状（天正10年5月7日・信孝宛。1931年の写真集。読み下し）}
+  - {type: quote, from: 37, to: 37, label: 史料, text: 親子の旧離、許容すべからず, source: 織田信長書状（天正7年9月22日・信雄宛。『信長公記』巻十二。読み下し）}
+  - {type: quote, from: 54, to: 54, label: 史料, text: 雑兵の手にかかり候ては後難無念／ここにて腹を切るべし, source: 『信長公記』巻十五（天正10年6月2日条。読み下し）}
+  - {type: quote, from: 130, to: 130, label: 要点, text: 当主は信忠・弟は一門の大名／三法師の代までは分からない, source: この動画のもしもの整理（推論）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）信長と夜の寺}
+  - {line: 10, note: 序章 覚えてほしい名前}
+  - {line: 16, note: 第1章 任官の年（くい違い）}
+  - {line: 41, note: 第2章 息子たちの関係図}
+  - {line: 54, note: 第3章 信忠の言葉の引用札}
+  - {line: 68, note: 第4章 清洲の筋（くい違い）}
+  - {line: 111, note: 第6章 もしもの表}
+  - {end: true, note: 終了画面の空き}
