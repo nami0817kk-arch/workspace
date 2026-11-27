@@ -322,7 +322,7 @@ final kTraits = <Trait>[
     '大食い',
     TraitTier.common,
     '人の倍は食う。よく働くが、飢えの年にはこたえる',
-  ), // 済: 場面「大食いの賭け」
+  ), // 済: 場面「大食い比べ」
   Trait(
     'drinker',
     '酒豪',
@@ -465,9 +465,9 @@ final kTraits = <Trait>[
   ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'gambler',
-    '博打好き',
+    '勝負好き',
     TraitTier.common,
-    '賭け事に目がない。勝てば大きいが、負けも大きい',
+    '勝ち負けのつく事に目がない。勝てば大きいが、負けも大きい',
   ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'filial',
