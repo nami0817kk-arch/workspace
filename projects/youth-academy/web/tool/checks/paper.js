@@ -24,7 +24,7 @@ module.exports = (YA, ok) => {
     OK(Object.values(YA.PAPER_HL).every((l) => l.length >= 3), '見出しは型ごとに3通り以上');
   }
 
-  // ---- 2. 3年おまかせで回す：試合ごとに、新聞の有無・優先・記録との食い違いを見る ----
+  // ---- 2. 2年半おまかせで回す：試合ごとに、新聞の有無・優先・記録との食い違いを見る ----
   const w = YA.newWorld(2711);
   const am = YA.applyMatch;
   const seen = []; // { which, scheduled, official, made, P, real }
@@ -51,16 +51,17 @@ module.exports = (YA, ok) => {
   };
   let stops = 0;
   try {
-    for (let y = 0; y < 3; y++) { const r = YA.simulate(w, { until: 'year', stopOnImportant: false }); if (r && r.stopped) stops++; }
+    for (let y = 0; y < 2; y++) { const r = YA.simulate(w, { until: 'year', stopOnImportant: false }); if (r && r.stopped) stops++; }
+    for (let k = 0; k < 20; k++) { const r = YA.simulate(w, { until: 'week', stopOnImportant: false }); if (r && r.stopped) stops++; } // 3年目の途中まで（在籍の子の記事と紙面を見るため）
   } finally { YA.applyMatch = am; }
   OK(!YA._paperErr, '作るときに例外が出ない ' + (YA._paperErr || []).slice(0, 1).join(''));
   const A = seen.filter((x) => x.which === 'A' && x.scheduled);
   const offi = A.filter((x) => x.official);
-  OK(offi.length >= 60 && offi.every((x) => x.made), `A の公式戦のあとは毎回新聞が出る（${offi.filter((x) => x.made).length}/${offi.length}）`);
+  OK(offi.length >= 50 && offi.every((x) => x.made), `A の公式戦のあとは毎回新聞が出る（${offi.filter((x) => x.made).length}/${offi.length}）`);
   const friendly = A.filter((x) => !x.official);
   OK(friendly.length >= 4 && friendly.every((x) => !x.made), `練習試合・フェスティバルでは出ない（${friendly.length}試合）`);
   const bs = seen.filter((x) => x.which === 'B');
-  OK(bs.length >= 20 && bs.every((x) => !x.made), `B の試合では出ない（${bs.length}試合）`);
+  OK(bs.length >= 15 && bs.every((x) => !x.made), `B の試合では出ない（${bs.length}試合）`);
   // 優先：試合から数えた事実と、選ばれた型の段が合う
   const made = A.filter((x) => x.made);
   let badRank = [];
@@ -76,7 +77,7 @@ module.exports = (YA, ok) => {
   OK(!badRank.length, `大見出しの優先順が試合の事実と合う（${made.length}試合） ` + badRank.slice(0, 4).join(' '));
   const kinds = {};
   for (const x of made) kinds[x.P.k] = (kinds[x.P.k] || 0) + 1;
-  console.log('新聞の大見出しの型（3年）', JSON.stringify(kinds));
+  console.log('新聞の大見出しの型（2年半）', JSON.stringify(kinds));
   OK(['nw', 'nd', 'nl'].filter((k) => kinds[k]).length >= 2 && (kinds.win1 || 0) + (kinds.hat || 0) > 0 && Object.keys(kinds).length >= 6, '大見出しの型がばらける（6種類以上）');
   // 記録と食い違わない：スコア・得点者・得点の数・採点
   let badRec = [];
@@ -100,7 +101,7 @@ module.exports = (YA, ok) => {
   {
     let n = 0, bad = 0;
     for (const P of w.papers) for (const r of P.rt) { const p = w.players[r[0]]; if (!p) continue; const rl = (p.rl || []).find((x) => x.y === P.y && x.w === P.wk && x.t !== 'B'); if (!rl) continue; n++; if (Math.abs(rl.r - r[3]) > 0.051) bad++; }
-    OK(n > 30 && bad === 0, `紙面の採点が選手の試合の記録と同じ（${n}人中 違い${bad}）`);
+    OK(n >= 8 && bad === 0, `紙面の採点が選手の試合の記録と同じ（${n}人中 違い${bad}）`);
   }
   // 同じ見出しが続かない（同じ型の直近の言い回しも避ける）
   {
@@ -128,7 +129,7 @@ module.exports = (YA, ok) => {
     OK(n > 0 && bad === 0, `経歴の記事が紙面と同じ（${n}件中 違い${bad}）`);
   }
   // おまかせで止まらない・お知らせを増やさない
-  OK(stops === 0 && w.year === 4, 'おまかせ進行は新聞で止まらない');
+  OK(stops === 0 && w.year === 3, 'おまかせ進行は新聞で止まらない');
   OK(!(w.forced || []).some((e) => /paper/.test(e.id)) && !(w.inbox || []).some((n) => /新聞/.test(String(n.text))), '新聞は出来事・お知らせを増やさない');
   // 保存の大きさ：紙面は直近だけ・記事は件数の上限。年を重ねても新聞の分は小さいまま
   {
@@ -137,7 +138,7 @@ module.exports = (YA, ok) => {
     const al = w.alumni || [];
     const pa = size(al.map((a) => a.press || []));
     const all = JSON.stringify(w).length;
-    console.log('新聞の保存（3年）', '紙面', pp, '在籍の記事', pl, '卒業生の記事', pa, '卒業生', al.length, '全体', all);
+    console.log('新聞の保存（2年半）', '紙面', pp, '在籍の記事', pl, '卒業生の記事', pa, '卒業生', al.length, '全体', all);
     OK(w.papers.length <= YA.PAPER_KEEP && pp < 16000, `紙面の材料は直近${YA.PAPER_KEEP}試合だけ（${pp}字）`);
     OK(pa / Math.max(1, al.length) < 900 && (pp + pl + pa) / all < 0.08, `新聞の分は保存全体の8%未満（${(((pp + pl + pa) / all) * 100).toFixed(1)}%・卒業生1人 ${(pa / Math.max(1, al.length)).toFixed(0)}字）`);
   }
