@@ -110,7 +110,7 @@
       // 重要度は色の点だけでなく短い札で（2026-11-17 点検）。選手につながるお知らせには「›」
       const go = n.pid && w.players[n.pid];
       // 留めるのは行の長押しで（2026-11-18 ユーザビリティ17）
-      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, nsay(n), go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null));
+      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null, nsay(n)));
       let lp = null, held = false;
       if (et <= 2) {
         row.addEventListener('pointerdown', () => { held = false; lp = setTimeout(() => { held = true; w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); if (YA.toast) YA.toast('上に留めました（外すときは「外す」）'); redraw(); }, 550); });
