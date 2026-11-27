@@ -1,0 +1,208 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：豊臣家はその後どうなった？（scripts/toyotomi-sonogo-story.yaml）。chiso/storymain.py が読む。
+# 11-27 作成（12/4 19:00 公開予定）。kaieki_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-27。out/story/toyotomi/main/<名>.jpg）だけ。江戸の初め（1600〜1650年）中心＋明治・1980年の場面。
+#   処刑の場面・遺体・骨は描かない。実在の人物の顔ははっきり描かない（後ろ姿・遠景・名指さない人）。字・紋（桐紋）は描かない。
+script: scripts/toyotomi-sonogo-story.yaml
+out: toyotomi_sonogo_story_main
+art_dir: out/story/toyotomi/main
+main_art_dir: out/story/toyotomi/main
+ai_disclosure: この動画の情景と人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 豊臣家は本当に絶えたのか, now: null, dates: {}}
+  1: {label: 第1章 豊臣の人は誰が残った？, now: 1615年5月, dates: {}}
+  2: {label: 第2章 国松はどこで育った？, now: null, dates: {24: 慶長19年, 27: 1615年5月, 28: null}}
+  3: {label: 第3章 最期の日は誰が選んだ？, now: 1615年5月, dates: {33: 1615年5月23日, 34: null, 40: null}}
+  4: {label: 第4章 秀頼の娘は尼寺で何を残した？, now: 1616年, dates: {46: 1615年, 49: 1642年, 51: 1645年, 52: 1659年, 54: 1647年, 55: null}}
+  5: {label: 第5章 秀吉を祀った神社はどうなった？, now: 1615年, dates: {61: 1616年, 63: 1770年代, 64: 1785年, 66: null}}
+  6: {label: 第6章 大坂城の土から出た骨は誰？, now: 1980年, dates: {72: 1983年ごろ, 73: null}}
+  7: {label: 第7章 秀頼は薩摩で生きていた？, now: null, dates: {83: 1968年, 86: 1907年ごろ, 87: 1642年, 89: null}}
+  8: {label: 第8章 秀吉の血はどこへ残った？, now: null, dates: {95: 1533年, 97: 1625年, 99: 1604年, 100: null}}
+  9: {label: 第9章 ねねの家と明治の豊国社, now: 1615年, dates: {106: 1871年, 107: 1884年, 108: 2019年, 109: 1868年, 112: 1880年, 113: 1898年, 114: null}}
+  10: {label: まとめ 豊臣家は本当に絶えたのか, now: null, dates: {}}
+no_tag_from: 120
+
+references:
+  - "東京大学史料編纂所『大日本史料』第12編之20（1918）元和元年5月23日条（駿府記・本光国師日記・土御門泰重卿記・梵舜日記・元寛日記・大坂御陣山口休菴咄・落穂雑談一言集ほか）"
+  - "Kaneko・Morrell「Sanctuary: Kamakura's Tokeiji Convent」（Japanese Journal of Religious Studies 10/2-3, 1983）・東慶寺の公式"
+  - "日出町歴史資料館「延由が蘇る―国松伝説を背負った男の刀―」（2021）・鹿児島市「史跡めぐり 谷山」・観光庁の多言語解説（豊国神社・豊国廟）"
+
+credits: {}
+ai:
+  T01: {scene: 焼け落ちた大坂城の跡と煙, pan: h, crops: &c {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  T02: {scene: 暦を広げて考える僧（行灯）, pan: h, crops: *c}
+  T03: {scene: 鎌倉の尼寺の山門と石段, pan: v, crops: *c}
+  T04: {scene: 若狭の海辺の城下町, pan: h, crops: *c}
+  T05: {scene: 若狭の町家で幼い男の子を抱く女性, pan: h, crops: *c}
+  T06: {scene: 長持を担いで城門をくぐる武士たち, pan: h, crops: *c}
+  T07: {scene: 夜に燃える城を見上げる町の人々, pan: h, crops: *c}
+  T08: {scene: 伏見の川べりの町と橋, pan: h, crops: *c}
+  T09: {scene: 日記を書く公家, pan: h, crops: *c}
+  T10: {scene: 所司代の屋敷の門前で願い出る武士, pan: h, crops: *c}
+  T11: {scene: 夕方の鴨川の橋にたたずむ人々, pan: h, crops: *c}
+  T12: {scene: 幼い尼の手を引く尼僧, pan: h, crops: *c}
+  T13: {scene: 鎌倉の寺の門前で手帳に書くイギリス人, pan: h, crops: *c}
+  T14: {scene: 雲板の前で手を合わせる尼僧, pan: h, crops: *c}
+  T15: {scene: 林の中の無縫塔, pan: v, crops: *c}
+  T16: {scene: 荒れた東山の神社の社殿, pan: h, crops: *c}
+  T17: {scene: 東山の長い石段の参道, pan: v, crops: *c}
+  T18: {scene: 1980年ごろの発掘調査の現場, pan: h, crops: *c}
+  T19: {scene: 嵯峨の大きな寺の本堂, pan: h, crops: *c}
+  T20: {scene: 南九州の石の宝塔と火山, pan: v, crops: *c}
+  T21: {scene: 豊後の海辺の城, pan: h, crops: *c}
+  T22: {scene: 明治の和室で老女が少年に語る, pan: h, crops: *c}
+  T23: {scene: 寺の堂内に並ぶ位牌と灯明, pan: h, crops: *c}
+  T24: {scene: 庭を見る年老いた尼, pan: h, crops: *c}
+  T25: {scene: 公家の屋敷への輿入れ, pan: h, crops: *c}
+  T26: {scene: 備中の陣屋町, pan: h, crops: *c}
+  T27: {scene: 明治初めの京都の新しい神社, pan: h, crops: *c}
+  TEND: {scene: 終了画面。夕暮れの城下町の遠景（右半分に余白）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:T02 wide
+- 1 ai:T03 wide
+- 2 ai:T21 wide
+- 3 ai:T22 wide
+- 4 ai:T01 wide
+- 5 ai:T18 wide
+- 6 ai:T16 wide
+- 7 ai:T07 wide
+- 8 ai:T01 left
+- 9 ai:T07 right
+- 10 ai:T01 right
+- 11 ai:T24 wide
+- 12 ai:T25 wide
+- 13 ai:T21 right
+- 14 ai:T01 wide
+- 15 ai:T07 wide
+- 16 ai:T05 wide
+- 17 ai:T09 left
+- 18 ai:T05 left
+- 19 ai:T09 right
+- 20 ai:T05 right
+- 21 ai:T04 wide
+- 22 ai:T04 left
+- 23 ai:T05 wide
+- 24 ai:T06 wide
+- 25 ai:T06 left
+- 26 ai:T06 right
+- 27 ai:T07 wide
+- 28 ai:T02 wide
+- 29 ai:T08 wide
+- 30 ai:T09 wide
+- 31 ai:T02 left
+- 32 ai:T02 right
+- 33 ai:T11 wide
+- 34 ai:T02 wide
+- 35 ai:T10 left
+- 36 ai:T10 wide
+- 37 ai:T10 right
+- 38 ai:T11 left
+- 39 ai:T09 right
+- 40 ai:T09 left
+- 41 ai:T02 left
+- 42 ai:T11 right
+- 43 ai:T13 left
+- 44 ai:T13 wide
+- 45 ai:T13 right
+- 46 ai:T12 left
+- 47 ai:T12 wide
+- 48 ai:T03 wide
+- 49 ai:T14 wide
+- 50 ai:T14 left
+- 51 ai:T15 left
+- 52 ai:T15 wide
+- 53 ai:T12 right
+- 54 ai:T03 left
+- 55 ai:T15 right
+- 56 ai:T16 left
+- 57 ai:T17 wide
+- 58 ai:T16 wide
+- 59 ai:T16 right
+- 60 ai:T17 left
+- 61 ai:T17 right
+- 62 ai:T16 left
+- 63 ai:T17 wide
+- 64 ai:T16 right
+- 65 ai:T17 left
+- 66 ai:T19 left
+- 67 ai:T18 wide
+- 68 ai:T18 left
+- 69 ai:T18 right
+- 70 ai:T01 left
+- 71 ai:T19 wide
+- 72 ai:T19 right
+- 73 ai:T18 wide
+- 74 ai:T19 left
+- 75 ai:T20 left
+- 76 ai:T20 wide
+- 77 ai:T20 right
+- 78 ai:T09 wide
+- 79 ai:T20 left
+- 80 ai:T20 wide
+- 81 ai:T22 left
+- 82 ai:T21 wide
+- 83 ai:T22 wide
+- 84 ai:T22 right
+- 85 ai:T21 left
+- 86 ai:T22 left
+- 87 ai:T23 left
+- 88 ai:T21 right
+- 89 ai:T23 wide
+- 90 ai:T23 right
+- 91 ai:T23 left
+- 92 ai:T22 wide
+- 93 ai:T24 left
+- 94 ai:T24 wide
+- 95 ai:T24 right
+- 96 ai:T24 wide
+- 97 ai:T24 left
+- 98 ai:T25 left
+- 99 ai:T25 wide
+- 100 ai:T25 right
+- 101 ai:T25 wide
+- 102 ai:T26 left
+- 103 ai:T26 wide
+- 104 ai:T21 wide
+- 105 ai:T26 right
+- 106 ai:T26 wide
+- 107 ai:T21 left
+- 108 ai:T26 left
+- 109 ai:T27 wide
+- 110 ai:T16 wide
+- 111 ai:T27 left
+- 112 ai:T27 right
+- 113 ai:T17 wide
+- 114 ai:T01 wide
+- 115 ai:T07 wide
+- 116 ai:T02 wide
+- 117 ai:T15 wide
+- 118 ai:T23 wide
+- 119 ai:T25 wide
+- 120 ai:T03 wide
+- 121 ai:T01 right
+- end ai:TEND wide
+focus: {}
+fx:
+  T02: {lamp: {region: [0.2, 0.2, 0.6, 0.7]}}
+  T07: {fire: {region: [0.3, 0.0, 0.9, 0.5]}}
+  T23: {lamp: {region: [0.2, 0.3, 0.8, 0.8]}}
+figures:
+- {from: 39, to: 39, spec: null}
+parts:
+- {type: versus3, from: 39, to: 39, items: [[駿府記, 8歳], [元寛日記・寺の過去帳, 7歳], [落穂雑談一言集, 6歳], [村越道半覚書, 10歳ばかり]], every: 1.2}
+- {type: quote, from: 32, to: 32, label: 史料, text: 翌23日がよい／時刻は申と酉のあいだ, source: 金地院崇伝『本光国師日記』5月22日の条}
+- {type: quote, from: 45, to: 45, label: 史料, text: 秀頼様の小さな娘が／尼にされてこの寺にいる, source: リチャード・コックスの日記（1616年）}
+- {type: quote, from: 89, to: 89, label: 史料, text: 明暦四戊戌七月六日／木下縫殿助豊臣延由, source: 長流寺の延由の位牌（日出町歴史資料館 2021）}
+- {type: quote, from: 120, to: 120, label: 要点, text: 記録の上の秀頼の子は1645年まで／名と血のかけらは形を変えて残った, source: この動画のまとめ}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 13, note: 1615年のゆかりの人}
+- {line: 19, note: 母の食い違い}
+- {line: 32, note: 崇伝の答え}
+- {line: 39, note: 年齢の食い違い}
+- {line: 45, note: コックスの余白}
+- {line: 89, note: 延由の位牌}
+- {line: 101, note: 完子からの線}
+- {line: 106, note: 木下家の年数}
+- {end: true, note: 終了画面}

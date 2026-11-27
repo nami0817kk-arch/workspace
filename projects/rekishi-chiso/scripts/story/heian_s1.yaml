@@ -1,0 +1,156 @@
+# 物語完結型ショート 平安貴族if s1（2026-11-27）。本編 scripts/heian-if-story.yaml（12/3 12:00 公開予定、https://youtu.be/WkZt_G7O2Mc）から。12/4 9:00 に予約。
+# 形式は kaieki_s1〜s5・shibusawa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 平安貴族if_facts_20261126.yaml）だけ。
+# 絵：本編の AI 絵（out/story/heian_if/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：道長の祖父・藤原師輔の家訓『九条殿遺誡』の朝の決まりとお風呂の日（本編 序章・第3章、heianif-01・03・04・05・06・07）。
+# hook＝お風呂はいつ入るか（答えはこのショートの中：5日に1度、日を選ぶ。1日は早死に・18日は盗賊・8日は長生き）。
+# tease＝記録係のある役人が1年で休んだのは何日か（答えは本編 第3章：紀理綱は351日出勤、休みは約3日。heianif-11）。
+# 年：『九条殿遺誡』は書いた年が分からないので、年も「いま」の札も年表も出さない（年の流れに入れない）。季節は言わない。
+# 「小さな声で」（本編の第3章）は事実カードの引用（先起稱屬星名號七遍）に無いので言わない。
+# 理解テスト：①道長の祖父・藤原師輔が子孫に残した家訓（九条殿遺誡）の話 ②平安貴族の朝の決まりとお風呂の日
+#   ③お風呂は5日に1度、日を選ぶ（1日は早死に・18日は盗賊・8日は長生き）。朝は星の名を7回→鏡→暦で吉凶→楊枝と西を向いて手を洗う→昨日を暦に書く
+#   ④そこまで済ませて粥。食事は朝と夕の2回
+title: "平安貴族｜お風呂の日"
+yt_title: "平安貴族のお風呂は5日に1度　1日に入ると早死に、18日は盗賊　藤原道長の祖父が残した家訓『九条殿遺誡』"
+description: |-
+  毎月1日にお風呂に入ると、早死にする。18日に入ると、盗賊に遭う。8日なら長生きする。藤原道長の祖父、藤原師輔が子孫に残した家訓『九条殿遺誡』の、お風呂の決まりです。お風呂は5日に1度、日を選んで入れ、とあります。
+  朝の決まりも細かく、起きたらまず自分の星の名を7回唱え、鏡で顔を見て、暦でその日の吉凶を知り、楊枝を使って西を向いて手を洗い、仏の名を唱えます。昨日のことは暦に書き付け、そこまで済ませてようやく粥を食べました。髪をとかすのは3日に1度、手の爪は丑の日、足の爪は寅の日です。
+  本編では、平安貴族の家に生まれた子の毎日を、生まれた日から出世の夜まで、道長の日記『御堂関白記』と同じ時代の記録でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#平安時代"
+- "#藤原道長"
+- "#九条殿遺誡"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/heian_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: heian_story_s1
+header:
+  tag: "藤原道長の祖父の家訓"
+  title: "平安貴族の《お風呂》は、いつ入る？"
+cards:
+  - type: table
+    title: 九条殿遺誡の朝
+    from: 起きたら
+    until: 髪は3日に
+    items:
+      - {at: "起きたら", text: "自分の星の名を7回唱える"}
+      - {at: "鏡で顔を見る", text: "鏡で顔を見て暦で吉凶"}
+      - {at: "西を向いて", text: "西を向いて手を洗う"}
+    text_y: 0.70
+shots:
+  A01_1:
+    kind: "ai"
+    file: "heian_if/main/A01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "A01"
+  A01_2:
+    kind: "ai"
+    file: "heian_if/main/A01.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "A01"
+  A04_3:
+    kind: "ai"
+    file: "heian_if/main/A04.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "A04"
+  A02_4:
+    kind: "ai"
+    file: "heian_if/main/A02.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "A02"
+  B05_5:
+    kind: "ai"
+    file: "heian_if/main/B05.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "B05"
+  A03_6:
+    kind: "ai"
+    file: "heian_if/main/A03.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "A03"
+  A02_7:
+    kind: "ai"
+    file: "heian_if/main/A02.jpg"
+    focus: [0.45, 0.4]
+    move: "left"
+    must: "A02"
+  B04_8:
+    kind: "ai"
+    file: "heian_if/main/B04.jpg"
+    focus: [0.5, 0.6]
+    move: "in"
+    must: "B04"
+  A05_9:
+    kind: "ai"
+    file: "heian_if/main/A05.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "A05"
+lines:
+  # fact: heianif-05
+- 語り: "毎月1日に、お風呂に入ると、早死にする。18日に入ると、盗賊に遭う。"
+  shot: A01_1
+  tone: 強調
+  pause: 0.12
+  # fact: heianif-05
+- 語り: "藤原道長の祖父、藤原師輔が、子孫に残した家訓、九条殿遺誡の言葉だ。お風呂は、5日に1度。日を選べ、とある。"
+  shot: A01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: heianif-05
+- 語り: "8日に入れば、長生きする。日ごとの結果まで、書いてあるのだ。"
+  shot: A01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: heianif-01
+- 語り: "朝の決まりも、細かい。起きたら、まず、自分の星の名を、7回唱える。"
+  shot: A04_3
+  tone: 重い
+  pause: 0.12
+  # fact: heianif-03
+- 語り: "次に、鏡で顔を見る。暦で、日の吉凶を知る。"
+  shot: A02_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: heianif-03
+- 語り: "楊枝を使う。西を向いて、手を洗う。仏の名を唱える。"
+  shot: B05_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: heianif-03, heianif-06
+- 語り: "昨日のことは、暦に書き付ける。忘れないためだ。"
+  shot: A03_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: heianif-04
+- 語り: "髪は、3日に1度とかす。手の爪は、丑の日。足の爪は、寅の日に切る。"
+  shot: A02_7
+  tone: 重い
+  pause: 0.12
+  # fact: heianif-03, heianif-07
+- 語り: "そこまで済ませて、ようやく、粥を食べる。食事は、朝と夕の、2回だった。"
+  shot: B04_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第3章（heianif-11 少外記の紀理綱は351日出勤、休みは約3日）
+- 語り: "では、記録係のある役人が、1年で休んだのは、何日だったのか。"
+  shot: A05_9
+  tone: 疑問
+  pause: 0.15
