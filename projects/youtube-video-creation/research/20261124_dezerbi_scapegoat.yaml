@@ -1,0 +1,154 @@
+# 取材メモ（2026年11月24日）トッテナムのデ・ゼルビ監督、マルセイユを去ったときの苦しさを語る「何度もスケープゴートにされた」「約束を守らなかった人たちがいた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-23 19:34「「みんなのスケープゴートにされた」トッテナムのデ・ゼルビ監督、マルセイユ退任時の苦悩を告白「約束を守らなかった人たちがいた」」 https://www.footballchannel.jp/2026/11/23/post1058791/
+#   元は仏『Foot Mercato』、インタビューは仏テレビ局 Canal+。同じ記事の後半（ウィリアムズ＝バーネットとヤマルの話）は 20261123_williams_barnett_yamal で出しているので使わない。
+# 元の記事（全文を読んだ。フランス語）: Foot Mercato 2026-11-22 20:35「Roberto De Zerbi : "certains n'ont pas tenu leur parole avec moi à l'OM"」 https://www.footmercato.net/a7143118687873905734-roberto-de-zerbi-certains-nont-pas-tenu-leur-parole-avec-moi-a-lom
+#   « De nombreuses fois, j'ai été le bouc émissaire pour tout le monde, mais dans un club et une ville si importants, tout le monde doit prendre ses responsabilités et pas seulement peu de monde, dont je faisais partie »
+#   « je suis désolé, car quand j'ai signé à Marseille, je l'ai tant voulu et je pensais rester de nombreuses années. Cependant, certains n'ont pas tenu leur parole avec moi. Ils m'ont dit des choses qu'ils n'ont pas respectées. Jusqu'au Trophée des champions au Koweït, il s'était passé un an et demi. On était en train de gagner un titre après 12 ans de disette. Depuis ce match, la situation s'est dégradée, elle a empiré jusqu'à mon départ. (…) Marseille est un des clubs que je garde le plus dans mon cœur, avec Foggia. J'ai beaucoup souffert quand je suis parti. J'ai souffert parce qu'à Marseille, j'ai tout donné. »
+#   記事の地の文: 2026年2月に18か月の指揮のあと退任（Parti en février dernier après une collaboration de 18 mois）。後任はアビブ・ベイェ、マルセイユは5位で終わりCL出場権を逃した。トッテナムには3月に就任して残留させた。
+#   → 台本の言葉は、このフランス語を私が日本語にしたもの。「(…)」で切れているところは補わない。
+#   「On était en train de gagner un titre après 12 ans de disette」は「12年ぶりのタイトルを勝ち取りかけていた／勝ち取っていた」のどちらにも読め、スパーズジャパンは「あと一歩まで迫っていた」と訳している → 台本では使わない（試合の結果も言わない）。
+# ほかに読んだもの: スパーズジャパン 2026-11-23「デゼルビがマルセイユに反論…」 https://spurs.sc/2026/11/23/de-zerbi-marseille-scapegoat-broken-promises-canal-plus/ （「デゼルビが去った時点でマルセイユは4位だったが、その後5位に落ち、CL出場権を逃した」）。
+#   フットボールチャンネルは「2024年夏にマルセイユの指揮官に就任。1年目はリーグ2位に導いた」。
+# ESPN（site.api.espn.com eng.1）: 11/21 トッテナム 2-0 イプスウィッチ（event=401878754）。順位表（11/24 取得）でトッテナムは10位 勝ち点15（11試合）。次は 11/29 14:05 UTC（日本時間 23時5分）サンダーランド戦（敵地）。
+# 食い違い:
+#   ・訳の言い方: フットボールチャンネル「何度も、私はみんなのスケープゴートにされた」、スパーズジャパン「何度もスケープゴートにされた」。原文 « De nombreuses fois, j'ai été le bouc émissaire pour tout le monde » に沿って訳した。
+#   ・退任の時の順位: スパーズジャパン「4位」。フットボールチャンネル・Foot Mercato は書かない → 台本では「最後は5位」だけ（Foot Mercato とスパーズジャパンで一致）。
+#   ・DailyMercato は「日付と数字が彼の言い分を和らげる」という反論の記事を出している（見出しだけ見た）→ 言い分の是非は言わない。約束の中身も本人が言っていないので言わない。
+# 自分で数えたもの: 2024年夏〜2026年2月＝1年半あまり（本人の「1年半」・記事の「18か月」と合う）。
+# 前の本との重なり: 20261123_williams_barnett_yamal（同じインタビューの後半ではなく、イプスウィッチ戦後の会見の話）。今回はマルセイユの話で初出。
+# 【言わないこと】「約束」の中身（本人が言っていない）／ロンゴリア会長・ベナティアの名前と内紛（別の部分の報道、本文を読めていない）／スーパーカップの結果／媒体名・テレビ局名。
+# 本人の言葉: あり → Y（short_hook_quote）。
+# 写真: 3枚。
+#   01＝スパーズジャパンの記事の主写真（マルセイユの練習着の絵。写真を絵画風に加工したもの。代理店の表記は無いが、元の写真の出どころは不明＝引き受ける危険）。
+#   02＝Commons「File:Матч «Динамо» - «Шахтар» 0-0. 3 жовтня 2021 року — 1279025 (cropped).jpg」（CC BY-SA 4.0 / Olga Shcherbytska、2021年シャフタール時代の会見。下端に撮影者の表示の文字があるので、02_v・02_w は手でその上を切った）。
+#   03＝Commons「File:Roberto De Zerbi, 2019.png」（CC BY 3.0 / TVSEI、2019年サッスオーロ時代のインタビュー）。
+#   Foot Mercato の主写真（トッテナムの本拠地）は出どころが書かれておらず、PA の写真の可能性があるので使わない。フットボールチャンネルは Getty。
+#   一覧を目で見た: 3枚とも本人。01 は絵、02・03 は古い写真（5年前・7年前）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [デ・ゼルビ監督, トッテナム, マルセイユ]
+
+short_style: Y
+short_hook_quote: 何度も、私はみんなのスケープゴートにされた。
+short_photos:
+  - assets/images/20261124_dezerbi_scapegoat/01_v.jpg
+  - assets/images/20261124_dezerbi_scapegoat/02_v.jpg
+  - assets/images/20261124_dezerbi_scapegoat/03_v.jpg
+short_question: デ・ゼルビ監督の言葉を、マルセイユはどう受け止めると思いますか。
+short_telops: []
+
+theme:
+  id: dezerbi_scapegoat
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: デ・ゼルビ監督、マルセイユを去った日の本音。「約束を守らなかった人たちがいた」
+  hook: ""
+  question: トッテナムのデ・ゼルビ監督は、マルセイユを去ったときのことをどう語ったのか
+  takeaway: 1年半で去ったマルセイユについて、「何度もスケープゴートにされた」「約束を守らなかった人たちがいた」と語った。一方で「すべてを捧げたから、去るときは苦しんだ」とも。約束の中身は語っていない
+
+thumbnail:
+  layout: face
+  line1: デ・ゼルビ マルセイユの本音
+  line2: スケープゴートにされた
+  tags: [トッテナム, マルセイユ]
+  photo: assets/images/20261124_dezerbi_scapegoat/01_w.jpg
+  short_photo: assets/images/20261124_dezerbi_scapegoat/01_v.jpg
+
+answer: 「何度もスケープゴートにされた」「約束を守らなかった人たちがいた」。それでも、すべてを捧げたクラブだと語った
+watch: 29日のサンダーランド戦（日本時間23時5分）
+
+sections:
+  - id: what
+    main: true
+    heading: デ・ゼルビ監督は、マルセイユを去ったときのことをどう語ったのか
+    tier: 報道
+    telop: デ・ゼルビ監督「何度もスケープゴートにされた」
+    say:
+      - voice: デ・ゼルビ監督
+        text: 何度も、私はみんなのスケープゴートにされた。
+        emph: true
+        image: assets/images/20261124_dezerbi_scapegoat/01_w.jpg
+      - voice: デ・ゼルビ監督
+        text: これほど大きなクラブと街だ。
+        cont: true
+      - voice: デ・ゼルビ監督
+        text: 責任は数人ではなく、全員が負うべきだ。
+        cont: true
+      - voice: デ・ゼルビ監督
+        text: 私も、その数人の1人だった。
+        image: assets/images/20261124_dezerbi_scapegoat/03_w.jpg
+        cont: true
+      - text: トッテナムのデ・ゼルビ監督が、前に率いたマルセイユを去った理由と胸の内を、インタビューで語りました。
+        image: assets/images/20261124_dezerbi_scapegoat/01_w.jpg
+        short_only: true
+      - text: デ・ゼルビは2024年の夏にマルセイユの監督に就任。1年目はリーグ2位でした。
+        image: assets/images/20261124_dezerbi_scapegoat/03_w.jpg
+        card: {type: timeline, title: デ・ゼルビ監督の2年, rows: [[2024年夏, マルセイユの監督に], [2024-25, フランスのリーグで2位], [2026年2月, マルセイユを去る], [2026年3月, トッテナムの監督に]], highlight_row: 1}
+      - text: ところが今年の2月、1年半あまりでクラブを去ります。
+        card: none
+        image: assets/images/20261124_dezerbi_scapegoat/02_w.jpg
+      - voice: デ・ゼルビ監督
+        text: 契約したときは、心から望んでいた。何年もいるつもりだった。
+        card: none
+        image: assets/images/20261124_dezerbi_scapegoat/02_w.jpg
+      - voice: デ・ゼルビ監督
+        text: でも、私との約束を守らなかった人たちがいた。
+        cont: true
+        emph: true
+      - voice: デ・ゼルビ監督
+        text: 言ったことを、実行しなかった。
+        cont: true
+      - text: 転機は、前の季の王者どうしが戦うフランスのスーパーカップ。クウェートでの試合だったと言います。
+        image: assets/images/20261124_dezerbi_scapegoat/01_w.jpg
+      - voice: デ・ゼルビ監督
+        text: あの試合から状況は悪くなり、去るまで悪化し続けた。
+      - voice: デ・ゼルビ監督
+        text: マルセイユは、いちばん心に残っているクラブの1つだ。
+        image: assets/images/20261124_dezerbi_scapegoat/03_w.jpg
+      - voice: デ・ゼルビ監督
+        text: 去るときは、とても苦しんだ。
+        cont: true
+      - voice: デ・ゼルビ監督
+        text: マルセイユには、すべてを捧げたから。
+        image: assets/images/20261124_dezerbi_scapegoat/02_w.jpg
+        cont: true
+    official: false
+    sources:
+      - https://www.footmercato.net/a7143118687873905734-roberto-de-zerbi-certains-nont-pas-tenu-leur-parole-avec-moi-a-lom
+      - https://www.footballchannel.jp/2026/11/23/post1058791/
+  - id: after
+    heading: デ・ゼルビ監督が去ったあと、両クラブはどうなったのか
+    tier: 報道
+    telop: マルセイユは5位でCL出場権を逃す
+    say:
+      - text: デ・ゼルビ監督が去ったあと、マルセイユは5位でシーズンを終えます。
+      - text: ヨーロッパの王者を決めるチャンピオンズリーグには、出られませんでした。
+        image: assets/images/20261124_dezerbi_scapegoat/03_w.jpg
+      - text: デ・ゼルビ監督は3月にトッテナムへ。そのシーズン、チームを1部に残しました。
+    official: false
+    sources:
+      - https://www.footmercato.net/a7143118687873905734-roberto-de-zerbi-certains-nont-pas-tenu-leur-parole-avec-moi-a-lom
+      - https://spurs.sc/2026/11/23/de-zerbi-marseille-scapegoat-broken-promises-canal-plus/
+  - id: view
+    viewpoint: true
+    heading: いまのトッテナムで、デ・ゼルビ監督はどこにいるのか
+    tier: 背景
+    telop: トッテナムは10位、21日はイプスウィッチに2対0
+    say:
+      - text: 見立てです。デ・ゼルビ監督の言う「約束」の中身は、語られていません。
+        image: assets/images/20261124_dezerbi_scapegoat/02_w.jpg
+      - text: そのデ・ゼルビ監督が率いるいまのトッテナムは、11試合で勝ち点15の10位。
+        card: {type: stats, title: トッテナム（11試合）, items: [[10, 位, いまの順位], [15, 点, 勝ち点], [2, 対0, 21日のイプスウィッチ戦]], focus: 0}
+      - text: 21日は、イプスウィッチに2対0で勝ちました。
+      - text: 次は29日、敵地でのサンダーランド戦。日本時間では夜の11時5分キックオフです。
+        card: none
+        image: assets/images/20261124_dezerbi_scapegoat/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.espn.com/soccer/match/_/gameId/401878754

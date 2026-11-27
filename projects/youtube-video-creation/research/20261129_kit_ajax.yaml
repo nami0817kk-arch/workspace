@@ -1,0 +1,443 @@
+# ユニフォームとエンブレムの歴史 アヤックス（11/21 作成、11/29 分）。エールディビジ。骨組みは 20261117_kit_realsociedad.yaml と 20261125_kit_psg の台本。
+# 題の問い：アヤックスの紋章は、なぜ34年ぶりに1928年の形へ戻ったのか。白に赤い1本線のシャツは、どこから来たのか。
+#   答え＝2024年11月17日にクラブが発表。125周年（2025年3月18日）に、長年ファンが願ってきた昔の紋章を「ファンと自分たちに返す」。「アヤックスのDNAに忠実なとき、いちばん強い」（CEO）。2025年7月1日から正式な紋章。
+#   シャツ＝最初は黒に赤い帯 → 赤白の縦じまに黒パンツ（アムステルダムの旗の色）。1911年に1部へ上がると、スパルタ（ロッテルダム）が同じ服。規則で後から来た側が替え、白に太い赤の縦線・白パンツに。
+# 選んだ理由：ユニフォームは大物の順。プレミア20・ラ・リーガ主要6・インテル・ユヴェントス・バイエルン・PSG が済み。ドルトムントは 11/27 のスタジアム（2日前）、ミランは 11/24 のクラブ紹介（5日前）、ナポリ・ローマ・マルセイユはスタジアム済みなので外した。
+#   同じ日（11/29）のスタジアムは PSG（research/20261127_picks.txt）。アヤックスは直近30日では 11/2 の財政だけ（4週前。決算の話で、色・紋章は扱っていない）。
+# 重なり確認（2026-11-21）：scripts/*kit_* にアヤックス無し。posted.json の題にアヤックス無し。PSG の回（11/25）が「アヤックスに似ているという説」に1行触れているが、別の問い。
+# 取材：requests（Wikipedia API・クラブ公式の英語版）のみ。ブラウザは使っていない。
+#   読んだ：en "AFC Ajax"（Crest and colours・Sponsorship・Kit suppliers）、en "History of AFC Ajax"（創立・1911年）、nl "AFC Ajax"（Ontstaan・Logo en shirt・Gouden Kampioenssterren・Shirtsponsor）、
+#   クラブ公式 https://english.ajax.nl/articles/classic-ajax-logo-returns-permanently/ （2024-11-17。CEO メンノ・ヘーレンと理事長の言葉）。
+# ---- 食い違い・断ったこと ----
+#   ・11本の線の紋章の年：en 本文「1990年」、en の図説「1991–2025」、nl「1991年」「34年」。クラブ公式「34年ぶり」。→ 台本は1991年。
+#   ・最初の黒いシャツと赤い帯：en のみ（nl に無い）。→ 台本は「とされます」。
+#   ・赤白の縦じま→白に赤い1本線（1911年・スパルタと同じ服・規則）：en "AFC Ajax" と en "History of AFC Ajax" が一致。nl には無い。
+#   ・名前の由来：en History「ギリシャの英雄アイアスにちなむ」。nl は 1894年の前身のクラブ（綴りの誤り）にも触れるが、台本は1900年の創立だけ言う。
+#   ・1928年の紋章の作者：nl「正確な作者は不明。1925年の記念旗に先に出た」。→ 台本は「誰が描いたかは、分かっていません」。1991年の紋章のデザイナー名（nl）は言わない。
+#   ・TDK：nl「最初の大きな胸の広告は日本の電機メーカー TDK（1982/83〜1990/91）」、en の表「1982–1991」。→ 台本は「1982年から」「9シーズン」。
+#   ・Ziggo の始まり：en の表「2014–」、nl 本文「2015年1月1日から」。→ 台本と表は2015年。
+#   ・アディダス：en「2000年から」、nl の表は 2026-27 まで続く。→ 今季で27シーズン目（2000-01〜2026-27）。
+#   ・金の星：nl「星1つが国内リーグ優勝10回。2011年5月15日に30回目、2011-12から星3つ」。
+#   ・1987年のカップウィナーズカップ優勝：en の Honours（1986–87）。胸の TDK の期間内。
+# ---- 自分で数えた数 ----
+#   創立 1900→2026＝126年。白に赤い1本線 1911→2026＝115年＝115/126≒約91%。英雄の顔の紋章 1928→2026＝98年＝98/126≒約78%。
+#   11本の線の顔 1991→2025＝34年。1928年の形の紋章 1928→1991＝63年＋2025年7月から。TDK 9シーズン。アディダス 27シーズン目。ABNアムロ 1991→2008＝17年。
+# ---- 日本との接点 ----
+#   最初の大きな胸の広告が日本の TDK（nl・en の表）。それ以外は入れない（今の在籍選手の話はしない）。
+# 言わなかったもの：スタジアム・選手・今季の成績・上場の話（11/2 の財政回）・1894年の前身のクラブ・デザイナー名・CEO の名前。
+# 写真：assets/images/20261129_kit_ajax/（credits.json）。Commons（CC0・CC BY・CC BY-SA）。代理店・放送映像・エンブレム画像は使っていない。人物は特定していない。
+date: 2026年11月21日
+slot: other_5
+format: news
+series: ユニフォームとエンブレムの歴史
+voice_min: 0
+people:
+- アヤックス
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  end_bg: assets/images/20261129_kit_ajax/p_fans_w.jpg
+  id: kit_ajax
+  league: netherlands
+  league_name: エールディビジ
+  kind: other
+  topic: アヤックス
+  title: アヤックスの紋章は、34年ぶりに昔の顔へ。なぜ戻したのか
+  question: アヤックスの紋章は、なぜ1928年の形に戻ったのか。白に赤い1本線のシャツは、どこから来たのか。胸の広告と星は、いつ入ったのか
+  opening_image: assets/images/20261129_kit_ajax/p_old_w.jpg
+  lead: 紋章が、34年ぶりに戻った。
+  hook: ''
+  takeaway: アヤックスの白に赤い1本線は、1911年の規則から生まれて115年。英雄の顔の紋章は98年で、創立から約78%。11本の線の顔は34年。描き方は替わっても顔は消えず、125周年にファンの願いで1928年の形へ戻った
+  hook_unused: ''
+thumbnail:
+  layout: classic
+  callouts:
+  - 赤い線は1911年から
+  - 最初の胸は日本のTDK
+  photo: assets/images/20261129_kit_ajax/p_old_t_w.jpg
+  short_photo: assets/images/20261129_kit_ajax/p_old_v.jpg
+  line1: アヤックスの紋章が
+  line2: 34年ぶりに戻った
+  tags:
+  - ユニフォーム
+  - エンブレム
+  - 紋章
+  - エールディビジ
+x-cards:
+  crest: &crest
+    type: timeline
+    title: アヤックスの紋章の歩み
+    rows:
+    - - 1900年
+      - 選手の絵の紋章
+    - - 1911年
+      - 1部に上がり、形を少し変える
+    - - 1928年
+      - 英雄アイアスの顔が入る
+    - - 1991年
+      - 11本の線で描いた顔に
+    - - 2025年
+      - 1928年の顔が、34年ぶりに戻る
+    focus: 2025年
+    highlight_row: 0
+  shirt: &shirt
+    type: timeline
+    title: アヤックスのシャツの歩み
+    rows:
+    - - 1900年
+      - 黒いシャツに、赤い帯
+    - - その後
+      - 赤と白の縦じま、黒いパンツ
+    - - 1911年
+      - 1部へ。スパルタと同じ服
+    - - 同じ年
+      - 白に太い赤の縦線、白いパンツ
+    - - 今季
+      - 同じ形で115年
+    focus: 1911年
+    highlight_row: 0
+  chest: &chest
+    type: table
+    title: アヤックスの胸の広告
+    columns:
+    - いつから
+    - 会社
+    - 年数
+    rows:
+    - - 1982年
+      - TDK（日本）
+      - 9季
+    - - 1991年
+      - ABNアムロ（銀行）
+      - 17年
+    - - 2008年
+      - エイゴン（保険）
+      - 約6年
+    - - 2015年
+      - ジゴ（通信）
+      - 今も
+    highlight_row: 0
+  view: &view
+    type: table
+    title: アヤックスの色と紋章の年数（自分で数えた）
+    columns:
+    - 何が
+    - 年数
+    rows:
+    - - 創立から（1900年〜）
+      - 126年
+    - - 白に赤い1本線（1911年〜）
+      - 115年
+    - - 英雄の顔の紋章（1928年〜）
+      - 98年
+    - - 11本の線の顔（1991〜2025年）
+      - 34年
+    highlight_row: 0
+sections:
+- id: crest_back
+  main: true
+  heading: アヤックスの紋章は、なぜ昔の顔に戻ったのか
+  bg: assets/images/20261129_kit_ajax/p_arena_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 2024年11月17日に発表。125周年に、1928年の紋章を戻す。2025年7月1日から正式な紋章。胸に戻るのは34年ぶり
+  card: *crest
+  say:
+  - text: 今回はアヤックス。オランダ、アムステルダムのクラブです。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card: none
+  - text: ここから先は、11月21日時点の話です。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card: none
+  - text: 2025年7月1日、アヤックスの紋章が替わりました。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: 新しい紋章ではありません。1928年の、古い紋章です。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  - text: シャツの胸に戻ったのは、34年ぶりでした。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+    emph: true
+    callword: 34年ぶり
+  - text: 発表は、2024年11月17日。クラブの社長は、こう話しました。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card:
+      type: document
+      label: アヤックス 社長（CEO）の言葉（2024年11月17日）
+      paragraphs:
+      - ファンの多くが、何年も前からこの願いを大切にしてきたことを、私たちは知っています。125周年は、昔の紋章をファンと私たち自身に返す、最高の機会だと考えました。
+      - 歴史が示しているように、私たちはアヤックスのDNAに忠実なときに、いちばん強い。
+      highlight:
+      - 125周年
+      - DNAに忠実
+  - text: ファンの多くが、何年も前から、願ってきたことだ、と。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+  - text: 2025年3月18日は、クラブの125歳の誕生日でした。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: その節目に、紋章を、ファンと自分たちに返す、と。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: もう1つの理由は、「アヤックスらしさ」です。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card: none
+    emph: true
+  - text: らしさを守るときが、いちばん強い。歴史がそう示した、と。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card: none
+  sources:
+  - https://english.ajax.nl/articles/classic-ajax-logo-returns-permanently/
+  - https://nl.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/AFC_Ajax
+- id: face
+  heading: 紋章の顔は誰で、どう描き替えられたのか
+  bg: assets/images/20261129_kit_ajax/p_arena_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 紋章の顔はギリシャ神話の英雄アイアス。1928年に紋章へ。1991年に11本の線で描いた顔に替わり、34年続いた
+  card: *crest
+  say:
+  - text: 紋章の顔は、ギリシャ神話の英雄です。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: 名前は、アイアス。オランダ語で読むと、アヤックス。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+    emph: true
+  - text: トロイア戦争を戦った、ギリシャ側の英雄です。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: クラブの名前も、この英雄から取りました。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: 創立は、1900年3月18日。最初の紋章は、選手の絵でした。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 0
+  - text: 1911年に、形を少し変えます。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 1
+  - text: 英雄の顔が入ったのは、1928年です。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 2
+    emph: true
+  - text: 誰が描いたかは、分かっていません。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: 1991年、紋章は、線で描いた顔に替わります。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 3
+  - text: 顔を描く線は、11本だけ。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+    emph: true
+    callword: 11本の線
+  - text: サッカーの1チーム、11人を表す線です。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: この紋章が、34年続きました。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: 2021年から22年のシーズン、昔の紋章が一度だけ胸に戻ります。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: そして2025年、正式な紋章として、戻りました。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card:
+      <<: *crest
+      highlight_row: 4
+  sources:
+  - https://nl.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/History_of_AFC_Ajax
+- id: shirt
+  heading: 白に赤い1本線は、なぜ生まれたのか
+  bg: assets/images/20261129_kit_ajax/p_kit_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初は黒に赤い帯、次に赤白の縦じまと黒いパンツ。1911年に1部へ上がると、スパルタと同じ服。規則で替えて、白に赤い1本線
+  card: *shirt
+  say:
+  - text: 次は、シャツです。白の地に、太い赤の縦線が1本。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: ただ、最初のシャツは、黒でした。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *shirt
+      highlight_row: 0
+  - text: 黒いシャツに、腰に赤い帯を巻いていた、とされます。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: すぐに、赤と白の縦じまのシャツに、黒いパンツへ。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card:
+      <<: *shirt
+      highlight_row: 1
+  - text: 赤、黒、白は、アムステルダムの旗の色です。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+    emph: true
+  - text: 1911年、アヤックスは初めて、国の1部リーグに上がります。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card:
+      <<: *shirt
+      highlight_row: 2
+  - text: ところが1部には、同じ服のクラブがいました。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: ロッテルダムの、スパルタです。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: 赤と白の縦じまに、黒いパンツ。まったく同じでした。
+    image: assets/images/20261129_kit_ajax/p_flag_w.jpg
+    card: none
+  - text: 当時は、アウェー用のシャツが、ありません。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: 規則では、後から来たクラブが、色を替えます。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: アヤックスが選んだのが、白に、太い赤の縦線です。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *shirt
+      highlight_row: 3
+    emph: true
+    callword: 赤い1本線
+  - text: パンツも、白にしました。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: この形が、今季で115年、続いています。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *shirt
+      highlight_row: 4
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/History_of_AFC_Ajax
+- id: chest
+  heading: 胸の広告と、金の星は、いつ入ったのか
+  bg: assets/images/20261129_kit_ajax/p_old_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 最初の大きな胸の広告は日本のTDK（1982年から9季）。アディダスは2000年から27季目。金の星1つが国内優勝10回、2011年に3つ目
+  card: *chest
+  say:
+  - text: アヤックスの胸に、最初の大きな広告が入ったのは、1982年。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 0
+  - text: 相手は、日本の電機メーカー、TDKでした。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+    emph: true
+    callword: 胸に日本のTDK
+  - text: TDKの文字は、1991年まで、9シーズン胸にありました。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: 1987年には、その胸で、ヨーロッパの大会を制しています。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: 各国のカップ戦の勝者が戦う、カップウィナーズカップです。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card: none
+  - text: 1991年からは、オランダの銀行が、17年。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 1
+  - text: 2008年からは保険の会社、2015年からは通信の会社です。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *chest
+      highlight_row: 3
+  - text: シャツを作るのは、2000年からアディダス。今季で27季目です。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card: none
+  - text: 紋章の上には、金の星が3つあります。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: 星1つが、国内リーグの優勝10回の印です。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: 3つ目の星は、2011年、30回目の優勝で付きました。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  sources:
+  - https://nl.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/AFC_Ajax
+- id: view
+  viewpoint: true
+  heading: 見立て・赤い線の115年と、英雄の顔の98年
+  bg: assets/images/20261129_kit_ajax/p_fans_w.jpg
+  tier: 背景
+  narrator: 解説
+  telop: 創立126年のうち、白に赤い1本線は115年（約91%）、英雄の顔の紋章は98年（約78%）。11本の線の顔は34年
+  card: *view
+  say:
+  - text: アヤックスの色と紋章を、年数で並べます。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 創立から、126年。
+    image: assets/images/20261129_kit_ajax/p_arena_w.jpg
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 白に赤い1本線は、115年。126年の、約91%です。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 英雄の顔の紋章は、1928年から98年。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 126年で割ると、約78%です。
+    image: assets/images/20261129_kit_ajax/p_old_w.jpg
+    card:
+      type: calc
+      title: 英雄の顔が紋章にある割合（自分で割った）
+      terms:
+      - - 98年
+        - 英雄の顔
+      - - 126年
+        - 創立から
+      - - 約78%
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    emph: true
+  - text: 11本の線の顔は、そのうちの34年でした。
+    image: assets/images/20261129_kit_ajax/p_kit_w.jpg
+    card:
+      <<: *view
+      highlight_row: 3
+    mark:
+      kind: circle
+      row: 3
+  - text: 描き方は替わっても、英雄の顔は、一度も消えていません。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+  - text: シャツは規則から生まれ、紋章はファンの願いで戻りました。
+    image: assets/images/20261129_kit_ajax/p_fans_w.jpg
+    card: none
+    emph: true
+  sources:
+  - https://nl.wikipedia.org/wiki/AFC_Ajax
+  - https://en.wikipedia.org/wiki/AFC_Ajax
+  - https://english.ajax.nl/articles/classic-ajax-logo-returns-permanently/

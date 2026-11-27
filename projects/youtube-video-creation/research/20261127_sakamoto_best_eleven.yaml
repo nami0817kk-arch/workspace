@@ -1,0 +1,145 @@
+# 取材メモ（2026年11月27日）坂元達裕が、アラン・シアラーの選ぶプレミアリーグ第11節の週間ベストイレブンに。第9節に続いて今季2度目（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-27。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の元: footballnet（まとめ）https://footballnet.2chblog.jp/archives/60151251.html の見出し「今節プレミアリーグのベストイレブンに選出」。まとめ自身の要約は使わない。
+# 元の選出（一次）: プレミアリーグ公式「Alan Shearer's Team of the Week for Matchweek 11」（2026-11-24）
+#   https://www.premierleague.com/en/news/4770841/alan-shearers-team-of-the-week-for-matchweek-11
+#   本文（英語、読んだ）: Wirtz（リヴァプール、マンU戦4-0で1得点1アシスト）が選ばれた。Shearer は "the Premier League's all-time record goalscorer"。
+#     フルアムの Affengruber と Bassey、ハルの GK Tzolakis と FW McBurnie（ブライトン戦の2点はどちらも後半の追加時間）。
+#     リーズの Farke 監督が「Team of the Week's manager」（チェルシーに敵地で4-1）。
+#   ★坂元の名前は、公式ページの本文の文字には出てこない（11人の並びは図で、ページの HTML にも文字が無かった）。
+#     → 坂元が11人に入っていることは、日本の報道5社で確かめた（どれもプレミアリーグ公式の発表として伝え、11人の並びも一致）:
+#       ゲキサカ 463848（公式Xで紹介）・サッカーキング（Yahoo 43a2fab0、「24日、プレミアリーグ公式サイトが伝えている」）・サッカーダイジェスト（Yahoo 9d641481、「現地11月24日…発表」）・
+#       フットボールチャンネル（Yahoo 4cc57a86）・THE ANSWER（Yahoo 069308dc「プレミアリーグ公式Xで発表」）。
+#       各社の11人の並び（GK ツォラキス／DF ヒル・アッフェングルーバー・バッシー・ルイス＝ポッター／MF 坂元・ヴィルツ・ウィリアムズ＝バーネット／FW エヴァニウソン・マクバーニー…）のうち、
+#       公式の本文に名前のある5人（ヴィルツ・アッフェングルーバー・バッシー・ツォラキス・マクバーニー）は全部一致。
+#     → 確度は「報道」。台本は「選ばれた」「選んだのはシアラー」「リーグが毎週発表している」までにし、坂元の名前が公式の本文にあるとは言わない。
+#   BBC の週間ベスト11（トロイ・ディーニー選）は別物。11/24 の CoventryLive によれば、そちらに入ったのはアシストしたルドニで、坂元ではない。→ 「BBC」とは言わない。
+# 第9節の選出: プレミアリーグ公式に「Alan Shearer's Team of the Week for Matchweek 9」（2026-11-03）がある（ニュース検索の見出しで確認、本文は未読）。
+#   坂元が入ったことはゲキサカ・サッカーキング・サッカーダイジェストが「第9節に続いて今季2度目」と一致。→ 報道。
+# ESPN の試合データ（eng.1）:
+#   第11節 event 401879235（2026-11-21 15:00 UTC）: コベントリー 3-2 C・パレス。30分 坂元（左足、エリアの外から右上。アシスト ルドニ、速攻から）。5分 アウォニイ／13分 ピノ／45+1分 ストランド・ラーセン／85分 マクニールのオウンゴール。
+#   第9節 event 401879247（2026-10-31 15:00 UTC）: コベントリー 3-1 サンダーランド。17分 坂元（左足、エリアの外から左下）。37分 アウォニイ／52分 ルドニ。
+#   次: 2026-11-28 15:00 UTC Coventry City at Leeds United（リーズの敵地）。
+# サッカーキング: シアラーは「歴代最多の通算260ゴール」。
+# CoventryLive（2026-11-24 Brian Dick、全文）: 14位・降格圏と勝ち点3差。「Championship-winning team」＝昨季2部優勝。チームメイトのトルプが BBC CWR に坂元を称える言葉（使わない）。
+# 自分で数えたもの（ESPN の2試合）: 選ばれた2つの節で、坂元のゴールはどちらも左足・エリアの外から。どちらもホームで、コベントリーは2試合とも勝利（3-1・3-2）。
+#   次の相手リーズの監督ファルケが、同じ第11節の「週間の監督」（公式の本文）。
+# 食い違い:
+#   ・試合日: 日本の記事は「21日」「22日」が混在（時差）。ESPN は 2026-11-21 15:00 UTC。→ 日付は言わない。
+#   ・パレス戦のゴールの形: 報道は「ボレー」「ミドル」と割れる。ESPN は「左足、エリアの外」。→ 11/22 の回と同じく「胸で止めて左足、エリアの外から」。
+#   ・位置: 日本の報道の並びでは、坂元とヴィルツはどちらも MF。→「同じ中盤」と言う。
+#   ・サッカーダイジェストの「6節まで連続ベンチ、その後はすべて先発」「直近3試合で2得点」は自分で確かめていないので使わない。
+# 前の本との重なり: 11/22 sakamoto_coventry_goal（パレス戦の得点そのもの・鎌田との対決・順位）／11/4 sakamoto_pl_first_goal（初ゴール）／11/15 ブラジル戦。
+#   → 今回の軸は「選出」。得点の説明は1行だけ。鎌田・順位・ブラジル戦は言わない。
+# 【言わないこと】本人の気持ち（選出への言葉は見つからない）／11人全員の名前（公式の本文で確かめられたのは5人）／BBC の選出／順位／ファンの声。
+# 本人の言葉: 見つからず（ゲキサカ・サッカーキング・サッカーダイジェスト・フットボールチャンネル・THE ANSWER・CoventryLive 11/24 を当たった）。→ X。
+# 写真: 4枚（すべてゲキサカの自社撮影 ©Koki NAGAHAMA/GEKISAKA、11月の日本代表）。01・04＝写真ギャラリー 463289（11/14 ブラジル戦、1・7枚目）、02・03＝463309（11/16 練習、1・26枚目）。過去の回で未使用。
+#   コベントリーの試合の写真は、使えるものが無かった（ゲキサカの海外ギャラリー 463743・フットボールチャンネル・サッカーダイジェストは Getty、CoventryLive は Shutterstock 等の配信）。
+#   → 写真は代表のもの。台本で「この試合の写真」とは言わない。02 は顔の寄りが強く縦に切れず、横でも頭が切れたので台本では使わない（取り込みだけ残っている）。
+# 反応: 0件（作らない。approve は --no-voices）。サッカーダイジェスト・まとめの声は元の投稿まで辿っていないので使わない。
+slot: japanese
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [坂元達裕, コベントリー, アラン・シアラー, ヴィルツ, リーズ, ファルケ監督]
+
+short_style: X
+short_hook_word: シアラーが選んだ
+short_photos:
+  - assets/images/20261127_sakamoto_best_eleven/01_v.jpg
+  - assets/images/20261127_sakamoto_best_eleven/03_v.jpg
+  - assets/images/20261127_sakamoto_best_eleven/04_v.jpg
+short_question: 坂元達裕は、28日のリーズ戦で3度目の週間ベストイレブン入りを果たすと思いますか。
+short_telops: []
+
+theme:
+  id: sakamoto_best_eleven
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 坂元達裕、シアラーの週間ベスト11に2度目の選出。2試合に共通していたこと
+  hook: ""
+  question: 坂元達裕は、なぜ今季2度もシアラーの週間ベストイレブンに選ばれたのか
+  takeaway: 選ばれた第9節と第11節は、どちらもホームで、どちらも左足・エリアの外からのゴール。コベントリーは2試合とも勝っている
+thumbnail:
+  layout: face
+  line1: 坂元達裕 週間ベスト11に
+  line2: シアラーが今季2度目の選出
+  tags: [坂元達裕, コベントリー]
+  photo: assets/images/20261127_sakamoto_best_eleven/01_w.jpg
+  short_photo: assets/images/20261127_sakamoto_best_eleven/01_v.jpg
+
+answer: パレス戦の30分、胸で止めて左足、エリアの外から決めた勝ち越し点。第9節も同じ左足・エリアの外からのゴールだった
+watch: 11月28日のリーズ戦（敵地）
+sections:
+  - id: what
+    main: true
+    heading: 坂元達裕は、誰が選ぶベストイレブンに入ったのか
+    tier: 報道
+    telop: シアラーが選ぶプレミア第11節の週間ベスト11に坂元達裕
+    say:
+      - text: コベントリーの坂元達裕が、プレミアリーグの週間ベストイレブンに選ばれました。
+      - text: 選んだのは、プレミアリーグ歴代最多の260ゴールを持つ、アラン・シアラー。
+        image: assets/images/20261127_sakamoto_best_eleven/04_w.jpg
+      - text: この節の坂元は、クリスタル・パレス戦の30分に勝ち越し点。
+        image: assets/images/20261127_sakamoto_best_eleven/03_w.jpg
+      - text: チームメイトのルドニの浮き球を、胸で止めます。
+      - text: そのまま、ペナルティエリアの外から左足で蹴り込みました。
+      - text: 坂元がシアラーに選ばれるのは、第9節に続いて今季2度目です。
+        emph: true
+        image: assets/images/20261127_sakamoto_best_eleven/01_w.jpg
+        card: {type: stats, title: 坂元達裕とシアラーのベスト11, items: [[9, 節, 1度目（初ゴール）], [11, 節, 2度目（パレス戦）], [2, 度目, 今季の選出]], focus: 2}
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4770841/alan-shearers-team-of-the-week-for-matchweek-11
+      - https://web.gekisaka.jp/news/world/detail/?463848-463848-fl
+      - https://news.yahoo.co.jp/articles/43a2fab0e0794e770af70d0c26d722c0e7885d4c
+      - https://news.yahoo.co.jp/articles/9d6414811ec532aa93bc333629ed4dac7955d6ff
+      - https://news.yahoo.co.jp/articles/4cc57a8641e85a251b562bbbfb84913b988723fe
+      - https://www.espn.com/soccer/match/_/gameId/401879235
+  - id: view
+    viewpoint: true
+    heading: 選ばれた2つの試合に、共通していたことは何か
+    tier: 報道
+    telop: 第9節も第11節も、左足・エリアの外からのゴール
+    say:
+      - text: 見立てです。坂元が選ばれた2つの試合には、共通点があります。
+        emph: true
+        image: assets/images/20261127_sakamoto_best_eleven/04_w.jpg
+        card: {type: table, title: シアラーに選ばれた2試合, columns: [節, 相手, 結果, 坂元のゴール], rows: [[第9節, サンダーランド, 3-1で勝ち, 17分・左足・エリアの外], [第11節, C・パレス, 3-2で勝ち, 30分・左足・エリアの外]], highlight_row: 0}
+      - text: 第9節のサンダーランド戦は17分。これがプレミアリーグでの初ゴールでした。
+        card: {type: table, title: シアラーに選ばれた2試合, columns: [節, 相手, 結果, 坂元のゴール], rows: [[第9節, サンダーランド, 3-1で勝ち, 17分・左足・エリアの外], [第11節, C・パレス, 3-2で勝ち, 30分・左足・エリアの外]], highlight_row: 0}
+      - text: どちらもホームで、どちらも左足、エリアの外からのゴール。
+        card: {type: table, title: シアラーに選ばれた2試合, columns: [節, 相手, 結果, 坂元のゴール], rows: [[第9節, サンダーランド, 3-1で勝ち, 17分・左足・エリアの外], [第11節, C・パレス, 3-2で勝ち, 30分・左足・エリアの外]], highlight_row: 1}
+      - text: そしてコベントリーは、2試合とも勝利。坂元のゴールが勝ちにつながりました。
+        card: none
+        image: assets/images/20261127_sakamoto_best_eleven/01_w.jpg
+      - text: 次は28日、敵地でリーズと戦います。
+        card: none
+        image: assets/images/20261127_sakamoto_best_eleven/03_w.jpg
+      - text: そのリーズのファルケ監督も、同じ第11節で選ばれた人。
+      - text: ベストイレブンと一緒に選ばれる、その週の監督です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879247
+      - https://www.espn.com/soccer/match/_/gameId/401879235
+      - https://www.premierleague.com/en/news/4770841/alan-shearers-team-of-the-week-for-matchweek-11
+      - https://web.gekisaka.jp/news/world/detail/?463848-463848-fl
+  - id: team
+    heading: シアラーの週間ベストイレブンは、どんなチームなのか
+    tier: 報道
+    telop: リーグが毎週発表。第11節はヴィルツらと同じ11人
+    say:
+      - text: シアラーの週間ベストイレブンは、プレミアリーグが毎週発表しているものです。
+        image: assets/images/20261127_sakamoto_best_eleven/04_w.jpg
+        card: none
+      - text: 第11節では、坂元と同じ中盤に、リヴァプールのヴィルツが選ばれました。
+      - text: マンチェスター・ユナイテッドに4対0で勝った試合で、1得点1アシストです。
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4770841/alan-shearers-team-of-the-week-for-matchweek-11
+      - https://web.gekisaka.jp/news/world/detail/?463848-463848-fl
+      - https://news.yahoo.co.jp/articles/43a2fab0e0794e770af70d0c26d722c0e7885d4c
+      - https://news.yahoo.co.jp/articles/9d6414811ec532aa93bc333629ed4dac7955d6ff
+      - https://news.yahoo.co.jp/articles/4cc57a8641e85a251b562bbbfb84913b988723fe
+      - https://www.coventrytelegraph.net/sport/football/football-news/coventry-city-transfers-sakamoto-lampard-34958312

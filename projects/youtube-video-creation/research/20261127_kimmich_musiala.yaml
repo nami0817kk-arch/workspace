@@ -1,0 +1,153 @@
+# 取材メモ（2026年11月27日）キミッヒが、ムシアラをめぐるバイエルン幹部の公の発言を「バイエルンらしくない」と批判。翌日、最高経営責任者ドレーゼンは「内部で話す」（ニュースのショート。見せ方 Y＝キミッヒ本人の言葉から始める）
+# 取材: 2026-11-27。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# いつ・どこで: 11/25（水）チャンピオンズリーグ リール 2-1 バイエルン（ESPN uefa.champions event=401915377、2026-11-25 20:00 UTC）のあと、取材エリアで記者に話した（ESPN「told reporters after Bayern's 2-1 Champions League loss at Lille」、n-tv「in der Nacht von Mittwoch auf Donnerstag」）。
+#   ESPN の試合データ: 15分 ウパメカノ（バイエルン）／62分 上田綺世（リール）／65分 パヴロヴィッチのオウンゴール。ムシアラは76分にビショフと交代で出場。キミッヒは先発。
+#   → 上田の得点は 11/26 ueda_bayern_equalizer で扱った。今回は言わない。
+# キミッヒの言葉（ドイツ語の原文。sportschau「Debatte um Musiala: Kimmich greift Bayern-Bosse an」11/26、n-tv「Joshua Kimmich sagt endlich den wichtigsten Satz in der Musiala-Debatte」11/26）:
+#   "Es darf niemals passieren, dass es auf dem Rücken von einem Spieler ausgetragen wird. Natürlich ist der Verein immer das Höchste, um das es geht und größer als der Spieler, aber trotzdem nicht größer als der Mensch. Und das ist ein absolutes No-Go und auch nicht Bayern-like."（n-tv の書き起こし。sportschau もほぼ同文）
+#   "Was ich nicht verstehe, ist die Art und Weise, wie man das in der Öffentlichkeit kommuniziert."（sportschau）
+#   "Ich finde, wenn es um die Leistung von den Spielern geht, dann kann man immer kritisieren, dann ist das auch völlig legitim. (...) Aber da ging es um eine andere Problematik und das ist etwas, was man intern am Tisch klären sollte und nicht öffentlich versuchen sollte zu klären. Und vor allem bei einem Verein wie Bayern München, der eigentlich für so was steht, dass man eine Familie ist, dass man da zusammenhält."（n-tv。「(...)」の中は補わない）
+#   "Wir sollten nicht auf Wunder hoffen, er wird Zeit brauchen. Das Wichtigste ist, dass er jeden Tag zur Säbener kommt und den Fußball genießt. Ich hoffe, er spürt, dass alle zu 100 Prozent hinter ihm stehen."（sportschau・n-tv 同文）
+#   英語（ESPN/AP 50602935）: "The club is obviously the top priority and bigger than a player, but it's not bigger than a person. That's an absolute no-go and it is not Bayern-like either." → ドイツ語と一致。
+#   → 台本の言葉は、ドイツ語の原文を私が日本語にしたもの。
+# ムシアラの状況（一次に近いもの）:
+#   ・バイエルンとムシアラの代理人の共同声明（11/25 水、sportschau・ESPN が引用）: ムシアラは「2025年4月22日に、初めてアブサンスのような症状で検査を受けた」。ESPN: 契約延長の2か月あと。契約は2030年6月30日まで（sportschau）。
+#   ・ESPN（AP）: 発作を起こす神経の病気（neurological condition）。8月に本人が診断を公にした。けがで2か月ほど試合を離れ、11/20 のケルン戦で復帰（sportschau「Comeback nach rund zwei Monaten Pause」）。
+#   ・幹部の発言: 名誉会長ヘーネス、最高経営責任者ドレーゼン、監査役会のルンメニゲが、ムシアラの状態と契約の見直しを公の場で話した（sportschau）。ルンメニゲは「元の強さに戻れるか」を疑い、給与について「この額はもう説明がつかない」（Sky、ケルン戦のあと）。
+#   → 病気については「神経の病気」とだけ言う（一次の言葉の範囲）。症状の名前・発作の場面は言わない。幹部の発言の中身は 11/22 musiala_fifpro と重なるので1行だけ。
+# クラブの対応（kicker の見出し「Dreesen ruft bei Musiala neues Motto aus: "Kümmern, kümmern und nicht reden"」は kicker が 403 で本文を読めなかった。同じ言葉を sportschau・n-tv が全文で引用）:
+#   ドレーゼン（11/26 木 午後、ウンターハヒングで）"Wir möchten uns ums Kümmern kümmern, und nicht ums Reden. … Deswegen werde ich auch nicht weiter darüber reden. Sie werden verstehen: Wenn wir das schon so gesagt haben, dann wollen wir das auch intern klären."
+#     キミッヒと話すのかと聞かれ "Das habe ich nicht gesagt. … Kümmern, kümmern - und nicht reden!"
+#   n-tv: ドレーゼンは「ミア・ザン・ミア」が問われていることについて「少し大げさ…誰もジャマルの面倒を見ないとは言っていない」。
+#   → 台本の言葉は、ドイツ語を私が日本語にしたもの。
+# 食い違い:
+#   ・試合の日: 11/25（水）。ESPN の公開は11/26。→ 「25日のリール戦のあと」。
+#   ・検査の日: sportschau「22. April 2025」、ESPN「April 2025」。→ 「2025年4月」。
+#   ・キミッヒの肩書き: n-tv は「Ersatzkapitän（キャプテンの代わり）」とも「Kapitän」とも書く。→ 肩書きは言わない。
+# 前の本との重なり: 11/22 musiala_fifpro（世界の選手会の声明）。→ 今回はチームメイトの言葉とクラブの返事。FIFPRO の話はしない。11/26 ueda_bayern_equalizer（同じ試合）→ 試合の中身は言わない。
+# 【言わないこと】発作の場面・症状の細部／契約の金額（報道どまり）／幹部の個人攻撃に読める言い方／キミッヒの家族の話（n-tv の地の文）。
+# 写真: Commons の CC BY-SA 4.0（portrait で被写体を確かめて取得）。c_kimmich＝キミッヒ 2026-06-25 W杯 エクアドル対ドイツ（Bryan Berlin）、c_musiala＝ムシアラ 同じ試合（Bryan Berlin）、c_kimmich2＝キミッヒ 2018年（Granada。古い写真だが縦の入れ替え用）。
+#   pair＝キミッヒとムシアラを pairphoto で横に並べた1枚（サムネ用）。記事の写真は sportschau が IMAGO・picture alliance・dpa、ESPN が Getty なので使わない。FC バイエルン公式は読み込みが時間切れ。ドレーゼンの写真は Commons で見つからなかった。
+# 反応: 0件（作らない）。
+slot: world
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [キミッヒ, ムシアラ, バイエルン, ドレーゼン, ルンメニゲ]
+
+short_style: Y
+short_hook_quote: クラブは選手より大きい。でも、人より大きくはない。
+short_photos:
+  - assets/images/20261127_kimmich_musiala/c_kimmich/01_v.jpg
+  - assets/images/20261127_kimmich_musiala/c_musiala/01_v.jpg
+  - assets/images/20261127_kimmich_musiala/c_kimmich2/01_v.jpg
+short_question: クラブの中の話は、外で話すべきではないと思いますか。
+short_telops: []
+
+theme:
+  id: kimmich_musiala
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: キミッヒ、ムシアラをめぐり幹部に「バイエルンらしくない」。クラブの返事は
+  hook: ""
+  question: キミッヒは、ムシアラをめぐるクラブのやり方の何を批判したのか
+  takeaway: 批判したのは試合の出来ではなく、選手の体と契約の話を公の場でしたこと。クラブは翌日「内部で話す」と答えた
+thumbnail:
+  line1: キミッヒ、幹部に苦言
+  line2: 「バイエルンらしくない」
+  tags: [バイエルン, キミッヒ, ムシアラ]
+  photo: assets/images/20261127_kimmich_musiala/c_kimmich/01_w.jpg
+  short_photo: assets/images/20261127_kimmich_musiala/c_kimmich/01_v.jpg
+
+answer: 選手の体と契約の話を、内部ではなく公の場でしたこと。試合の出来への批判とは別だ、と線を引いた
+watch: 11月28日、バイエルンは敵地でハンブルガーSV戦
+sections:
+  - id: what
+    main: true
+    heading: キミッヒは、クラブのやり方の何を批判したのか
+    tier: 報道
+    telop: キミッヒ「人より大きくはない」
+    say:
+      - text: バイエルンのキミッヒが、チームメイトのムシアラをめぐるクラブの幹部のやり方を、こう批判しました。
+      - voice: キミッヒ
+        text: クラブは選手より大きい。でも、人より大きくはない。
+        emph: true
+        image: assets/images/20261127_kimmich_musiala/c_kimmich/01_wf.jpg
+      - voice: キミッヒ
+        text: これは絶対にだめなことで、バイエルンらしくもない。
+        cont: true
+      - text: 25日、チャンピオンズリーグのリール戦のあと、記者に話した言葉です。
+      - text: ムシアラは神経の病気を抱えていて、11月20日に、およそ2か月ぶりに試合に戻ったばかり。
+        image: assets/images/20261127_kimmich_musiala/c_musiala/01_w.jpg
+      - text: その間に、クラブの幹部が、ムシアラの状態や契約を公の場で話していました。
+      - text: 監査役のルンメニゲは、元の強さに戻れるかを疑い、給与を「もう説明がつかない額」と話しています。
+      - voice: キミッヒ
+        text: 分からないのは、それを公の場で話すやり方です。
+        image: assets/images/20261127_kimmich_musiala/c_kimmich2/01_w.jpg
+      - voice: キミッヒ
+        text: 選手の背中に負わせることは、絶対にあってはいけない。
+        cont: true
+      - voice: キミッヒ
+        text: 選手の出来なら、いつ批判してもいい。
+        image: assets/images/20261127_kimmich_musiala/pair/01.jpg
+      - voice: キミッヒ
+        text: でも、これは別の問題です。
+        cont: true
+      - voice: キミッヒ
+        text: テーブルを囲んで、内部で話すべきことでした。
+        cont: true
+    official: false
+    quotes_from: [sportschau, n-tv]
+    sources:
+      - https://www.sportschau.de/fussball/championsleague/kimmich-greift-bayern-bosse-an,musiala-bayern-kimmich-100.html
+      - https://www.n-tv.de/sport/fussball/Joshua-Kimmich-sagt-endlich-den-wichtigsten-Satz-in-der-Musiala-Debatte-id31581340.html
+      - https://www.espn.com/soccer/story/_/id/50602935/bayern-munich-jamal-musiala-health-issues-kimmich
+      - https://www.espn.com/soccer/match/_/gameId/401915377
+  - id: club
+    heading: クラブは、キミッヒの言葉にどう答えたのか
+    tier: 報道
+    telop: ドレーゼン「気にかける。話すのではなく」
+    say:
+      - text: 翌日、バイエルンの最高経営責任者、ドレーゼンが答えました。
+      - voice: ドレーゼンCEO
+        text: 話すことではなく、気にかけることに力を注ぎたい。
+      - voice: ドレーゼンCEO
+        text: だから、これ以上は話しません。内部で話し合います。
+        cont: true
+      - text: キミッヒを呼んで話すのかと聞かれると、「そうは言っていない」と答えました。
+    official: false
+    quotes_from: [sportschau, n-tv]
+    sources:
+      - https://www.sportschau.de/fussball/championsleague/kimmich-greift-bayern-bosse-an,musiala-bayern-kimmich-100.html
+      - https://www.n-tv.de/sport/fussball/Joshua-Kimmich-sagt-endlich-den-wichtigsten-Satz-in-der-Musiala-Debatte-id31581340.html
+  - id: view
+    viewpoint: true
+    heading: 日付を並べると、何が見えるのか
+    tier: 報道
+    telop: 初めての検査は、契約を延ばした2か月あと
+    say:
+      - text: 見立てです。契約のときに症状が分かっていたのか、という点も話題になっていました。
+      - text: 25日、クラブとムシアラの代理人は、そろって日付を発表しました。
+        emph: true
+        card: {type: timeline, title: ムシアラと契約の日付, rows: [[2025年2月, 2030年までの契約に延長], [2025年4月, 初めて検査を受ける], [2025年夏, クラブW杯で足を骨折], [2026年11月20日, ケルン戦で2か月ぶりに出場]], highlight_row: 0}
+      - text: ムシアラが初めて検査を受けたのは2025年4月。契約を延ばした2か月あとでした。
+      - text: クラブの説明では、症状が出てすぐに検査を受けています。
+      - text: 契約の時点では、まだ症状は出ていなかったことになります。
+        card: {type: timeline, title: ムシアラと契約の日付, rows: [[2025年2月, 2030年までの契約に延長], [2025年4月, 初めて検査を受ける], [2025年夏, クラブW杯で足を骨折], [2026年11月20日, ケルン戦で2か月ぶりに出場]], highlight_row: 1}
+      - text: キミッヒは、ムシアラがこの1年半、4、5試合続けて出たことが無い、とも話しています。
+        card: {type: timeline, title: ムシアラと契約の日付, rows: [[2025年2月, 2030年までの契約に延長], [2025年4月, 初めて検査を受ける], [2025年夏, クラブW杯で足を骨折], [2026年11月20日, ケルン戦で2か月ぶりに出場]], highlight_row: 2}
+      - voice: キミッヒ
+        text: 奇跡を待つべきではない。彼には時間が必要です。
+        image: assets/images/20261127_kimmich_musiala/c_kimmich/01_w.jpg
+        card: none
+      - voice: キミッヒ
+        text: みんなが100パーセント後ろにいると、感じてほしい。
+        cont: true
+      - text: 話し合いは内部で続きます。バイエルンは11月28日、敵地でハンブルガーSVと戦います。
+    official: false
+    quotes_from: [sportschau, n-tv]
+    sources:
+      - https://www.sportschau.de/fussball/championsleague/kimmich-greift-bayern-bosse-an,musiala-bayern-kimmich-100.html
+      - https://www.espn.com/soccer/story/_/id/50602935/bayern-munich-jamal-musiala-health-issues-kimmich
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ger.1/teams/132/schedule

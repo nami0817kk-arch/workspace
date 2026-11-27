@@ -1,0 +1,74 @@
+title: 11月26日のショート題材
+lead: 海外フィード約460件と日本語の海外組ニュースから10件をClaudeが選びました（日本人6件・海外4件）。取材で前提が崩れたら次点に差し替えます。
+note: 木曜（26日）の朝7時に集めました。見出しからの選定。次点：荒木遼太郎が誘ったGK退場とテロップの取り違え、リバプールがブルージュに3-0（イサク2発・ヴィルツ）、PSG 2-2 ローマ。外した：森保一氏の欧州での次の仕事（11/18・11/24 と同じ話）、坂元達裕の代表招集の祝福（11月に5本作成済み）、三笘薫の復帰時期（11/24 作成済み）、塩貝健人の負傷（11/24 作成済み）、佐野航大のレアル戦（11/25 作成済み）、鈴木彩艶のロングキック（11/25 と同じ試合）、スターリングの有罪判決（法的な話）、U-17W杯・U-15（年代別）、MLSの新方式・女子W杯（対象外）。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 上田綺世がバイエルン相手に同点弾。伊藤洋輝との日本人対決、リールは逆転でCL初白星
+  why: 条件：代表FW・CL・大物クラブ。11/22 の復帰の回の続報（得点という新しい事実）。本人の言葉があればY。
+  src: ESPN 試合データ / ゲキサカ・サッカーキング（11/26）
+  url: https://web.gekisaka.jp/news/ucl/detail/?463977-463977-fl
+  fmt: news
+- num: 2
+  slot: 日本人（代表）
+  head: 中村敬斗が「GQ MEN OF THE YEAR 2026」に。サッカー界から唯一の選出
+  why: 条件：代表FW・W杯の年の活躍・本人のコメントがあればY。
+  src: GQ JAPAN / フットボールゾーン（11/25）
+  url: https://www.football-zone.net/archives/687020
+  fmt: news
+- num: 3
+  slot: 日本人（代表）
+  head: デ・ゼルビのトッテナムが田中碧に関心と英メディア。タックル成功数はプレミア3位
+  why: 条件：代表MF・大物監督。11/24 の契約延長の回とは別の新しい話（関心の報道と数字）。確度は報道止まり。
+  src: The Spurs Web / サッカーダイジェスト・フットボールゾーン（11/25〜26）
+  url: https://news.yahoo.co.jp/articles/3c3214c04549d7b592bcd28b7112068a76e140e8
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 堂安律のボール奪取にフランクフルト公式が「専用動画が必要」。決勝点のきっかけ
+  why: 条件：代表MF・クラブ公式の言葉。11/23 の年俸の回とは別の話。
+  src: フランクフルト公式X / フットボールゾーン（11/25）
+  url: https://www.football-zone.net/archives/687075
+  fmt: news
+- num: 5
+  slot: 日本人
+  head: 宮代大聖がラス・パルマスで今季4点目。自陣からのスプリントで勝利を決める
+  why: 条件：日本人FW・本人の言葉があればY。代表の条件には当たらない（弱め）。
+  src: フットボールゾーン（11/25）
+  url: https://www.football-zone.net/archives/687098
+  fmt: news
+- num: 6
+  slot: 日本人
+  head: 荒木遼太郎が相手GKの退場を誘う。中継のテロップは荒木が退場と取り違え
+  why: 条件：日本人MF。出来事は小さめ（次点から繰り上げ）。
+  src: フットボールゾーン（11/24）
+  url: https://www.football-zone.net/archives/686959
+  fmt: news
+- num: 7
+  slot: 海外
+  head: グアルディオラがイタリア代表監督の打診を断る。「断るのは恥ずかしかった」
+  why: 条件：大物・本人の言葉（Y）。
+  src: ESPN・キッカー（11/25〜26）
+  url: https://www.kicker.de/
+  fmt: quote
+- num: 8
+  slot: 海外
+  head: バルサのゴードン、アゼルバイジャンで「好ましからざる人物」扱いの地で得点。サバフに4-1
+  why: 条件：大物クラブ・本人の言葉（Y）・CL。
+  src: ESPN 試合データ / ESPN・マルカ（11/26）
+  url: https://www.espn.com/soccer/match/_/gameId/401915378
+  fmt: news
+- num: 9
+  slot: 海外
+  head: ミランがエンドリッキに7000万ユーロの用意と報道。レアルに打診へ
+  why: 条件：大物・移籍。確度は報道止まり。
+  src: Football Italia ほか10媒体（11/25）
+  url: https://football-italia.net/
+  fmt: news
+- num: 10
+  slot: 海外
+  head: ブルーノが古巣スポルティング相手に2得点。終盤に追いつかれ2-2、ティーレマンスは退場
+  why: 条件：大物（ブルーノ）・CL・本人の言葉があればY。11/25 は試合前の話、今回は結果。
+  src: ESPN 試合データ（11/26）
+  url: https://www.espn.com/soccer/match/_/gameId/401915373
+  fmt: news

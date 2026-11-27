@@ -1,0 +1,151 @@
+# 取材メモ（2026年11月23日）バルセロナ、0対2からビジャレアルに3対2で逆転勝ち。ヤマルは前日のエムバペに続いてPK失敗、フリック監督「キッカーを変えるか考える」（ニュースのショート。見せ方 Y＝フリック監督の言葉から始める）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: Foot Mercato「FC Barcelone : après Kylian Mbappé, Lamine Yamal rate également son penalty !」（requests で全文。フランス語）
+#   ・ヤマルは加速したところをエリア内でオルワセイに引っかけられ、自分で蹴ったが「très mal tiré」、ポストに当たって外へ（"toucher le poteau avant de sortir"）。試合前に足首の不安があった（→ 言わない）。
+# ESPN の試合データ（site.api.espn.com summary esp.1 event=401882804、11/22 13:00 UTC、スポティファイ・カンプ・ノウ）:
+#   バルセロナ 3-2 ビジャレアル。5分 ブキャナン（ビジャレアル）／7分 オルワセイ（ビジャレアル、アシスト モレイロ）／23分 ヤマルのPK失敗（左足、右のポストに当てる "hits the right post"）／
+#   57分 ジェラール・マルティン（頭、アシスト ペドリ）／61分 フェルミン・ロペス（アシスト ヤマル）／67分 パウ・ナバーロ（ビジャレアル）のオウンゴール。
+#   75分 フェルミン（68分に交代で退いたあと）にレッドカード、90+3分 ナバーロが2枚目で退場。シュート30本対4本、支配率69.9%対30.1%。
+# ESPN（Sam Marsden）2026-11-22 17:25 UTC「Flick: Barcelona comeback against Villarreal 'unbelievable' but not happy with ref」（content API で全文）:
+#   ・PKは VAR の介入で与えられた。ヤマルは "sent his effort wide"。→ 食い違い: 試合データは「右のポストに当てた」、Foot Mercato も「ポストに当たって外へ」。台本は「ポストに当て、外れた」。
+#   ・ヤマルがクラブでPKを外すのは2026年で3回目（ESPN の地の文。自分では数えていない）。→ 台本は「今年、クラブで3回目と報じられています」。
+#   ・フリック（試合後）: "When you see the first 10 minutes, we don't start so good. We took too long with the ball, made two mistakes and they scored two goals." ／ "The reaction was unbelievable." ／
+#     "We scored, I think three goals in 10 minutes, it was amazing." ／ PKのキッカーについて "They are decided on the pitch. Maybe I have to think to change it, I am not sure." "I will speak with [Raphinha and Yamal] to see how we manage it in the future. Both of them are able to score penalties"
+#     審判について "If it was another result, maybe I wouldn't say anything. But seeing this referee, we expected [decisions] like that. I am really happy with the referees, but with this referee I am not."
+#     （主審はアレハンドロ・エルナンデス・エルナンデス。交代で退いたフェルミンが第4審判への言葉で退場になった件にも不満）
+#   ・フリックの下で、逆転勝ちは24回目、2点差以上からは6回目（ESPN）。リーグ13試合で12勝。レアルとの勝ち点差を3に戻した。水曜にバクーでサバフ戦（CL）。
+#   → 台本の言葉は、この英語を私が日本語にしたもの。
+# エムバペ（前日）: 20261122_real_celta_mbappe_pk の取材メモ（ESPN 試合データ event=401882798）: 11/21 セルタ戦39分、PKをバーの上へ外した。→ 「前日にはエムバペもPKを外していた」とだけ言う。
+# ESPN 順位表（esp.1、11/23 取得）: 1位バルセロナ 13試合12勝1敗 勝ち点36／2位レアル 13試合 33／3位アトレティコ 31。
+# ESPN scoreboard（uefa.champions 2026-11-25）: Barcelona at Sabah FK 17:45 UTC＝日本時間 11/26 2:45。
+# 自分で数えたもの: 2点差を追いついて逆転するまで、57分→61分→67分の10分間で3点（フリックの「10分で3点」と一致）。シュート30本で枠内9本。
+# 前の本との重なり: 20261122_real_celta_mbappe_pk（エムバペのPK失敗。前日）／ヤマルの回は 20261104_yamal_teen_cl_record・20261112_yamal_delafuente_lying など。今回のPK失敗とフリックのキッカーの話は初出。
+# 【言わないこと】ヤマルの足首の不安（試合前の情報で本人・クラブの言葉ではない）／判定の是非（フリックの言い分として一言だけ）／フェルミンの退場の中身の細部／アトレティコなど他の試合。
+# 本人の言葉: ヤマル本人の試合後の言葉は見つからず（ESPN・Foot Mercato に無い）。フリック監督の言葉あり → Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 3枚。すべて Commons。02・03＝ヤマル（02 は2026年7月のスペイン代表 Bryan Berlin CC BY-SA 4.0、03 は2025年のスペイン代表 Biso CC BY 4.0）、04＝フリック監督（2025年4月のバルセロナの会見 CC BY-SA 4.0。左に広報の人が写るので縦は右のフリックで切り直した）。
+#   ESPN の写真は説明が Getty、Foot Mercato は Maxppp（代理店）なので使っていない。01（ヤマルの後ろ姿で顔なし）は外した。一覧を目で見た: 本人、透かしなし。今回の試合の写真ではない（クラブのユニフォームの本人写真は使えるものが無かった）。
+slot: foreign
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [ラミン・ヤマル, フリック監督, バルセロナ, ビジャレアル, ラフィーニャ, エムバペ]
+
+short_style: Y
+short_hook_quote: キッカーを変えることを、考えないといけないかもしれない。
+short_photos:
+  - assets/images/20261123_yamal_pk_comeback/04_v.jpg
+  - assets/images/20261123_yamal_pk_comeback/02_v.jpg
+  - assets/images/20261123_yamal_pk_comeback/03_v.jpg
+short_question: バルセロナのPKは、ヤマルとラフィーニャのどちらが蹴るべきだと思いますか。
+short_telops: []
+
+theme:
+  id: yamal_pk_comeback
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ヤマルもPK失敗。0対2から逆転のバルサ、フリック監督が語ったこと
+  hook: ""
+  question: ヤマルがPKを外したあと、バルセロナはどう逆転し、フリック監督は何を語ったのか
+  takeaway: 0対2から57分、61分、67分の10分間で3点。バルセロナは13試合12勝で首位を守り、フリック監督はPKのキッカーを考え直すかもしれないと話した
+
+thumbnail:
+  layout: face
+  line1: ヤマル PK失敗
+  line2: 0対2から10分で3点
+  tags: [ヤマル, バルセロナ]
+  photo: assets/images/20261123_yamal_pk_comeback/02_w.jpg
+  short_photo: assets/images/20261123_yamal_pk_comeback/02_v.jpg
+
+answer: 後半の10分間で3点を奪って逆転。フリックはキッカーの変更を考えるかもしれないと話した
+watch: 25日のサバフ戦（日本時間26日2時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: ヤマルのPK失敗のあと、フリック監督は何を語ったのか
+    tier: 報道
+    telop: フリック「キッカーを変えることを考えるかもしれない」
+    say:
+      - voice: フリック監督
+        text: キッカーを変えることを、考えないといけないかもしれない。
+        emph: true
+        image: assets/images/20261123_yamal_pk_comeback/04_w.jpg
+      - voice: フリック監督
+        text: まだ、分かりませんが。
+        cont: true
+      - text: バルセロナのフリック監督が、ヤマルのPK失敗のあとに語った言葉です。
+        short_only: true
+      - text: 22日、ホームのビジャレアル戦。バルセロナは開始7分で、2点を先に奪われました。
+        image: assets/images/20261123_yamal_pk_comeback/02_w.jpg
+      - text: 23分、ヤマルがペナルティエリアの中で倒されてPK。
+      - text: 自分で蹴りましたが、左足のシュートは右のポストに当たり、外れました。
+        image: assets/images/20261123_yamal_pk_comeback/03_w.jpg
+      - text: ヤマルがクラブでPKを外すのは、今年3回目と報じられています。
+      - text: 前日には、首位を争うレアル・マドリードのエムバペも、PKを外したばかりでした。
+        image: assets/images/20261123_yamal_pk_comeback/02_w.jpg
+      - text: 試合は、後半にバルセロナが3対2で逆転勝ち。それでも、PKを誰が蹴るかが話題になりました。
+        image: assets/images/20261123_yamal_pk_comeback/03_w.jpg
+      - text: フリック監督は、こう説明しました。
+        image: assets/images/20261123_yamal_pk_comeback/04_w.jpg
+      - voice: フリック監督
+        text: キッカーは、ピッチの上で決まります。
+      - voice: フリック監督
+        text: ラフィーニャとヤマルの2人と話します。
+        cont: true
+      - voice: フリック監督
+        text: これからどうするか、決めます。
+        cont: true
+      - voice: フリック監督
+        text: 2人とも、PKを決められる選手です。
+        cont: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50562953/barcelona-villarreal-la-liga-hansi-flick-refereeing
+      - https://www.footmercato.net/a3216629716844986564-fc-barcelone-apres-kylian-mbappe-lamine-yamal-rate-egalement-son-penalty
+      - https://www.espn.com/soccer/match/_/gameId/401882804
+  - id: comeback
+    heading: 0対2から、バルセロナはどう逆転したのか
+    tier: 報道
+    telop: 後半の10分間で3点。バルセロナ 3-2 ビジャレアル
+    say:
+      - text: 逆転は後半でした。57分にジェラール・マルティンが頭で1点を返します。
+        image: assets/images/20261123_yamal_pk_comeback/03_w.jpg
+        card: {type: table, title: バルセロナ 3-2 ビジャレアル, columns: [分, 出来事], rows: [[5分, ブキャナン（ビジャレアル）], [7分, オルワセイ（ビジャレアル）], [23分, ヤマルのPK失敗], [57分, ジェラール・マルティン], [61分, フェルミン・ロペス], [67分, オウンゴール]], highlight_row: 3}
+      - text: 61分、ヤマルのパスからフェルミン・ロペスが同点。
+        card: {type: table, title: バルセロナ 3-2 ビジャレアル, columns: [分, 出来事], rows: [[5分, ブキャナン（ビジャレアル）], [7分, オルワセイ（ビジャレアル）], [23分, ヤマルのPK失敗], [57分, ジェラール・マルティン], [61分, フェルミン・ロペス], [67分, オウンゴール]], highlight_row: 4}
+      - text: 67分には相手のオウンゴールで、ついに逆転しました。
+        card: {type: table, title: バルセロナ 3-2 ビジャレアル, columns: [分, 出来事], rows: [[5分, ブキャナン（ビジャレアル）], [7分, オルワセイ（ビジャレアル）], [23分, ヤマルのPK失敗], [57分, ジェラール・マルティン], [61分, フェルミン・ロペス], [67分, オウンゴール]], highlight_row: 5}
+      - text: フリック監督は、試合をこう振り返っています。
+        card: none
+        image: assets/images/20261123_yamal_pk_comeback/04_w.jpg
+      - voice: フリック監督
+        text: 最初の10分は、良くなかった。2つのミスで2点を取られた。
+      - voice: フリック監督
+        text: でも、そこからの反応は信じられないほどでした。
+        cont: true
+      - text: 一方で、この試合の審判の判定には、不満を口にしました。
+      - voice: フリック監督
+        text: この審判には、満足していません。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882804
+      - https://www.espn.com/soccer/story/_/id/50562953/barcelona-villarreal-la-liga-hansi-flick-refereeing
+  - id: view
+    viewpoint: true
+    heading: 逆転勝ちで、バルセロナの首位はどうなったのか
+    tier: 背景
+    telop: 10分間で3点。13試合12勝で首位
+    say:
+      - text: 見立てです。バルセロナが3点を奪ったのは、57分から67分までの10分間でした。
+        card: {type: stats, title: ビジャレアル戦のバルセロナ, items: [[30, 本, シュート], [9, 本, 枠内], [10, 分間, 3点を奪った時間]], focus: 2}
+      - text: シュートは30本。相手の4本を大きく上回りました。
+      - text: これでリーグは13試合12勝。2位レアル・マドリードとの差を、勝ち点3に戻しました。
+        card: none
+      - text: 次は25日、ヨーロッパのクラブ王者を決めるチャンピオンズリーグ。アゼルバイジャンでのサバフ戦です。
+      - text: 日本時間では、26日の午前2時45分。次のPKをヤマルが蹴るのかにも、注目です。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+      - https://www.espn.com/soccer/match/_/gameId/401882804

@@ -1,0 +1,129 @@
+# 取材メモ（2026年11月27日）シント＝トロイデンの19歳FW新川志音、一発退場の次の試合で、カンファレンスリーグのハイドゥク・スプリト戦にエリア外からのゴール（ニュースのショート。見せ方 X＝強い一言から）
+# 取材: 2026-11-27。WebFetch は使わず python requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない（記事探しは Google ニュースの RSS 見出しと Yahoo!ニュースの検索一覧の見出しだけ）。
+# 11/25 の回（research/20261125_shinkawa_stvv_red.yaml「新川志音、初ゴールの次の試合で一発退場」）の続報。今回の新しい事実＝退場の次の試合でゴール。
+# ESPN の試合データ（uefa.europa.conf summary event=401915805、2026-11-26 20:00 UTC）: ハイドゥク・スプリト 0-2 シント＝トロイデン。
+#   45+1分 バズダル（エリア外から右足、ゴール右下。石渡ネルソンのヘディングのパスから）／51分 新川志音（エリア外から右足、ゴール右上）／59分 新川→松澤海斗。
+#   STVV の先発: 小久保玲央ブライアン（GK、39分に警告）・谷口彰悟・畑大雅・石渡ネルソン（33分に警告）・新川志音ほか。途中出場: 松澤海斗（59分）。ベンチ: 高井幸大・荒木遼太郎（出場なし）。
+#   → 親の添え書きは日本人の出場を「小久保・谷口・畑・新川」の4人としていたが、ESPN では石渡ネルソンも先発、松澤海斗が途中出場（6人）。台本では人数を言わない。
+# ESPN の STVV のカンファレンスリーグの日程（teams/936/schedule）: 10/15 イベリア1999 2-0（新川は途中出場・得点なし）／10/22 ミッティラン 1-0（出場なし）／11/5 ブラン 1-1（先発・得点なし）／11/26 ハイドゥク 2-0。
+#   → 新川のヨーロッパの大会での初ゴール（自分で数えた）。STVV は4試合で3勝1分け＝勝ち点10（自分で足した。TVL・VoetbalPrimeur の「10点」と一致）。
+# ESPN のベルギー1部の日程: 11/8 ズルテ・ワレヘム 4-1（新川がリーグ初ゴール）→ 11/21 シャルルロワ 2-2（新川が25分に一発退場）→ 11/26 ハイドゥク（このゴール）。退場の試合とこの試合のあいだに試合は無い＝退場の次の試合。日数は5日。
+# 読んだ記事（全文）:
+#   VoetbalPrimeur 2163473（11/26 22:56）「Europees sprookje van STVV blijft duren: Kanaries vliegen naar volgende ronde」:
+#     6分ごろ、新川がピュペのクロスを頭で折り返し、ムスリウが決めたが VAR でオフサイド、取り消し。
+#     後半すぐ、新川はバズダルとのワンツーが一度合わなかったが、ボールを拾い直して強烈に蹴り込んだ（"haalde vervolgens verschroeiend uit"）。
+#     STVV は4試合で勝ち点10。「今季、リーグフェーズのあとの欧州の試合を決めた最初のベルギーのクラブ」。
+#     小久保が前半にマルティンのシュートと間接FKを止めた。
+#   Truineer「Hajduk Split – STVV: 0 – 2」（11/26）: 新川が後半すぐに「すばらしい一撃（geweldige uithaal）」で 0-2。小久保がこの夜の出来のよかった選手の一人。
+#   TVL（11/26）「Europees sprookje van STVV blijft duren…」: STVV は勝ち点10。ハイドゥクにとって今季ホームで初めての負け。
+#   Voetbalbelgie「Ex-scheidsrechter over rode kaart STVV'er Shinkawa」（11/22。11/25 の回で読んだもの。読み直した）: 「新川とスメッツは出場停止で、日曜のゲンクとのダービーに出られない」。
+#   → 台本では「日曜のゲンク戦は出場停止」だけ言う。退場の出場停止がなぜこの試合に及ばないか（大会が別だから等）は、規定の原文を確かめていないので言わない。
+# 食い違い: 取り消しのゴールの分（VoetbalPrimeur「6分」、Voetbalbelgie の見出し下「7分」）→ 台本では「立ち上がり」。
+# 本人の言葉: 見つからなかった（STVV 公式のニュース一覧に試合の記事はまだ無い。Google ニュースの見出し（日本語・オランダ語）、Yahoo!ニュースの見出し、HBVL は 403 で本文が読めず。本人の X・Instagram はブラウザの道具を使わない決まりで見ていない）→ X。
+#   監督・識者の新川への言葉も見つからなかった。
+# 写真（目で見た）: この試合の新川の写真で、代理店・放送の表記の無いものは見つからなかった（VoetbalPrimeur の主写真＝右下に PHOTO NEWS の透かし。Truineer の主写真＝放送の画面 PLAY SPORTS。TVL の主写真＝取り消しのゴールの喜び（ムスリウ）で新川の顔が見えない）。
+#   → 11/8 のリーグ初ゴールのときのクラブ提供の写真（(C) STVV）を使う。01＝FOOTBALL ZONE 683714 の主写真（1200x800。中央が新川）、02＝サッカーダイジェストWeb 199539 の写真（800x798。同じ場面を全身で）。
+#   03＝Commons「Azerbaijan U-20 v. Japan U-20, 6 October 2026 (21377)」（CC BY-SA 4.0。U-20日本代表のユニフォーム。11/25 の回で使った 78043 とは別の1枚）。
+#   台本では「この試合の写真」とは言わない。
+# 反応: 0件（作らない）。
+slot: japanese
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [新川志音, シント＝トロイデン, ハイドゥク・スプリト, 小久保玲央ブライアン, 石渡ネルソン, バズダル]
+
+short_style: X
+short_hook_word: 退場の次の試合で
+short_photos:
+  - assets/images/20261127_shinkawa_stvv_goal/01_v.jpg
+  - assets/images/20261127_shinkawa_stvv_goal/03_w.jpg
+  - assets/images/20261127_shinkawa_stvv_goal/02_v.jpg
+short_question: 新川志音は、ゲンク戦のあとの試合でまた決めると思いますか。
+short_telops: []
+
+theme:
+  id: shinkawa_stvv_goal
+  league: japan
+  league_name: カンファレンスリーグ
+  prefix: ""
+  title: 新川志音、一発退場の次の試合で。19歳がエリアの外から放った一撃
+  hook: ""
+  question: 一発退場から5日後、新川志音はハイドゥク戦で何をしたのか
+  takeaway: 11月8日にリーグ初ゴール、21日に一発退場、そして26日にヨーロッパの大会で初ゴール。STVVはカンファレンスリーグ4試合で勝ち点10とし、ベルギーのクラブで今季いちばん早く次の段階を決めた
+thumbnail:
+  line1: 新川志音 退場の次の試合
+  line2: エリアの外から右足一閃
+  tags: [新川志音, シント＝トロイデン]
+  photo: assets/images/20261127_shinkawa_stvv_goal/01_w.jpg
+  short_photo: assets/images/20261127_shinkawa_stvv_goal/01_v.jpg
+
+answer: 51分、拾い直したボールをペナルティエリアの外から右足でゴール右上へ。ヨーロッパの大会で初ゴール
+watch: 日曜のゲンク戦（新川は出場停止）
+sections:
+  - id: what
+    main: true
+    heading: 一発退場から5日後、新川志音はハイドゥク戦で何をしたのか
+    tier: 報道
+    telop: ハイドゥク・スプリト 0-2 シント＝トロイデン。51分に新川がゴール
+    say:
+      - text: シント＝トロイデンの19歳、新川志音が、カンファレンスリーグのハイドゥク・スプリト戦で決めました。
+      - text: その5日前のリーグ戦では、前半に一発退場。そこからの次の試合です。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+        card: {type: table, title: 新川志音 この3試合, columns: [日付, 相手, 新川], rows: [[11月8日, ズルテ・ワレヘム, リーグ初ゴール], [11月21日, シャルルロワ, 前半に一発退場], [11月26日, ハイドゥク・スプリト, 51分にゴール]], highlight_row: 1}
+      - text: 前半の終わりに先制し、1点リードで迎えた51分。
+      - text: 仲間とのワンツーが一度は合わなかったボールを、新川が拾い直します。
+        image: assets/images/20261127_shinkawa_stvv_goal/01_w.jpg
+        card: none
+      - text: ペナルティエリアの外から右足。ゴール右上に突き刺しました。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+        emph: true
+      - text: 新川にとって、ヨーロッパの大会では初めてのゴールです。
+        image: assets/images/20261127_shinkawa_stvv_goal/01_w.jpg
+        card: {type: table, title: 新川志音 この3試合, columns: [日付, 相手, 新川], rows: [[11月8日, ズルテ・ワレヘム, リーグ初ゴール], [11月21日, シャルルロワ, 前半に一発退場], [11月26日, ハイドゥク・スプリト, 51分にゴール]], highlight_row: 2}
+      - text: シント＝トロイデンは敵地で、2対0の勝ちを収めました。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915805
+      - https://www.voetbalprimeur.be/nieuws/2163473/stvv-wint-tegen-hajduk-split.html
+      - https://www.truineer.be/2026/11/hajduk-split-stvv-0-2/
+      - https://www.tvl.be/nieuws/europees-sprookje-van-stvv-blijft-duren-volgende-ronde-bijna-zekerheid-na-winst-in-split-184514
+      - https://www.espn.com/soccer/match/_/gameId/401878940
+  - id: japanese
+    heading: 新川のほかに、この試合で日本人は何をしたのか
+    tier: 報道
+    telop: 先制点は石渡ネルソンの頭から。GK小久保も好セーブ
+    say:
+      - text: 新川は立ち上がりにも、頭で折り返したボールからゴールを演出。ただこれはオフサイドで取り消されました。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+      - text: 前半終了間際の先制点は、石渡ネルソンが頭でつないだボールを、バズダルが決めたものです。
+        image: assets/images/20261127_shinkawa_stvv_goal/01_w.jpg
+      - text: ゴールキーパーの小久保玲央ブライアンも、前半に何度もシュートを止めました。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915805
+      - https://www.voetbalprimeur.be/nieuws/2163473/stvv-wint-tegen-hajduk-split.html
+      - https://www.truineer.be/2026/11/hajduk-split-stvv-0-2/
+  - id: view
+    viewpoint: true
+    heading: この勝利で、新川とシント＝トロイデンはどこまで来たのか
+    tier: 報道
+    telop: STVVは4試合で勝ち点10。新川は日曜のゲンク戦は出場停止
+    say:
+      - text: 見立てです。シント＝トロイデンはカンファレンスリーグ4試合で3勝1分け、勝ち点10。
+        image: assets/images/20261127_shinkawa_stvv_goal/01_w.jpg
+        card: {type: stats, title: シント＝トロイデン カンファレンスリーグ, items: [[4, 試合, ここまで], [3, 勝1分け, 負けなし], [10, 勝ち点, 4試合で]], focus: 2}
+      - text: リーグフェーズのあとの試合に進むことを、ベルギーのクラブで今季いちばん早く決めました。
+      - text: 次は日曜、ゲンクとのダービーです。
+      - text: ただ新川は、前の試合の退場による出場停止で、この試合には出られません。
+        image: assets/images/20261127_shinkawa_stvv_goal/02_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.voetbalprimeur.be/nieuws/2163473/stvv-wint-tegen-hajduk-split.html
+      - https://www.tvl.be/nieuws/europees-sprookje-van-stvv-blijft-duren-volgende-ronde-bijna-zekerheid-na-winst-in-split-184514
+      - https://www.voetbalbelgie.be/artikel/ex-scheidsrechter-over-rode-kaart-stvver-shinkawa-vieze-beelden
+      - https://www.espn.com/soccer/match/_/gameId/401915805
+      - https://www.espn.com/soccer/match/_/gameId/401915820

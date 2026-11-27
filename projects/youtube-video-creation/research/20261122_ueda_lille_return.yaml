@@ -1,0 +1,119 @@
+# 取材メモ（2026年11月22日）上田綺世、約1か月ぶりの実戦復帰（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・フットボールチャンネル 2026-11-22「リールFW上田綺世、約1か月ぶりの実戦復帰 …」（全文）https://www.footballchannel.jp/2026/11/22/post1058661/
+#       リール 0-1 リヨン（リーグ・アン第11節、現地21日）。上田は後半開始から途中出場。10月13日のCLアーセナル戦以来39日ぶり。左足の足底筋膜断裂で公式戦6試合を欠場。
+#       リヨンは40分にビドストルップ、42分の2点目はVARで取り消し。リールはリーグ戦6試合ぶりの黒星。次は25日CLバイエルン戦、28日ル・マン戦（敵地）。
+#   ・フットボールチャンネル 2026-11-22「約1か月ぶりに戦列復帰！ …ベンチ入り」（スタメン時点の記事）post1058642 → 中村敬斗は先発、上田はベンチスタート。
+#   ・サッカーキング 2026-11-21「上田綺世が戦線復帰！ …」（アンチェロッティ監督の前日会見＝先発かは未定、の話。今回は使わない）
+#   ・Le Petit Lillois 2026-11-21（試合後の総括。「復帰した上田だけが得点の気配を作った」という論評。論評なので事実としては使わない）
+# ESPN の試合データ（site.api.espn.com summary event=401876402、11/21 19:45 UTC）で確かめたこと:
+#   ・リール 0-1 リヨン。40分 ビドストルップ（右足、ゴール左下）。上田は45分（後半頭）にディアウンと交代で入る。中村敬斗は先発で82分にデュランヴィルと交代。
+#   ・上田のシュート（実況記録）: 49分 右足、枠の外（アルナルソンのパスから）／78分 左足、グレイフが防ぐ（ベンジャマン・アンドレのパス）／90+1分 頭、右へ外れる（アンドレのクロス）。→ 3本、ゴールなし。
+#   ・順位表: リール 2位・勝ち点21（6勝3分2敗）、リヨン 4位・勝ち点20。
+#   ・リールのホームのリーグ戦（ESPN の日程）: PSG 2-2／トロワ 2-0／ル・アーヴル 1-0／ブレスト 1-1／ランス（ランス＝RCL）1-0／リヨン 0-1 → 今季ホームのリーグ戦で初めての負け（自分で数えた）。
+#   ・日程: CL リーグフェーズ バイエルン at リール 11/25 20:00 UTC＝日本時間 11/26 5:00。ligue1 リール at ル・マン 11/28。
+# 食い違い（気をつけた点）:
+#   ・上田の出場: ESPN は「45分に交代」＝後半の頭。報道は「後半開始から」で一致。
+#   ・上田の最初のシュート: フットボールチャンネルは「48分」、ESPN の実況は49分。→ 台本は分を言わず「後半の頭に」とだけ言う。
+#   ・「約1か月ぶり」: 報道の言い方。数字としては39日（10/13→11/21）。→ 台本は「39日ぶり」（報道）。
+#   ・フットボールチャンネルの写真は Getty のため使わない。
+# 前の本との重なり: 11/20 ueda_lille_stadium（本拠地の第一印象）、10/17 ueda_ancelotti_words、10/19 ueda_plantar_out。→ 今回の初出は復帰の試合そのもの・3本のシュート・中村との同時出場。
+# 自分で数えたもの: 上田と中村が同時にピッチに立った時間＝45分→82分で37分（ESPN）。
+# 【言わないこと】上田の気持ち・「手応え」（本人の言葉は見つからず）／アンチェロッティ監督の起用意図／ゴール以外の評価の採点／ケガの再発の心配。
+# 本人の言葉: 試合後の上田本人の言葉は見つからず（報道・クラブの試合後コメントとも見当たらない）。X。
+# 写真: 前の取材の写真から3枚（LPL・上田本人。LPL＝Le Petit Lillois の写真）。02＝背中向きの写真（背番号18 AYASE）、04＝笑顔、05＝走る姿。試合当日の写真ではない（11/20 の ueda_lille_stadium と同じ出どころの流用）。透かしは無い。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [上田綺世, リール, 中村敬斗, リヨン, アンチェロッティ監督]
+
+short_style: X
+short_hook_word: 39日ぶりの復帰
+short_photos:
+  - assets/images/20261122_ueda_lille_return/04_v.jpg
+  - assets/images/20261122_ueda_lille_return/03_v.jpg
+  - assets/images/20261122_ueda_lille_return/05_v.jpg
+  - assets/images/20261122_ueda_lille_return/04_v.jpg
+short_question: 上田綺世は、25日のバイエルン戦で先発すると思いますか。
+short_telops: []
+
+theme:
+  id: ueda_lille_return
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 上田綺世、39日ぶりの復帰。後半から出て打った3本のシュート
+  hook: ""
+  question: 足底筋膜の断裂から戻った上田綺世は、復帰戦で何をしたのか
+  takeaway: 上田は後半の頭から出て、シュートを3本打った。ゴールは無く、リールは今季ホームのリーグ戦で初めて負けた。次は日本時間26日5時のバイエルン戦
+
+thumbnail:
+  layout: face
+  line1: 上田綺世 39日ぶりの復帰
+  line2: 後半から出て3本のシュート
+  tags: [上田綺世, リール]
+  photo: assets/images/20261122_ueda_lille_return/04_w.jpg
+  short_photo: assets/images/20261122_ueda_lille_return/04_v.jpg
+
+answer: 後半の頭から出場し、シュートは3本。ゴールは無く、リールは0対1で負けた
+watch: 25日のバイエルン戦（日本時間26日5時）
+
+sections:
+  - id: what
+    main: true
+    heading: 復帰した上田綺世は、リヨン戦の後半に何をしたのか
+    tier: 報道
+    telop: 上田綺世、39日ぶりの復帰。後半頭から出場
+    say:
+      - text: リールの上田綺世が、足の裏の筋膜を断裂するケガから復帰しました。チームは0対1で負けました。
+        image: assets/images/20261122_ueda_lille_return/04_w.jpg
+      - text: リヨン戦の後半の頭から出場。10月13日のアーセナル戦以来、39日ぶりの試合です。
+      - text: 欠場した公式戦は、6試合でした。
+      - text: 復帰してすぐ、後半の頭に右足でシュートを打ちました。
+        image: assets/images/20261122_ueda_lille_return/03_w.jpg
+        emph: true
+      - text: このシュートは、ゴールの枠を外れました。
+      - text: 78分には左足で打ち、リヨンのキーパーに止められました。
+      - text: 試合の終わりに、クロスへ頭で合わせましたが、右へ外れました。
+        image: assets/images/20261122_ueda_lille_return/05_w.jpg
+      - text: ゴールは、ありませんでした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/22/post1058661/
+      - https://www.espn.com/soccer/match/_/gameId/401876402
+  - id: game
+    heading: 日本人対決は何分間あったのか。リールは何を失ったのか
+    tier: 報道
+    telop: リール 0-1 リヨン。ホームのリーグ戦で今季初の負け
+    say:
+      - text: リヨンの先発には、中村敬斗もいました。
+        card: {type: table, title: リール 0-1 リヨン, columns: [分, できごと], rows: [[40分, リヨンが先制], [45分, 上田が出場], [82分, 中村が交代], [90+1分, 上田のヘディング]], highlight_row: 1}
+      - text: 上田が出た45分から、中村が下がる82分まで。二人が同じピッチにいたのは37分間です。
+        card: none
+        image: assets/images/20261122_ueda_lille_return/04_w.jpg
+      - text: リールは、今季のホームのリーグ戦で初めて負けました。
+      - text: 順位は2位のまま。4位のリヨンとは、勝ち点1差です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401876402
+      - https://www.footballchannel.jp/2026/11/22/post1058661/
+  - id: view
+    viewpoint: true
+    heading: 上田綺世の次の試合は、いつ、どの相手か
+    tier: 背景
+    telop: 次は日本時間26日5時、チャンピオンズリーグのバイエルン戦
+    say:
+      - text: 見立てです。復帰戦のシュートは、右足、左足、頭の3種類でした。
+        card: {type: table, title: 上田綺世 復帰戦のシュート, columns: [時間, シュート], rows: [[後半の頭, 右足・枠の外], [78分, 左足・キーパーが止める], [90+1分, 頭・右へ外れる]], highlight_row: 1}
+        image: assets/images/20261122_ueda_lille_return/05_w.jpg
+      - text: 上田のリールは、次に25日、欧州最高峰の大会チャンピオンズリーグへ。
+        card: none
+      - text: 相手はバイエルンで、日本時間は26日の朝5時です。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401876402
+      - https://www.espn.com/soccer/match/_/gameId/401915377

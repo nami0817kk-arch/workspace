@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月25日）ブルーノ・フェルナンデス、古巣スポルティングとの試合を前にアルヴァラーデで「なぜダメなんだ？ここで幸せだった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を読み、site.api.espn.com で日程を確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: A Bola 2026-11-24 19:30「«Fui feliz aqui e gostava de voltar a ser»: Bruno Fernandes sobre possível regresso ao Sporting」（全文）
+#          A Bola 2026-11-24 20:20（David Nunes）「«Todos os jogadores do Sporting têm qualidade para jogar no Man. United», diz Bruno Fernandes」（前日会見の全文の問答）
+# 出典で確かめたこと（本人の言葉。ポルトガル語の原文→台本の日本語。語順はなぞらず日本語として通るようにした。「…」で切れた所は補っていない）:
+#   ・Sport TV に（A Bola 1本目）:
+#       «É especial mas estranho ao mesmo tempo, estar aqui com a camisola de outro clube» → 特別だけど、同時に不思議な気分です。ほかのクラブのユニフォームで、ここにいるのは。
+#       «São grandes memórias» → いい思い出ばかりです。
+#       «Não gosto de fazer esse tipo de promessas. Mas por tudo o que fiz aqui pode levar a pensar isso» → そういう約束はしたくない。でも、ここでやってきたことを思えば、そう考えたくもなる。
+#       «Porque não? Fui feliz aqui e gostava de voltar a ser.» → なぜダメなんだ？ここで幸せだったし、また幸せになりたい。
+#   ・前日会見（UEFA チャンピオンズリーグ第5節の前日、A Bola 2本目の問答）:
+#       「fechar a porta ao Sporting nunca fecharei, porque o Sporting foi o clube que me abriu as portas no momento em que eu necessitava de dar o próximo passo na carreira.
+#         Por isso, a porta do Sporting, principalmente no meu coração, estará sempre aberta. Depois se pode acontecer ou não, já há muitas coisas à volta disso que não dependem só de mim」
+#        → スポルティングへの扉を閉じることは絶対にない。次の一歩が必要だったときに、扉を開けてくれたクラブだから。／扉は、とくに僕の心の中では、いつも開いている。／実現するかどうかは、僕だけでは決められないことが多い。
+#       「Foi principalmente o primeiro clube a acreditar no grande potencial que eu poderia ter.」→ 僕の可能性を最初に信じてくれたクラブです。
+#       ゴールしたら喜ぶか: 「isso do festejar ou não festejar, eu acho que é irrelevante. Estou aqui, obviamente, para representar o Manchester United.」→ 喜ぶかどうかは関係ない。ここにはマンUを代表して来ている。
+#       （契約の問い・ロナウドの母の話・UCL の話は題の外なので使わない。マンUとの契約は 20261106 ごろに別の回で扱っている）
+#   ・A Bola 2本目の地の文: 2020年1月に5500万ユーロでマンUへ（ボーナスを含めると6000万ユーロ超）。アルヴァラーデを離れてから「ほぼ7年」。
+#   ・ESPN（uefa.champions scoreboard 2026-11-25）: Manchester United at Sporting CP、2026-11-25 20:00 UTC＝日本時間 11/26 午前5時。まだ試合前（STATUS_SCHEDULED）。
+#       ESPN の CL 順位: スポルティング 4試合 勝ち点9・マンU 4試合 勝ち点6（今回は使わない）。
+# 【言わないこと】試合の結果・予想（まだ試合前）。復帰の時期・移籍の話（本人は「約束しない」と言っている）。11/23 のリバプール戦（0対4・「とても痛い」）は繰り返さない。
+# 前の本との重なり: 20261123_bruno_painful_19th（リバプール戦と19位）。今回は古巣への思いだけ。「日本時間26日の午前5時」は前の本の締めにもあったので、言い方を変える（「今夜」ではなく「日本時間あすの朝5時」）。
+# 本人の言葉: あり。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真の出どころ（本人の写真を探すため）:
+#   https://www.record.pt/futebol/futebol-nacional/liga-betclic/sporting/detalhe/bruno-fernandes-e-um-possivel-regresso-ao-sporting-nunca-vou-fechar-a-porta
+#   https://www.ojogo.pt/futebol/artigo/bruno-fernandes-temos-de-comecar-a-ganhar-jogos-e-depois-falaremos-do-contrato/18151900
+#   https://www.ojogo.pt/futebol/artigo/bruno-fernandes-festejar-em-alvalade-e-irrelevante-nao-acho-que-isso-demonstre-que-tenho-mais-ou-menos-respeito/18151902
+#   https://www.abola.pt/noticias/bruno-fernandes-esta-de-volta-a-alvalade-vimos-45-e-nao-foi-preciso-mais-2026112318101834349
+slot: world
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [ブルーノ・フェルナンデス, マンチェスター・ユナイテッド, スポルティング]
+
+short_style: Y
+short_hook_quote: なぜダメなんだ？
+short_photos:
+  - assets/images/20261125_bruno_sporting_return/02_v.jpg
+  - assets/images/20261125_bruno_sporting_return/01_v.jpg
+  - assets/images/20261125_bruno_sporting_return/03_v.jpg
+short_question: ブルーノ・フェルナンデスは、いつかスポルティングに戻ると思いますか。
+short_telops: []
+
+theme:
+  id: bruno_sporting_return
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ブルーノ・フェルナンデス、古巣スポルティングの本拠地で口にした「戻る可能性」
+  hook: ""
+  question: 古巣との試合を前に、ブルーノ・フェルナンデスはスポルティングへの復帰について何を語ったのか
+  takeaway: 約束はしない、でも扉は閉じない。ブルーノは「僕だけでは決められない」とも言い、復帰を言い切ってはいない。マンUに移って5500万ユーロ、ほぼ7年ぶりに敵として古巣の本拠地に立つ
+
+thumbnail:
+  layout: face
+  line1: ブルーノ・フェルナンデス
+  line2: 古巣に戻る可能性
+  tags: [ブルーノ・フェルナンデス, スポルティング]
+  photo: assets/images/20261125_bruno_sporting_return/01_w.jpg
+  short_photo: assets/images/20261125_bruno_sporting_return/02_v.jpg
+
+answer: 約束はしない。でも、ここで幸せだったし、また幸せになりたい。扉はいつも開いている
+watch: 日本時間11月26日 午前5時のスポルティング戦
+
+sections:
+  - id: what
+    main: true
+    heading: 古巣の本拠地で、ブルーノ・フェルナンデスは復帰について何を語ったか
+    tier: 報道
+    telop: ブルーノ・フェルナンデス、古巣スポルティングへの復帰に「なぜダメなんだ？」
+    say:
+      - text: マンUのブルーノが、古巣スポルティングの本拠地でチャンピオンズリーグを戦います。
+        image: assets/images/20261125_bruno_sporting_return/01_w.jpg
+        emph: true
+      - voice: ブルーノ・フェルナンデス
+        text: ほかのクラブのユニフォームでここにいるのは、特別だけど不思議な気分です。
+      - text: ポルトガルのテレビで聞かれたのは、いつかスポルティングに戻る可能性でした。
+        image: assets/images/20261125_bruno_sporting_return/03_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: そういう約束はしたくない。
+      - voice: ブルーノ・フェルナンデス
+        text: でも、ここでやってきたことを思えば、そう考えたくもなる。
+        cont: true
+      - voice: ブルーノ・フェルナンデス
+        text: なぜダメなんだ？
+      - voice: ブルーノ・フェルナンデス
+        text: ここで幸せだったし、また幸せになりたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/fui-feliz-aqui-e-gostava-de-voltar-a-ser-bruno-fernandes-sobre-possivel-regresso-ao-sporting-2026112419333493388
+  - id: door
+    heading: 前日会見で、ブルーノ・フェルナンデスは古巣をどう語ったか
+    tier: 報道
+    telop: ブルーノ「扉は、とくに僕の心の中で、いつも開いている」
+    say:
+      - text: 前日の会見でも、ブルーノは古巣への思いを口にしました。
+        image: assets/images/20261125_bruno_sporting_return/01_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: 僕の可能性を、最初に信じてくれたクラブです。
+      - voice: ブルーノ・フェルナンデス
+        text: 扉は、とくに僕の心の中で、いつも開いている。
+        emph: true
+      - voice: ブルーノ・フェルナンデス
+        text: 実現するかどうかは、僕だけでは決められないことが多い。
+        cont: true
+      - text: ゴールを決めたら喜ぶのか、とも聞かれています。
+        image: assets/images/20261125_bruno_sporting_return/04_w.jpg
+      - voice: ブルーノ・フェルナンデス
+        text: 喜ぶかどうかは関係ない。ここにはマンUを代表して来ています。
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/todos-os-jogadores-do-sporting-tem-qualidade-para-jogar-no-man-united-diz-bruno-fernandes-2026112420204181780
+      - https://www.record.pt/futebol/futebol-nacional/liga-betclic/sporting/detalhe/bruno-fernandes-e-um-possivel-regresso-ao-sporting-nunca-vou-fechar-a-porta
+      - https://www.ojogo.pt/futebol/artigo/bruno-fernandes-festejar-em-alvalade-e-irrelevante-nao-acho-que-isso-demonstre-que-tenho-mais-ou-menos-respeito/18151902
+  - id: view
+    viewpoint: true
+    heading: 古巣を離れて何年、ブルーノ・フェルナンデスはどんな立場で戻ってきたのか
+    tier: 背景
+    telop: 2020年1月にマンUへ。敵としては初めての古巣の本拠地
+    say:
+      - text: 見立てです。ブルーノがマンUへ移ったのは、2020年の1月。
+        image: assets/images/20261125_bruno_sporting_return/03_w.jpg
+      - text: 移籍金は5500万ユーロ。それから、ほぼ7年がたちました。
+      - text: 代表の試合では戻っていますが、敵として古巣と戦うのは初めてです。
+      - text: 約束はしない、でも扉は閉じない。そう話したブルーノが、古巣との一戦に臨みます。
+        emph: true
+      - text: キックオフは、日本時間26日の朝5時です。
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/todos-os-jogadores-do-sporting-tem-qualidade-para-jogar-no-man-united-diz-bruno-fernandes-2026112420204181780
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261125

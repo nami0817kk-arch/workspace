@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月21日）ケイン、左足首のじん帯断裂。バイエルンが「今後数か月」の離脱を発表（ニュースのショート。見せ方 Y＝コンパニ監督の言葉から始める）
+# 取材: 2026-11-21。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・Guardian 2026-11-20 22:43 GMT「Bayern Munich confirm Harry Kane 'out for next few months' with ankle injury」（requests で全文）
+#       クラブ声明（X）: "Harry Kane suffered a tear of the syndesmosis ligament in his left ankle in Bayern Munich's Bundesliga home match against Köln on Friday evening. This was confirmed by an examination by Bayern Munich's medical department. The 33-year-old will therefore be out for the next few months."
+#       20分に交代（ビショフと）。エーベル（スポーツディレクター）は「手術を勧めるかどうか協議中」。冬の中断は12/20〜1/8。CLの欠場: リール（アウェー）・スラヴィア・プラハ（ホーム、来月）・1月のマンU（アウェー）・ベティス（ホーム、リーグフェーズ最終節）。
+#       コンパニ監督の談話: "I think this result was fair and Cologne deserved the point" / "We have other worries now, I have to honestly say. We will all try together to make something strong out of this situation. FC Bayern does that time and again, and that's what we want to do now too."
+#       NLの準々決勝1戦目は3/27ノルウェー（「4か月強先」）。
+#   ・ESPN 記事（now.core.api.espn.com/v1/sports/news/50543079、PA・ESPN Global Research）: 「バイエルンのスポーツディレクター、エーベルは約3か月の離脱と見ている」
+#       ケイン・オリーズで今季バイエルン54ゴールのうち22（41%）／CL リーグフェーズの残り4試合はほぼ確実に欠場、2月の決勝トーナメント初戦も危うい／
+#       コンパニ（ESPN の訳）: "These are world-class players, you can't replace them, but we have the mentality and we have to bring that now." / "We will all try together to turn this situation into a strength. FC Bayern does this time and time again, and that's what we want to do now too."
+#       オリーズは前半終盤に痛め、後半頭に交代。松葉杖でスタジアムを出たが「念のため」（コンパニ）。クラブ発表は「足の打撲（bruised forefoot）、数日治療」。
+#   ・サッカーキング 2026-11-21（日本語）: 「足首のじん帯断裂と発表…オリーズは打撲と診断」。離脱は「今後数カ月間」、独『スカイスポーツ』は約3カ月と予想。
+#   ・ESPN の試合データ（site.api.espn.com summary event=401884736、11/20 19:30 UTC）: バイエルン 1-1 ケルン。12分 ムーア（ケルン）0-1／19分 ケインの負傷で中断→20分 ビショフと交代／37分 ブラウン 1-1（アシスト ビショフ）／42分 オリーズの負傷で中断→45分（後半頭）ビンダーと交代。
+#       ※ゲキサカの記録も 先発ケイン 20分交代・オリーズ交代で一致。
+#   ・ESPN scoreboard（uefa.champions 2026-11-25）: バイエルン at リール 11/25 20:00 UTC＝日本時間 11/26 5:00。ger.1 2026-11-28: バイエルン at ハンブルガーSV。
+# 食い違い（気をつけた点）:
+#   ・依頼文の「W杯への影響」→ 2026年のW杯は6〜7月に終わっている（Commons の写真も6月のW杯）。影響として語れるのは「3月のネーションズリーグ準々決勝（ノルウェー）に間に合うか」だけ（Guardian・ESPN）。W杯とは言わない。
+#   ・離脱期間: クラブ発表は「数か月（next few months）」だけ。「約3か月」は ESPN（エーベルの見立て）とスカイ（サッカーキング経由）の報道。台本は「クラブは『数か月』と発表。エーベルは約3か月と見ている（報道）」と分ける。
+#   ・負傷の原因: ESPN は「ケルンのシュミットのタックル」（ゲキサカ表記ではシュミード、サッカーキングはシュミット）→ 読みが割れるので名前は出さず「ケルンの選手」。
+#   ・Guardian は「ケインがバロンドール受賞者」→ 受賞の話は 10/27 で出し済みなので入れない。
+# 前の本との重なり: 20261027_kane_ballon_dor／20261028_kane_bayern_return／20261106_kane_bayern_2029／20261113_kane_126_caps／20261120_kane_benzema_admirer（ベンゼマの言葉）。
+#   → 今回の初出: じん帯断裂の発表・離脱の見込み・コンパニの言葉・欠場するCLの試合。
+# 【言わないこと】手術の有無（協議中）／受賞・契約・126試合の話／ケルンの選手の名前／オリーズの離脱期間（診断は打撲・数日の治療のみ）／イングランド代表の監督の見解（取っていない）。
+# 写真: 4枚（Commons、Bryan Berlin、CC BY-SA 4.0、2026-06-23 イングランド対ガーナ。今回の負傷の写真ではない・イングランド代表の姿）。_pool.png を目で見た: 本人、透かし無し。報道写真（Guardian＝ロイター表記、Foot Mercato＝配信元不明）は外した。
+# 本人の言葉: ケイン本人のコメントは見つからず（クラブ声明のみ）。→ Y はコンパニ監督の言葉。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [ハリー・ケイン, バイエルン, ヴァンサン・コンパニ, ミカエル・オリーズ]
+
+short_style: Y
+short_hook_quote: 世界レベルの選手たちです。代わりはいません。
+short_photos:
+  - assets/images/20261121_kane_ankle_ligament/01_v.jpg
+  - assets/images/20261121_kane_ankle_ligament/05_v.jpg
+  - assets/images/20261121_kane_ankle_ligament/03_v.jpg
+  - assets/images/20261121_kane_ankle_ligament/01_v.jpg
+short_question: ケインは、3月のネーションズリーグ準々決勝に間に合うと思いますか。
+short_telops: []
+
+theme:
+  id: kane_ankle_ligament
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ケイン、足首のじん帯断裂。バイエルンが明かした離脱の見込みとコンパニ監督の言葉
+  hook: ""
+  question: ケインのけがはどれほど重く、バイエルンは何を欠くのか
+  takeaway: ケインとオリーズは今季のバイエルン54ゴールのうち22点。ケインの欠場が見込まれるチャンピオンズリーグは残り4試合で、約3か月なら復帰は2月下旬、イングランド代表の3月の準々決勝まで約5週間の余裕がある
+
+thumbnail:
+  layout: face
+  line1: ケイン 足首のじん帯断裂
+  line2: クラブ発表「今後数か月」
+  tags: [ハリー・ケイン, バイエルン]
+  photo: assets/images/20261121_kane_ankle_ligament/05_w.jpg
+  short_photo: assets/images/20261121_kane_ankle_ligament/01_v.jpg
+
+answer: 左足首のじん帯断裂で、クラブの発表は「今後数か月」。エーベルは約3か月と見ている
+watch: 25日のリール戦（日本時間26日）
+
+sections:
+  - id: what
+    main: true
+    heading: ケインのけがは、クラブから何と発表されたのか
+    tier: 報道
+    telop: ケイン、左足首のじん帯断裂。クラブ「今後数か月」
+    say:
+      - text: バイエルンのケインが、左足首のじん帯を断裂しました。クラブが発表しました。
+        image: assets/images/20261121_kane_ankle_ligament/03_w.jpg
+      - text: 20日のケルン戦で、相手のタックルを受けて左足を痛め、前半20分に交代しました。
+        image: assets/images/20261121_kane_ankle_ligament/05_w.jpg
+      - text: クラブの発表では、離脱は「今後数か月」。
+        emph: true
+      - text: スポーツディレクターのエーベルは、約3か月と見ているそうです。
+        image: assets/images/20261121_kane_ankle_ligament/02_w.jpg
+      - text: 同じ試合で、オリーズも前半の終わりに痛めて交代しました。
+      - text: ケインとオリーズが抜ける穴について、コンパニ監督の言葉です。
+      - voice: コンパニ監督
+        text: 世界レベルの選手たちです。代わりはいません。
+        emph: true
+        image: assets/images/20261121_kane_ankle_ligament/02_w.jpg
+      - voice: コンパニ監督
+        text: でも、みんなでこの状況を、強みに変えたい。
+        cont: true
+      - voice: コンパニ監督
+        text: バイエルンは、これまで何度もそうしてきました。
+        cont: true
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/nov/20/harry-kane-ankle-ligament-injury-bayern-munich-england
+      - https://www.espn.com/soccer/story/_/id/50543079/harry-kane-injury-bayern-munich
+      - https://www.soccer-king.jp/news/world/ger/20261121/2229983.html
+  - id: game
+    heading: ケインが抜けたあとの試合と、オリーズの診断はどうだったのか
+    tier: 報道
+    telop: 試合は1対1。オリーズの診断は打撲
+    say:
+      - text: ケインが抜けたバイエルンは、ケルンと1対1で引き分けました。
+        card: {type: table, title: バイエルン 1-1 ケルン, columns: [分, できごと], rows: [[12分, ケルンが先制], [20分, ケインが負傷交代], [37分, ブラウンが同点], [45分, オリーズが負傷交代]], highlight_row: 1}
+        image: assets/images/20261121_kane_ankle_ligament/02_w.jpg
+      - text: オリーズは、松葉杖でスタジアムを出る姿も伝えられました。
+        card: none
+      - text: ただしクラブの発表は、足の打撲です。
+        image: assets/images/20261121_kane_ankle_ligament/03_w.jpg
+      - text: 数日間、治療を受けるとしています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401884736
+      - https://www.soccer-king.jp/news/world/ger/20261121/2229983.html
+      - https://www.espn.com/soccer/story/_/id/50543079/harry-kane-injury-bayern-munich
+  - id: view
+    viewpoint: true
+    heading: ケインの離脱で、バイエルンは何を欠くのか
+    tier: 背景
+    telop: ケインとオリーズで今季54ゴールのうち22点に関与。CLは残り4試合を欠場へ
+    say:
+      - text: 見立てです。ケインとオリーズは、今季のバイエルンの22点に関わっています。
+        card: {type: table, title: ケインの欠場が見込まれるチャンピオンズリーグ, columns: [相手, 時期], rows: [[リール（アウェー）, 11月25日], [スラヴィア・プラハ（ホーム）, 12月], [マンチェスター・ユナイテッド（アウェー）, 1月], [ベティス（ホーム）, 1月]], highlight_row: 0}
+        image: assets/images/20261121_kane_ankle_ligament/05_w.jpg
+      - text: 54ゴールのうち、およそ4割です。
+      - text: ケインは、チャンピオンズリーグの総当たり戦、残り4試合を、ほぼ確実に欠場します。
+        card: none
+        image: assets/images/20261121_kane_ankle_ligament/02_w.jpg
+      - text: 約3か月なら、復帰は2月の下旬です。
+        emph: true
+      - text: イングランド代表の、3月のネーションズリーグ準々決勝までは、約5週間あります。
+      - text: 手術をするかどうかは、クラブの医師が話し合っている段階です。
+        image: assets/images/20261121_kane_ankle_ligament/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50543079/harry-kane-injury-bayern-munich
+      - https://www.theguardian.com/football/2026/nov/20/harry-kane-ankle-ligament-injury-bayern-munich-england

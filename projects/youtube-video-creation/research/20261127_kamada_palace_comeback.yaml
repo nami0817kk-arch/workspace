@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月27日）鎌田大地、ヨーロッパリーグのソシエダ戦に3つのポジションでフル出場。クリスタル・パレスは10人の相手に逆転勝ちで、フランク新監督の初勝利（ニュースのショート。見せ方 X＝強い一言から）
+# 取材: 2026-11-27。WebFetch は使わず python requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない（記事探しは Google ニュースの RSS 見出しと Yahoo!ニュースの検索一覧の見出しだけ）。
+# ESPN の試合データ（uefa.europa summary event=401915504、2026-11-26 20:00 UTC）: クリスタル・パレス 2-1 レアル・ソシエダ。
+#   57分 エンケティア→マクニール／64分 ジョン・マルティンに警告／66分 ママドゥ・サール（ソシエダ、オチェンのアシスト）／71分 マルティン2枚目の警告で退場／73分 マテタ PK／
+#   79分 ヒューズ→ストランド・ラーセン（ほか2人交代）／81分 マクニール（ストランド・ラーセンのアシスト）／90+3分 ピノの PK をマレーロが止める。
+#   鎌田は先発・交代なし（rosters starter=True, subbedOut=False）＝フル出場。久保はソシエダのメンバー表にあるが starter=False・subbedIn=False＝ベンチで出場なし。
+# 一次: クラブ公式 cpfc.co.uk「Report: Palace hit back to earn dramatic win over Real Sociedad」（全文）:
+#   トーマス・フランク監督にとって本拠地セルハースト・パークでの最初の試合。78分「ピノの完璧なパスで鎌田が抜け出すが、サールが戻ってゴールライン上でブロック」。マクニールはパレスでの初ゴール。
+#   パレスはリーグフェーズ5試合で勝ち点8、12位。次は日曜、ホームでハル・シティ（プレミアリーグ）。控えにも Kubo とある（ソシエダのベンチ）。
+#   cpfc.co.uk「Frank: The passion from the players was good」: フランクの初戦はコヴェントリーに 3-2 の負け → この勝ちが就任後の初勝利（スポニチも「新監督就任後初白星」）。
+# ゲキサカ 464053（全文）「左サイドハーフ先発の鎌田大地が3ポジションで躍動フル出場!」:
+#   4-4-2 の左サイドハーフで先発 → 後半12分（57分）マクニール投入で 4-2-3-1 のトップ下へ → 後半34分（79分）交代に伴いボランチへ。久保は EL 2試合連続で出番なし。
+#   ソシエダは右サイドにオチェン（久保と争う位置）。パレスは今大会 2勝2分1敗、ソシエダは 1勝2分2敗。
+#   後半33分（78分）: ピノのスルーパスで抜け出した鎌田の折り返しが相手に当たってゴールへ流れ、サールがカバー。
+# スポニチ（Yahoo!ニュース b32d5946、11/27 6:55、全文）: 鎌田は公式戦5試合連続の先発。新監督就任後初白星。久保はベンチ入りも出番なし。※本文の分（同11分など）は ESPN とずれるので使わない。
+# 日刊スポーツ（Yahoo!ニュース 5fee194b）: 久保はベンチ入りも出番なし。ソシエダは後半42分に5人目の交代を行い、久保の出番はなくなった。
+# 食い違い: 78分の場面。公式は「鎌田のシュートのような形をライン上でブロック」、サッカーダイジェストは「鎌田のシュートはサールがゴールライン上でクリア」、ゲキサカは「鎌田の折り返しが相手に当たってゴール方向へ」。
+#   → 台本では「78分、鎌田に決定機。ゴールライン上でかき出された」とだけ言う（シュートか折り返しかは言わない）。
+# 久保の欠場の理由: ベンチ入りしていて、出番が無かっただけ（けが・温存の記事は無い）。→ 台本は「ベンチに入ったが出番なし」だけ。理由は言わない。
+# 本人の言葉: 見つからなかった（クラブ公式の試合後の記事はフランク監督とマクニール。日本語の記事（ゲキサカ・スポニチ・日刊・サッカーダイジェスト・サッカーキング・GOAL・フットボールチャンネル）の見出しと本文に鎌田の試合後の言葉は無かった。本人の X・Instagram はブラウザの道具を使わない決まりで見ていない）→ X。
+# 前の本との重なり: 10/16 EL初ゴール／11/06 後半ATの同点弾（ホッフェンハイム戦）／11/07 冨安との言葉 ほか。→ 今回の初出: 1試合で3つのポジション・フランク新監督の初勝利・久保との対決が実現しなかったこと。
+# 写真（目で見た）: この試合の鎌田の写真で代理店の表記の無いものは見つからなかった（日本語の記事の写真はロイター・Getty。クラブ公式の試合記事の写真5枚に鎌田は写っていない）。
+#   → Commons のパレスでの鎌田の写真を使う。portrait は「被写体の指定が無い」で止めたので、自分で取り込んだ（人が顔と背番号で確かめた。credits.json に CC の表示を控えた）。
+#   01＝「Fredrikstad Fotballklubb v Crystal Palace FC, 28 August 2025 A26」（CC BY 4.0、MichaelEmilio。2025年8月のカンファレンスリーグ予選、アウェーの金色のユニフォーム）
+#   02＝同 B24（CC BY 4.0。右が鎌田、左が GK ヘンダーソン）
+#   03＝「1 Daichi Kamada 2026」（CC BY-SA 4.0、Chensiyuan。ホームのユニフォーム、背番号18）
+#   台本では「この試合の写真」とは言わない。
+# 反応: 0件（作らない）。
+slot: japanese
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [鎌田大地, クリスタル・パレス, レアル・ソシエダ, 久保建英, トーマス・フランク, マクニール]
+
+short_style: X
+short_hook_word: 3つの位置で90分
+short_photos:
+  - assets/images/20261127_kamada_palace_comeback/03_v.jpg
+  - assets/images/20261127_kamada_palace_comeback/01_v.jpg
+  - assets/images/20261127_kamada_palace_comeback/02_v.jpg
+short_question: 鎌田大地は、フランク監督のもとでどの位置がいちばん合うと思いますか。
+short_telops: []
+
+theme:
+  id: kamada_palace_comeback
+  league: england
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: 鎌田大地、フランク新監督の初勝利の90分。任された位置はいくつ？
+  hook: ""
+  question: 鎌田大地は、ソシエダ戦の90分でどこを任されたのか
+  takeaway: 鎌田は左サイドハーフからトップ下、ボランチと3つの位置で90分。10人になったソシエダに逆転勝ちし、フランク新監督は2試合目でパレスでの初勝利。パレスはヨーロッパリーグ5試合で勝ち点8
+thumbnail:
+  line1: 鎌田大地 3つの位置で90分
+  line2: 新監督の初勝利に
+  tags: [鎌田大地, クリスタル・パレス]
+  photo: assets/images/20261127_kamada_palace_comeback/01_w.jpg
+  short_photo: assets/images/20261127_kamada_palace_comeback/03_v.jpg
+
+answer: 4-4-2の左サイドハーフで先発し、57分からトップ下、79分からボランチ。フル出場で逆転勝ちに加わった
+watch: 日曜のハル・シティ戦（プレミアリーグ、ホーム）
+sections:
+  - id: what
+    main: true
+    heading: 鎌田大地は、ソシエダ戦の90分でどこを任されたのか
+    tier: 報道
+    telop: クリスタル・パレス 2-1 レアル・ソシエダ。鎌田はフル出場
+    say:
+      - text: クリスタル・パレスの鎌田大地が、ヨーロッパリーグのレアル・ソシエダ戦にフル出場しました。
+      - text: トーマス・フランク新監督にとって、本拠地での初めての試合です。
+        image: assets/images/20261127_kamada_palace_comeback/03_w.jpg
+      - text: 鎌田のスタートは、左のサイドハーフでした。
+        card: {type: table, title: 鎌田大地 この試合の位置, columns: [時間, 位置], rows: [[キックオフ, 左サイドハーフ], [57分から, トップ下], [79分から, ボランチ]], highlight_row: 0}
+      - text: 57分に選手が代わると、トップ下へ。
+        card: {type: table, title: 鎌田大地 この試合の位置, columns: [時間, 位置], rows: [[キックオフ, 左サイドハーフ], [57分から, トップ下], [79分から, ボランチ]], highlight_row: 1}
+      - text: 試合は66分にソシエダが先制。71分、ソシエダの守備の選手が2枚目の警告で退場します。
+      - text: その反則で得たPKをマテタが決めて、パレスが追いつきました。
+        image: assets/images/20261127_kamada_palace_comeback/01_w.jpg
+        card: none
+      - text: 78分、鎌田に決定機。しかしゴールライン上で、かき出されました。
+        emph: true
+      - text: 79分の交代のあとは、ボランチに下がって試合を締めます。
+        image: assets/images/20261127_kamada_palace_comeback/02_w.jpg
+        card: {type: table, title: 鎌田大地 この試合の位置, columns: [時間, 位置], rows: [[キックオフ, 左サイドハーフ], [57分から, トップ下], [79分から, ボランチ]], highlight_row: 2}
+      - text: 81分にマクニールが逆転ゴール。パレスが2対1で勝ちました。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915504
+      - https://web.gekisaka.jp/news/world/detail/?464053-464053-fl
+      - https://www.cpfc.co.uk/news/match-reports/report-highlights-crystal-palace-real-sociedad-november-2026/
+      - https://news.yahoo.co.jp/articles/b32d5946f5da3d91b5a153f25e172992d6efe04c
+  - id: kubo
+    heading: 鎌田と久保建英の日本人対決は、どうなったのか
+    tier: 報道
+    telop: 久保建英はベンチ入りも出番なし
+    say:
+      - text: この試合で待たれていたのが、鎌田と久保建英の日本人対決でした。
+        image: assets/images/20261127_kamada_palace_comeback/03_w.jpg
+      - text: ソシエダの久保は、ベンチに入りましたが出番はなし。ヨーロッパリーグでは2試合続けて出場がありません。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?464053-464053-fl
+      - https://news.yahoo.co.jp/articles/5fee194bbaf9eec2acce491feea590e43aab903e
+      - https://www.espn.com/soccer/match/_/gameId/401915504
+  - id: view
+    viewpoint: true
+    heading: この勝利で、鎌田とパレスはどこまで来たのか
+    tier: 報道
+    telop: フランク新監督は2試合目で初勝利。パレスは5試合で勝ち点8
+    say:
+      - text: 見立てです。フランク監督はパレスでの最初の試合に負けていて、これが2試合目での初勝利。
+        card: {type: stats, title: クリスタル・パレス ヨーロッパリーグ, items: [[5, 試合, リーグフェーズ], [8, 勝ち点, 2勝2分け1敗], [12, 位, 試合後の時点]], focus: 1}
+      - text: パレスはヨーロッパリーグ5試合で2勝2分け1敗、勝ち点8。試合後の時点で12位です。
+      - text: 鎌田は公式戦5試合続けての先発。新しい監督のもとでも、続けてピッチに立っています。
+        image: assets/images/20261127_kamada_palace_comeback/01_w.jpg
+        card: none
+      - text: 次は日曜、プレミアリーグでハル・シティを本拠地に迎えます。
+    official: false
+    sources:
+      - https://www.cpfc.co.uk/news/match-reports/report-highlights-crystal-palace-real-sociedad-november-2026/
+      - https://www.cpfc.co.uk/news/match-reaction/reaction-thomas-frank-coventry-palace/
+      - https://news.yahoo.co.jp/articles/b32d5946f5da3d91b5a153f25e172992d6efe04c

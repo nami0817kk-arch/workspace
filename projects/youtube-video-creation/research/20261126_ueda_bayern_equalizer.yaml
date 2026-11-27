@@ -1,0 +1,150 @@
+# 取材メモ（2026年11月26日）上田綺世、CL第5節バイエルン戦で62分の同点弾。リールは3分後に逆転し今季CL初白星（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 追記（親・書き出し後）: qc.png で 0:30〜0:55 に 01 の写真が25秒続いたので、66日ぶり・逆転・ムバッペ・守り切りの4行に image:/表を足した。語りは変えていない。
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915377、2026-11-25 20:00 UTC）: リール 2-1 バイエルン。
+#   15分 ウパメカノ（CKのあと至近距離のヘディング、ビショフのクロス）／62分 上田（右足、エリア左から右下隅、エンゴイのスルーパス）／65分 パヴロヴィッチのオウンゴール。
+#   上田は先発、77分にオナルと交代。伊藤洋輝はバイエルンの先発、76分にビンダーと交代。53分ライマー警告。
+#   シュート: リール15本（枠内3）、バイエルン12本（枠内7）。ボール保持 バイエルン 64.8%。
+# ゲキサカ 463977（11/26 06:52、全文）: スタメン復帰の上田は後半17分に同点弾、同32分に途中交代。伊藤は先発し後半31分まで。
+#   足底筋膜断裂から復帰2戦目の上田は、後半1分にゴール前の競り合いからネットを揺らすが、VARの結果ファウルで取り消し。
+#   後半17分、エンゴイのドリブルからペナルティエリア左へのパス、マークを外して受けた上田が右足でゴール右へ。今大会2得点目。
+#   後半20分、カウンターからムバッペのシュートが左ポスト→跳ね返りがパブロビッチに当たってオウンゴール。リールは開幕5戦目で初白星、バイエルンは今大会初黒星。
+#   次: リールは12月9日に敵地でシュツットガルト、バイエルンは12月8日にホームでスラビア・プラハ。
+# フットボールチャンネル post1059200（11/26、全文）: 負傷離脱から43日ぶりの先発。9月20日のニース戦以来66日ぶりのクラブでの得点、公式戦4得点目。CLは9月8日のベティス戦以来の今季2得点目。
+#   リールは今大会1分3敗の勝ち点1だった。10月13日のCLアーセナル戦で左足を負傷（足底筋膜断裂）、公式戦6試合を欠場。21日のリヨン戦で39日ぶりに復帰。
+# サッカーキング 2231535（11/26、全文）: 47分、ウパメカノのクリアミスに上田が反応しキミッヒと競り合いながらネットを揺らすが、オンフィールドレビューで上田のファウル。
+#   62分、エンゴイのドリブルからボックス内左へのパス→上田がファーサイドへ。65分 GKエゼルのスローからカウンター、エムバペのシュートが左ポスト→戻ったパヴロヴィッチに当たってゴール。「わずか3分間で逆転」。バイエルンはそれまで2勝2分。
+# 日刊スポーツ（Yahoo 43c83785、11/26）: 後半開始早々、ウパメカノが頭でGKへ戻したボールを押し込んだが、VARでキミッヒの足を右足で蹴っていたとしてファウル。CL通算4点目。
+# スポーティングニュース（Yahoo dd3640a3）: フェイエノールト時代の2025年1月にもCLのバイエルン戦で得点。
+#   → ESPN（event 720341、2025-01-22）で確認: フェイエノールト 3-0 バイエルン、89分 上田（左足）。
+# クラブ公式 losc.fr「LOSC-Bayern Munich : (2-1) : Renversants, les Dogues s'offrent un géant !」（11/25 22:50、全文）:
+#   47分 上田の同点弾はVARで取り消し。62分 エンゴイから上田がファーのサイドネットへ。65分 エゼルの素早いリスタート→アンドレ→ムバッペ、ポスト→パヴロヴィッチがそらして自陣ゴールへ。
+#   「2年前のレアル・マドリードに続き、欧州の巨人を倒した」。次はリーグ・アン、土曜にル・マン（敵地）。
+# 食い違い:
+#   ・取り消された場面の分: ゲキサカ・サッカーダイジェスト 46分（後半1分）、サッカーキング・クラブ公式 47分。→ 分は言わず「後半の立ち上がり」。
+#   ・取り消しの経緯: サッカーキングは「ウパメカノのクリアミス」、日刊は「頭でGKへ戻したボール」。→ 経緯は言わず「競り合いでファウルがあったとして取り消し」（両方に共通）。
+#   ・オウンゴールの起点: ゲキサカ・日刊「相手FKを防いだあと」、クラブ公式・サッカーキング「GKの素早いスロー・リスタート」。→ 「カウンターから」とだけ言う。
+#   ・上田の交代: ESPN・ゲキサカ 77分、クラブ公式 76分。伊藤の交代: ESPN 76分、ゲキサカ 後半31分（76分）、日刊 後半32分。→ 交代の分は言わない（「後半途中まで」）。
+#   ・CLのゴール数: 「今季2点目」（ゲキサカ・フットボールチャンネル）と「通算4点目」（日刊）は数え方の違い。→ 今季2点目だけを使う。
+#   ・ESPN の取り消しの記録は無い（取り消しは報道各社とクラブ公式で一致）。
+# 自分で数えたもの: 62分の同点から65分の勝ち越しまで3分（ESPN）。バイエルン相手のCLゴールは2025年1月（89分）に続いて2度目（ESPN 2試合）。
+#   リールのCL: 1分3敗 → 1勝1分3敗。
+# 前の本との重なり: 11/20 ueda_lille_stadium（本拠地）／11/22 ueda_lille_return（39日ぶり復帰・3本のシュート）。→ 今回の初出は復帰後初先発・初ゴール・取り消し・3分の逆転・伊藤との対決。「39日ぶり」「3本のシュート」は繰り返さない。
+# 【言わないこと】上田の気持ち（本人の言葉なし）／取り消しの経緯の細部・分（食い違い）／交代の分／「ケインはバロンドール」等の背景。
+# 本人の言葉: 見つからず（ゲキサカ・フットボールチャンネル・サッカーキング・日刊・サッカーダイジェスト・クラブ公式の試合記事、Yahoo の一覧を当たった。11/26 朝の時点で試合後コメントの記事は無い）。→ X。
+# 写真: 3枚。01＝Le Petit Lillois（Quentin Delcourt）の試合記事の主写真、同点弾のあとハラルドソンと喜ぶ上田（今日。ショート用の縦は上田中心に切り直した）。02＝クラブ公式 losc.fr の試合記事の写真、頭に手を当てる上田（今日）。03＝Le Petit Lillois の先発発表記事の主写真（11/21 リヨン戦の背中、18 AYASE）。
+#   外した: ゲキサカ主写真（©Getty の透かし）、日刊スポーツ（ロイター）、スポーティングニュース（時事＝通信社の写真）、フットボールチャンネル・サッカーキング（Getty）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [上田綺世, リール, バイエルン, 伊藤洋輝, パヴロヴィッチ]
+
+short_style: X
+short_hook_word: 取り消されても決めた
+short_photos:
+  - assets/images/20261126_ueda_bayern_equalizer/01_v.jpg
+  - assets/images/20261126_ueda_bayern_equalizer/02_v.jpg
+  - assets/images/20261126_ueda_bayern_equalizer/03_v.jpg
+short_question: 上田綺世は、12月9日のシュツットガルト戦で2試合続けて点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: ueda_bayern_equalizer
+  league: france
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: 上田綺世、バイエルンから復帰後初ゴール。決める前に起きていたこと
+  hook: ""
+  question: ケガから戻った上田綺世は、バイエルン戦でどうやって同点ゴールを決めたのか
+  takeaway: 後半の立ち上がりに一度ネットを揺らしたが取り消し。それでも62分、右足で流し込んで同点。3分後にリールは逆転し、チャンピオンズリーグ5試合目で初めて勝った
+thumbnail:
+  layout: face
+  line1: 上田綺世 バイエルンに同点弾
+  line2: 取り消しのあとに決めた
+  tags: [上田綺世, リール]
+  photo: assets/images/20261126_ueda_bayern_equalizer/01_w.jpg
+  short_photo: assets/images/20261126_ueda_bayern_equalizer/01_v.jpg
+
+answer: 一度目は取り消し。それでも62分、エンゴイのパスを受けて右足でゴール右へ流し込んだ
+watch: 12月9日のシュツットガルト戦（敵地）
+sections:
+  - id: what
+    main: true
+    heading: 上田綺世は、バイエルン戦でどうやって同点ゴールを決めたのか
+    tier: 報道
+    telop: リール 2-1 バイエルン。上田が62分に同点弾
+    say:
+      - text: 上田綺世が、バイエルンから同点ゴール。リールは2対1で逆転勝ちしました。
+      - text: 足のケガから戻って2試合目、上田は43日ぶりに先発しました。
+        image: assets/images/20261126_ueda_bayern_equalizer/03_w.jpg
+      - text: バイエルンには伊藤洋輝も先発。日本人どうしの対決です。
+      - text: 先に点を取ったのはバイエルン。15分、コーナーキックからウパメカノが頭で決めました。
+        card: {type: table, title: リール 2-1 バイエルン, columns: [分, できごと], rows: [[15分, ウパメカノが先制], [後半の立ち上がり, 上田のゴールは取り消し], [62分, 上田が同点], [65分, オウンゴールで逆転]], highlight_row: 0}
+      - text: 後半の立ち上がり、上田がゴール前の競り合いからネットを揺らします。
+        image: assets/images/20261126_ueda_bayern_equalizer/02_w.jpg
+        card: {type: table, title: リール 2-1 バイエルン, columns: [分, できごと], rows: [[15分, ウパメカノが先制], [後半の立ち上がり, 上田のゴールは取り消し], [62分, 上田が同点], [65分, オウンゴールで逆転]], highlight_row: 1}
+      - text: しかしビデオの確認で、競り合いにファウルがあったとして取り消し。
+        emph: true
+      - text: それでも62分。エンゴイのパスを左で受けた上田が、右足でゴール右へ流し込みました。
+        image: assets/images/20261126_ueda_bayern_equalizer/01_w.jpg
+        card: none
+      - text: 上田にとって、クラブでは66日ぶりのゴールです。
+        image: assets/images/20261126_ueda_bayern_equalizer/03_w.jpg
+        card: none
+      - text: そしてこの同点弾の3分後、リールは相手のオウンゴールで逆転します。
+        card: {type: table, title: リール 2-1 バイエルン, columns: [分, できごと], rows: [[15分, ウパメカノが先制], [後半の立ち上がり, 上田のゴールは取り消し], [62分, 上田が同点], [65分, オウンゴールで逆転]], highlight_row: 3}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915377
+      - https://web.gekisaka.jp/news/ucl/detail/?463977-463977-fl
+      - https://www.footballchannel.jp/2026/11/26/post1059200/
+      - https://www.soccer-king.jp/news/world/cl/20261126/2231535.html
+      - https://www.losc.fr/actualites/2026-11-25/losc-bayern-le-compte-rendu
+      - https://news.yahoo.co.jp/articles/43c83785ee14e006f332cfb71402974c4b37e4a8
+      - https://lepetitlillois.com/2026/11/25/losc-exploit-tomber-bayern-premiere/
+  - id: comeback
+    heading: 同点から3分。リールはどうやって逆転したのか
+    tier: 報道
+    telop: 65分、オウンゴールでリールが勝ち越し
+    say:
+      - text: 勝ち越しの場面は、上田の同点弾で勢いに乗ったリールのカウンターから生まれました。
+        card: {type: table, title: リール 2-1 バイエルン, columns: [分, できごと], rows: [[15分, ウパメカノが先制], [後半の立ち上がり, 上田のゴールは取り消し], [62分, 上田が同点], [65分, オウンゴールで逆転]], highlight_row: 3}
+      - text: イーサン・ムバッペが抜け出し、左足でシュート。ボールはポストに当たります。
+        image: assets/images/20261126_ueda_bayern_equalizer/02_w.jpg
+        card: none
+      - text: 跳ね返ったボールが、戻ってきたパヴロヴィッチに当たってゴールへ。オウンゴールでした。
+      - text: リールはこの1点を最後まで守り切りました。
+        image: assets/images/20261126_ueda_bayern_equalizer/01_w.jpg
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915377
+      - https://web.gekisaka.jp/news/ucl/detail/?463977-463977-fl
+      - https://www.footballchannel.jp/2026/11/26/post1059200/
+      - https://www.soccer-king.jp/news/world/cl/20261126/2231535.html
+      - https://www.losc.fr/actualites/2026-11-25/losc-bayern-le-compte-rendu
+      - https://news.yahoo.co.jp/articles/43c83785ee14e006f332cfb71402974c4b37e4a8
+      - https://lepetitlillois.com/2026/11/25/losc-exploit-tomber-bayern-premiere/
+  - id: view
+    viewpoint: true
+    heading: バイエルンに勝ったリールは、チャンピオンズリーグでどこまで来たのか
+    tier: 報道
+    telop: リールはCL5試合目で初勝利。バイエルンは今大会初黒星
+    say:
+      - text: 見立てです。上田がバイエルンから決めたのは、これが2度目。
+        emph: true
+      - text: フェイエノールトにいた2025年1月にも、チャンピオンズリーグでバイエルンから点を取っています。
+      - text: リールはここまで1引き分け3敗。この勝ちが、今大会で初めての勝利です。
+        card: {type: timeline, title: リールのチャンピオンズリーグ, rows: [[第1〜4節, 1引き分け3敗], [第5節, バイエルンに2-1]], highlight_row: 1}
+      - text: 一方のバイエルンは、2勝2引き分けのあと、初めての負けとなりました。
+      - text: 次のチャンピオンズリーグは12月9日。リールは敵地で、シュツットガルトと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915377
+      - https://www.espn.com/soccer/match/_/gameId/720341
+      - https://web.gekisaka.jp/news/ucl/detail/?463977-463977-fl
+      - https://news.yahoo.co.jp/articles/dd3640a3285e60fe525f53fe8d5b60af1bd77a3d
+      - https://www.soccer-king.jp/news/world/cl/20261126/2231535.html

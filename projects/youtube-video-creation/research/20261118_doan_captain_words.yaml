@@ -1,0 +1,133 @@
+# 取材メモ（2026年11月18日）堂安律、途中出場で腕章。「最後勝てなくて申し訳ないという気持ちは伝えた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。WebFetch と requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-18「森保J最終戦を白星で飾れず…途中出場で腕章巻いたMF堂安律「最後勝てなくて申し訳ないと伝えた」」（全文） https://web.gekisaka.jp/news/japan/detail/?463392-463392-fl
+#   フットボールチャンネル 2026-11-18「サッカー日本代表・堂安律、8年間共闘した森保一監督のラストマッチに「悔しいし、さみしい」」（全文） https://www.footballchannel.jp/2026/11/18/post1058085/
+# 出典で確かめたこと:
+#   ・堂安律の言葉（ゲキサカ。試合後のフラッシュインタビュー。字は変えない。台本は読点で行に分けた）:
+#       「選手として、最後勝てなくて申し訳ないという気持ちは伝えた」
+#       「後半押し込む時間が多かったけど、1点しか取れず、何とか同点に持ち込むことができずにほんとに悔しいです」
+#       「(北中米W杯で)優勝だとか、今までの結果を乗り越える結果を出せなかったかもしれないけど、日本サッカーの発展に、ともに成長してきた監督だと思うので本当に悔しいし、寂しい」
+#       「今日までまずは(森保)監督のためにこの代表活動をやってきた。また、所属チームに戻って新たな競争が始まると思うので、切り替えてやっていきたい」
+#   ・ゲキサカ（地の文）: 堂安は0-2の後半開始から出場。見出しは「途中出場で腕章巻いた」。堂安は2018年9月のコスタリカ戦でデビューし、21年東京五輪・22年カタールW杯・26年北中米W杯を森保監督とともに戦った。3月から大岩剛監督がチームを率いる。
+#   ・フットボールチャンネル: 堂安は2点を追う後半開始から出場。「日本サッカーの発展をともにしてきた監督なので、悔しいし、さみしい」と要約して書く（ゲキサカの全文の言い回しと少し違うので、台本はゲキサカの原文を使う）。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC）: Japan 1-2 Paraguay。45'（前半終了後）Ritsu Doan が Tatsuhiro Sakamoto と交代で入る（＝後半の頭から出場）。日本の得点は 85' Shio Fukuda のみ。→ 前半0-2、堂安が出た後半は日本1-0。
+# 記事どうしの食い違い: 「腕章」はゲキサカの見出しだけ（本文では誰から受け取った・何分からかは書いていない）。→ 台本は見出しの言い方に留め、時刻は言わない。堂安の言葉は、ゲキサカの全文を使い、フットボールチャンネルの要約の言い回しは使わない。
+# 依頼文との違い: 依頼文は「日本0-2パラグアイ」だったが、実際は1-2（0-2 は前半終了時）。
+# 自分で数えたもの: 前半は日本0-2、堂安が出た後半は日本1-0（ESPN の得点の時刻から）。
+# 前の本との重なり: 20261115_doan_brazil_captain_words（ブラジル戦の主将）／20261114_doan_last_captain。2018年9月のコスタリカ戦デビューは南野の本（20261117_minamino_thanks_moriyasu）が使っているので繰り返さない。→ 今回の初出: ラストマッチ後の「申し訳ない」「悔しいし、寂しい」と、堂安が出た後半は1-0だったという数え。
+# 【言わないこと】森保監督の功績の評価（記者の整理）／コスタリカ戦デビュー・各大会の話（南野の本と重なる）／所属クラブ名（記事に無い）。
+# 本人の言葉: あり（堂安律。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [堂安律, 森保一]
+
+short_style: Y
+short_hook_quote: 選手として、最後勝てなくて申し訳ないという気持ちは伝えた
+short_photos:
+  - assets/images/20261118_doan_captain_words/01_v.jpg
+  - assets/images/20261118_doan_captain_words/03_v.jpg
+  - assets/images/20261118_doan_captain_words/01_v.jpg
+  - assets/images/20261118_doan_captain_words/04_v.jpg
+short_question: 堂安律は、3月の大岩ジャパンでも主力として呼ばれると思いますか。
+short_telops: []
+
+theme:
+  id: doan_captain_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 堂安律、途中出場で腕章。森保監督のラストマッチで伝えたこと
+  hook: ""
+  question: 森保監督のラストマッチで途中出場した堂安律は、監督に何を伝えたのか
+  takeaway: 堂安が入る前の前半は日本0対2、堂安が出た後半は日本1対0だった。堂安は3月の大岩監督の新体制に向け、所属チームでの競争から切り替えると話す
+
+thumbnail:
+  layout: face
+  line1: 堂安律 森保監督へ
+  line2: 「勝てなくて申し訳ない」
+  tags: [堂安律, 森保一, 日本代表]
+  photo: assets/images/20261118_doan_captain_words/01_w.jpg
+  short_photo: assets/images/20261118_doan_captain_words/01_v.jpg
+
+answer: 最後に勝てなくて申し訳ないと伝えた。悔しいし、寂しい
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 堂安律は、森保監督に何を伝えたのか
+    tier: 報道
+    telop: 堂安律「最後勝てなくて申し訳ない」
+    say:
+      - text: 森保監督のラストマッチで、途中出場の堂安律が腕章を巻きました。
+      - voice: 堂安律
+        text: 選手として、最後勝てなくて申し訳ないという気持ちは伝えた。
+        emph: true
+      - text: 0対2の後半から入った堂安は、1対2の敗戦を悔やみました。
+        image: assets/images/20261118_doan_captain_words/03_w.jpg
+      - voice: 堂安律
+        text: 後半押し込む時間が多かったけど、1点しか取れず、
+      - voice: 堂安律
+        text: 何とか同点に持ち込むことができずに、
+        cont: true
+      - voice: 堂安律
+        text: ほんとに悔しいです。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463392-463392-fl
+      - https://www.footballchannel.jp/2026/11/18/post1058085/
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: words
+    heading: 堂安は、森保監督との時間をどう語ったのか
+    tier: 報道
+    telop: 堂安律「本当に悔しいし、寂しい」
+    say:
+      - text: 堂安は、東京五輪、カタールW杯、そして北中米W杯を、森保監督とともに戦いました。
+        image: assets/images/20261118_doan_captain_words/04_w.jpg
+      - voice: 堂安律
+        text: 優勝だとか、今までの結果を乗り越える結果を、
+      - voice: 堂安律
+        text: 出せなかったかもしれないけど、
+        cont: true
+      - voice: 堂安律
+        text: 日本サッカーの発展に、ともに成長してきた監督だと思うので、
+        cont: true
+      - voice: 堂安律
+        text: 本当に悔しいし、寂しい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463392-463392-fl
+  - id: view
+    viewpoint: true
+    heading: 堂安が入った後半、日本はどう変わったのか
+    tier: 背景
+    telop: 前半0対2、堂安が出た後半は1対0
+    say:
+      - text: 見立てです。前半の日本は0対2で負けていました。
+        image: assets/images/20261118_doan_captain_words/01_w.jpg
+        card: {type: table, title: 堂安律が出た試合の流れ, columns: [時間帯, 日本のスコア], rows: [[前半, 0対2], [後半（堂安が出場）, 1対0]], highlight_row: 1}
+      - text: 堂安が出た後半は、日本が1対0で上回りました。
+        image: assets/images/20261118_doan_captain_words/04_w.jpg
+        card: none
+      - text: 日本の1点は、85分の福田師王のゴール。
+      - text: 前半の2失点に対して、後半の失点は0でした。
+        image: assets/images/20261118_doan_captain_words/03_w.jpg
+        card: none
+      - text: 3月からは大岩剛監督の新体制です。堂安はこう話しています。
+        image: assets/images/20261118_doan_captain_words/03_w.jpg
+      - voice: 堂安律
+        text: 所属チームに戻って新たな競争が始まると思うので、
+      - voice: 堂安律
+        text: 切り替えてやっていきたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463392-463392-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336

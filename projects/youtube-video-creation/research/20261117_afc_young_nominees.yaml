@@ -1,0 +1,111 @@
+# 取材メモ（2026年11月17日）AFCアワード2026、男子ユース部門のノミネートは日本人3人（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・サッカーキング 2026-11-15（全文を読んだ。見出し「19日開催のAFCアワードに日本勢が多数ノミネート！ 最優秀国際選手賞に上田綺世＆長谷川唯、男子若手部門は日本人3選手が独占」）:
+#       AFCは「先月16日」にAFCアワード2026の各賞候補者を発表。バンコクで開く授賞式は19日（記事は「4日後」「3日後」と書く＝15日付）。1994年から実施で今年30回目。全19部門。
+#       「AFC年間最優秀ユース選手賞」男子部門は、日本勢が3枠を独占: 北原槙（MF・藤枝MYFC、U17アジアカップMVP）／市原吏音（DF・AZ）／佐藤龍之介（MF・バレンシア、今年1月のAFC U23アジアカップ サウジアラビア2026でMVP）。
+#       同記事の他の日本勢: 年間最優秀国際選手賞 男子＝上田綺世（FW・リール）、女子＝長谷川唯（MF・マンチェスター・シティ、3年連続の候補）／ユース女子＝福島望愛／年間最優秀コーチ賞 男子＝黒田剛（FC町田ゼルビア）ほか。
+#   ・AFC公式（the-afc.com）は URL が 404 で一次を直接は読めなかった。記事は「AFCの公式Xが各部門の候補を改めて紹介」と書く。→ 確度は「報道」。受賞はまだ（授賞式が19日）。
+#   ・Marca（why に書いてあった）は未取得。使わない。
+# 食い違い・扱い:
+#   ①発表日は記事が「先月16日」（＝10月16日）。授賞式の日付と混ざらないように、台本では「10月に候補が発表され」とだけ書く。
+#   ②受賞者は未定。「受賞」「選ばれた」と言わず、「候補」で通す。
+#   ③市原吏音のMVPなどの肩書きは記事に無い → 書かない。北原のU17の大会の年は記事に無い → 書かない。
+#   ④佐藤の年齢・今季の出場は、この記事に無い → 今回の初出は「ノミネート」だけ。出場の話は前の台本（20261108 など）と重ねない。
+# 前の本との重なり: scripts/20261007_sato_valencia・20261020_sato_ryunosuke_no_minutes・20261028_sato_ryunosuke_copa・20261108_sato_valencia_out_of_squad（いずれも出場機会の話）。今回の初出: AFCのノミネートと日本人3枠独占。posted.json・covered.yaml に AFC アワードは無し。
+# 写真: 佐藤龍之介の写真は3枚（バレンシア公式2枚＝noticasato・megasato、サッカーマガジン＝日本代表の背番号27）。20261007_sato_valencia から取り込み直した。サッカーキングの記事の写真は Getty のため使わない。北原・市原の写真は取れていない。
+# 本人の言葉: 無し。X。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [佐藤龍之介, 北原槙, 市原吏音, 上田綺世]
+
+short_style: X
+short_hook_word: 日本人3人が独占
+short_photos:
+  - assets/images/20261117_afc_young_nominees/03_v.jpg
+  - assets/images/20261117_afc_young_nominees/02_v.jpg
+  - assets/images/20261117_afc_young_nominees/01_v.jpg
+short_question: AFCの男子ユース部門は、日本人3人のうち誰が選ばれると思いますか。
+short_telops: []
+
+theme:
+  id: afc_young_nominees
+  league: england
+  league_name: AFCアワード
+  prefix: ""
+  title: AFCアワード若手部門のノミネート。佐藤龍之介を含む3人の顔ぶれがこちらです
+  hook: ""
+  question: AFCアワードの男子ユース部門には、誰が候補に入ったのか
+  takeaway: 男子ユース部門の候補3枠を日本人が占めた。佐藤龍之介と北原槙は、アジアの年代別大会でMVPに選ばれている。授賞式は19日、バンコクで開かれる
+
+thumbnail:
+  layout: face
+  line1: AFC若手部門 日本人3人
+  line2: 佐藤龍之介もノミネート
+  tags: [佐藤龍之介]
+  photo: assets/images/20261117_afc_young_nominees/02_w.jpg
+  short_photo: assets/images/20261117_afc_young_nominees/03_v.jpg
+
+answer: 候補は北原槙、市原吏音、佐藤龍之介の3人で、全員が日本人。授賞式は19日にバンコクで開かれる
+watch: 19日、バンコクでのAFCアワード授賞式
+
+sections:
+  - id: what
+    main: true
+    heading: AFCアワードの男子ユース部門に、誰が候補入りしたのか
+    tier: 報道
+    telop: 男子ユース部門の候補は日本人3人
+    say:
+      - text: AFCアワードの男子ユース部門。ノミネートされた3人は、全員が日本人です。
+        short_only: true
+        image: assets/images/20261117_afc_young_nominees/03_w.jpg
+      - text: アジアサッカー連盟が開く、アジアの年間表彰です。
+        image: assets/images/20261117_afc_young_nominees/03_w.jpg
+      - text: 年間最優秀ユース選手賞の男子部門に、日本人が3人、入りました。
+      - text: 藤枝MYFCの北原槙、AZの市原吏音、そしてバレンシアの佐藤龍之介です。
+        image: assets/images/20261117_afc_young_nominees/01_w.jpg
+        card: {type: table, title: 男子ユース部門の候補（3人）, columns: [選手, 所属, 位置], rows: [[北原槙, 藤枝MYFC, MF], [市原吏音, AZ, DF], [佐藤龍之介, バレンシア, MF]], highlight_row: 2}
+      - text: 佐藤は、今年1月のU23アジアカップで、大会MVPに選ばれました。
+        card: none
+        image: assets/images/20261117_afc_young_nominees/02_w.jpg
+      - text: 北原も、U17アジアカップのMVPです。
+        image: assets/images/20261117_afc_young_nominees/03_w.jpg
+      - text: 授賞式は、19日にバンコクで開かれます。
+        image: assets/images/20261117_afc_young_nominees/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261115/2228115.html
+  - id: others
+    heading: ほかの部門にも、日本の選手と監督が名を連ねている
+    tier: 報道
+    telop: 上田綺世、長谷川唯、黒田剛監督も候補
+    say:
+      - text: 佐藤龍之介のほかにも、日本からは、別の部門で候補が入っています。
+        card: {type: table, title: AFCアワード2026 日本勢の主な候補, columns: [部門, 候補], rows: [[男子 年間最優秀国際選手賞, 上田綺世（リール）], [女子 年間最優秀国際選手賞, 長谷川唯（マンチェスター・シティ）], [男子 年間最優秀コーチ賞, 黒田剛（FC町田ゼルビア）]], highlight_row: 0}
+        image: assets/images/20261117_afc_young_nominees/02_w.jpg
+      - text: 長谷川は、3年連続の候補です。
+        card: none
+      - text: アワードは1994年から続き、今年が30回目。全部で19の部門があります。
+        image: assets/images/20261117_afc_young_nominees/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261115/2228115.html
+  - id: view
+    viewpoint: true
+    heading: 若手部門の3枠は、どう埋まったのか
+    tier: 背景
+    telop: 3枠すべてが日本人。受賞者は19日に決まる
+    say:
+      - text: 見立てです。男子ユース部門は、候補が3人で、その3枠すべてを日本人が占めました。
+        card: none
+        image: assets/images/20261117_afc_young_nominees/01_w.jpg
+      - text: 3人のうち、年代別の大会でMVPに選ばれたと報じられているのは、佐藤と北原の2人です。
+        image: assets/images/20261117_afc_young_nominees/02_w.jpg
+      - text: ただ、受賞者はまだ決まっていません。発表は、19日の授賞式です。
+        image: assets/images/20261117_afc_young_nominees/03_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261115/2228115.html

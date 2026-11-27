@@ -1,0 +1,140 @@
+# 取材メモ（2026年11月17日）インテルのキヴ監督が最優秀監督賞「パンキーナ・ドーロ」を初受賞。授賞式での本人の言葉（ニュースのショート。見せ方 Y）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・授賞日: 2026-11-16（月）。Inter 公式（inter.it/en/news/cristian-chivu-inter-panchina-oro-2026）「Monday 16 November」午前、コヴェルチャーノ（FIGC 技術部）で、
+#       FIGC 管理官マラゴ、レガ・セリエA会長シモネッリが授与。第35回。仲間の監督たちの投票で決まる。
+#       （football-italia は「月曜の午後」、Inter 公式は「午前」と食い違う → 時刻は使わない。「16日」だけ）
+#   ・Gazzetta 2026-11-16「Inter, Chivu vince la Panchina d'oro: "Premio speciale. Per lo scudetto non temo nessuno"」（全文）:
+#       第35回 2025-26。外国人では3人目（ゴエセルス 1990-91、モウリーニョ 2009-10 に続く）。2位ファブレガス、3位ガスペリーニ。前年の受賞はコンテ（通算7回）。
+#       キヴ「同僚からの評価で受けるのは特別。選手・スタッフ・クラブ、そして勝利の時も敗北の時も近くにいてくれる家族に感謝」
+#       モウリーニョの比較について（Italian）: "Essere paragonato a lui è troppo, mi mettete in imbarazzo. Josè è un grande e io ho appena iniziato. Spero di avere un pezzo di quello che ha vinto."
+#       「スクデットで誰も恐れない。そういう考え方ではない」「ラベル（優勝候補）は好きではない」
+#   ・Football Italia 2026-11-16 14:04（Peter Young。授賞式に同媒体の記者が出席）の英訳:
+#       "Being compared to Mourinho is too much, you're making me embarrassed! He's a legend and I have only just begun. This is only my second year in the professional ranks.
+#        If I could achieve even a fraction of what he has won, I would be a very happy man, even happier than I am today."
+#       "Recognition from my peers means twice as much, it's impossible to not feel moved by it."
+#       "I'm not a fan of labels like that. ..." 「1敗が悲劇に思え、2勝の週が熱狂を生む。みんなにバランスが要る」
+#       ＝授賞式（11/16）の発言。古い発言ではない。モウリーニョは「3冠のときの監督」（football-italia）。
+#   ・サッカーキング 2026-11-16（本文）: 46歳、2025-26 は勝ち点87でインテルを通算21度目のセリエA優勝。投票で2位ファブレガス（コモ）、3位ガスペリーニ（ローマ）。
+#   ・Football Italia 2026-11-16 18:52（ザネッティ副会長、Sky Sport Italia）「完全に値する。賢く、情熱と明確な考えを伝えられる」→ 他人の言葉。今回は本人の言葉を主役にするので使わない（次点）。
+#   ・次戦はアタランタ戦（Football Italia）。日付の換算が要るので台本では「次の試合」とだけ言う。
+#   ・写真: 今日の授賞式の写真は Getty 表記しか無かった（football-italia・サッカーキング・Gazzetta・Inter公式とも）ので使っていない。Commons（CC BY / BY-SA）の古い写真:
+#       01=2009 ルーマニア代表（Andrei Stroe）、02=同（同）、03=2011（Christophe95）、04=2018 インテル・レジェンド戦（@cfcunofficial）。顔は目で確認済み（04 は後ろ向き、背番号 CHIVU 26 で本人と分かる）。
+# 自分で数えたもの: 賞は35回目。外国人の受賞は3人目（35回で3人）。モウリーニョ 2009-10 → キヴ 2025-26 は16シーズンぶり。
+# 前の本との重なり: scripts/20261014_brugge_inter（敗戦後の言葉）／20261126_sa_inter（監督の紹介・46歳）。受賞と授賞式の言葉は初出。契約延長（2028年）・優勝の経緯は繰り返さない。
+# 本人の言葉: あり（上。Gazzetta・Football Italia）。Y。台本は私が日本語にした。「…」で切れた所は補っていない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: general
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [キヴ監督, インテル, モウリーニョ, ファブレガス, ガスペリーニ]
+
+short_style: Y
+short_hook_quote: モウリーニョと比べられるのは、恥ずかしいです。
+short_photos:
+  - assets/images/20261117_chivu_panchina_doro/03_v.jpg
+  - assets/images/20261117_chivu_panchina_doro/01_v.jpg
+  - assets/images/20261117_chivu_panchina_doro/04_v.jpg
+  - assets/images/20261117_chivu_panchina_doro/02_v.jpg
+short_question: キヴ監督は、モウリーニョに並ぶ監督になると思いますか。
+short_telops: []
+
+theme:
+  id: chivu_panchina_doro
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: インテルのキヴ監督、最優秀監督賞を初受賞。モウリーニョの名を出され、口にした言葉
+  hook: ""
+  question: 最優秀監督賞を受けたキヴ監督は、モウリーニョとの比較に何と答えたのか
+  takeaway: 賞は今回で35回目。外国人の受賞は3人目で、モウリーニョ以来16シーズンぶり。キヴは「私はまだ始めたばかり」と答えた
+
+thumbnail:
+  layout: face
+  line1: キヴ監督 最優秀監督賞
+  line2: モウリーニョと比べられ
+  tags: [キヴ, インテル]
+  photo: assets/images/20261117_chivu_panchina_doro/01_w.jpg
+  short_photo: assets/images/20261117_chivu_panchina_doro/03_v.jpg
+
+answer: 比べられるのは恥ずかしい。彼は偉大で、自分はまだ始めたばかり
+watch: インテルの次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: 最優秀監督賞を受けたキヴ監督が、モウリーニョの名を出されて語ったこと
+    tier: 報道
+    telop: キヴ「モウリーニョと比べられるのは恥ずかしい」
+    say:
+      - text: インテルのキヴ監督が、セリエAの最優秀監督賞「パンキーナ・ドーロ」を初めて受賞しました。
+      - text: 授賞式で、あのモウリーニョと比べられた46歳は、こう答えました。
+      - voice: キヴ
+        text: モウリーニョと比べられるのは、恥ずかしいです。
+        emph: true
+      - voice: キヴ
+        text: 彼は偉大な人で、私はまだ始めたばかりです。
+        cont: true
+      - voice: キヴ
+        text: プロの監督は、まだ2年目です。
+        cont: true
+      - voice: キヴ
+        text: 彼が勝ち取ったもののほんの一部でも、手にできれば。
+      - voice: キヴ
+        text: 今日よりも、もっと幸せです。
+        cont: true
+      - text: 授賞式は11月16日、コヴェルチャーノで開かれました。
+        image: assets/images/20261117_chivu_panchina_doro/01_w.jpg
+      - text: モウリーニョは、キヴが選手だったころの、三冠のときの監督です。
+        image: assets/images/20261117_chivu_panchina_doro/04.jpg
+    official: false
+    sources:
+      - https://football-italia.net/chivu-embarrassed-to-be-compared-to-mourinho/
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/16-11-2026/inter-chivu-vince-la-panchina-d-oro.shtml
+      - https://www.inter.it/en/news/cristian-chivu-inter-panchina-oro-2026
+  - id: award
+    heading: 仲間の投票で決まる賞。2位はファブレガス、3位はガスペリーニ
+    tier: 報道
+    telop: 監督たちの投票で決まる。2位ファブレガス、3位ガスペリーニ
+    say:
+      - text: この賞は、監督たち自身の投票で決まります。
+      - text: 2位はコモのファブレガス監督、3位はローマのガスペリーニ監督でした。
+      - voice: キヴ
+        text: 同僚の監督から認められるのは、二重にうれしいです。
+        cont: true
+      - voice: キヴ
+        text: 心を動かされないわけがありません。
+        cont: true
+      - text: 去年の受賞者は、コンテ監督です。
+        image: assets/images/20261117_chivu_panchina_doro/02_w.jpg
+      - text: 2025-26シーズン、インテルは勝ち点87でセリエAを制しました。
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/16-11-2026/inter-chivu-vince-la-panchina-d-oro.shtml
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228882.html
+      - https://football-italia.net/chivu-embarrassed-to-be-compared-to-mourinho/
+  - id: view
+    viewpoint: true
+    heading: 外国人の受賞は35回で3人。モウリーニョ以来16シーズンぶりの意味
+    tier: 背景
+    telop: 外国人の受賞は35回で3人。モウリーニョ以来16シーズンぶり
+    say:
+      - text: 見立てです。賞は今回で35回目、外国人の受賞はそのうち3人だけ。
+        card: {type: table, title: 外国人の受賞者, columns: [シーズン, 監督], rows: [[1990-91, ゴエセルス], [2009-10, モウリーニョ], [2025-26, キヴ]], highlight_row: 2}
+      - text: モウリーニョからキヴまで、16シーズンあきました。
+      - text: ゴエセルス、モウリーニョに続く3人目が、キヴです。
+      - text: インテルが優勝候補と見られていることについては、こう話しました。
+        card: none
+      - voice: キヴ
+        text: 道のりは長く、失敗できる余地はごくわずかです。
+      - voice: キヴ
+        text: 1敗が悲劇に思え、2勝の週が熱狂を生みます。
+        cont: true
+      - voice: キヴ
+        text: みんなにバランスが必要です。
+        cont: true
+    official: false
+    sources:
+      - https://www.gazzetta.it/Calcio/Serie-A/Inter/16-11-2026/inter-chivu-vince-la-panchina-d-oro.shtml
+      - https://football-italia.net/chivu-embarrassed-to-be-compared-to-mourinho/

@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月25日）小久保玲央ブライアンがシント＝トロイデン（STVV）と2030年まで契約延長。本人が振り返った加入1年目（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-24「小久保玲央ブライアンがシント・トロイデンと契約延長！…9月に日本代表デビューの25歳GK」（全文）。
+# 出典で確かめたこと:
+#   ・STVV 日本公式サイト 2026-11-24「【お知らせ】GK小久保玲央ブライアン選手との契約延長合意について」（全文）＝確定:
+#       「GK小久保玲央ブライアン選手と2030年まで契約を延長することに合意」。2024年夏に加入。ベンフィカのトップチームでの出場はかなわなかった。
+#       約1か月前のカンファレンスリーグ、ミッティランとのアウェー戦で好セーブを連発し無失点。
+#       プロフィール: 2001年1月23日生まれ（25歳）・千葉出身・193cm/93kg。経歴「2024-: STVV 通算88試合」。
+#       本人の談話（日本語の原文。クラブが出したもの。台本はこの文を短く区切って使う。語は足さない）:
+#         「加入1年目はリーグに慣れるまで時間がかかりましたが、コーチングスタッフやサポーターの皆さんに支えられ、成長することができました。
+#           昨シーズン、チームが素晴らしいシーズンを送る中で、自分も力になれたことをうれしく思っています。
+#           今シーズンも力のある選手がそろっていて、この数か月間、その力を示せた試合もありました。
+#           これからさらに順位を上げ、出場する各大会で勝ち進んでいくことが目標です。
+#           自分のプレーでチームに勝ち点をもたらせるような試合を、もっと増やしていきたいと思います。」
+#       立石敬之CEOの談話もある（主役の言葉の回にするので使わない）。
+#   ・STVV 公式（オランダ語）2026-11-23「Leo Kokubo tekent nieuw contract bij STVV」: 練習後に特別な文字入りのユニフォームで撮影。
+#       談話はオランダ語版にもある（日本語版と同じ中身）。※契約期間はオランダ語版の本文には書いていない → 期間は日本語版（2030年まで）で取る。
+#       日付の食い違い: オランダ語版は 11/23、日本語版・サッカーキングは 11/24。→ 台本では発表の日付を言わない。
+#   ・ESPN（site.api.espn.com summary event=401915835、2026-10-22 カンファレンスリーグ）: ミッティラン 0-1 STVV。
+#       42分 ソエレ（STVV）の頭のゴール。小久保は先発で失点0・セーブ3。
+#   ・ESPN 順位表（bel.1、11/25 取得）: STVV 12試合 勝ち点12 で11位（9位〜16位が勝ち点12〜14の団子）。
+#       ESPN 2025季: チャンピオンズ・プレーオフ3位（昨季の「素晴らしいシーズン」の中身。今回は数字は出さない）。
+#   ・サッカーキング: 9月にA代表デビュー、パリ五輪で全4試合に出場。公式戦通算88試合（公式と一致）。
+# 前の本との重なり: scripts/20260929b_kokubo（A代表デビュー戦の横っ飛び・「国防」）。→ 今回の初出は契約延長と本人の談話。代表デビュー戦の中身は繰り返さない（「9月に代表デビュー」と一言だけ）。
+#   前日 20261124_tanaka_leeds_2030（田中碧の2030年まで延長、X型）と「2030年まで」が重なる → 題の結びを変え、こちらは本人の言葉（Y）にする。
+# 本人の言葉: あり（クラブが出した日本語の談話）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [小久保玲央ブライアン, シント＝トロイデン, ミッティラン, ベンフィカ]
+
+short_style: Y
+short_hook_quote: 加入1年目は、リーグに慣れるまで時間がかかりました。
+short_photos:
+  - assets/images/20261125_kokubo_stvv_extension/04_v.jpg
+  - assets/images/20261125_kokubo_stvv_extension/02_v.jpg
+  - assets/images/20261125_kokubo_stvv_extension/05_v.jpg
+short_question: 小久保玲央ブライアンは、2030年までシント＝トロイデンのゴールを守ると思いますか。
+short_telops: []
+
+theme:
+  id: kokubo_stvv_extension
+  league: japan
+  league_name: ベルギー1部
+  prefix: ""
+  title: 小久保玲央ブライアン、2030年まで延長。加入1年目を振り返って明かしたこと
+  hook: ""
+  question: 2030年までの契約延長を決めた小久保玲央ブライアンは、ここまでの歩みをどう語ったのか
+  takeaway: 加入1年目は慣れるのに時間がかかったと本人は認めた。それでも通算88試合に立ち、チームはいま11位。次の目標は順位を上げることと、自分のプレーで勝ち点をもたらす試合を増やすこと
+
+thumbnail:
+  layout: face
+  line1: 小久保玲央ブライアン
+  line2: 2030年まで延長
+  tags: [小久保玲央ブライアン, シント＝トロイデン]
+  photo: assets/images/20261125_kokubo_stvv_extension/01_w.jpg
+  short_photo: assets/images/20261125_kokubo_stvv_extension/04_v.jpg
+
+answer: 1年目は慣れるまで時間がかかった。支えられて成長し、次は自分のプレーで勝ち点をもたらす試合を増やしたい
+watch: 次のリーグ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 2030年まで契約を延ばした小久保玲央ブライアンが、語ったこと
+    tier: 確定
+    telop: 小久保玲央ブライアン、2030年までシント＝トロイデンと延長
+    say:
+      - text: 日本代表GK小久保玲央ブライアンが、シント＝トロイデンと2030年まで延長。
+        image: assets/images/20261125_kokubo_stvv_extension/04_w.jpg
+        emph: true
+      - voice: 小久保玲央ブライアン
+        text: 加入1年目は、リーグに慣れるまで時間がかかりました。
+        emph: true
+      - voice: 小久保玲央ブライアン
+        text: コーチングスタッフやサポーターの皆さんに支えられ、
+        cont: true
+      - voice: 小久保玲央ブライアン
+        text: 成長することができました。
+        cont: true
+      - text: ベルギー1部のクラブで、25歳は次の目標も口にしました。
+        image: assets/images/20261125_kokubo_stvv_extension/02_w.jpg
+      - voice: 小久保玲央ブライアン
+        text: これからさらに順位を上げ、
+      - voice: 小久保玲央ブライアン
+        text: 出場する各大会で勝ち進んでいくことが目標です。
+        cont: true
+      - voice: 小久保玲央ブライアン
+        text: 自分のプレーでチームに勝ち点をもたらせるような試合を、
+        cont: true
+        image: assets/images/20261125_kokubo_stvv_extension/05_w.jpg
+      - voice: 小久保玲央ブライアン
+        text: もっと増やしていきたいと思います。
+        cont: true
+    official: true
+    sources:
+      - https://stvv.jp/news/20261123_1/
+      - https://www.stvv.com/nl/nieuws/artikel/leo-kokubo-tekent-nieuw-contract-bij-stvv
+      - https://www.soccer-king.jp/news/world/world_other/20261124/2230698.html
+  - id: path
+    heading: 小久保玲央ブライアンは、どんな道を通ってここまで来たのか
+    tier: 報道
+    telop: ベンフィカから加入して公式戦88試合、9月にA代表デビュー
+    say:
+      - text: 小久保は2024年の夏に、ポルトガルのベンフィカから加入しました。
+        image: assets/images/20261125_kokubo_stvv_extension/04_w.jpg
+        card: {type: timeline, title: 小久保玲央ブライアンの歩み, rows: [[2024年夏, ベンフィカから加入], [ここまで, 公式戦88試合に出場], [2026年9月, A代表デビュー], [2026年11月, 2030年まで延長]], highlight_row: 0}
+      - text: ベンフィカでは、トップチームの試合に出られないままでした。
+      - text: シント＝トロイデンでは、ここまで公式戦88試合に出場。
+        card: {type: timeline, title: 小久保玲央ブライアンの歩み, rows: [[2024年夏, ベンフィカから加入], [ここまで, 公式戦88試合に出場], [2026年9月, A代表デビュー], [2026年11月, 2030年まで延長]], highlight_row: 1}
+        emph: true
+      - text: そして今年の9月、A代表でデビューしています。
+        card: {type: timeline, title: 小久保玲央ブライアンの歩み, rows: [[2024年夏, ベンフィカから加入], [ここまで, 公式戦88試合に出場], [2026年9月, A代表デビュー], [2026年11月, 2030年まで延長]], highlight_row: 2}
+        image: assets/images/20261125_kokubo_stvv_extension/02_w.jpg
+    official: true
+    sources:
+      - https://stvv.jp/news/20261123_1/
+      - https://www.soccer-king.jp/news/world/world_other/20261124/2230698.html
+  - id: view
+    viewpoint: true
+    heading: 小久保が言う「順位を上げる」は、いまどこから始まるのか
+    tier: 背景
+    telop: シント＝トロイデンはいま11位
+    say:
+      - text: 見立てです。シント＝トロイデンは、いまリーグ戦で11位。
+        image: assets/images/20261125_kokubo_stvv_extension/05_w.jpg
+      - text: 9位から16位までが、勝ち点2の差にひしめいています。
+        emph: true
+      - text: ただ、守りで結果を出した試合は、この秋にもありました。
+        image: assets/images/20261125_kokubo_stvv_extension/02_w.jpg
+      - text: 1か月前の欧州カップ戦、デンマークのミッティランとの敵地の試合です。
+        card: {type: stats, title: 小久保玲央ブライアン ミッティラン戦, items: [[0, 失点, 敵地で1対0], [3, セーブ, 先発でフル出場]], focus: 0}
+      - text: 小久保は無失点で、チームは1対0で勝ちました。
+      - text: 小久保が勝ち点をもたらす試合を増やせるか。それが順位を上げる道です。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915835
+      - https://site.api.espn.com/apis/v2/sports/soccer/bel.1/standings

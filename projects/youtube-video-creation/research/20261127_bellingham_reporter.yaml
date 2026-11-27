@@ -1,0 +1,133 @@
+# 取材メモ（2026年11月27日）ベリンガム、PSV戦のあとの取材エリアで、女性記者の質問に割り込んだ男性記者を止めた。記者本人が語ったこと（ニュースのショート。見せ方 Y＝ベリンガム本人の一言から始める）
+# 取材: 2026-11-27。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 前提の確認: 「試合後の混乱の中で女性記者を守った」→ 実際は、ミックスゾーン（選手が通る通路の柵の前で記者が待つ取材の場所）で、BBC の記者エリザベス・コンウェイさんの2つ目の質問に男性の記者が声をかぶせたので、ベリンガムが「Sorry, she's got one more」と言って止め、彼女の質問に答えた。
+#   体を張って守った話ではない。→ 「割り込みを止めた」「質問を最後まで聞いた」と言う。「守った」とは言わない。前提は崩れていない（どの試合・何が起きたか・本人の言葉がそろった）。
+# どの試合: 11/24（火）チャンピオンズリーグ レアル・マドリード 5-1 PSV（ESPN uefa.champions event=401915298、ベルナベウ）。
+#   ESPN の試合データ: 32分 ペリシッチのPK（PSV）／45分 ベリンガムがチュアメニと交代で出場／50分 バルベルデ／60分 ベリンガム（右足、エリアの外からボレー。エムバペのアシスト）／64分・84分 エムバペ／87分 ヴィニシウス（ベリンガムのアシスト、速攻）。
+# BBC News「Bellingham praised for backing BBC reporter during interview」（BBC Radio WM、Susie Rack・Trish Adudu）:
+#   "Sorry, she's got one more"（ベリンガムが男性記者に）／コンウェイさんはソリハル出身、BBC Sport でレアル・マドリードを取材。
+#   コンウェイさん（BBC Radio WM に）"It is utter carnage," "You've got elbows you've got microphones, you've got cameras, you've got massive tall men reaching over you."
+#     "I'm one of very, very, few female reporters and one of very, very, few English reporters there, so trying to make a stand for yourself and get in a good position is so important."
+#     "It's shown him yet again being respectful, polite, and really respecting me as a journalist," 割り込まれるのはよくあること、場が「intimidating」になりうる、でも「it was so nice」。
+#     見出しの地の文: "added a whole new layer to the love people have for Jude"（記者の言葉として BBC が書いた）。
+# The Independent（11/26）: 同じ言葉と経緯。ベリンガムは後半から出て60分に得点、ヴィニシウスの得点をアシスト。レアルはリーグフェーズ5戦全勝で首位。
+# Real Madrid 公式（11/24「Bellingham: "We have many players with quality who do wonderful things"」、Realmadrid TV）: ベリンガム "I have no idea what I did. But I had the ball in a good position, I shot, and it was a goal."
+#   → ゴールの言葉は使わない（題から離れる・11/17 の回とも別の話だが、尺を記者の話に使う）。
+# → 台本の言葉は、英語を私が日本語にしたもの。
+# 食い違い:
+#   ・BBC の動画の見出しは「assists female reporter」、Independent は「stands up for」、Sun は「stood up for her in post-match scrum」。→ 台本は事実の一言（割り込みを止めた）だけ。
+#   ・男性記者がどこの誰かは書かれていない。→ 言わない。責めない。
+# 前の本との重なり: 11/17 bellingham_smile（代表で笑顔を失った話）。→ 今回は別の話。言及しない。
+# 【言わないこと】割り込んだ記者を悪く言う言い方／SNSの反響の件数／「女性だから」と決めつける言い方（本人が言った範囲だけ）。
+# 写真: Real Madrid 公式の試合記事の写真（01＝ベリンガムのゴールのあと、撮影 David S. Bustamante、02＝喜ぶ選手たち（5番がベリンガム）、03＝ヴィニシウスの5点目のシュート）。
+#   BBC の記事の写真は EPA/Shutterstock・Getty・Reuters なので使わない。コンウェイさん本人の写真（本人提供）も使わない。
+# 反応: 0件（作らない）。BBC が載せた読者の書き込みは使わない。
+slot: world
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [ベリンガム, レアル・マドリード, エリザベス・コンウェイ, PSV]
+
+short_style: Y
+short_hook_quote: ごめん、彼女の質問がもう1つあるんだ。
+short_photos:
+  - assets/images/20261127_bellingham_reporter/01_v.jpg
+  - assets/images/20261127_bellingham_reporter/02_v.jpg
+  - assets/images/20261127_bellingham_reporter/03_v.jpg
+short_question: ベリンガムのこのひと言、どう思いましたか。
+short_telops: []
+
+theme:
+  id: bellingham_reporter
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ベリンガム、割り込んだ記者を止めた一言。女性記者が明かしたこと
+  hook: ""
+  question: ベリンガムは、取材の場で何をしたのか
+  takeaway: 試合で1得点1アシストのあと、取材の場では質問を最後まで聞いた。記者本人は「記者として尊重してくれた」と話した
+thumbnail:
+  layout: face
+  line1: ベリンガム、取材の場の一言
+  line2: 「彼女の質問がもう1つ」
+  tags: [ベリンガム, レアル・マドリード, チャンピオンズリーグ]
+  photo: assets/images/20261127_bellingham_reporter/01_w.jpg
+  short_photo: assets/images/20261127_bellingham_reporter/01_v.jpg
+
+answer: 女性記者の2つ目の質問に男性記者が割り込むと、「ごめん、彼女の質問がもう1つある」と止めて、彼女の質問に答えた
+watch: 11月28日、レアル・マドリードは本拠地でアラベス戦
+sections:
+  - id: what
+    main: true
+    heading: ベリンガムは、取材の場で何をしたのか
+    tier: 報道
+    telop: 「ごめん、彼女の質問がもう1つあるんだ」
+    say:
+      - text: 24日のピーエスブイ戦のあと、取材の場で、レアル・マドリードのベリンガムが言ったひと言です。
+      - voice: ベリンガム
+        text: ごめん、彼女の質問がもう1つあるんだ。
+        emph: true
+      - text: 質問していたのは、エリザベス・コンウェイさん。
+        image: assets/images/20261127_bellingham_reporter/02_w.jpg
+      - text: イギリスの公共放送、ビービーシーで、レアル・マドリードを担当する記者です。
+      - text: 2つ目の質問の途中で、男性の記者が声をかぶせてきました。
+      - text: ベリンガムはそれを止めて、コンウェイさんの質問に答えました。
+        image: assets/images/20261127_bellingham_reporter/01_w.jpg
+    official: false
+    quotes_from: [BBC]
+    sources:
+      - https://www.bbc.co.uk/news/articles/cqkg5d3078zro
+      - https://www.bbc.co.uk/sport/football/videos/ckp80mr110p5o
+      - https://www.independent.co.uk/sport/football/jude-bellingham-bbc-elizabeth-conway-reporter-interview-b3092305.html
+  - id: reporter
+    heading: 割り込まれた記者は、何を語ったのか
+    tier: 報道
+    telop: 記者「私を記者として尊重してくれた」
+    say:
+      - text: 場所はミックスゾーン。試合のあと、選手が通る通路の柵の前で、記者が待ち構える場所です。
+        image: assets/images/20261127_bellingham_reporter/02_w.jpg
+      - text: コンウェイさんは、ベリンガムについて、ビービーシーのラジオでこう話しています。
+        image: assets/images/20261127_bellingham_reporter/01_w.jpg
+      - voice: エリザベス・コンウェイ
+        text: まさに大混乱です。ひじも、マイクも、カメラもある。
+      - voice: エリザベス・コンウェイ
+        text: 背の高い男性たちが、上から手を伸ばしてくる。
+        image: assets/images/20261127_bellingham_reporter/02_w.jpg
+        cont: true
+      - voice: エリザベス・コンウェイ
+        text: 女性の記者も、イギリスの記者も、ほんのわずかしかいません。
+        image: assets/images/20261127_bellingham_reporter/01_w.jpg
+      - voice: エリザベス・コンウェイ
+        text: 彼はまた、礼儀正しかった。
+        image: assets/images/20261127_bellingham_reporter/02_w.jpg
+      - voice: エリザベス・コンウェイ
+        text: 私を記者として、本当に尊重してくれました。
+        image: assets/images/20261127_bellingham_reporter/01_w.jpg
+        cont: true
+    official: false
+    quotes_from: [BBC]
+    sources:
+      - https://www.bbc.co.uk/news/articles/cqkg5d3078zro
+      - https://www.bbc.co.uk/sport/football/videos/ckp80mr110p5o
+      - https://www.independent.co.uk/sport/football/jude-bellingham-bbc-elizabeth-conway-reporter-interview-b3092305.html
+  - id: view
+    viewpoint: true
+    heading: その試合のベリンガムは、何をしていたのか
+    tier: 報道
+    telop: 後半から出て、1得点1アシスト
+    say:
+      - text: 見立てです。この日のベリンガムは、後半から出場して1得点1アシスト。
+        emph: true
+        card: {type: table, title: レアル・マドリード 5-1 PSV, columns: [分, できごと], rows: [[32分, ペリシッチのPK（PSV）], [45分, ベリンガムが出場], [50分, バルベルデ], [60分, ベリンガム], [64分, エムバペ], [84分, エムバペ], [87分, ヴィニシウス（ベリンガムのアシスト）]], highlight_row: 3}
+      - text: 0対1から、5対1の逆転勝ちに絡みました。
+        image: assets/images/20261127_bellingham_reporter/02_w.jpg
+        card: {type: table, title: レアル・マドリード 5-1 PSV, columns: [分, できごと], rows: [[32分, ペリシッチのPK（PSV）], [45分, ベリンガムが出場], [50分, バルベルデ], [60分, ベリンガム], [64分, エムバペ], [84分, エムバペ], [87分, ヴィニシウス（ベリンガムのアシスト）]], highlight_row: 6}
+      - text: レアル・マドリードは、チャンピオンズリーグで5戦全勝です。
+        card: none
+      - text: 次は11月28日、本拠地でアラベスと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915298
+      - https://www.independent.co.uk/sport/football/jude-bellingham-bbc-elizabeth-conway-reporter-interview-b3092305.html
+      - https://www.realmadrid.com/en-US/news/football/first-team/latest-news/bellingham-en-la-segunda-parte-el-nivel-del-equipo-fue-mucho-mas-alto-24-11-2026
+      - https://www.realmadrid.com/en-US/news/football/first-team/reports/cronica-real-madrid-psv-j5-champions-league-24-11-2026

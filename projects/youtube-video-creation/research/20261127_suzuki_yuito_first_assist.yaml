@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月27日）鈴木唯人、カンファレンスリーグのトゥウェンテ戦で今季初アシスト。自陣から運んで先制点、フライブルクは終了間際に2-1（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-27。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.europa.conf summary event=401915801、2026-11-26 20:00 UTC）: フライブルク 2-1 トゥウェンテ。
+#   11分 イリエ（左足、エリア中央から左下。アシスト 鈴木唯人「速攻からのスルーパス」）／62分 タハ（FK、左足で右上）／
+#   90+3分 ギンターのPKは右ポスト／90+3分 ベステ（左足、ゴールエリア右から右下。セットプレーの流れ）。
+#   鈴木は先発、68分にヘーラーと交代（同じ68分にイリエ→ベステ）。鈴木の記録: アシスト1・シュート1。
+# フットボールチャンネル post1059429（11/27 05:56、試合中の記事・全文）: 自陣で味方のパスを受けた鈴木が一気に加速。寄せられて体勢を崩しながらもキープし、長い距離を運ぶ。
+#   ペナルティエリア手前まで運び、2人のDFを引きつけてスルーパス→イリエがGKとの1対1を制した。「今季公式戦17試合目にして初アシスト」。
+#   鈴木は加入2年目、開幕節ブレーメン戦でハットトリック、リーグ戦9試合で5得点。フライブルクは前節まで2勝1敗・勝ち点6で14位、トゥウェンテは開幕3連勝。
+#   先発は前の試合（21日 エルフェアスベルク戦）から6人変更。山本理仁・後藤啓介はベンチ（出番なし＝試合後の記事）。
+# フットボールチャンネル（Yahoo a1b13d3f、試合後・全文）: 2-1で勝利。今大会2連勝で勝ち点9。トゥウェンテにリーグフェーズ初黒星。次はブンデス第11節 29日 ライプツィヒ（ホーム）、ECL第5節 12月10日 パナシナイコス（ホーム）。
+#   → ESPN の日程で確認: 2026-11-29 14:30 UTC RB Leipzig at SC Freiburg ／ 2026-12-10 17:45 UTC Panathinaikos at SC Freiburg。
+# Football ZONE（Yahoo 899f0e36、全文）: 最後尾からのボールをマタノヴィッチが収め、鈴木が前向きで受けて運び、DFの股を抜くパス。「今季初のアシスト」。ベステの決勝点は VAR の確認の末に認められた。
+# スポーティングニュース（Yahoo e8896b06、試合中・全文）: 自陣中央付近で受けて独走、複数のDFを引きつけ、股抜きのパス。「約70メートル」は記事の目測。
+# 食い違い:
+#   ・ベステの決勝点: フットボールチャンネルは「左サイドから侵入し右足」、ESPN は「左足、ゴールエリア右から」。→ 足と位置は言わない。「ゴール前で決めた」だけ。
+#   ・PK: ESPN はギンターのPKが右ポスト→その直後（同じ90+3分）にベステ。日本語の記事は PK に触れていない。→ ESPN を正とし「PKはポスト、その直後に」。
+#   ・運んだ距離: 「約70メートル」（スポーティングニュース）は目測なので使わない。「自陣から、相手のペナルティエリアの手前まで」（各社一致）。
+#   ・「9秒」（Football ZONE の計測）は他で確かめられないので使わない。
+#   ・欧州カップ戦のホーム14連勝（フットボールチャンネル）は自分で確かめていないので使わない。
+# 自分で数えたもの: 先制11分→同点62分→決勝点90+3分（ESPN）。フライブルクのリーグフェーズ: 2勝1敗（勝ち点6）→3勝1敗（勝ち点9）。
+#   鈴木の今季: リーグ戦9試合5得点（報道）に対し、アシストは公式戦17試合目で初めて。
+# 前の本との重なり: 11/19 suzuki_yuito_trequartista（代表のトップ下・本人の言葉）／11/11 suzuki_yui_freiburg／10/26 suzuki_yuito_bayern。→ 今回の初出はトゥウェンテ戦のアシストと試合の結末。代表の話はしない。
+# 【言わないこと】本人の気持ち（試合後の言葉が見つからない）／「約70メートル」「9秒」「ホーム14連勝」／ベステの足と位置／山本・後藤の評価。
+# 本人の言葉: 見つからず（フットボールチャンネル・Football ZONE・スポーティングニュースの試合記事、ゲキサカの一覧、SC フライブルク公式（11/27 朝の時点で試合後の記事は無く、ライブティッカーの告知だけ）を当たった）。→ X。
+# 写真: 4枚（すべてゲキサカの自社撮影 ©Koki NAGAHAMA/GEKISAKA、11月の日本代表）。01・02＝写真ギャラリー 463418（11/17 パラグアイ戦）の9・10枚目、03・04＝463307（11/16 練習）の22・14枚目。過去の回で未使用。
+#   今日の試合の写真は使えるものが無かった: フットボールチャンネル（Getty）、Football ZONE（アフロ）、スポーティングニュース（時事＝通信社）。SC フライブルク公式は試合後の記事が未掲載。
+#   → 写真は代表のもの。台本で「この試合の写真」とは言わない。_pool の代わりに自分で縦・横の切り抜きを並べて目で見た（本人・顔の欠けなし。透かしはゲキサカ自社の表記のみ）。
+# 反応: 0件（作らない。approve は --no-voices）。スポーティングニュースが引く SNS の声は、元の投稿まで辿れないので使わない。
+slot: japanese
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [鈴木唯人, フライブルク, トゥウェンテ, イリエ, ベステ, ギンター]
+
+short_style: X
+short_hook_word: 17戦目の初アシスト
+short_photos:
+  - assets/images/20261127_suzuki_yuito_first_assist/02_v.jpg
+  - assets/images/20261127_suzuki_yuito_first_assist/01_v.jpg
+  - assets/images/20261127_suzuki_yuito_first_assist/03_v.jpg
+  - assets/images/20261127_suzuki_yuito_first_assist/04_v.jpg
+short_question: 鈴木唯人は、29日のライプツィヒ戦でゴールかアシストを記録すると思いますか。
+short_telops: []
+
+theme:
+  id: suzuki_yuito_first_assist
+  league: germany
+  league_name: カンファレンスリーグ
+  prefix: ""
+  title: 鈴木唯人、今季初アシスト。体勢を崩されても離さなかったボール
+  hook: ""
+  question: 鈴木唯人は、トゥウェンテ戦でどうやって今季初めてのアシストを記録したのか
+  takeaway: リーグ戦では9試合5得点の鈴木唯人が、公式戦17試合目で初めてのアシスト。自陣から相手のエリアの手前まで運んでのスルーパスだった。フライブルクは終了間際の決勝点で3勝1敗とした
+thumbnail:
+  layout: face
+  line1: 鈴木唯人 今季初アシスト
+  line2: 自陣から運んだ
+  tags: [鈴木唯人, フライブルク]
+  photo: assets/images/20261127_suzuki_yuito_first_assist/01_w.jpg
+  short_photo: assets/images/20261127_suzuki_yuito_first_assist/02_v.jpg
+
+answer: 自陣で受けて相手のペナルティエリアの手前まで運び、DFを引きつけてスルーパス。イリエが決めた
+watch: 11月29日のライプツィヒ戦（ホーム）
+sections:
+  - id: what
+    main: true
+    heading: 鈴木唯人は、どうやって今季初めてのアシストを記録したのか
+    tier: 報道
+    telop: フライブルク 2-1 トゥウェンテ。鈴木唯人が先制点をアシスト
+    say:
+      - text: フライブルクの鈴木唯人が、公式戦17試合目で今季初めてのアシスト。
+      - text: 舞台はカンファレンスリーグ。
+        image: assets/images/20261127_suzuki_yuito_first_assist/04_w.jpg
+      - text: チャンピオンズリーグ、ヨーロッパリーグに次ぐ、欧州で3番目の大会です。
+      - text: 相手は、ここまで3戦全勝のトゥウェンテです。
+      - text: リーグ戦では9試合5得点の鈴木。ゴールを重ねてきた中での一本でした。
+      - text: 11分。自陣でボールを受けた鈴木は、一気に前へ運びます。
+        image: assets/images/20261127_suzuki_yuito_first_assist/01_w.jpg
+        card: {type: table, title: フライブルク 2-1 トゥウェンテ, columns: [分, できごと], rows: [[11分, イリエが先制（鈴木のアシスト）], [62分, タハのFKで同点], [90+3分, ギンターのPKはポスト], [90+3分, ベステが決勝点]], highlight_row: 0}
+      - text: 寄せてきた相手に体勢を崩されながらも、ボールは離しません。
+        emph: true
+      - text: そのまま、相手のペナルティエリアの手前まで運びます。
+        card: none
+        image: assets/images/20261127_suzuki_yuito_first_assist/03_w.jpg
+      - text: 2人のディフェンダーを引きつけ、その間を通すパス。
+      - text: 受けたチームメイトのイリエが、キーパーと向き合い、左足で決めて先制。
+        image: assets/images/20261127_suzuki_yuito_first_assist/01_w.jpg
+      - text: 試合はフライブルクが2対1で勝利します。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915801
+      - https://www.footballchannel.jp/2026/11/27/post1059429/
+      - https://news.yahoo.co.jp/articles/a1b13d3fb66e268d9016b4e8e961a430cd95e473
+      - https://news.yahoo.co.jp/articles/899f0e366358f27b0f7f8cbff39ac2a3f50563b7
+      - https://news.yahoo.co.jp/articles/e8896b06a70c3af293bc11c5ebe6ab386ac9d1f2
+  - id: finish
+    heading: 追いつかれたフライブルクは、どうやって勝ち越したのか
+    tier: 報道
+    telop: 90+3分、PKはポスト。その直後にベステが決勝点
+    say:
+      - text: 鈴木のアシストで奪ったリードは、62分、タハの直接フリーキックで追いつかれます。
+        card: {type: table, title: フライブルク 2-1 トゥウェンテ, columns: [分, できごと], rows: [[11分, イリエが先制（鈴木のアシスト）], [62分, タハのFKで同点], [90+3分, ギンターのPKはポスト], [90+3分, ベステが決勝点]], highlight_row: 1}
+      - text: 決着は試合の終わり間際、後半の追加時間でした。
+      - text: ギンターのペナルティキックは、ポストに弾かれます。
+        card: {type: table, title: フライブルク 2-1 トゥウェンテ, columns: [分, できごと], rows: [[11分, イリエが先制（鈴木のアシスト）], [62分, タハのFKで同点], [90+3分, ギンターのPKはポスト], [90+3分, ベステが決勝点]], highlight_row: 2}
+      - text: しかしその直後、途中から入ったベステがゴール前で決めて、勝ち越しました。
+        card: {type: table, title: フライブルク 2-1 トゥウェンテ, columns: [分, できごと], rows: [[11分, イリエが先制（鈴木のアシスト）], [62分, タハのFKで同点], [90+3分, ギンターのPKはポスト], [90+3分, ベステが決勝点]], highlight_row: 3}
+      - text: トゥウェンテにとっては、今大会で初めての負けになりました。
+        card: none
+        image: assets/images/20261127_suzuki_yuito_first_assist/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915801
+      - https://news.yahoo.co.jp/articles/a1b13d3fb66e268d9016b4e8e961a430cd95e473
+      - https://news.yahoo.co.jp/articles/899f0e366358f27b0f7f8cbff39ac2a3f50563b7
+  - id: view
+    viewpoint: true
+    heading: 点を取ってきた鈴木唯人の今季に、何が加わったのか
+    tier: 報道
+    telop: リーグ戦は9試合5得点。アシストは公式戦17試合目で初
+    say:
+      - text: 見立てです。開幕戦のハットトリックから、鈴木の今季はゴールで数字を積んできました。
+        emph: true
+        card: {type: stats, title: 鈴木唯人の今季, items: [[9, 試合, リーグ戦], [5, 得点, リーグ戦], [1, アシスト, 公式戦17試合目で初]], focus: 2}
+      - text: この日のアシストで、味方のゴールを用意する役でも結果が付きました。
+      - text: 鈴木のアシストから始まったこの勝利で、フライブルクは3勝1敗。
+      - text: 勝ち点は6から9になりました。
+        card: {type: table, title: フライブルクのカンファレンスリーグ, columns: [時点, 成績, 勝ち点], rows: [[試合前, 2勝1敗, 6], [試合後, 3勝1敗, 9]], highlight_row: 1}
+      - text: 次は29日、ホームでライプツィヒと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/27/post1059429/
+      - https://news.yahoo.co.jp/articles/a1b13d3fb66e268d9016b4e8e961a430cd95e473
+      - https://www.espn.com/soccer/match/_/gameId/401915801

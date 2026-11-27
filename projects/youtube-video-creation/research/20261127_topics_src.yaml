@@ -1,0 +1,88 @@
+title: 11月27日のショート題材
+lead: 海外フィード約465件と日本語の海外組ニュースから10件をClaudeが選びました（日本人6件・海外4件）。取材で前提が崩れたら次点に差し替えます。
+note: 金曜（27日）の朝7時に集めました。昨夜はヨーロッパリーグとカンファレンスリーグ。試合の分・スコアはESPNの試合データで確かめ済み。次点：毎熊晟矢のAZがスパルタに0-2から4-2の逆転（11）、ハーランドのシティ退団の検討報道（12、確度は未確認止まり）。外した：上田綺世の市場価値（11/26 に得点の回を作成済み）、菅原由勢の退団報道（11/25 作成済み）、旗手怜央のバーンリーのホーム未勝利記録（2部の話）、スターリングの有罪判決（法的な話）、森保ジャパンのワースト試合5選（まとめ記事）、町田・鹿島などACL（Jリーグ）、U-17W杯・U-21欧州選手権の抽選（年代別）、女子・MLS（対象外）。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 南野拓実がボール奪取で勝ち越し点の起点に。モナコは90+4分の決勝弾でハーツに3-2
+  why: 条件：代表MF・大物の名前。本人の言葉があればY。
+  src: ESPN 試合データ / ゲキサカ（11/27）
+  url: https://web.gekisaka.jp/news/world/detail/?464046-464046-fl
+  fmt: news
+- num: 2
+  slot: 日本人（代表）
+  head: 鎌田大地のパレスがレアル・ソシエダに逆転勝ち。0-1から2-1、終盤のPK失敗も
+  why: 条件：代表MF・ELの日本人絡み。久保建英の出場の有無は取材で確かめる。
+  src: ESPN 試合データ（11/27）
+  url: https://www.espn.com/soccer/match/_/gameId/401915504
+  fmt: news
+- num: 3
+  slot: 日本人
+  head: 新川志音、退場の次の試合で得点。シントトロイデンはハイデュク・スプリトに2-0
+  why: 条件：日本人FW・11/25 の退場の回の続報（得点という新しい事実）。日本人4人が出場。
+  src: ESPN 試合データ（11/27）
+  url: https://www.espn.com/soccer/match/_/gameId/401915805
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 鈴木唯人が今季初アシスト。フライブルクは90+3分のPK失敗の直後に決勝点
+  why: 条件：代表MF。本人の言葉があればY。
+  src: ESPN 試合データ / フットボールチャンネル（11/27）
+  url: https://www.footballchannel.jp/2026/11/27/post1059429/
+  fmt: news
+- num: 5
+  slot: 日本人（元代表主将）
+  head: 長谷部誠がUEFA A級ライセンス取得を報告「これからの指導者人生に活かしていきたい」
+  why: 条件：元代表主将・本人の言葉（Y）。
+  src: ゲキサカ（11/26）・本人の投稿
+  url: https://web.gekisaka.jp/news/japan/detail/?464030-464030-fl
+  fmt: news
+- num: 6
+  slot: 日本人（代表）
+  head: 坂元達裕、パレス戦のスーパーゴールでプレミアの週間ベストイレブンに
+  why: 条件：代表MF・プレミア。11/22 の得点の回の続報（選出という新しい事実）。元の選出の出どころを取材で確かめる。
+  src: 英メディア（取材で特定）
+  url: https://footballnet.2chblog.jp/archives/60151251.html
+  fmt: news
+- num: 7
+  slot: 海外
+  head: キミッヒが「バイエルンらしくない」とムシアラの扱いを批判
+  why: 条件：大物・本人の言葉（Y）・ドイツ代表。
+  src: ESPN / kicker（11/27）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ミランがオリンピアコスに0-2から4-2の逆転。プリシッチが勝ち越し点、アモリム「ハッチンソンが試合を変えた」
+  why: 条件：大物クラブ・監督の言葉。
+  src: ESPN 試合データ / Football Italia（11/27）
+  url: https://www.espn.com/soccer/match/_/gameId/401915521
+  fmt: news
+- num: 9
+  slot: 海外
+  head: ベンフィカがプルゼニに0-4の大敗。前半だけで3失点、「恥」の声
+  why: 条件：名門の記録的な大敗。監督・選手の言葉があればY。
+  src: ESPN 試合データ / kicker（11/27）
+  url: https://www.espn.com/soccer/match/_/gameId/401915518
+  fmt: news
+- num: 10
+  slot: 海外
+  head: ベリンガムが試合後の混乱で女性記者を守る。「クラスがある」と称賛
+  why: 条件：大物・本人の行動。新しい事実が取材で確かめられるか見る。
+  src: BBC / 英メディア（11/26〜27）
+  url: https://www.bbc.com/sport/football
+  fmt: news
+- num: 11
+  slot: 日本人（次点）
+  head: 毎熊晟矢のAZ、スパルタ・プラハに0-2から4-2の逆転勝ち
+  why: 次点。出来事は大きいが毎熊は得点に絡んでいない可能性。
+  src: ESPN 試合データ（11/27）
+  url: https://www.espn.com/soccer/match/_/gameId/401915514
+  fmt: news
+- num: 12
+  slot: 海外（次点）
+  head: ハーランドがシティ退団を検討と報道
+  why: 次点。確度は未確認止まり。
+  src: 海外報道（11/26）
+  url: https://www.skysports.com/
+  fmt: news

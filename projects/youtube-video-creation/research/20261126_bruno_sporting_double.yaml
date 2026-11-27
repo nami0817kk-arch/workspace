@@ -1,0 +1,138 @@
+# 取材メモ（2026年11月26日）ブルーノ・フェルナンデス、古巣スポルティングの本拠で2得点。芝で跳ねた逆転弾も、80分に追いつかれて2-2（ニュースのショート。見せ方 X。試合後の本人の言葉は無し）
+# 追記（親・書き出し後）: qc で 0:09〜0:18 に9秒の停滞。山場の4行に image: を足した。語りは変えていない。
+# 取材: 2026-11-26。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない（見出しは Google ニュースの RSS の見出しだけ）。
+# ESPN の試合データ（site.api.espn.com uefa.champions summary event=401915373、2026-11-25 20:00 UTC、リスボンのジョゼ・アルヴァラーデ）:
+#   スポルティング 2-2 マンチェスター・ユナイテッド。
+#   30分 スアレスのPKをラメンスが止める／31分 ラメンス警告／33分 スアレスがPK（2本目）／40分 ティーレマンス警告／
+#   48分 ブルーノがPK（右足）／50分 ブルーノ（左足、エリアの外から、アシストはアマド）／80分 スアレス（至近距離、VARで確認）／
+#   90+2分 ブルーノ交代（アンドレイ・サントス）／90+3分 ティーレマンスが2枚目の警告で退場。ブルーノはシュート3本・枠内2本・2得点。
+#   ESPN の記事（PA の情報も使ったもの）"Lammens errors cost Man United win despite bizarre Fernandes goal":
+#     ラメンスはスアレスのPKを止めたあと、もう1本PKを与えた。アマドの同点弾は主審マルチニャクが早く笛を吹いたので取り消し（VARが介入できない）。
+#     リサンドロ・マルティネスが最初のPKを与え、マンUのPKも得た。ブルーノの2点目は芝のくぼみ（divot）で跳ねてGKカイキ・ペレイラの上を越えた。
+#     80分はラメンスがスアレスに競られてクロスを触り損ね、スアレスが決めた。終盤、ドルグがGKに圧をかけて生まれたオウンゴールは、オンフィールドレビューで取り消し。
+#     ポチェッティーノは就任初戦のリヴァプール戦 0-4 に続き、2試合目も初勝利ならず。
+#   http://www.espn.com/soccer/report/_/gameId/401915373
+# O Jogo（11/25 21:16 UTC）「Bruno Fernandes empata e não festeja」: 48分PK。「元スポルティングの選手はボールを取りに行き、すぐに中盤へ戻った。大きな喜びは無し」。
+#   https://www.ojogo.pt/futebol/artigo/sporting-manchester-united-bruno-fernandes-empata-e-nao-festeja-veja-o-golo/18152336
+# O Jogo（11/25 21:20 UTC）: 50分、左足のシュートは正面だったが、芝の塊で跳ねてカイキの上を越えた。 https://www.ojogo.pt/futebol/artigo/incrivel-bola-desvia-num-tufo-de-relva-e-bruno-fernandes-bisa-no-sporting-manchester-united/18152335
+# O Jogo（11/25 21:27 UTC）: 試合前、ヴァランダス会長がブルーノに額を手渡した。中は背番号8と、スポルティングとマンUのユニフォーム姿の写真2枚。 https://www.ojogo.pt/futebol/artigo/bruno-fernandes-recebe-uma-moldura-das-maos-de-frederico-varandas/18152341
+# Manchester Evening News（11/25 21:16 UTC、全文）: 32歳。右から中へ持ち替えて左足、大きなくぼみで跳ねてGKは動けず。80分スアレスが同点。終盤のGKのオウンゴールはVARのあと取り消し（ドルグとリサンドロ・マルティネスのファウル）。ティーレマンスは2枚目で退場。
+#   主写真は Getty → 使わない。 https://www.manchestereveningnews.co.uk/sport/football/football-news/bruno-fernandes-man-united-goal-34967329
+# ハーフタイムの場面: レコルド（11/25 21:03 UTC、写真記事の見出し）「Nervos à flor da pele ao intervalo: Bruno Fernandes e Luis Suárez pegados no regresso aos balneários」（ロッカーへ戻る途中にブルーノとスアレスがもみ合い）。
+#   https://www.record.pt/internacional/competicoes-de-clubes/liga-dos-campeoes/detalhe/nervos-a-flor-da-pele-ao-intervalo-bruno-fernandes-e-luis-suarez-pegados-no-regresso-aos-balnearios
+#   CaughtOffside（BBC を引く形）は「スアレスの一言にブルーノが押した」と書くが、BBC の原文は見ていないので「押した」「一言」は言わない。「もみ合う場面」とだけ言う。
+# マンU公式の試合レポート（manutd.com、本文はページの仕組みで読めず。主写真だけ使う）: https://www.manutd.com/en/news/match-report-sporting-lisbon-manchester-united-25-november-2026
+# 次の試合: 11/28 15:00 UTC（日本時間 29日 0時）ホームでブレントフォード戦（ESPN eng.1 scoreboard）。
+# 食い違い:
+#   ・最初のPKの分: ESPN 30分（止めた）・33分（2本目を決めた）。CaughtOffside も同じ。→ ESPN。
+#   ・ハーフタイムの場面: レコルドは「もみ合い」、CaughtOffside は「押した」→ 弱いほう（もみ合う場面）だけ。
+#   ・マンUの監督: CaughtOffside の地の文に「キャリック体制のひどい滑り出し」とあるが、ESPN・マンU公式はポチェッティーノ → ESPN。
+# 自分で数えたもの: ブルーノの2点は48分と50分＝2分で2点。マンUのリードは50分〜80分の30分。
+# 前の本との重なり: 11/23「19位はとても痛い」（リヴァプール戦の前後）、11/25「古巣で戻る可能性」（試合前の言葉。「喜ぶかどうかは関係ない」もここで読んだ）。
+#   → 今回は試合そのもの（初出）。前日の言葉は繰り返さず、「実際、大きくは喜ばなかった」という事実だけ言う。移籍金・7年の話は繰り返さない。
+# 本人の言葉: 試合後のものは見つからず（マンU公式のニュース一覧・ESPN・MEN・A Bola・レコルド・O Jogo の一覧を当たった。11/26 朝の時点で記事が無い）→ X。
+# 【言わないこと】「押した」「スアレスの一言」（確かめていない）／アマドの取り消しの判定の細部／移籍金・在籍年数（11/25 と重なる）。
+# 写真: 02＝O Jogo の主写真（額を受け取るブルーノとヴァランダス会長。撮影者の表記なし、代理店の表記なし）、04・05＝マンU公式（manutd.com の試合レポート・MOM投票の主写真。喜ぶマンUの選手、05 は手前にスポルティングのGK）、06・07＝マンU公式の試合前の記事の主写真（アルヴァラーデでのブルーノ）。
+#   外したもの: O Jogo の試合の写真2枚（Producer: AFP）、MEN（Getty）。11/23・11/25 の回の写真（A Bola・Commons）は使っていない。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [ブルーノ・フェルナンデス, マンチェスター・ユナイテッド, スポルティング, ルイス・スアレス, ティーレマンス, ポチェッティーノ監督]
+
+short_style: X
+short_hook_word: 芝で跳ねた逆転弾
+short_photos:
+  - assets/images/20261126_bruno_sporting_double/06_v.jpg
+  - assets/images/20261126_bruno_sporting_double/02_v.jpg
+  - assets/images/20261126_bruno_sporting_double/07_v.jpg
+short_question: ブルーノ・フェルナンデスのマンU、ブレントフォード戦でポチェッティーノ監督に初勝利を届けられると思いますか。
+short_telops: []
+
+theme:
+  id: bruno_sporting_double
+  league: england
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ブルーノ・フェルナンデス、古巣の本拠で2得点。30分で消えたリード
+  hook: ""
+  question: 古巣スポルティングとの試合で、ブルーノ・フェルナンデスの2得点はどう生まれ、なぜ勝てなかったのか
+  takeaway: ブルーノは48分のPKと50分の一撃、2分で2点を挙げて逆転した。しかしリードは80分までの30分で消え、2対2。ポチェッティーノ監督は就任から2試合、まだ勝てていない
+thumbnail:
+  layout: face
+  line1: ブルーノ・フェルナンデス
+  line2: 古巣の本拠で2得点
+  tags: [ブルーノ・フェルナンデス, マンチェスター・ユナイテッド]
+  photo: assets/images/20261126_bruno_sporting_double/06_w.jpg
+  short_photo: assets/images/20261126_bruno_sporting_double/06_v.jpg
+
+answer: 48分のPKと、芝で跳ねて GK を越えた50分の一撃。しかし80分に追いつかれ、終盤には退場者も出た
+watch: 29日のブレントフォード戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: ブルーノ・フェルナンデスの2得点は、どう生まれたのか
+    tier: 報道
+    telop: スポルティング 2-2 マンU。ブルーノは48分と50分
+    say:
+      - text: チャンピオンズリーグで、マンUのブルーノ・フェルナンデスが古巣スポルティングの本拠で2ゴール。
+      - text: 前半に先制されたマンU。48分、ブルーノがPKを決めて同点にします。
+        image: assets/images/20261126_bruno_sporting_double/04_w.jpg
+      - text: 大きくは喜ばず、ボールを拾うと、すぐに自分の陣地へ戻りました。
+        image: assets/images/20261126_bruno_sporting_double/06_w.jpg
+      - text: その2分後、エリアの外から左足でシュート。
+        image: assets/images/20261126_bruno_sporting_double/05_w.jpg
+      - text: ボールは芝のくぼみで跳ねてキーパーの頭を越え、マンUが逆転します。
+        emph: true
+      - text: しかし80分、マンUのキーパー、ラメンスがクロスに触りきれず、スアレスに押し込まれます。
+        image: assets/images/20261126_bruno_sporting_double/07_w.jpg
+      - text: 終了間際には、マンUのティーレマンスが2枚目のイエローカードで退場。
+        image: assets/images/20261126_bruno_sporting_double/04_w.jpg
+      - text: 試合は2対2の引き分けに終わりました。
+        image: assets/images/20261126_bruno_sporting_double/06_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915373
+      - http://www.espn.com/soccer/report/_/gameId/401915373
+      - https://www.ojogo.pt/futebol/artigo/sporting-manchester-united-bruno-fernandes-empata-e-nao-festeja-veja-o-golo/18152336
+      - https://www.ojogo.pt/futebol/artigo/incrivel-bola-desvia-num-tufo-de-relva-e-bruno-fernandes-bisa-no-sporting-manchester-united/18152335
+      - https://www.manchestereveningnews.co.uk/sport/football/football-news/bruno-fernandes-man-united-goal-34967329
+  - id: game
+    heading: 古巣との一戦は、どれだけ荒れたのか
+    tier: 報道
+    telop: PK3本、取り消し2つ、退場1人
+    say:
+      - text: 時間を戻して、試合前。ブルーノはスポルティングの会長から、背番号8と写真の入った額を受け取りました。
+        image: assets/images/20261126_bruno_sporting_double/02_w.jpg
+      - text: ところが試合が始まると、前半だけでマンUのゴール前にPKが2本。
+      - text: 30分、スポルティングのスアレスのPKをラメンスが止めますが、33分、2本目を決められました。
+      - text: ハーフタイムには、ロッカーへ戻る途中で、ブルーノとスアレスがもみ合う場面も。
+      - text: マンUは前半と終盤に1点ずつ、ゴールを取り消されています。
+      - text: PKが3本、取り消されたゴールが2つ、退場が1人。それほど荒れた古巣との一戦でした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915373
+      - http://www.espn.com/soccer/report/_/gameId/401915373
+      - https://www.ojogo.pt/futebol/artigo/bruno-fernandes-recebe-uma-moldura-das-maos-de-frederico-varandas/18152341
+      - https://www.record.pt/internacional/competicoes-de-clubes/liga-dos-campeoes/detalhe/nervos-a-flor-da-pele-ao-intervalo-bruno-fernandes-e-luis-suarez-pegados-no-regresso-aos-balnearios
+      - https://www.manutd.com/en/news/match-report-sporting-lisbon-manchester-united-25-november-2026
+  - id: view
+    viewpoint: true
+    heading: 逆転したマンUのリードは、どれだけ続いたのか
+    tier: 報道
+    telop: マンUのリードは50分から80分の30分
+    say:
+      - text: 見立てです。ブルーノの2点で逆転したマンUのリードは、50分から80分までの30分でした。
+        image: assets/images/20261126_bruno_sporting_double/04_w.jpg
+        card: {type: timeline, title: スポルティング 2-2 マンU, rows: [[33分, スアレスがPK（0-1）], [48分, ブルーノがPK（1-1）], [50分, ブルーノが逆転（1-2）], [80分, スアレスが同点（2-2）], [90+3分, ティーレマンスが退場]], focus: 50分}
+      - text: ポチェッティーノ監督は、就任初戦のリヴァプール戦に0対4で敗れています。
+      - text: 2試合目のこの日は、30分のリードを守りきれず、初勝利を逃しました。
+        card: none
+      - text: 次は29日の未明、ホームでブレントフォードと戦います。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915373
+      - http://www.espn.com/soccer/report/_/gameId/401915373
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20261128

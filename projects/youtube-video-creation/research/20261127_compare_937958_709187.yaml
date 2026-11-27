@@ -1,0 +1,1296 @@
+# 取材メモ（11/27 金、シリーズ「比べる」、key: compare_937958_709187）。ラミン・ヤマル（バルセロナ・19歳）×ニコ・ウィリアムズ（アスレティック・ビルバオ・24歳）。
+# **情報の時点は 2026-11-21**。FotMob・DataMB は使っていない。数字は Transfermarkt の API（2026-11-21 取得。控え: research/raw/20261127_yamal_tm.json・20261127_nico_tm.json・*_profile.json）。
+#   番号：ヤマル 937958・ニコ 709187。profile・market-value-history・performance-season（2023〜2026季）を2.5秒あけて取得。
+# **選んだ理由**：EURO2024 で優勝したスペインの両翼（決勝 2024-07-14 ベルリン、47分にヤマルのクロスからニコが先制・ニコが試合の最優秀選手。Wikipedia「UEFA Euro 2024 final」で確認）。誕生日が1日違い（ニコ 2002-07-12・ヤマル 2007-07-13、TM と Wikipedia）。
+#   軸：クラブの公式戦の（得点＋アシスト）÷出場時間×90 を4季。23/24 はニコが上、24/25 から逆転。市場価値は 2024-06 に 9000万€ と 6000万€（1.5倍）→ いま 2億2000万€ と 4000万€（5.5倍）。代表戦は混ぜない（TM の clubId 3375＝スペイン代表を除外）。
+#   重なり：scripts/*compare*・posted.json・covered.yaml・picks を grep。この2人の組は初めて（ヤマルは 10/22 にサカと、10/20・11/22 のランキングに名前。ニコは比べるに未登場）。
+#   同じ日（11/27）の picks（選手紹介ケイン・スタジアム ドルトムント）と人もクラブも重ならない（バルセロナ・アスレティックは 11/27 の他シリーズに無い。公開前にもう一度）。
+#   日本との接点：無し（入れない）。
+# **2人とも今季も欧州7リーグの1部**：バルセロナ（ラ・リーガ。TM clubId 131）・アスレティック（ラ・リーガ。clubId 621）。
+# **使った数**（クラブのトップチームの公式戦だけ）
+#   ヤマル：23/24 50試合 2957分 7点9A／24/25 55試合 4553分 18点25A／25/26 45試合 3702分 24点18A／26/27 16試合 1355分 13点12A
+#   ニコ：23/24 37試合 2729分 8点18A／24/25 45試合 3130分 11点7A／25/26 32試合 2101分 6点7A／26/27 11試合 706分 2点2A
+#   90分あたり（自分で割った値）：ヤマル 0.49, 0.85, 1.02, 1.66／ニコ 0.86, 0.52, 0.56, 0.51
+# 市場価値（TM）：ヤマル 2024-06-07 9000万→2024-12-27 1億8000万→2025-06 2億→2026-07-22 2億2000万（最高）／ニコ 2024-06-07 6000万→2024-07-18 7000万（最高）→2025-12 6000万→2026-03 5000万→2026-06-05 4000万。
+# ニコの契約：Wikipedia「Nico Williams」に 2025-07-04 に2035年までの10年契約、2025年6月にバルセロナと条件で合意と広く報じられた、とある。25/26 は pubalgia（恥骨まわりの痛み）で欠場が続いた、とも（台本は「恥骨まわりの痛み」）。
+#   **確かめていない**：ニコの欠場の試合数（台本では「何試合も」だけ）。ヤマルの身長 1.83m は TM の値（公式の発表は見ていない）。市場価値の差の理由は見立て（算定理由は確かめていない）。
+# 写真：y1・y2・n1・n2 は Commons（Bryan Berlin、CC BY-SA 4.0、スペイン代表 2026年7月。y1/n1 は France v Spain 7.24.26、y2/n2 は Argentina v Spain 19 July 2026）。**2人とも代表の姿のみ**（クラブ姿は探していない）。n2 は左にアルゼンチンの選手が写るため、顔は右の2番目の顔で切った。pair_a=y1+n1、pair_b=y2_v+n2_v。
+slot: other_1
+date: 2026年11月21日
+format: news
+series: 比べる
+people:
+- ラミン・ヤマル
+- ニコ・ウィリアムズ
+- バルセロナ
+- アスレティック・ビルバオ
+theme:
+  end_bg: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+  id: compare_937958_709187
+  league: spain
+  kind: other
+  topic: ヤマルとニコ・ウィリアムズ
+  prefix: ''
+  title: ヤマルとニコ・ウィリアムズ、EURO優勝の両翼。2年で何が入れ替わったのか
+  hook: ''
+  question: EURO2024で優勝したスペインの両翼、ヤマルとニコ・ウィリアムズ。クラブの公式戦で点に絡む速さは、2年でどう入れ替わったのか
+  takeaway: 90分あたりの得点＋アシストは23/24はニコが上（0.86と0.49）。24/25に逆転し、25/26はヤマル1.02・ニコ0.56。市場価値の差は2024年6月の1.5倍（9000万€と6000万€）から、いまは5.5倍（2億2000万€と4000万€）
+  league_name: ラ・リーガ
+  opening_image: assets/images/20261127_compare_937958_709187/pair_b/01.jpg
+short_title: ヤマルとニコ、EURO優勝の両翼
+thumbnail:
+  photo: assets/images/20261127_compare_937958_709187/pair_b/01.jpg
+  photos:
+  - assets/images/20261127_compare_937958_709187/y1/01_t.jpg
+  - assets/images/20261127_compare_937958_709187/n1/01_t.jpg
+  short_photo: assets/images/20261127_compare_937958_709187/pair_a/01_v.jpg
+  face_link: VS
+  line1: ヤマルとニコ・ウィリアムズ
+  line2: 2年前は、ニコが上だった
+  tags:
+  - ヤマル
+  - ニコ・ウィリアムズ
+  - バルセロナ
+  - アスレティック・ビルバオ
+answer: 23/24はニコが上、24/25からヤマルが上。差は25/26に0.46まで開いた
+watch: 毎日、数字でサッカーを読み解きます
+sections:
+- id: hook
+  heading: EUROを決めた2人、点に絡む速さはどちらが上なのか
+  tier: 報道
+  telop: EURO2024の両翼
+  narrator: 解説
+  card:
+    type: stats
+    title: 2人の数字（クラブの公式戦）
+    items:
+    - - '0.86'
+      - ''
+      - 23/24 ニコの90分あたり
+    - - '1.02'
+      - ''
+      - 25/26 ヤマルの90分あたり
+    - - '5.5'
+      - 倍
+      - いまの市場価値の差
+    focus: 1
+  say:
+  - text: 2024年7月、ユーロの決勝。
+    image: assets/images/20261127_compare_937958_709187/pair_b/01.jpg
+    card: none
+  - text: ヤマルのクロスを、ニコ・ウィリアムズが決めました。
+    image: assets/images/20261127_compare_937958_709187/pair_b/01.jpg
+    card: none
+    emph: true
+  - text: スペインはこの大会で優勝。2人はその両翼でした。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+  - text: あれから2年。クラブでの数字を並べてみます。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - '0.86'
+        - ''
+        - 23/24 ニコの90分あたり
+      - - '1.02'
+        - ''
+        - 25/26 ヤマルの90分あたり
+      - - '5.5'
+        - 倍
+        - いまの市場価値の差
+      focus: 1
+  - text: 得点とアシストの合計を90分あたりで見ると、23/24はニコが0.86。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - '0.86'
+        - ''
+        - 23/24 ニコの90分あたり
+      - - '1.02'
+        - ''
+        - 25/26 ヤマルの90分あたり
+      - - '5.5'
+        - 倍
+        - いまの市場価値の差
+      focus: 0
+  - text: それが25/26は、ヤマルが1.02、ニコは0.56です。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - '0.86'
+        - ''
+        - 23/24 ニコの90分あたり
+      - - '1.02'
+        - ''
+        - 25/26 ヤマルの90分あたり
+      - - '5.5'
+        - 倍
+        - いまの市場価値の差
+      focus: 1
+  - text: 市場価値は、いまヤマルがニコの5倍を超えます。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: stats
+      title: 2人の数字（クラブの公式戦）
+      items:
+      - - '0.86'
+        - ''
+        - 23/24 ニコの90分あたり
+      - - '1.02'
+        - ''
+        - 25/26 ヤマルの90分あたり
+      - - '5.5'
+        - 倍
+        - いまの市場価値の差
+      focus: 2
+    emph: true
+  - text: この2年に、何があったのか。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/leistungsdaten/spieler/709187
+  - https://en.wikipedia.org/wiki/UEFA_Euro_2024_final
+- id: data
+  heading: ヤマルとニコ・ウィリアムズは、どんな2人か
+  tier: 報道
+  telop: 19歳と24歳
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: ヤマル
+      club: バルセロナ
+      photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ニコ
+      club: アスレティック
+      photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+      color: '#ee2523'
+    rows:
+    - - 年齢
+      - 19歳
+      - 24歳
+    - - 生まれ
+      - 2007年7月13日
+      - 2002年7月12日
+    - - 利き足
+      - 左
+      - 右
+    - - 身長
+      - 1.83m
+      - 1.81m
+    - - クラブ
+      - バルセロナ
+      - アスレティック
+    - - トップ初出場
+      - 2023年4月
+      - 2021年4月
+    - - 市場価値
+      - 2億2000万€
+      - 4000万€
+    bars: false
+    note: 市場価値は最新の値
+  say:
+  - text: ヤマルは19歳。バルセロナの下部組織から上がった左利きです。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 年齢
+        - 19歳
+        - 24歳
+      - - 生まれ
+        - 2007年7月13日
+        - 2002年7月12日
+      - - 利き足
+        - 左
+        - 右
+      - - 身長
+        - 1.83m
+        - 1.81m
+      - - クラブ
+        - バルセロナ
+        - アスレティック
+      - - トップ初出場
+        - 2023年4月
+        - 2021年4月
+      - - 市場価値
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 年齢
+  - text: ニコ・ウィリアムズは24歳。アスレティック・ビルバオの右利き。
+    image: assets/images/20261127_compare_937958_709187/n1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 年齢
+        - 19歳
+        - 24歳
+      - - 生まれ
+        - 2007年7月13日
+        - 2002年7月12日
+      - - 利き足
+        - 左
+        - 右
+      - - 身長
+        - 1.83m
+        - 1.81m
+      - - クラブ
+        - バルセロナ
+        - アスレティック
+      - - トップ初出場
+        - 2023年4月
+        - 2021年4月
+      - - 市場価値
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 利き足
+  - text: 誕生日は1日違い。ニコが7月12日、ヤマルが7月13日です。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 年齢
+        - 19歳
+        - 24歳
+      - - 生まれ
+        - 2007年7月13日
+        - 2002年7月12日
+      - - 利き足
+        - 左
+        - 右
+      - - 身長
+        - 1.83m
+        - 1.81m
+      - - クラブ
+        - バルセロナ
+        - アスレティック
+      - - トップ初出場
+        - 2023年4月
+        - 2021年4月
+      - - 市場価値
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: 市場価値は最新の値
+      highlight_row: 生まれ
+    emph: true
+  - text: ユーロの決勝は7月14日。2人とも、誕生日の直後でした。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+  - text: ニコは2025年7月、2035年までの契約を結んでクラブに残りました。
+    image: assets/images/20261127_compare_937958_709187/n2/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/profil/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/profil/spieler/709187
+  - https://en.wikipedia.org/wiki/Nico_Williams
+  - https://en.wikipedia.org/wiki/Lamine_Yamal
+- id: seasons
+  heading: 2年前と直近の季で、数はどう違うのか
+  tier: 報道
+  telop: 23/24と25/26
+  narrator: 解説
+  card:
+    type: table
+    title: 季ごとの数（クラブの公式戦）
+    columns:
+    - 選手
+    - 季
+    - 試合
+    - 出場時間
+    - 得点
+    - アシスト
+    rows:
+    - - ニコ
+      - 23/24
+      - '37'
+      - 2729分
+      - '8'
+      - '18'
+    - - ヤマル
+      - 23/24
+      - '50'
+      - 2957分
+      - '7'
+      - '9'
+    - - ヤマル
+      - 25/26
+      - '45'
+      - 3702分
+      - '24'
+      - '18'
+    - - ニコ
+      - 25/26
+      - '32'
+      - 2101分
+      - '6'
+      - '7'
+    note: 23/24と、直近の25/26
+  say:
+  - text: 2年前の23/24と、直近の25/26です。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - ニコ
+        - 23/24
+        - '37'
+        - 2729分
+        - '8'
+        - '18'
+      - - ヤマル
+        - 23/24
+        - '50'
+        - 2957分
+        - '7'
+        - '9'
+      - - ヤマル
+        - 25/26
+        - '45'
+        - 3702分
+        - '24'
+        - '18'
+      - - ニコ
+        - 25/26
+        - '32'
+        - 2101分
+        - '6'
+        - '7'
+      note: 23/24と、直近の25/26
+  - text: 23/24は、ニコが37試合で8得点18アシスト。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - ニコ
+        - 23/24
+        - '37'
+        - 2729分
+        - '8'
+        - '18'
+      - - ヤマル
+        - 23/24
+        - '50'
+        - 2957分
+        - '7'
+        - '9'
+      - - ヤマル
+        - 25/26
+        - '45'
+        - 3702分
+        - '24'
+        - '18'
+      - - ニコ
+        - 25/26
+        - '32'
+        - 2101分
+        - '6'
+        - '7'
+      note: 23/24と、直近の25/26
+      highlight_row: 0
+  - text: ヤマルは50試合で7得点9アシスト。このとき16歳でした。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - ニコ
+        - 23/24
+        - '37'
+        - 2729分
+        - '8'
+        - '18'
+      - - ヤマル
+        - 23/24
+        - '50'
+        - 2957分
+        - '7'
+        - '9'
+      - - ヤマル
+        - 25/26
+        - '45'
+        - 3702分
+        - '24'
+        - '18'
+      - - ニコ
+        - 25/26
+        - '32'
+        - 2101分
+        - '6'
+        - '7'
+      note: 23/24と、直近の25/26
+      highlight_row: 1
+  - text: 25/26は、ヤマルが45試合で24得点18アシスト。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - ニコ
+        - 23/24
+        - '37'
+        - 2729分
+        - '8'
+        - '18'
+      - - ヤマル
+        - 23/24
+        - '50'
+        - 2957分
+        - '7'
+        - '9'
+      - - ヤマル
+        - 25/26
+        - '45'
+        - 3702分
+        - '24'
+        - '18'
+      - - ニコ
+        - 25/26
+        - '32'
+        - 2101分
+        - '6'
+        - '7'
+      note: 23/24と、直近の25/26
+      highlight_row: 2
+    emph: true
+  - text: ニコは32試合で6得点7アシスト。出場は2101分でした。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: table
+      title: 季ごとの数（クラブの公式戦）
+      columns:
+      - 選手
+      - 季
+      - 試合
+      - 出場時間
+      - 得点
+      - アシスト
+      rows:
+      - - ニコ
+        - 23/24
+        - '37'
+        - 2729分
+        - '8'
+        - '18'
+      - - ヤマル
+        - 23/24
+        - '50'
+        - 2957分
+        - '7'
+        - '9'
+      - - ヤマル
+        - 25/26
+        - '45'
+        - 3702分
+        - '24'
+        - '18'
+      - - ニコ
+        - 25/26
+        - '32'
+        - 2101分
+        - '6'
+        - '7'
+      note: 23/24と、直近の25/26
+      highlight_row: 3
+  - text: ニコはこの季、恥骨まわりの痛みで何試合も欠場しています。
+    image: assets/images/20261127_compare_937958_709187/n1/01_w.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/leistungsdaten/spieler/709187
+  - https://en.wikipedia.org/wiki/Nico_Williams
+- id: rate
+  heading: 4つのシーズンで、90分あたりはどう動いたのか
+  tier: 報道
+  telop: 得点＋アシスト
+  narrator: 解説
+  main: true
+  card:
+    type: line
+    title: 90分あたりの得点＋アシスト
+    x:
+    - 23/24
+    - 24/25
+    - 25/26
+    - 26/27
+    series:
+    - - ヤマル
+      - - 0.49
+        - 0.85
+        - 1.02
+        - 1.66
+    - - ニコ
+      - - 0.86
+        - 0.52
+        - 0.56
+        - 0.51
+    focus: ヤマル
+    note: クラブの公式戦。26/27は11月21日時点
+  say:
+  - text: バルセロナのヤマルと、アスレティックのニコ・ウィリアムズ。点に絡む速さを比べます。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+    short_only: true
+  - text: 1試合90分に直して、得点とアシストがいくつ付くか。その数です。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 23/24
+  - text: 23/24は、ニコの0.86がヤマルの0.49を上回っていました。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 23/24
+    emph: true
+  - text: 24/25で逆転。ヤマルが0.85、ニコは0.52に下がります。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 24/25
+  - text: 25/26は1.02と0.56。差は0.46に開きました。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 25/26
+  - text: 今季はヤマルが1.66。ニコは0.51です。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 26/27
+  - text: ヤマルは3季続けて上がり、ニコは0.5台にとどまっています。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: line
+      title: 90分あたりの得点＋アシスト
+      x:
+      - 23/24
+      - 24/25
+      - 25/26
+      - 26/27
+      series:
+      - - ヤマル
+        - - 0.49
+          - 0.85
+          - 1.02
+          - 1.66
+      - - ニコ
+        - - 0.86
+          - 0.52
+          - 0.56
+          - 0.51
+      focus: ヤマル
+      note: クラブの公式戦。26/27は11月21日時点
+      highlight: 26/27
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/leistungsdaten/spieler/709187
+- id: value
+  heading: 市場価値は、いつから離れ始めたのか
+  tier: 報道
+  telop: 市場価値の歩み
+  narrator: 解説
+  card:
+    type: line
+    title: 市場価値の歩み（百万ユーロ）
+    x:
+    - 24年6月
+    - 24年12月
+    - 25年6月
+    - 25年12月
+    - 26年6月
+    - 最新
+    series:
+    - - ヤマル
+      - - 90
+        - 180
+        - 200
+        - 200
+        - 200
+        - 220
+    - - ニコ
+      - - 60
+        - 70
+        - 70
+        - 60
+        - 40
+        - 40
+    focus: ヤマル
+    note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+  say:
+  - text: 市場価値の動きも見ます。ユーロの直前、2024年6月から。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 24年6月
+  - text: ヤマルが9000万ユーロ、ニコが6000万ユーロ。差は1.5倍でした。
+    image: assets/images/20261127_compare_937958_709187/n1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 24年6月
+  - text: ヤマルは半年で倍の、1億8000万ユーロに。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 24年12月
+  - text: ニコの最高は7000万ユーロ。2025年12月から下がり始めます。
+    image: assets/images/20261127_compare_937958_709187/n1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 25年12月
+  - text: いまはヤマルが2億2000万、ニコが4000万ユーロ。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 最新
+  - text: 1.5倍だった差が、5.5倍まで開きました。
+    image: assets/images/20261127_compare_937958_709187/y1/01_r.jpg
+    card:
+      type: line
+      title: 市場価値の歩み（百万ユーロ）
+      x:
+      - 24年6月
+      - 24年12月
+      - 25年6月
+      - 25年12月
+      - 26年6月
+      - 最新
+      series:
+      - - ヤマル
+        - - 90
+          - 180
+          - 200
+          - 200
+          - 200
+          - 220
+      - - ニコ
+        - - 60
+          - 70
+          - 70
+          - 60
+          - 40
+          - 40
+      focus: ヤマル
+      note: 各時点の直前に出た値。最新はヤマル26年7月、ニコ26年6月
+      highlight: 最新
+    emph: true
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/marktwertverlauf/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/marktwertverlauf/spieler/709187
+- id: now
+  heading: 今季のここまで、2人の数字はどう動いているのか
+  tier: 報道
+  telop: 11月21日時点
+  narrator: 解説
+  card:
+    type: duel
+    left:
+      name: ヤマル
+      club: バルセロナ
+      photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ニコ
+      club: アスレティック
+      photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+      color: '#ee2523'
+    rows:
+    - - 試合
+      - '16'
+      - '11'
+    - - 出場時間
+      - 1355分
+      - 706分
+    - - 得点
+      - '13'
+      - '2'
+    - - アシスト
+      - '12'
+      - '2'
+    - - 90分あたり
+      - '1.66'
+      - '0.51'
+    bars: false
+    note: クラブの公式戦。11月21日時点
+  say:
+  - text: 続いて、今季のここまで。
+    image: assets/images/20261127_compare_937958_709187/pair_b/01.jpg
+    card: none
+  - text: ヤマルは16試合で13得点12アシスト。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 試合
+        - '16'
+        - '11'
+      - - 出場時間
+        - 1355分
+        - 706分
+      - - 得点
+        - '13'
+        - '2'
+      - - アシスト
+        - '12'
+        - '2'
+      - - 90分あたり
+        - '1.66'
+        - '0.51'
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: 得点
+  - text: ニコは11試合で2得点2アシスト。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 試合
+        - '16'
+        - '11'
+      - - 出場時間
+        - 1355分
+        - 706分
+      - - 得点
+        - '13'
+        - '2'
+      - - アシスト
+        - '12'
+        - '2'
+      - - 90分あたり
+        - '1.66'
+        - '0.51'
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: アシスト
+  - text: ニコの出場は706分。試合数が少なく、ここから大きく動きえます。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 試合
+        - '16'
+        - '11'
+      - - 出場時間
+        - 1355分
+        - 706分
+      - - 得点
+        - '13'
+        - '2'
+      - - アシスト
+        - '12'
+        - '2'
+      - - 90分あたり
+        - '1.66'
+        - '0.51'
+      bars: false
+      note: クラブの公式戦。11月21日時点
+      highlight_row: 出場時間
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/leistungsdaten/spieler/709187
+- id: view
+  heading: 見立て・2人の差は、どこで開いたのか
+  tier: 背景
+  telop: 数字の違いが示すもの
+  narrator: 解説
+  viewpoint: true
+  card:
+    type: duel
+    left:
+      name: ヤマル
+      club: バルセロナ
+      photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+      color: '#a50044'
+    right:
+      name: ニコ
+      club: アスレティック
+      photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+      color: '#ee2523'
+    rows:
+    - - 23/24の90分あたり
+      - '0.49'
+      - '0.86'
+    - - 25/26の90分あたり
+      - '1.02'
+      - '0.56'
+    - - 25/26の出場時間
+      - 3702分
+      - 2101分
+    - - 市場価値 24年6月
+      - 9000万€
+      - 6000万€
+    - - 市場価値 最新
+      - 2億2000万€
+      - 4000万€
+    bars: false
+    note: クラブの公式戦。90分あたりは得点＋アシストを出場時間で割った値
+  say:
+  - text: 見立てです。2年前、点に絡む速さはニコが上でした。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 23/24の90分あたり
+        - '0.49'
+        - '0.86'
+      - - 25/26の90分あたり
+        - '1.02'
+        - '0.56'
+      - - 25/26の出場時間
+        - 3702分
+        - 2101分
+      - - 市場価値 24年6月
+        - 9000万€
+        - 6000万€
+      - - 市場価値 最新
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: クラブの公式戦。90分あたりは得点＋アシストを出場時間で割った値
+    mark:
+      kind: circle
+      row: 0
+  - text: その後ヤマルは、0.49から1.02へ。2倍を超えて伸びました。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 23/24の90分あたり
+        - '0.49'
+        - '0.86'
+      - - 25/26の90分あたり
+        - '1.02'
+        - '0.56'
+      - - 25/26の出場時間
+        - 3702分
+        - 2101分
+      - - 市場価値 24年6月
+        - 9000万€
+        - 6000万€
+      - - 市場価値 最新
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: クラブの公式戦。90分あたりは得点＋アシストを出場時間で割った値
+      highlight_row: 1
+  - text: ニコは25/26、出場時間がヤマルの6割弱でした。
+    image: assets/images/20261127_compare_937958_709187/n2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 23/24の90分あたり
+        - '0.49'
+        - '0.86'
+      - - 25/26の90分あたり
+        - '1.02'
+        - '0.56'
+      - - 25/26の出場時間
+        - 3702分
+        - 2101分
+      - - 市場価値 24年6月
+        - 9000万€
+        - 6000万€
+      - - 市場価値 最新
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: クラブの公式戦。90分あたりは得点＋アシストを出場時間で割った値
+      highlight_row: 2
+    emph: true
+  - text: 市場価値の開きは、この伸びと出場の差に重なって見えます。
+    image: assets/images/20261127_compare_937958_709187/y2/01_r.jpg
+    card:
+      type: duel
+      left:
+        name: ヤマル
+        club: バルセロナ
+        photo: assets/images/20261127_compare_937958_709187/y1/01_sq.jpg
+        color: '#a50044'
+      right:
+        name: ニコ
+        club: アスレティック
+        photo: assets/images/20261127_compare_937958_709187/n1/01_sq.jpg
+        color: '#ee2523'
+      rows:
+      - - 23/24の90分あたり
+        - '0.49'
+        - '0.86'
+      - - 25/26の90分あたり
+        - '1.02'
+        - '0.56'
+      - - 25/26の出場時間
+        - 3702分
+        - 2101分
+      - - 市場価値 24年6月
+        - 9000万€
+        - 6000万€
+      - - 市場価値 最新
+        - 2億2000万€
+        - 4000万€
+      bars: false
+      note: クラブの公式戦。90分あたりは得点＋アシストを出場時間で割った値
+      highlight_row: 4
+  - text: これからの注目は、ニコの出場時間です。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+  - text: 出場が戻ったとき、0.5台の数字がどこまで戻るか。そこにあります。
+    image: assets/images/20261127_compare_937958_709187/pair_a/01.jpg
+    card: none
+  sources:
+  - https://www.transfermarkt.com/lamine-yamal/leistungsdaten/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/leistungsdaten/spieler/709187
+  - https://www.transfermarkt.com/lamine-yamal/marktwertverlauf/spieler/937958
+  - https://www.transfermarkt.com/nico-williams/marktwertverlauf/spieler/709187

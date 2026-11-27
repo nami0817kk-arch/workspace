@@ -1,0 +1,709 @@
+# スタジアム紹介シリーズ：パリ・サンジェルマンの本拠地（パルク・デ・プランス、11/29 予定）。雛形は 11/25 バイエルンの回。
+# 題材の選び方（2026-11-21）：大物のクラブで残っていた器。PSG のユニフォームは 11/25 に済み、11/29 のユニフォームはアヤックスなので同じ日に重ならない。
+#   同日 11/29 の他シリーズ（選手紹介＝ロドリ、比べる＝クルトワとアリソン）とクラブが重ならない（research/20261127_picks.txt）。
+# 選んだ理由：「欧州王者が、自分の本拠地を持たずに借りている」という強い一点／買い取りの話が 2026 年に動いている（市長交代→4月に交渉の許し→10月に長期の賃貸を外す→11月に7万席・15〜20億ユーロの案の報道）。
+# 重なりの確認：scripts/*stadium_*・posted.json・covered.yaml・research/*picks.txt に無し（grep 済み）。
+# 一次情報の突き合わせ：en・fr ウィキペディア（Parc des Princes）、パリ市の発表（2026-06-26 の見出し「La Ville de Paris et le PSG entament leurs discussions」。本文は未読）、
+#   報道の要約（Le Monde 2026-04-14 の見出し「Grégoire mandaté par le Conseil de Paris」、Le Parisien 2026-10-06 と L'Équipe 2026-11-04 を引いた lestitisdupsg.fr の記事）。
+#   開場 1897-07-18（自転車の競技場）／ツール・ド・フランスのゴール 1903〜1967（en・fr 一致）／1932 改築 4万（en）／1956 最初の欧州チャンピオンズカップ決勝（en・fr）／
+#   1967-07-08 取り壊し開始・いまの器は 1972 年（設計ロジェ・タイユベール、en・fr）／周回道路が一部のスタンドの下を通る（fr）／PSG は 1974-07 から（en）・1998 年から唯一の使い手（en は 1997）／
+#   2013-11-26 に 30 年の契約（fr は 2044 年まで、en は 2043 年まで→「30年」だけ言う）／2014〜16 の改修 7500 万ユーロは PSG が負担（fr）・席 4万8583（fr、2016-05-10 の発表）／
+#   改修で器の収入が 2000万→1億ユーロ（en だけ→「とされます」）／2021 に買い取りと拡張を求める・タイユベールは 2013 年に 5万5000 までと見た（fr）／
+#   市（イダルゴ市長）が拒む、2024-02 に PSG が新しい器の計画、2025 にマッシー・ポワシーを調べる（en・fr）／2026 春 グレゴワール市長、4月に議会が交渉を許す（en・fr・Le Monde）／
+#   2026-10 長い賃貸の案は外れ、最大7万席（Le Parisien）／2026-11-04 拡張の案 15〜20億ユーロ・7万席（L'Équipe）／11/21 時点でパリ・マッシー・ポワシーのどれかは決まっていない（報道）。
+#   PSG の最多入場 4万9575（1983、en）。
+#   食い違い（台本に入れない）：席（en 4万7929・fr 4万8583→fr を使う）、契約の終わり（2043 か 2044）、PSG が唯一の使い手になった年（1997 か 1998）、1932 年の席（4万か別の数）。
+#   確かめられなかった：パリ市・PSG の発表の本文（見出しのみ）、L'Équipe・Le Parisien の本文（転載の要約で読んだ）、売値（市長は「機密」と述べたと伝えられる）。
+#   写真：Commons。場内の全景は CC BY 3.0、真上の写真は Licence Ouverte（パリの公開の航空写真）、1913 年はパブリックドメイン、ほかは CC BY-SA。観客は遠景で、顔が分かる人は写らない。
+# 読みが割れる名前：パルク・デ・プランス／ロジェ・タイユベール／グレゴワール／イダルゴ／マッシー／ポワシー／ランス（スタッド・ド・ランス）。
+date: 2026年11月21日
+slot: other_1
+format: news
+series: スタジアム紹介
+voice_min: 0
+people: []
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: stadium_psg
+  league: france
+  league_name: リーグ・アン
+  kind: other
+  topic: パリ・サンジェルマン
+  title: PSGの本拠地パルク・デ・プランス。借りて52年、買い取りに動く理由は
+  question: 欧州王者のPSGは、なぜ、1974年から借りてきた器を、パリ市から買い取ろうとしているのか
+  lead: パリでいちばん古い競技場です。
+  hook: ''
+  opening_image: assets/images/20261129_stadium_psg/06_w.jpg
+  end_bg: assets/images/20261129_stadium_psg/04_w.jpg
+  takeaway: パルク・デ・プランスの持ち主はパリ市で、PSGは1974年から借りている。2016年の改修に7500万ユーロを出しても席は4万8583のまま。7万席に広げる案は今の1.44倍で、広げるには買い取りが要る、というのがPSGの立場。11月21日時点で、残るかどうかはまだ決まっていない。
+  short_title: PSGの本拠地、持ち主はパリ市
+thumbnail:
+  layout: scene
+  bold: false
+  callouts:
+  - 持ち主はパリ市
+  - 7万席の案は1.44倍
+  photo: assets/images/20261129_stadium_psg/01_w.jpg
+  line1: パリ・サンジェルマンの本拠地
+  line2: 欧州王者の家は借り物
+  tags:
+  - パリ・サンジェルマン
+  - リーグ・アン
+  - スタジアム紹介
+sections:
+- id: data
+  main: true
+  heading: 欧州王者の本拠地は、誰の持ち物なのか
+  bg: assets/images/20261129_stadium_psg/06_w.jpg
+  card:
+    type: table
+    title: パルク・デ・プランスの基礎DATA
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 持ち主
+      - パリ市
+    - - PSGが使う
+      - 1974年から（借りている）
+    - - いまの器
+      - 1972年に開場
+    - - 収容
+      - 4万8583人
+    - - 最初の開場
+      - 1897年（自転車の競技場）
+  narrator: 解説
+  tier: 背景
+  telop: 持ち主はパリ市。PSGは1974年から借りている。収容は4万8583人
+  sources: &id001
+  - https://en.wikipedia.org/wiki/Parc_des_Princes
+  - https://fr.wikipedia.org/wiki/Parc_des_Princes
+  - https://www.lestitisdupsg.fr/a-la-une/%f0%9f%97%9e%ef%b8%8fnews-club-le-psg-prepare-un-projet-a-2-milliards-deuros-pour-agrandir-le-parc-des-princes-lequipe/
+  - https://www.lestitisdupsg.fr/a-la-une/%f0%9f%97%9e%ef%b8%8fnews-club-futur-stade-du-psg-les-discussions-avancent-la-vente-du-parc-des-princes-se-precise-le-parisien/
+  - https://www.lestitisdupsg.fr/a-la-une/%f0%9f%97%9e%ef%b8%8fnews-club-le-dossier-du-parc-des-princes-prend-un-nouveau-tournant-trois-reunions-programmees-rmc-sport/
+  say:
+  - text: パリ・サンジェルマンの本拠地、パルク・デ・プランスの話です。
+    card: none
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+    short_only: true
+  - text: 欧州王者のパリ・サンジェルマンは、自分の本拠地を、持っていません。
+    card: none
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+    emph: true
+  - text: 持ち主は、パリ市。パリ・サンジェルマンは、1974年から借りて使っています。
+    card:
+      type: table
+      title: パルク・デ・プランスの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - パリ市
+      - - PSGが使う
+        - 1974年から（借りている）
+      - - いまの器
+        - 1972年に開場
+      - - 収容
+        - 4万8583人
+      - - 最初の開場
+        - 1897年（自転車の競技場）
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+  - text: いまの器の開場は1972年。収容は、4万8583人です。
+    card:
+      type: table
+      title: パルク・デ・プランスの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - パリ市
+      - - PSGが使う
+        - 1974年から（借りている）
+      - - いまの器
+        - 1972年に開場
+      - - 収容
+        - 4万8583人
+      - - 最初の開場
+        - 1897年（自転車の競技場）
+      highlight_row: 3
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+  - text: この場所に最初の競技場が開いたのは、1897年です。
+    card:
+      type: table
+      title: パルク・デ・プランスの基礎DATA
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 持ち主
+        - パリ市
+      - - PSGが使う
+        - 1974年から（借りている）
+      - - いまの器
+        - 1972年に開場
+      - - 収容
+        - 4万8583人
+      - - 最初の開場
+        - 1897年（自転車の競技場）
+      highlight_row: 4
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+  - text: その借りている器を、パリ・サンジェルマンはいま、買い取ろうとしています。
+    card:
+      type: stats
+      title: パルク・デ・プランスの数字
+      items:
+      - - '1897'
+        - 年
+        - 最初の開場
+      - - '48583'
+        - 席
+        - いまの収容
+      - - '70000'
+        - 席
+        - PSGの拡張の案（報道）
+      focus: 2
+    image: assets/images/20261129_stadium_psg/06_w.jpg
+    emph: true
+- id: history
+  heading: なぜ、サッカーの器は、自転車の競技場から始まったのか
+  bg: assets/images/20261129_stadium_psg/03_w.jpg
+  card:
+    type: timeline
+    title: パルク・デ・プランスの歩み
+    rows:
+    - - 1897年
+      - 自転車の競技場で開場
+    - - 1903年
+      - ツール・ド・フランスのゴールに
+    - - 1956年
+      - 最初の欧州王者の決勝
+    - - 1972年
+      - いまの器が開場
+    - - 1974年
+      - PSGが使い始める
+    - - 2016年
+      - PSGの負担で改修
+    focus: 1972年
+    highlight_row: 0
+  narrator: 解説
+  tier: 背景
+  telop: 1897年に自転車の競技場として開場。いまの器は1972年に建った
+  sources: *id001
+  say:
+  - text: 1897年7月18日、ここは、自転車の競技場として開きました。
+    card:
+      type: timeline
+      title: パルク・デ・プランスの歩み
+      rows:
+      - - 1897年
+        - 自転車の競技場で開場
+      - - 1903年
+        - ツール・ド・フランスのゴールに
+      - - 1956年
+        - 最初の欧州王者の決勝
+      - - 1972年
+        - いまの器が開場
+      - - 1974年
+        - PSGが使い始める
+      - - 2016年
+        - PSGの負担で改修
+      focus: 1972年
+      highlight_row: 0
+    image: assets/images/20261129_stadium_psg/03_w.jpg
+  - text: 1903年から1967年まで、ツール・ド・フランスのゴールは、この競技場でした。
+    card:
+      type: timeline
+      title: パルク・デ・プランスの歩み
+      rows:
+      - - 1897年
+        - 自転車の競技場で開場
+      - - 1903年
+        - ツール・ド・フランスのゴールに
+      - - 1956年
+        - 最初の欧州王者の決勝
+      - - 1972年
+        - いまの器が開場
+      - - 1974年
+        - PSGが使い始める
+      - - 2016年
+        - PSGの負担で改修
+      focus: 1972年
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/03_w.jpg
+  - text: 1956年には、最初の欧州王者を決める決勝を開きます。
+    card:
+      type: timeline
+      title: パルク・デ・プランスの歩み
+      rows:
+      - - 1897年
+        - 自転車の競技場で開場
+      - - 1903年
+        - ツール・ド・フランスのゴールに
+      - - 1956年
+        - 最初の欧州王者の決勝
+      - - 1972年
+        - いまの器が開場
+      - - 1974年
+        - PSGが使い始める
+      - - 2016年
+        - PSGの負担で改修
+      focus: 1972年
+      highlight_row: 2
+    image: assets/images/20261129_stadium_psg/03_w.jpg
+  - text: 勝ったのは、レアル・マドリード。相手はフランスのランスでした。
+    card: none
+    image: assets/images/20261129_stadium_psg/03_w.jpg
+  - text: 1967年に古い器を壊し、1972年、いまの器が開きます。
+    card:
+      type: timeline
+      title: パルク・デ・プランスの歩み
+      rows:
+      - - 1897年
+        - 自転車の競技場で開場
+      - - 1903年
+        - ツール・ド・フランスのゴールに
+      - - 1956年
+        - 最初の欧州王者の決勝
+      - - 1972年
+        - いまの器が開場
+      - - 1974年
+        - PSGが使い始める
+      - - 2016年
+        - PSGの負担で改修
+      focus: 1972年
+      highlight_row: 3
+    image: assets/images/20261129_stadium_psg/05_w.jpg
+  - text: 設計は、ロジェ・タイユベール。
+    card: none
+    image: assets/images/20261129_stadium_psg/05_w.jpg
+  - text: 外のコンクリートの柱は、13の形を組み合わせています。
+    card: none
+    image: assets/images/20261129_stadium_psg/05_w.jpg
+    emph: true
+  - text: パリを一周する道路が、スタンドの一部の下を通っています。
+    card: none
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 1974年の夏から、パリ・サンジェルマンが、ここを本拠地にしました。
+    card:
+      type: timeline
+      title: パルク・デ・プランスの歩み
+      rows:
+      - - 1897年
+        - 自転車の競技場で開場
+      - - 1903年
+        - ツール・ド・フランスのゴールに
+      - - 1956年
+        - 最初の欧州王者の決勝
+      - - 1972年
+        - いまの器が開場
+      - - 1974年
+        - PSGが使い始める
+      - - 2016年
+        - PSGの負担で改修
+      focus: 1972年
+      highlight_row: 4
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+- id: lease
+  heading: なぜ、PSGは、借りた器の改修にお金を出したのか
+  bg: assets/images/20261129_stadium_psg/04_w.jpg
+  card:
+    type: table
+    title: 借りたままの改修（報道）
+    columns:
+    - 項目
+    - 中身
+    rows:
+    - - 契約
+      - 2013年に30年
+    - - 改修の費用
+      - 7500万ユーロ（PSGが負担）
+    - - 器の収入
+      - 2000万→1億ユーロ
+    - - 席の数
+      - 4万8583（変わらず）
+  narrator: 解説
+  tier: 報道
+  telop: 2013年に30年の契約。2014〜16年の改修は7500万ユーロでPSGが負担
+  sources: *id001
+  say:
+  - text: 1998年、フランス代表は、新しいスタッド・ド・フランスへ移りました。
+    card: none
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+  - text: それからは、このクラブだけが、この器を使っています。
+    card: none
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+  - text: 2013年、クラブは、器を30年借りる契約を、パリ市と結び直しました。
+    card:
+      type: table
+      title: 借りたままの改修（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 契約
+        - 2013年に30年
+      - - 改修の費用
+        - 7500万ユーロ（PSGが負担）
+      - - 器の収入
+        - 2000万→1億ユーロ
+      - - 席の数
+        - 4万8583（変わらず）
+      highlight_row: 0
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+  - text: 2014年から2年の改修は、7500万ユーロ。
+    card:
+      type: table
+      title: 借りたままの改修（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 契約
+        - 2013年に30年
+      - - 改修の費用
+        - 7500万ユーロ（PSGが負担）
+      - - 器の収入
+        - 2000万→1億ユーロ
+      - - 席の数
+        - 4万8583（変わらず）
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+  - text: お金を出したのは、持ち主ではなく、借りているクラブでした。
+    card:
+      type: table
+      title: 借りたままの改修（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 契約
+        - 2013年に30年
+      - - 改修の費用
+        - 7500万ユーロ（PSGが負担）
+      - - 器の収入
+        - 2000万→1億ユーロ
+      - - 席の数
+        - 4万8583（変わらず）
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+    emph: true
+  - text: 器の収入は、2000万ユーロから1億ユーロになったとされます。
+    card:
+      type: table
+      title: 借りたままの改修（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 契約
+        - 2013年に30年
+      - - 改修の費用
+        - 7500万ユーロ（PSGが負担）
+      - - 器の収入
+        - 2000万→1億ユーロ
+      - - 席の数
+        - 4万8583（変わらず）
+      highlight_row: 2
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+  - text: 割ると、5倍。
+    card:
+      type: calc
+      title: 改修のあとの収入は、前の何倍か（自分で割った）
+      terms:
+      - - 1億ユーロ
+        - 改修のあと
+      - - 2000万ユーロ
+        - 改修の前
+      - - 5倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+    emph: true
+  - text: ただ、席の数は、ほとんど増えていません。
+    card:
+      type: table
+      title: 借りたままの改修（報道）
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 契約
+        - 2013年に30年
+      - - 改修の費用
+        - 7500万ユーロ（PSGが負担）
+      - - 器の収入
+        - 2000万→1億ユーロ
+      - - 席の数
+        - 4万8583（変わらず）
+      highlight_row: 3
+    image: assets/images/20261129_stadium_psg/04_w.jpg
+- id: buy
+  heading: なぜ、PSGは、借りるのをやめて買いたいのか
+  bg: assets/images/20261129_stadium_psg/02_w.jpg
+  card:
+    type: timeline
+    title: 買い取りの話の流れ（報道）
+    rows:
+    - - 2021年
+      - PSGが買い取りを求める
+    - - 2024年2月
+      - 新しい器の計画へ
+    - - 2025年
+      - マッシー・ポワシーを調べる
+    - - 2026年4月
+      - パリ市議会が交渉を許す
+    - - 2026年10月
+      - 最大7万席の案
+    - - 2026年11月
+      - 15〜20億ユーロの案
+    focus: 2026年4月
+    highlight_row: 0
+  narrator: 解説
+  tier: 報道
+  telop: 広げるには買い取りが要る、というのがPSGの立場。2026年4月にパリ市議会が交渉を許した
+  sources: *id001
+  say:
+  - text: 2021年、パリ・サンジェルマンは、器を買い取って広げたい、と表に出しました。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 0
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 広げる工事は、数億ユーロと見られます。
+    card: none
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 持ち主でない器には出せない、というのがクラブの立場です。
+    card: none
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+    emph: true
+  - text: パリ市は、売ることを認めませんでした。
+    card: none
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 2024年2月、パリ・サンジェルマンは、新しい器を建てる計画を明らかにします。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 2025年には、パリの外のマッシーとポワシーを、候補として調べました。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 2
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 流れが変わったのは、2026年の春。パリの市長が替わります。
+    card: none
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+    emph: true
+  - text: 4月、パリ市議会は、新しい市長がパリ・サンジェルマンと交渉することを認めました。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 3
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 10月には、長く借りる案は外れ、最大7万席に広げる案が出たと伝えられます。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 4
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+  - text: 11月には、15億から20億ユーロの拡張の案が報じられました。
+    card:
+      type: timeline
+      title: 買い取りの話の流れ（報道）
+      rows:
+      - - 2021年
+        - PSGが買い取りを求める
+      - - 2024年2月
+        - 新しい器の計画へ
+      - - 2025年
+        - マッシー・ポワシーを調べる
+      - - 2026年4月
+        - パリ市議会が交渉を許す
+      - - 2026年10月
+        - 最大7万席の案
+      - - 2026年11月
+        - 15〜20億ユーロの案
+      focus: 2026年4月
+      highlight_row: 5
+    image: assets/images/20261129_stadium_psg/02_w.jpg
+- id: view
+  viewpoint: true
+  heading: 見立て・7万席の案は、いまの器の何倍なのか
+  bg: assets/images/20261129_stadium_psg/01_w.jpg
+  card:
+    type: table
+    title: 席の数を比べる
+    columns:
+    - 器
+    - 席
+    rows:
+    - - PSG（いま）
+      - 4万8583
+    - - マルセイユ
+      - 6万7394
+    - - PSGの拡張の案（報道）
+      - 7万
+  narrator: 解説
+  tier: 報道
+  telop: 7万席の案は、いまの4万8583席の1.44倍。マルセイユの6万7394席も上回る
+  sources: *id001
+  say:
+  - text: では、広げる案は、いまの器と比べてどれだけ大きいのか。
+    card: none
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+    emph: true
+  - text: 数字は、11月21日の時点で見ます。
+    card: none
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: いまの席は、4万8583。
+    card:
+      type: table
+      title: 席の数を比べる
+      columns:
+      - 器
+      - 席
+      rows:
+      - - PSG（いま）
+        - 4万8583
+      - - マルセイユ
+        - 6万7394
+      - - PSGの拡張の案（報道）
+        - 7万
+      highlight_row: 0
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: 7万を、いまの席で割ると、1.44倍です。
+    card:
+      type: calc
+      title: 7万席の案は、いまの何倍か（自分で割った）
+      terms:
+      - - 7万席
+        - 拡張の案（報道）
+      - - 4万8583席
+        - いまの席
+      - - 1.44倍
+        - 割った答え
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: フランスの大きなクラブ、マルセイユの本拠地は、6万7394席。
+    card:
+      type: table
+      title: 席の数を比べる
+      columns:
+      - 器
+      - 席
+      rows:
+      - - PSG（いま）
+        - 4万8583
+      - - マルセイユ
+        - 6万7394
+      - - PSGの拡張の案（報道）
+        - 7万
+      highlight_row: 1
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: 7万席になれば、それより2606席多くなります。
+    card:
+      type: table
+      title: 席の数を比べる
+      columns:
+      - 器
+      - 席
+      rows:
+      - - PSG（いま）
+        - 4万8583
+      - - マルセイユ
+        - 6万7394
+      - - PSGの拡張の案（報道）
+        - 7万
+      highlight_row: 2
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+    mark:
+      kind: circle
+      row: 2
+    emph: true
+  - text: ただ、パリに残るか、外へ出るかは、まだ決まっていないと伝えられます。
+    card: none
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: 欧州王者の家は、借り物のままか、自分の物になるか。
+    card: none
+    image: assets/images/20261129_stadium_psg/01_w.jpg
+  - text: あなたは、クラブがパリに残ると思いますか。
+    card: none
+    image: assets/images/20261129_stadium_psg/01_w.jpg

@@ -1,0 +1,116 @@
+# 取材メモ（2026年11月16日）福田師王、ブラジル戦はベンチ外。次のパラグアイ戦へ「出たら絶対に点を決める」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-16。requests（ブラウザUA）でゲキサカの記事を全文読み、site.api.espn.com で試合データを確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ゲキサカ 2026-11-15（取材・文 矢内由美子）「ブラジル戦ベンチ外の初招集FW福田師王、代表デビューへ「出たら絶対に点を決める」」（全文） https://web.gekisaka.jp/news/japan/detail/?463294-463294-fl
+# 出典で確かめたこと:
+#   ・ゲキサカ: 福田（カールスルーエ）はドイツで4年近く。初めて日本代表の一員として過ごしている。合流当初は周囲とのコミュニケーションにぎこちなさがあったが、日数を重ねて表情が柔らかくなった。
+#   ・ブラジル戦はベンチ外で、間近で見届けた。本人の言葉（原文。字は変えていない）:
+#       「やっぱり日本を背負うというのは、レベルが違うんだな、と改めて思いました」
+#       「相当愛されている監督だなと思っています」（森保一監督のために最後の試合を勝って送り出そうとする先輩たちの姿を見て）
+#       「まだまだ自分の良さが出せていない」（ゲキサカの地の文は、もっとコミュニケーションを取り、練習から自分のプレーを理解してもらう必要があると本人が考えている、と書く）
+#       「めちゃくちゃ早く試合に出たいですし、出たら絶対に点を決めるという気持ちです」
+#   ・ESPN の試合データ（fifa.friendly summary event=401916337、2026-11-14 10:15 UTC）: 日本 3-2 ブラジル。日本の出場選手・控えの名簿に福田の名前は無い（＝ゲキサカの「ベンチ外」と一致）。
+#   ・ESPN scoreboard 2026-11-17: Paraguay at Japan（event 401916336）13:10 UTC。→ 台本は「17日のパラグアイ戦」とだけ言う（時刻は言わない）。森保監督のラストマッチはサッカーキング・ゲキサカの別の記事（11/15 の moriyasu_brazil_world_top のメモ）による。
+# 自分で数えたもの: 福田の日本代表での出場は、ここまで0分（初招集で、ブラジル戦はベンチ外。ESPN の名簿に無い）。
+#   今季ドイツ2部の成績は 11/12 の取材メモ（ゲキサカ）で「9試合先発・3得点2アシスト」。11/8 にカールスルーエは試合をしているので、その後の数は使わない（言うなら「3得点」ではなく言わない）。→ 台本には成績の数字を入れず、「0分」と「17日」だけ使う。
+# 前の本との重なり: 20261112_fukuda_shuo_first_callup（「キツいことだらけ」の下積み・宮市亮以来14年ぶり）。20261104 の招集の会見（森保監督の言葉）。
+#   → 今回の初出: ブラジル戦をベンチ外で見て感じたこと・森保監督への見方・「出たら絶対に点を決める」。「キツいこと」の言葉と14年ぶりの記録は繰り返さない。
+# 【言わないこと】「キツいことだらけ」／14年ぶり／招集の理由／ブラジル戦の得点者の話／起用の予想。
+# 本人の言葉: あり（福田師王。ゲキサカ）。Y。
+# 数えたもの: ブラジル戦の日本の交代は9人（ESPN summary 401916337 の substitution 9件。62分2・72分4・86分3）。福田はベンチ外で、その中にいない。
+# 読み: config/reading.yaml に『森保一監督』の読みが無い（draft のヒント）。config は編集しない決まりなので未対応。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [福田師王, カールスルーエ, 森保一監督, 日本代表]
+
+short_style: Y
+short_hook_quote: 出たら絶対に点を決めるという気持ちです。
+short_photos:
+  - assets/images/20261116_fukuda_shio_first_call/02_v.jpg
+  - assets/images/20261116_fukuda_shio_first_call/03_v.jpg
+  - assets/images/20261116_fukuda_shio_first_call/01_v.jpg
+short_question: 福田師王は、17日のパラグアイ戦でA代表デビューして点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: fukuda_shio_first_call
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 福田師王、ブラジル戦はベンチ外。初招集のFWが森保監督と日本代表を見て感じたこと
+  hook: ""
+  question: ブラジル戦をベンチ外で見た福田師王は、何を感じ、次の試合に何を誓ったのか
+  takeaway: 福田は日本代表でまだ0分。ブラジル戦を間近で見て「レベルが違う」と話し、17日のパラグアイ戦で出られたら「絶対に点を決める」と言い切った
+
+thumbnail:
+  layout: face
+  line1: 福田師王 代表デビューへ
+  line2: 出たら絶対に点を決める
+  tags: [福田師王, 日本代表]
+  photo: assets/images/20261116_fukuda_shio_first_call/02_w.jpg
+  short_photo: assets/images/20261116_fukuda_shio_first_call/02_v.jpg
+
+answer: 出番を待つ初招集のFWは、日本代表のレベルの高さを実感し、デビュー戦での得点を誓っている
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: 福田師王が次の試合に誓ったこと
+    tier: 報道
+    telop: 福田師王「出たら絶対に点を決める」
+    say:
+      - text: 初招集の福田師王は、ブラジル戦をメンバー外で見届け、パラグアイ戦への思いを語りました。
+        image: assets/images/20261116_fukuda_shio_first_call/02_w.jpg
+      - voice: 福田師王
+        text: めちゃくちゃ早く試合に出たいですし、
+        emph: true
+      - voice: 福田師王
+        text: 出たら絶対に点を決めるという気持ちです。
+        emph: true
+      - text: 福田が間近で見て感じたのは、日本代表のレベルの高さでした。
+        image: assets/images/20261116_fukuda_shio_first_call/03_w.jpg
+      - voice: 福田師王
+        text: やっぱり日本を背負うというのは、
+      - voice: 福田師王
+        text: レベルが違うんだな、と改めて思いました。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463294-463294-fl
+  - id: moriyasu
+    heading: 福田師王が代表で感じた先輩たちの強さ
+    tier: 報道
+    telop: 福田師王「相当愛されている監督」
+    say:
+      - text: 森保一監督は、次のパラグアイ戦が最後の試合です。先輩たちは、勝って送り出そうとしていました。福田は、そこに強い絆を感じたそうです。
+      - voice: 福田師王
+        text: 相当愛されている監督だなと思っています。
+      - text: 一方で、自分のことは、まだ満足していません。
+        image: assets/images/20261116_fukuda_shio_first_call/01_w.jpg
+      - voice: 福田師王
+        text: まだまだ自分の良さが出せていない。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463294-463294-fl
+  - id: view
+    viewpoint: true
+    heading: 日本代表でまだ0分の福田に、17日は来るのか
+    tier: 背景
+    telop: 日本代表での出場は、ここまで0分
+    say:
+      - text: 見立てです。日本はブラジル戦で、控えの選手を9人使いました。
+      - text: 福田はその中にいません。9人に比べて、日本代表のピッチに立った時間は0分です。
+        card: {type: table, title: 福田師王 日本代表での出場, columns: [試合, 出場], rows: [[ブラジル戦, 0分（ベンチ外）]], highlight_row: 0}
+      - text: 次のパラグアイ戦は17日。森保監督のラストマッチでもあります。
+        card: none
+        image: assets/images/20261116_fukuda_shio_first_call/03_w.jpg
+      - text: 出番が来たとき、福田の言葉が実現するのか。注目です。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463294-463294-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/401916336

@@ -1,0 +1,149 @@
+# 取材メモ（2026年11月27日）ヨーロッパリーグ第5節 ヴィクトリア・プルゼニ 4-0 ベンフィカ。開幕4連勝のベンフィカが敵地で大敗。この日のキャプテン、トマス・アラウジョ「恥だった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-27。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（site.api.espn.com uefa.europa summary event=401915518、2026-11-26 17:45 UTC、ドゥーサン・アレナ、観客10,207人）: ヴィクトリア・プルゼニ 4-0 ベンフィカ。
+#   30分 フロショフスキー（右足、エリア右からゴール左下。ツェルフのアシスト）／43分 プリンス・アドゥ（右足、エリア中央。カボンゴのアシスト）／
+#   44分 カボンゴ（右足、エリア中央からゴール右上）／46分 カボンゴ（右足、速攻。フロショフスキーのアシスト）。前半は3-0、4点目は後半が始まってすぐの46分。
+#   ボール保持 ベンフィカ 69.3%。シュート プルゼニ 15本（枠内11）、ベンフィカ 16本（枠内2）。
+#   順位（ESPN standings、11/27 取得）: 5位 ベンフィカ 4勝1敗 勝ち点12／19位 プルゼニ 2勝3敗 勝ち点6。
+#   次: 11月30日（月曜）ベンフィカは本拠地でファマリカン戦（ポルトガル・リーグ。ESPN の日程。ルイ・コスタ会長も「月曜に答えを」と話した）。
+# 監督: マルコ・シルヴァ（ESPN 2026-06-09「Marco Silva announced as Jose Mourinho replacement at Benfica」。ベンフィカ公式 11/26 の記事も「マルコ・シルヴァ…águias の監督」）。
+# kicker の見出し「"Eine Schande": Benfica erlebt 0:4-Albtraum in Pilsen」: 本文は kicker が 403 で読めなかった。
+#   「恥（vergonha）」と言ったのは、この試合でキャプテンを務めたセンターバックのトマス・アラウジョ（Observador・Record・SAPO・CNN Portugal の見出しが一致。SportTV のフラッシュインタビュー）。
+#   → 「恥」は監督の言葉ではなく、アラウジョの言葉として扱う。kicker の本文で誰の言葉として書いているかは確かめていない。
+# Observador「Da terceira pior derrota na Liga Europa ao primeiro jogo de Marco Silva sem marcar: Tomás Araújo fala em "vergonha" e pede desculpa」（11/26、SportTV での言葉の全文）:
+#   アラウジョ "Correu tudo mal. No início até estávamos confortáveis com bola, mas depois começámos a ter pouca humildade e a achar que o jogo ia ser fácil.
+#     Resta-nos pedir desculpa aos adeptos que vieram aqui apoiar e aos que ficaram em casa. Foi uma vergonha o que se passou hoje. …
+#     Tínhamos quatro vitórias em quatro jogos e pensávamos que só vínhamos jogar à bola, que era só mais um jogo. Levámos um banho de humildade. Que sirva de lição para os próximos jogos"
+#   マルコ・シルヴァ（同じ SportTV）"Assumo a responsabilidade da forma como aconteceu, dos erros que fomos cometendo e da forma como perdemos um jogo em seis ou sete minutos. Não é normal."
+#     "Alterei nove jogadores. Sentia que era o momento de o fazer." "Foi horrível, não há nada mais a dizer."
+#   地の文: UEFAカップ・ヨーロッパリーグで4点取られたのは16年ぶり（2010年 アンフィールドで1-4）。この大会での負けとしてはクラブ史上3番目の大差（1-5 オリンピアコス 2008/09、0-7 セルタ）。マルコ・シルヴァ体制で初めての無得点。
+# ベンフィカ公式（slbenfica.pt 11/26「"É uma noite para não repetir"」ルイ・コスタ会長）:
+#   "Não é uma noite para esquecer, é uma noite para não repetir." "Um jogo em que nós temos 70% de posse de bola, mas não conseguimos criar uma ocasião de golo e acabamos por sofrer quatro golos."
+#   → 会長の言葉は1行だけ使う（声の量を半分までに抑える）。
+# → 台本の言葉は、ポルトガル語の原文を私が日本語にしたもの。
+# 食い違い:
+#   ・ボール保持: ESPN 69.3%、会長「70%」。→ 台本は ESPN の「69%」。
+#   ・シルヴァ「6、7分で試合を落とした」: ESPN では 43・44・46分の3点（前半の追加時間をはさむ）。→ 監督の言葉としてそのまま訳し、語りでは分だけ言う。
+#   ・「恥」の主: 上のとおりアラウジョ。題材の一覧の「監督が誰か」は一次（ESPN・ベンフィカ公式）でマルコ・シルヴァと確かめた。
+# 【言わないこと】選手個人の採点・名指しの失点の責任（会長も「個人の話はしない」）／リオスの不在の話／先発を9人替えたことの是非（監督の言葉として事実だけ）。
+# 前の本との重なり: 09-17 benfica（ミラン戦の勝ち）・10-28 finance_benfica。今回の試合は扱っていない。
+# 写真: ベンフィカ公式の記事の写真（01＝プルゼニ戦のベンチ前のマルコ・シルヴァ監督、02＝プルゼニ戦のベンフィカの選手（16番。公式のファイル名は manu）、03＝試合のあとのルイ・コスタ会長）。元が 640x837 の縦。
+#   Observador の主写真は Getty なので使わない。アラウジョ本人の、この試合の写真は代理店以外で見つからなかった。
+#   pair/01.jpg＝01と02を pairphoto で横に並べた1枚（サムネと本文の横長用）。
+# 反応: 0件（作らない）。
+slot: world
+date: "2026年11月27日"
+format: news
+no_main: true
+people: [ベンフィカ, ヴィクトリア・プルゼニ, トマス・アラウジョ, マルコ・シルヴァ監督, ルイ・コスタ会長, カボンゴ, フロショフスキー, プリンス・アドゥ]
+
+short_style: Y
+short_hook_quote: 今日起きたことは、恥でした。
+short_photos:
+  - assets/images/20261127_benfica_plzen_0_4/02_v.jpg
+  - assets/images/20261127_benfica_plzen_0_4/01_v.jpg
+  - assets/images/20261127_benfica_plzen_0_4/03_v.jpg
+short_question: ベンフィカは、30日のファマリカン戦で立て直せると思いますか。
+short_telops: []
+
+theme:
+  id: benfica_plzen_0_4
+  league: england
+  league_name: ヨーロッパリーグ
+  prefix: ""
+  title: ベンフィカ、プルゼニに0対4。キャプテンが口にした「恥」の中身
+  hook: ""
+  question: 開幕4連勝のベンフィカは、なぜプルゼニに0対4で敗れたのか
+  takeaway: ボールは69%持ったのに、枠内シュートは2本と11本。前半終了間際からの4分間で3点を失った
+thumbnail:
+  line1: ベンフィカ プルゼニに0-4
+  line2: 主将「恥でした」
+  tags: [ベンフィカ, ヴィクトリア・プルゼニ, ヨーロッパリーグ]
+  photo: assets/images/20261127_benfica_plzen_0_4/pair/01.jpg
+  short_photo: assets/images/20261127_benfica_plzen_0_4/02_v.jpg
+
+answer: 4連勝で「簡単な試合だ」と思ってしまった、とキャプテン自身が認めた。43分から46分までの4分間で3点を失った
+watch: 11月30日、ベンフィカは本拠地でファマリカン戦
+sections:
+  - id: what
+    main: true
+    heading: 開幕4連勝のベンフィカは、なぜプルゼニに0対4で敗れたのか
+    tier: 報道
+    telop: プルゼニ 4-0 ベンフィカ。開幕4連勝からの大敗
+    say:
+      - text: ヨーロッパリーグで開幕4連勝のベンフィカが、チェコでプルゼニに0対4の大敗。
+        image: assets/images/20261127_benfica_plzen_0_4/01_w.jpg
+      - text: この日のキャプテン、トマス・アラウジョはこう話しました。
+        image: assets/images/20261127_benfica_plzen_0_4/02_w.jpg
+      - voice: トマス・アラウジョ
+        text: 今日起きたことは、恥でした。
+        emph: true
+      - voice: トマス・アラウジョ
+        text: 4戦4勝で、ただボールを蹴りに来ただけだと思っていた。
+      - voice: トマス・アラウジョ
+        text: 謙虚さを、思い知らされました。
+        cont: true
+      - text: 試合は30分、フロショフスキーのゴールでプルゼニが先制。
+        image: assets/images/20261127_benfica_plzen_0_4/02_w.jpg
+        card: {type: table, title: プルゼニ 4-0 ベンフィカ, columns: [分, 得点（すべてプルゼニ）], rows: [[30分, フロショフスキー], [43分, プリンス・アドゥ], [44分, カボンゴ], [46分, カボンゴ]], highlight_row: 0}
+      - text: 前半の終わり、43分にプリンス・アドゥ、44分にカボンゴが決めて3点差。
+        image: assets/images/20261127_benfica_plzen_0_4/01_w.jpg
+        card: {type: table, title: プルゼニ 4-0 ベンフィカ, columns: [分, 得点（すべてプルゼニ）], rows: [[30分, フロショフスキー], [43分, プリンス・アドゥ], [44分, カボンゴ], [46分, カボンゴ]], highlight_row: 2}
+      - text: 後半が始まってすぐの46分にも、カボンゴが速攻から決めました。
+        image: assets/images/20261127_benfica_plzen_0_4/02_w.jpg
+        card: {type: table, title: プルゼニ 4-0 ベンフィカ, columns: [分, 得点（すべてプルゼニ）], rows: [[30分, フロショフスキー], [43分, プリンス・アドゥ], [44分, カボンゴ], [46分, カボンゴ]], highlight_row: 3}
+      - text: 43分から46分までのあいだに、3点を失ったことになります。
+        image: assets/images/20261127_benfica_plzen_0_4/01_w.jpg
+        card: none
+    official: false
+    quotes_from: [Observador]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915518
+      - https://observador.pt/2026/11/26/da-terceira-pior-derrota-na-liga-europa-ao-primeiro-jogo-de-marco-silva-sem-marcar-tomas-araujo-fala-em-vergonha-e-pede-desculpa/
+      - https://www.slbenfica.pt/pt-pt/agora/noticias/2026/11/26/futebol-match-center-jogo-viktoria-plzen-benfica-5-jornada-fase-liga-liga-europa
+  - id: coach
+    heading: マルコ・シルヴァ監督は、敗戦をどう受け止めたのか
+    tier: 報道
+    telop: マルコ・シルヴァ監督「責任は私が負う」
+    say:
+      - text: ベンフィカのマルコ・シルヴァ監督は、この試合で先発を9人入れ替えていました。
+        image: assets/images/20261127_benfica_plzen_0_4/01_w.jpg
+      - voice: シルヴァ監督
+        text: ひどい試合でした。それ以上、言うことはありません。
+      - voice: シルヴァ監督
+        text: 6、7分で試合を落とした。普通ではありません。
+        image: assets/images/20261127_benfica_plzen_0_4/02_w.jpg
+      - voice: シルヴァ監督
+        text: その負け方の責任は、私が負います。
+        cont: true
+    official: false
+    quotes_from: [Observador]
+    sources:
+      - https://observador.pt/2026/11/26/da-terceira-pior-derrota-na-liga-europa-ao-primeiro-jogo-de-marco-silva-sem-marcar-tomas-araujo-fala-em-vergonha-e-pede-desculpa/
+      - https://www.slbenfica.pt/pt-pt/agora/noticias/2026/11/26/futebol-marco-silva-declaracoes-pos-jogo-viktoria-plzen-benfica-5-jornada-fase-de-liga-liga-europa
+  - id: view
+    viewpoint: true
+    heading: 数字で見ると、ベンフィカの何が足りなかったのか
+    tier: 報道
+    telop: ボールは69%。枠内シュートは2本と11本
+    say:
+      - text: 見立てです。ボールを持った時間は、ベンフィカが69%でした。
+        image: assets/images/20261127_benfica_plzen_0_4/02_w.jpg
+        emph: true
+        card: {type: table, title: プルゼニ 4-0 ベンフィカ, columns: [項目, ベンフィカ, プルゼニ], rows: [[ボール保持, 69%, 31%], [シュート, 16本, 15本], [枠内シュート, 2本, 11本]], highlight_row: 0}
+      - text: それでも枠内へのシュートは、ベンフィカの2本に対して、プルゼニは11本。
+        card: {type: table, title: プルゼニ 4-0 ベンフィカ, columns: [項目, ベンフィカ, プルゼニ], rows: [[ボール保持, 69%, 31%], [シュート, 16本, 15本], [枠内シュート, 2本, 11本]], highlight_row: 2}
+      - text: ヨーロッパリーグとその前の大会で4点を取られたのは、2010年のリヴァプール戦以来、16年ぶりです。
+        image: assets/images/20261127_benfica_plzen_0_4/03_w.jpg
+        card: none
+      - text: ルイ・コスタ会長は、こう話しています。
+      - voice: ルイ・コスタ会長
+        text: 忘れる夜ではなく、繰り返さない夜です。
+      - text: それでもベンフィカは4勝1敗の5位。次は30日、本拠地でファマリカン戦です。
+    official: false
+    quotes_from: [SL Benfica]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915518
+      - https://observador.pt/2026/11/26/da-terceira-pior-derrota-na-liga-europa-ao-primeiro-jogo-de-marco-silva-sem-marcar-tomas-araujo-fala-em-vergonha-e-pede-desculpa/
+      - https://www.slbenfica.pt/pt-pt/agora/noticias/2026/11/26/futebol-benfica-rui-costa-pos-jogo-viktoria-plzen-benfica-5-jornada-fase-de-liga-liga-europa
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings

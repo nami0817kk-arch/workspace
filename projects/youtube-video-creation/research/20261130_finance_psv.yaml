@@ -1,0 +1,381 @@
+# クラブの財政：PSV（11/30 月、シリーズ「クラブの財政」、key: finance_psv、型は news）。
+#
+# 題材の選び方：デロイトの上位は既出（11/2 アヤックスの控えのとおり）。11/28 のフェイエノールトと対にして、
+#   同じ「チャンピオンズリーグの賞金が減った年」に、フェイエノールトは赤字、PSV は黒字で自己資本が過去最高。★「収益の大きいクラブから」からは外れる。
+# 重なりの確認（11/21）：scripts/*finance_* に psv 無し。PSV の名前の入る本は佐野航大のニュース（20261010・1014・1018・1021・1121）だけで、財政の回は無い。
+#   同じ日（11/30）の別シリーズ：クラブ紹介＝ローマ、監督＝ポステコグルー、世界レジェンド＝アザール（research/20261127_picks.txt）。重ならない。
+# ★今季も1部：fcupdate.nl の 2026/27 エールディヴィジ順位表（11/21 取得）で12試合・首位（勝ち点26）。
+# ★日本との接点：佐野航大は 2026年8月の加入（psv.nl の発表、決算日のあと）なので、この決算には入らない。台本に入れない（10/6 の決定どおり無理に入れない）。
+#
+# **決算期**：PSV N.V.、2025-07-01〜2026-06-30。2026-10-06（火）にクラブが公式の場で発表。
+# ★確かめられなかったこと：クラブの年次報告書・発表文の本文は読めなかった（psv.nl は記事以外が動的で、発表のページも PDF も見つからず）。
+#   数字は報道3社（Omroep Brabant・FCUpdate・Roundtable）が一致して伝えるもの。台本は「報道」の確度。公開前に psv.nl の年次報告書で突き合わせることを勧める。
+# **出どころ**
+#   ○ Omroep Brabant 2026-10-06「PSV ziet eigen vermogen naar recordhoogte stijgen na succesvol jaar」https://www.omroepbrabant.nl/nieuws/6029900/psv-ziet-eigen-vermogen-naar-recordhoogte-stijgen-na-succesvol-jaar
+#     「nettowinst van 6,6 miljoen euro」「eigen vermogen ... 55 miljoen euro, een recordhoogte」「Vorig jaar ... recordomzet van 171 miljoen euro. Dit seizoen daalde die naar 158 miljoen euro」
+#     「PSV kwam afgelopen seizoen één punt tekort om de League Phase van de Champions League te overleven ... Toen reikten de Eindhovenaren tot de laatste zestien」「19 miljoen euro minder aan premies van de UEFA」
+#     「positief transferresultaat van 9 miljoen euro」「Saibari naar Bayern München en Joey Veerman naar Borussia Dortmund niet meegenomen ... samen goed voor ruim 70 miljoen euro」
+#     「84 miljoen euro uitgekeerd aan salarissen en sociale lasten」「contractspelers dalen van negentig naar tachtig」「sponsoring ... 46 miljoen」「merchandiseverkoop ... 12 miljoen」「880.000 toeschouwers ... 25 miljoen euro ... 26 thuiswedstrijden」
+#     「verwacht de club ook volgend seizoen zwarte cijfers te schrijven」
+#   ○ Omroep Brabant 2026-10-06「PSV rekent op prijskaartje van 400 miljoen euro voor uitbreiding stadion」https://www.omroepbrabant.nl/nieuws/6030001/psv-rekent-op-prijskaartje-van-400-miljoen-euro-voor-uitbreiding-stadion
+#     「aparte investering van 400 miljoen euro」 Marcel Brands「Niks doen is geen optie.」「slechts twaalf seizoenkaarten werden opgezegd」「kostenpost van 3,5 miljoen euro aan advieskosten」
+#   ○ FCUpdate 2026-10-06 https://www.fcupdate.nl/voetbalnieuws/2026/10/psv-boekt-zeven-miljoen-winst-record-eigen-vermogen
+#     表：Omzet ruim 158 / Sponsoring & Hospitality ruim 46 / Bedrijfskosten 157 / Operationeel resultaat 1 / Transferresultaat ruim 9 / Nettowinst bijna 7 / Eigen vermogen 55。Saibari 50・Veerman 22。
+#   ○ Roundtable 2026-10-07（英語）https://roundtable.io/sports/soccer/eredivisie/psv-eindhoven/news/psv-announce-nearly-7m-profit-as-equity-reaches-historic-55m-high-after-record-breaking-2025-26-season
+#     「third consecutive Eredivisie title」「positive operating result of €1 million」「Operating expenses increased to €157 million」「52,000-seat」
+#   ○ 前の年（2024-25）：Voetbalprimeur 2025-10「Klinkende jaarcijfers van PSV」https://www.voetbalprimeur.nl/nieuws/1699252/klinkende-jaarcijfers-van-psv-recordomzet-en-nettowinst.html
+#     omzet 170 miljoen（見出し。Omroep Brabant は 171）、kosten ruim 150、positief operationeel resultaat 20,5、nettowinst 7,5（本文に「winst van 7,4」も）、eigen vermogen 48、transferresultaat −9,5、ruim 65 miljoen premies
+# ★食い違い：前の年の収入 170（Voetbalprimeur）と 171（Omroep Brabant）→台本は「約1億7000万」。前の年の最終 7.5 と 7.4 →「約740万」。今年の最終「bijna 7」と 6.6 →台本は 660万（Omroep Brabant の細かい数）。
+#   設備投資 27.5（Omroep Brabant）と 24（Roundtable）は食い違うので使わない。給料の前年比（78 は「salarissen」だけの可能性）も使わない。
+# ★使わなかったもの：2025年夏に売った選手の名前（記事に名前が無い）、ボス監督の話、女子チームの優勝（女子は扱わない）。
+# 自分で計算した数（検算済み）
+#   収入の減り 171−158=13（−7.6%）→約1300万・約8%／本業の悪化 20.5−1=19.5／売買の改善 9−(−9.5)=18.5／最終の差 6.6−7.4=−0.8
+#   費用÷収入 157÷158=99.4%／給料÷収入 84÷158=53.2%→約53%／自己資本の増え 55−48=7
+#   フェイエノールトとの比べ（11/28 の年次報告書の数字）：収入の減り 51.5 対 13／賞金の減り 47.0 対 19／最終 −12.6 対 +6.6／自己資本 24.7 対 55
+date: 2026年11月21日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- PSV
+theme:
+  end_bg: assets/images/20261130_finance_psv/01_w.jpg
+  id: finance_psv
+  league: netherlands
+  league_name: エールディヴィジ
+  kind: other
+  topic: PSV
+  title: PSV、欧州の賞金が1900万ユーロ減っても黒字。自己資本が過去最高になった理由
+  question: PSVは2025-26、チャンピオンズリーグの賞金が前の年より約1900万ユーロ減った。収入も約1億7100万から1億5800万ユーロへ。それでも最終は660万ユーロの黒字で、自己資本は過去最高の5500万ユーロ。なぜか
+  lead: 欧州の賞金は約1900万減。それでも黒字。PSV。
+  opening_image: assets/images/20261130_finance_psv/01_w.jpg
+  takeaway: PSVの2025-26の決算（2026年6月まで、報道による）は、最終が660万ユーロの黒字で、自己資本は過去最高の5500万ユーロ。本業の収支は2050万から100万ユーロへ約1950万悪くなったが、選手の売買の結果がマイナス950万からプラス900万へ約1850万良くなり、ほぼ埋めた。情報は11月21日時点。
+  short_title: PSV、欧州の賞金が減っても黒字。過去最高の自己資本
+thumbnail:
+  layout: number
+  photo: assets/images/20261130_finance_psv/01_w.jpg
+  short_photo: assets/images/20261130_finance_psv/01_w_v.jpg
+  number: 5500万
+  line1: PSV 自己資本が過去最高
+  line2: 欧州の賞金が減っても黒字
+  callouts:
+  - 最終は黒字660万
+  tags:
+  - PSV
+  - クラブの財政
+  - オランダ
+  - エールディヴィジ
+  - フィリップス・スタディオン
+sections:
+- id: rev
+  heading: PSVの収入は、どこが減って、どこが伸びたのか
+  tier: 報道
+  telop: 収入は約1億7100万から1億5800万ユーロへ
+  narrator: 解説
+  card: &rev
+    type: table
+    title: PSVの収入（2025-26、百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - ひとこと
+    rows:
+    - - 収入の合計
+      - '158'
+      - 前の年は約171
+    - - UEFAの賞金
+      - ―
+      - 前の年より約19減
+    - - スポンサーと法人席
+      - '46'
+      - 過去最高
+    - - 入場券
+      - '25'
+      - 26試合・88万人
+    - - グッズ
+      - '12'
+      - 過去最高
+  say:
+  - text: PSVの決算は、2025年7月から2026年6月までの1年間です。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 10月6日に、クラブが発表しました。以下の数字は、報道によります。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 収入は、約1億7100万から1億5800万ユーロへ。約8%の減りです。
+    emph: true
+    card:
+      <<: *rev
+      highlight_row: 0
+  - text: 前の年は、チャンピオンズリーグで、16チームが残る段階まで勝ち上がりました。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: この年は、最初の段階のリーグフェーズで、突破に勝ち点1だけ届きませんでした。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 欧州サッカー連盟からの賞金は、前の年より約1900万ユーロ少なくなりました。
+    emph: true
+    card:
+      <<: *rev
+      highlight_row: 1
+  - text: 一方で、スポンサーと法人席は、4600万ユーロを超えて、過去最高。
+    card:
+      <<: *rev
+      highlight_row: 2
+  - text: 入場券は2500万ユーロ。ホーム26試合に、88万人が来ました。
+    card:
+      <<: *rev
+      highlight_row: 3
+  - text: グッズも、1200万ユーロで過去最高です。
+    card:
+      <<: *rev
+      highlight_row: 4
+  sources:
+  - https://www.omroepbrabant.nl/nieuws/6029900/psv-ziet-eigen-vermogen-naar-recordhoogte-stijgen-na-succesvol-jaar
+  - https://www.fcupdate.nl/voetbalnieuws/2026/10/psv-boekt-zeven-miljoen-winst-record-eigen-vermogen
+  - https://roundtable.io/sports/soccer/eredivisie/psv-eindhoven/news/psv-announce-nearly-7m-profit-as-equity-reaches-historic-55m-high-after-record-breaking-2025-26-season
+- id: cost
+  heading: PSVの費用は、なぜ増えたのか
+  tier: 報道
+  telop: 費用は1億5700万ユーロ。本業の黒字は100万だけ
+  narrator: 解説
+  card: &cost
+    type: table
+    title: PSVの費用と本業の収支（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 費用の合計
+      - '157'
+      - 約150
+    - - 給料と社会保険
+      - '84'
+      - ―
+    - - 本業の収支
+      - '+1'
+      - '+20.5'
+  say:
+  - text: 次に、PSVの費用です。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 費用は、約1億5000万から、1億5700万ユーロへ増えました。
+    emph: true
+    card:
+      <<: *cost
+      highlight_row: 0
+  - text: クラブは、理由に、選手の顔ぶれと、組織や設備への投資を挙げています。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 給料と社会保険には、8400万ユーロ。収入の約53%です。
+    card:
+      <<: *cost
+      highlight_row: 1
+  - text: 契約している選手は、90人から80人に減りました。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: スタジアムを広げる案を調べる費用も、350万ユーロ入っています。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 選手の売買を除いた本業の黒字は、2050万から100万ユーロへ縮みました。
+    emph: true
+    card:
+      <<: *cost
+      highlight_row: 2
+  sources:
+  - https://www.omroepbrabant.nl/nieuws/6029900/psv-ziet-eigen-vermogen-naar-recordhoogte-stijgen-na-succesvol-jaar
+  - https://www.fcupdate.nl/voetbalnieuws/2026/10/psv-boekt-zeven-miljoen-winst-record-eigen-vermogen
+  - https://www.voetbalprimeur.nl/nieuws/1699252/klinkende-jaarcijfers-van-psv-recordomzet-en-nettowinst.html
+- id: main
+  main: true
+  heading: 欧州の賞金が減ったのに、PSVはなぜ黒字だったのか
+  tier: 報道
+  telop: 最終は660万ユーロの黒字。自己資本は過去最高の5500万
+  narrator: 解説
+  card: &pl
+    type: table
+    title: PSVの損益と自己資本（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 本業の収支
+      - '+1'
+      - '+20.5'
+    - - 選手の売買の結果
+      - '+9'
+      - −9.5
+    - - 最終の損益
+      - '+6.6'
+      - '+7.4'
+    - - 自己資本（6月末）
+      - '55'
+      - '48'
+  say:
+  - text: PSVは、2026年6月までの1年間で、660万ユーロの黒字を出しました。
+    short_only: true
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: チャンピオンズリーグを早く去り、収入が減った年です。
+    short_only: true
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 本業の収支の悪化は、約1950万ユーロでした。
+    card:
+      <<: *pl
+      highlight_row: 0
+  - text: 埋めたのは、選手の売買でした。前の年は、950万ユーロのマイナス。
+    card:
+      <<: *pl
+      highlight_row: 1
+  - text: 2025年の夏に選手を入れ替え、この年は900万ユーロのプラスになりました。
+    emph: true
+    card:
+      <<: *pl
+      highlight_row: 1
+  - text: 最終の損益は、660万ユーロの黒字。前の年の約740万に近い額です。
+    emph: true
+    callword: 黒字
+    card:
+      <<: *pl
+      highlight_row: 2
+  - text: 資産から借金などを引いた自己資本は、4800万から5500万ユーロへ。
+    card:
+      <<: *pl
+      highlight_row: 3
+  - text: クラブとして、過去最高の額です。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: リーグでは、3年続けての優勝でした。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  sources:
+  - https://www.omroepbrabant.nl/nieuws/6029900/psv-ziet-eigen-vermogen-naar-recordhoogte-stijgen-na-succesvol-jaar
+  - https://roundtable.io/sports/soccer/eredivisie/psv-eindhoven/news/psv-announce-nearly-7m-profit-as-equity-reaches-historic-55m-high-after-record-breaking-2025-26-season
+  - https://www.voetbalprimeur.nl/nieuws/1699252/klinkende-jaarcijfers-van-psv-recordomzet-en-nettowinst.html
+- id: stadium
+  heading: PSVは、自己資本をスタジアムに使うのか
+  tier: 報道
+  telop: スタジアムを広げる案は、約4億ユーロ
+  narrator: 解説
+  say:
+  - text: いま、PSVが考えているのが、本拠地フィリップス・スタディオンを広げる案です。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 席を5万2000まで増やす案で、かかる額は約4億ユーロと見込まれています。
+    emph: true
+    card: &stad
+      type: stats
+      title: フィリップス・スタディオンの拡張
+      items:
+      - - 約4億
+        - ユーロ
+        - 見込みの費用
+      - - 5万2000
+        - 席
+        - 広げたあと
+      - - 約7
+        - 倍
+        - 自己資本と比べて
+      focus: 0
+  - text: いまの自己資本の、約7倍です。
+    card:
+      <<: *stad
+      focus: 2
+  - text: ただ、その自己資本は、拡張に充てるお金ではないとされています。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 昨季、解約されたシーズンチケットは、わずか12枚だったといいます。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: クラブの責任者の一人、マルセル・ブランツは、こう話しました。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 「何もしないという選択肢はない」。
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  sources:
+  - https://www.omroepbrabant.nl/nieuws/6030001/psv-rekent-op-prijskaartje-van-400-miljoen-euro-voor-uitbreiding-stadion
+  - https://roundtable.io/sports/soccer/eredivisie/psv-eindhoven/news/psv-announce-nearly-7m-profit-as-equity-reaches-historic-55m-high-after-record-breaking-2025-26-season
+- id: view
+  heading: 見立て・PSVとフェイエノールト、同じ年に何が分かれたのか
+  tier: 背景
+  telop: 本業の悪化を、選手の売買の改善がほぼ埋めた
+  narrator: 解説
+  viewpoint: true
+  card: &view
+    type: table
+    title: 自分で比べてみた（2025-26の決算）
+    columns:
+    - 比べ
+    - PSV
+    - フェイエノールト
+    rows:
+    - - 収入の減り
+      - 約1300万
+      - 約5150万
+    - - 欧州の賞金の減り
+      - 約1900万
+      - 約4700万
+    - - 最終の損益
+      - +660万
+      - −1260万
+    - - 自己資本
+      - 5500万
+      - 2469万
+  say:
+  - text: 見立てに入ります。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 同じリーグのフェイエノールトと、同じ時期の決算を比べます。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 収入の減りは、PSVが約1300万ユーロ。
+    emph: true
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: フェイエノールトは、約5150万ユーロ減りました。
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 欧州の賞金の減りも、PSVの約1900万に対し、フェイエノールトは約4700万。
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 最終は、PSVが黒字、フェイエノールトは1260万ユーロの赤字。
+    mark:
+      kind: circle
+      row: 2
+      col: 1
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 題への答えです。PSVは、本業の悪化を、選手の売買の改善でほぼ埋めました。
+    emph: true
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 売買の改善は、本業の悪化の約95%を埋めた計算です。
+    emph: true
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  - text: 決算のあと、サイバリがバイエルンへ、フェールマンがドルトムントへ移りました。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 移籍金は合わせて7000万ユーロ以上。この年の売買の結果の、約8倍です。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: クラブは、今季も黒字を見込んでいます。
+    image: assets/images/20261130_finance_psv/02_w.jpg
+    card: none
+  - text: 次の決算の注目は、売買の利益に頼らず、本業の収支をどこまで戻せるのか。
+    emph: true
+    image: assets/images/20261130_finance_psv/01_w.jpg
+    card: none
+  sources:
+  - https://www.omroepbrabant.nl/nieuws/6029900/psv-ziet-eigen-vermogen-naar-recordhoogte-stijgen-na-succesvol-jaar
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf

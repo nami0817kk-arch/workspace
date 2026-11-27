@@ -1,0 +1,24 @@
+{
+ "roma": {
+  "トッティ": {
+   "role": "legend",
+   "file": "assets/photos/sa/roma/roma_legend_3c1ee1f5.jpg",
+   "page": "Francesco Totti"
+  },
+  "デ・ロッシ": {
+   "role": "legend",
+   "file": "assets/photos/sa/roma/roma_legend_ce2897f1.jpg",
+   "page": "Daniele De Rossi"
+  },
+  "バティストゥータ": {
+   "role": "legend",
+   "file": "assets/photos/sa/roma/roma_legend_a1f9675a.jpg",
+   "page": "Gabriel Batistuta"
+  },
+  "ジャン・ピエロ・ガスペリーニ": {
+   "role": "manager",
+   "file": "assets/photos/sa/roma/roma_manager_c32f611c.jpg",
+   "page": "Gian Piero Gasperini"
+  }
+ }
+}

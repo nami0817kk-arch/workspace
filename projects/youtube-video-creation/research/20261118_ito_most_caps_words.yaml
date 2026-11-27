@@ -1,0 +1,167 @@
+# 取材メモ（2026年11月18日）伊東純也、森保ジャパン最多出場の8年「そのおかげで成長できた」（冒頭は「本当に勝ちたかった」）（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-18「伊東純也、森保ジャパンのラストマッチ後に語る…」（記者名なし・編集部。全文）
+#   https://www.soccer-king.jp/news/japan/national/20261118/2229252.html
+#   ゲキサカ 2026-11-18（取材・文 竹内達也）「伊東純也、大卒プロから森保J最多出場&最多G+A「これも自分の道だったのかなと」」（全文）
+#   https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+# 写真の出どころ（伊東本人の写真。_pool.png を目で見て、サッカーキング 11/18 の主写真は Getty 表記のため外した。日本代表の集合写真2枚・別人は外した）:
+#   09: https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl （今回の記事の主写真）
+#   02: https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl ／ 03: https://web.gekisaka.jp/news/japan/detail/?463112-463112-fl ／ 04: https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+#   ※02〜04 は 11/16 の伊東の回（20261116_ito_last_match）と同じ元記事の写真。今日の記事側に使える新しい写真が1枚しか無かったため足した。
+# 写真（最終）: 09＝ゲキサカ463396（今回）、02・03＝11/16の回の元記事、04＝サッカーキング11/12（解像度が低いので縦の short_photos だけに使い、本編の image: には使わない）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC、シンガポール国立競技場）: 日本 1-2 パラグアイ。
+#       2分 パラグアイ（セットプレー）／40分 パラグアイ／85分 福田師王（日本）。伊東純也は前半終了後の45分に相馬勇紀と交代で途中出場（先発ではない）。
+#       → 記事の「2点ビハインドで迎える後半スタートから伊東は左サイドで出場」「1-2で敗戦」と一致。
+#   ・サッカーキング（本人の言葉。字は変えない）:
+#       「森保さんの最後というところでは勝って終わりたかったです。本当に勝ちたかった」
+#       「立ち上げのところから呼んでもらって、ずっと呼んでもらったので感謝したいですし、信頼して使ってもらってたので、そのおかげで成長できたなっていう部分もあります」
+#       「1試合1試合本当に必死にやってきただけなんですけど、監督にも仲間にも恵まれましたし、アシストはやっぱりどんなにいいボール上げても決めてもらわなきゃつかないので。その仲間があってこそだと思います」
+#   ・ゲキサカ（本人の言葉。字は変えない）:
+#       「大卒の選手は本当に時間がないと思いますし、すぐに結果を出さないといけないという部分はあると思うので、そういう意味では1年目から試合に使ってもらって、ずっと試合に出られたという部分が大きかったですし、年々成長できたところだと思います」
+#       「もっと早い段階で活躍したかったなというのはありますけど、まあこれも自分の道だったのかなと思います」
+#       「『ごめんな』『最初から使ってあげたいけど』みたいな感じで、気を使ってもらっているなと思います」（森保監督との関係）
+#   ・ゲキサカ（地の文）: 初陣のコスタリカ戦は後半40分からの出場でA代表初ゴール、続く10月のパナマ戦は先発でまた得点。
+#       ESPN で確認: コスタリカ戦（event=512438、2018-09-11）日本 3-0。伊東は85分に堂安律と交代で途中出場、90+3分にゴール（アシスト 浅野拓磨）。
+#       パナマ戦（event=511125、2018-10-12）日本 3-0。伊東は先発、66分にゴール。→ 記事と一致。
+# 食い違い（台本では使わない）:
+#   ・伊東の出場数: サッカーキング「76試合で16得点」、ゲキサカ「75試合目の出場」「75試合16ゴール29アシスト」。同じ日の記事で1試合ちがう。
+#     11/16 の台本は「75試合」（試合前）。パラグアイ戦に出たなら76のはずだが、記事どうしで合わないので、今回は試合数を言わない。「最多出場」（両記事一致）だけ使う。
+#   ・取材の依頼文は「日本0-2パラグアイ」だったが、ESPN・サッカーキング・ゲキサカとも 1-2。台本は 1-2。
+# 自分で数えたもの: 初陣とラストマッチの伊東の出場の形。初陣は85分から途中出場（ESPN）、ラストマッチも後半（45分）から途中出場（ESPN）。どちらもベンチ発。
+# 前の本との重なり: 20261116_ito_last_match（試合前の「ほとんどの試合で使ってもらってきた」・出場75試合・関与45）／20261113_ito_brazil_improve。
+#   → 今回の初出: 試合後の言葉（本当に勝ちたかった・おかげで成長できた・仲間のおかげ・大卒の自分の道）と初陣・2戦目の得点。出場数・関与45は繰り返さない。
+# 【言わないこと】出場数の数字（食い違い）／大岩新体制の話／ブラジル戦の話（前の回と重なる）。
+# 本人の言葉: あり（伊東純也。サッカーキング・ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [伊東純也, 森保一]
+
+short_style: Y
+short_hook_quote: 本当に勝ちたかった
+short_photos:
+  - assets/images/20261118_ito_most_caps_words/09_v.jpg
+  - assets/images/20261118_ito_most_caps_words/03_v.jpg
+  - assets/images/20261118_ito_most_caps_words/04_v.jpg
+  - assets/images/20261118_ito_most_caps_words/02_v.jpg
+short_question: 森保ジャパンの8年間で、いちばん印象に残っている伊東純也のプレーは何ですか。
+short_telops: []
+
+theme:
+  id: ito_most_caps_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 伊東純也、森保ジャパン最多出場の8年を語る「そのおかげで成長できた」
+  hook: ""
+  question: 森保ジャパンで最多出場の伊東純也は、ラストマッチの後に何を語ったのか
+  takeaway: 伊東純也は、初陣のコスタリカ戦も、ラストマッチのパラグアイ戦もベンチから途中出場した。初陣は85分から出て初ゴール、最後は後半から出て1対2の敗戦を見届けた
+
+thumbnail:
+  layout: face
+  line1: 伊東純也 森保J最多出場
+  line2: 「本当に勝ちたかった」
+  tags: [伊東純也, 森保一, 日本代表]
+  photo: assets/images/20261118_ito_most_caps_words/03_w.jpg
+  short_photo: assets/images/20261118_ito_most_caps_words/09_v.jpg
+
+answer: 勝って終わりたかった。呼び続けてもらい、信頼して使ってもらったおかげで成長できた
+watch: 日本代表の次は、来年3月の大岩ジャパン
+
+sections:
+  - id: what
+    main: true
+    heading: ラストマッチの後、伊東純也は何を語ったのか
+    tier: 報道
+    telop: 伊東純也「本当に勝ちたかった」
+    say:
+      - text: ラストマッチに敗れた日本代表。後半から出た伊東純也は、試合後にこう語りました。
+        image: assets/images/20261118_ito_most_caps_words/09_w.jpg
+      - voice: 伊東純也
+        text: 森保さんの最後というところでは、勝って終わりたかったです。
+      - voice: 伊東純也
+        text: 本当に勝ちたかった。
+        image: assets/images/20261118_ito_most_caps_words/03_w.jpg
+        emph: true
+      - text: 森保ジャパンで最多出場の伊東は、立ち上げのときから呼ばれ続けた選手です。
+        image: assets/images/20261118_ito_most_caps_words/03_w.jpg
+      - voice: 伊東純也
+        text: 立ち上げのところから呼んでもらって、
+      - voice: 伊東純也
+        text: ずっと呼んでもらったので感謝したいですし、
+        image: assets/images/20261118_ito_most_caps_words/02_w.jpg
+        cont: true
+      - voice: 伊東純也
+        text: 信頼して使ってもらってたので、
+        cont: true
+      - voice: 伊東純也
+        text: そのおかげで成長できたなっていう部分もあります。
+        image: assets/images/20261118_ito_most_caps_words/09_w.jpg
+        cont: true
+        emph: true
+      - text: ゴールやアシストの数字については、こう話しています。
+      - voice: 伊東純也
+        text: 監督にも仲間にも恵まれましたし、
+        image: assets/images/20261118_ito_most_caps_words/02_w.jpg
+      - voice: 伊東純也
+        text: アシストはやっぱり、どんなにいいボールを上げても、
+        cont: true
+      - voice: 伊東純也
+        text: 決めてもらわなきゃつかないので、
+        image: assets/images/20261118_ito_most_caps_words/09_w.jpg
+        cont: true
+      - voice: 伊東純也
+        text: その仲間があってこそだと思います。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229252.html
+      - https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: game
+    heading: 伊東は、森保ジャパンの最初の2試合で、どう結果を出したのか
+    tier: 報道
+    telop: 初陣のコスタリカ戦、2戦目のパナマ戦で、どちらも得点
+    say:
+      - text: 伊東が森保ジャパンで初めて呼ばれたのは、2018年9月。
+        image: assets/images/20261118_ito_most_caps_words/03_w.jpg
+      - text: 初陣のコスタリカ戦は85分から出て、90分すぎに代表初ゴール。
+        card: {type: table, title: 伊東純也 森保ジャパンの最初の2試合, columns: [試合, 出場, ゴール], rows: [[コスタリカ戦（2018年9月11日）, 85分から途中出場, 90分すぎ], [パナマ戦（2018年10月12日）, 先発, 66分]], highlight_row: 1}
+      - text: 続く10月のパナマ戦は先発して、また点を取りました。
+        card: none
+      - text: 大学を出てプロになった伊東は、全国的に名前が知られた存在ではありませんでした。
+        image: assets/images/20261118_ito_most_caps_words/02_w.jpg
+      - text: 自分の道を、こう振り返っています。
+      - voice: 伊東純也
+        text: もっと早い段階で活躍したかったなというのはありますけど、
+        image: assets/images/20261118_ito_most_caps_words/03_w.jpg
+      - voice: 伊東純也
+        text: まあこれも自分の道だったのかなと思います。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+      - https://www.espn.com/soccer/match/_/gameId/512438
+      - https://www.espn.com/soccer/match/_/gameId/511125
+  - id: view
+    viewpoint: true
+    heading: 初陣も、ラストマッチも、伊東はベンチからどう入ったのか
+    tier: 背景
+    telop: 初陣もラストマッチも、途中出場から
+    say:
+      - text: 見立てです。伊東は、初陣もラストマッチも、ベンチから入りました。
+        card: {type: table, title: 伊東純也の森保ジャパン 最初と最後, columns: [試合, 出場], rows: [[初陣 コスタリカ戦（2018年9月11日）, 85分から途中出場], [ラストマッチ パラグアイ戦（2026年11月17日）, 後半（45分）から途中出場]], highlight_row: 1}
+        image: assets/images/20261118_ito_most_caps_words/09_w.jpg
+      - text: 森保監督との8年は、途中出場で始まり、途中出場で終わりました。
+        card: none
+        emph: true
+      - text: 次の代表活動は、来年3月に始まる大岩ジャパン。伊東は変わらない姿勢で臨む構えです。
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+      - https://www.espn.com/soccer/match/_/gameId/512438

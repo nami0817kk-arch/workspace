@@ -1,0 +1,88 @@
+title: 11月25日のショート題材
+lead: 海外フィード約390件と日本語の海外組ニュースから10件をClaudeが選びました（日本人6件・海外4件）。取材で前提が崩れたら次点に差し替えます。
+note: 水曜（25日）の朝7時に集めました。見出しからの選定。次点：新川志音（19歳）の欧州初弾→次節の一発退場、荒木遼太郎が誘ったGK退場とテロップの小久保、アーセナル1-1ドルトムント（ギョケレスの一撃）、ヨロの退場取り消し（マンUはブルーノと同じクラブのため外す）。外した：田中碧の契約延長（11/24 に作成済み）、塩貝健人の負傷（11/24 作成済み）、クリスタル・パレスの勝ち点剥奪（女子のため）、上田綺世のバイエルン戦（今夜の試合のあと）、ヤマル抜きのバルサ（11/24 と同じ話）、セネガルのアフリカ杯王者（欧州7リーグの外）、U-17W杯（年代別）、吉田麻也のギャラクシー退団（MLS）。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 鈴木彩艶、CLガラタサライ戦で終盤に“流血”のヘディング弾を浴びてヴィラは2連敗
+  why: 条件：代表GK・CL・本人の言葉があればY。11/23・11/24 とは別の試合。
+  src: ESPN 試合データ / ゲキサカ・フットボールチャンネル（11/25）
+  url: https://web.gekisaka.jp/news/ucl/detail/?463835-463835-fl
+  fmt: news
+- num: 2
+  slot: 日本人（代表）
+  head: 佐野航大が先発したベルナベウ。PSVは前半リードもレアルが後半5発、エムバペ2発
+  why: 条件：代表・大物（エムバペ・ベリンガム）・CL。本人の言葉があればY。
+  src: ESPN 試合データ / フットボールチャンネル（11/25）
+  url: https://www.espn.com/soccer/match/_/gameId/401915298
+  fmt: news
+- num: 3
+  slot: 日本人（代表）
+  head: 小久保玲央ブライアンがシント＝トロイデンと契約延長。9月に代表デビューの25歳GK
+  why: 条件：代表GK・クラブの発表に本人の談話があればY。
+  src: クラブ公式 / サッカーキング（11/24）
+  url: https://www.soccer-king.jp/news/world/world_other/20261124/2230698.html
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 菅原由勢、サウサンプトン退団は「もはや避けられない」。カリアリで出場機会が限られる
+  why: 条件：代表DF。英メディアの見立て（報道）。
+  src: Football League World / フットボールトライブ（11/24）
+  url: https://football-tribe.com/japan/2026/11/24/361712/
+  fmt: news
+- num: 5
+  slot: 日本人（代表）
+  head: 前田大然の元同僚、韓国代表ヤン・ヒョンジュンが「本当に寂しい」。ダイゼンから多くを学んだ
+  why: 条件：代表FW・話者の言葉あり（Y）。
+  src: デイリー・レコード / フットボールゾーン（11/24）
+  url: https://www.football-zone.net/archives/686965
+  fmt: quote
+- num: 6
+  slot: 日本人（代表）
+  head: 代表監督を退いた森保一氏に「インテル監督」論。3バックの親和性を挙げる海外メディア
+  why: 条件：代表・大物クラブ。11/18ごろの「就活」の回とは別の新しい話。確度は報道止まり。
+  src: Jリーグインサイダー / フットボールトライブ（11/24）
+  url: https://football-tribe.com/japan/2026/11/24/361693/
+  fmt: news
+- num: 7
+  slot: 海外
+  head: デ・ブライネ、ナポリの選手としてエティハドへ。横断幕と拍手、試合は2-2
+  why: 条件：大物・本人の言葉があればY。11/24 の「有罪」の回とは別の出来事。
+  src: ESPN 試合データ / ガゼッタ（11/25）
+  url: https://www.gazzetta.it/Calcio/Serie-A/Napoli/24-11-2026/city-napoli-striscioni-cori-e-applausi-per-de-bruyne.shtml
+  fmt: quote
+- num: 8
+  slot: 海外
+  head: ブルーノ・フェルナンデス、古巣スポルティングに戻る可能性に「なぜダメなんだ？ここで幸せだった」
+  why: 条件：大物・本人の言葉→Y。今夜のスポルティング戦の前。
+  src: Sport TV / A Bola（11/24）
+  url: https://www.abola.pt/noticias/fui-feliz-aqui-e-gostava-de-voltar-a-ser-bruno-fernandes-sobre-possivel-regresso-ao-sporting-2026112419333493388
+  fmt: quote
+- num: 9
+  slot: 海外
+  head: ラ・リーガ通算最多勝のシメオネ、批判に反論「守備だけで345試合も勝てるのか？」
+  why: 条件：記録・本人の言葉→Y。
+  src: ゲキサカ（11/24）
+  url: https://web.gekisaka.jp/news/world/detail/?463811-463811-fl
+  fmt: quote
+- num: 10
+  slot: 海外
+  head: ケインを欠くバイエルン、コンパニ監督「180点のうち130点がいま居ない」
+  why: 条件：大物・本人の言葉→Y。11/22 のケイン手術の回とは別（監督の言葉と数字）。
+  src: キッカー（11/24）
+  url: https://www.kicker.de/kompany-130-von-180-toren-sind-jetzt-weg-1274709/video
+  fmt: quote
+- num: 11
+  slot: 日本人（差し替え）
+  head: 新川志音（19歳）、ベルギー初ゴールの次の試合で一発退場。元審判は「不運だがレッドは正しい」
+  why: 6の森保一氏の回の差し替え（元の J-League Insider の記事が見つからず、前提が弱いため外した）。
+  src: ESPN 試合データ / Voetbalkrant・Voetbalbelgie（11/21〜24）
+  url: https://www.football-zone.net/archives/686956
+  fmt: quote
+- num: 12
+  slot: 海外（差し替え）
+  head: ギェケレシュ、ドルトムント戦で本拠地弾も1-1。「勝つべき試合だった」
+  why: 10のコンパニの回の差し替え（「130点」が誰の得点か確かめられなかったため外した）。本人の言葉→Y。
+  src: ESPN 試合データ / football.london（11/25）
+  url: https://www.espn.com/soccer/match/_/gameId/401915295
+  fmt: quote

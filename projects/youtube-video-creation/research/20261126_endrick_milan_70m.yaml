@@ -1,0 +1,154 @@
+# 取材メモ（2026年11月26日）ミランがレアル・マドリードのエンドリッキに7000万ユーロのオファー、とスペインで報道。モウリーニョは手放したくない（ニュースのショート。見せ方 Y＝エンドリッキ本人の言葉から始める。確度は報道どまり）
+# 追記（親・書き出し後）: qc.png でモウリーニョ監督の言葉の行にエンドリッキの写真が出ていた（話す人を画面に出す決まり）。監督の言葉の行に 06 を明示し、冒頭の本人の言葉にも写真の入れ替えを3か所足した（「モウリーニョ監督が決める」の行は監督を映す）。語りは変えていない。
+# 取材: 2026-11-26。requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない（見出しは Google ニュースの RSS の見出しだけ）。
+# 題材の元: Football Italia（11/25 17:32 UTC）「Report: AC Milan have €70m Endrick offer ready for Real Madrid talent」（全文）
+#   "Spanish reports claim Milan are ready to offer €70m in January" "Cadena SER suggest that the proposal is very much real, with €70m on the table for a January transfer."
+#   地の文: レアルはパルメイラスから2024年夏に 4750万ユーロで獲った。モウリーニョは早く売るのは間違いと考える。エンドリッキは短期の移籍（レンタル）をもう望んでいない。
+#   写真は Getty（キャプションに Getty Images）→ 使わない。 https://football-italia.net/report-milan-have-e70m-endrick-offer-ready/
+#   → イタリアの各紙（Tuttosport「media di Madrid svelano」、TMW「Dalla Spagna」など）も「スペインから」と書いている。**原典はスペインのカデナ・セール**。
+# 原典: カデナ・セール（11/23 15:37 UTC）「La oferta del Milan por Endrick es firme: 70 millones de euros para llevárselo en invierno」（全文）
+#   アントン・メアナ記者: ミランのオファーは正式（formal）で、1月に連れて行きたい。ミランはすでに本人に伝えた。1月がだめなら夏に交渉するかを見る。
+#   "El dueño del Milan quiere ofrecer cerca de 70 millones de euros"（＝「約7000万」。台本は「7000万ユーロ」と言い、「約」は見出しに合わせて落とさない→「およそ7000万」と言う）
+#   モウリーニョは手元に置きたい（同じ水準のFWを冬に取れないと分かっているから）。代理人たちが今週か来週の初めにマドリードに来て話す。メアナ「エンドリッキは出ていかないと思う」。
+#   https://cadenaser.com/nacional/2026/11/23/la-oferta-del-milan-por-endrick-es-firme-70-millones-de-euros-para-llevarselo-en-invierno-cadena-ser/
+# カデナ・セール（11/24 00:25 UTC）: 1月に70百万を投じる用意。レアル側はメアナに「本人が出ていきたいという話は把握していない」。代理人は今週マドリードへ。本人が出たいと言わない限り状況は変わらない。
+#   https://cadenaser.com/nacional/2026/11/24/la-tentadora-oferta-del-milan-al-real-madrid-por-endrick-setenta-kilos-por-el-futbolista-19-o-20-de-la-plantilla-es-para-tener-en-cuenta-cadena-ser/
+# エンドリッキ本人の言葉（カデナ・セール 11/17「Endrick manifiesta su compromiso con el Real Madrid…」、シンガポール戦のあとのミックスゾーン。スペイン語訳で掲載、元はポルトガル語）:
+#   "Creo que es una decisión de Mourinho"
+#   "Siempre estoy listo para ayudar al Real Madrid, que es el club más grande del mundo. Espero poder pasar mi vida allí para ayudar al Real y para estar siempre a la ayuda de mis compañeros"
+#   → オファーの報道（11/23）より前の言葉。台本では「報道の1週間ほど前」と時期を言ってから引く。訳は私がスペイン語から日本語にしたもの。
+#   https://cadenaser.com/nacional/2026/11/17/endrick-manifiesta-su-compromiso-con-el-real-madrid-y-senala-al-responsable-de-su-falta-de-minutos-es-una-decision-de-mourinho-cadena-ser/
+# モウリーニョ監督の言葉（レアル公式「rp-mourinho-pre-rm-celta-20-11-2026」に会見の全文。カデナ・セール 11/20 も同じ。スペイン語）:
+#   公式の全文には途中に "Ya tenéis la respuesta tú, la gente que escribe, sus agentes y todos los clubes que mandan noticias para los periódicos." もある（使わない）。
+#   "Quiero mucho a Endrick, es un niño fantástico y tengo mucho cariño por él, pero para mí el Real Madrid es más importante que Endrick. Significa que el Real Madrid lo necesita y el entrenador lo necesita. Después, si el Real Madrid como estructura superior y mis superiores deciden una cosa diferente, en el fútbol de hoy hay que respetar."
+#   https://cadenaser.com/nacional/2026/11/20/jose-mourinho-no-descarta-que-el-regreso-de-vinicius-a-laliga-sea-como-suplente-aqui-no-tenemos-jugadores-con-privilegios-cadena-ser/
+# レアル・マドリード公式（11/23 11:30 UTC「Parte médico de Endrick」全文）: 左脚の内転筋の筋損傷。経過を見る（Pendiente de evolución）。
+#   https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/partes-medicos/parte-medico-de-endrick-23-11-2026
+# 食い違い:
+#   ・額: カデナ・セール 11/23「cerca de 70」（約7000万）、11/24 と各紙「70」→「およそ7000万ユーロ」。
+#   ・オファーの段階: カデナ・セール「formal／firme（正式）」、Football Italia「ready（用意）」、イタリア各紙「pronti／offerta」→「正式なオファーを出した、と報じられた」とし、確度は報道。クラブ（ミラン・レアル）の発表は無い。
+#   ・パルメイラスへの移籍金: Football Italia の 4750万ユーロ（報道）。クラブの発表額ではないので「報道で」と添える。
+# 自分で数えたもの: 7000万 − 4750万 ＝ 2250万ユーロ（約1.5倍）。
+# 前の本との重なり: 直近3日（11/23〜26）にエンドリッキの回は無い（scripts を grep）。
+# 【言わないこと】ミランの監督名（カデナ・セールはアモリムと書くが確かめていない）／ロック・ネイションの話（Tribuna の見出しだけ）／ローマの話／カデナ・セールのコメンテーターの評価（「19番目か20番目の選手」）。
+# 写真: 05＝レアル・マドリード公式の「Parte médico de Endrick」の主写真（レアルのユニフォーム）、06＝レアル公式の11/24 会見記事の主写真（モウリーニョ）、_c/01＝Commons「Endrick-Palmeiras-Liverpool-abr24.jpg」CC BY-SA 4.0 NullReason（2024年パルメイラス時代。他に代理店でない写真が無いので使う）。
+#   _m/01＝Commons「José Mourinho 2020 (cropped).jpg」CC BY-SA 4.0 Steffen Prößdorf（2020年。会見の行でレアル公式の06と交互に出し、同じ絵が続かないようにするためだけに使う）。
+#   外したもの: カデナ・セールの主写真4枚（Anadolu／EFE／Koji Watanabe＝Getty の撮影者／出どころ不明のミランの紋章との合成）、Football Italia（Getty）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [エンドリッキ, レアル・マドリード, ミラン, モウリーニョ監督]
+
+short_style: Y
+short_hook_quote: いつでもレアルを助ける準備はできています。
+short_photos:
+  - assets/images/20261126_endrick_milan_70m/05_v.jpg
+  - assets/images/20261126_endrick_milan_70m_c/01_v.jpg
+  - assets/images/20261126_endrick_milan_70m/06_v.jpg
+short_question: エンドリッキは、1月にミランへ移ると思いますか。
+short_telops: []
+
+theme:
+  id: endrick_milan_70m
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: エンドリッキにミランが7000万ユーロ。モウリーニョが手放したくない理由
+  hook: ""
+  question: ミランのオファーが報じられたエンドリッキを、本人とモウリーニョはどう見ているのか
+  takeaway: 報じられた額は、レアルがパルメイラスに払ったとされる4750万ユーロより2250万多い。ただ本人は「レアルで一生を」と話し、モウリーニョも「レアルには彼が必要」と言う。23日には左脚の内転筋を痛めた
+thumbnail:
+  layout: face
+  line1: エンドリッキにミラン
+  line2: 7000万ユーロのオファー
+  tags: [エンドリッキ, レアル・マドリード]
+  photo: assets/images/20261126_endrick_milan_70m/05_w.jpg
+  short_photo: assets/images/20261126_endrick_milan_70m/05_v.jpg
+
+answer: 本人は「レアルで一生を」、モウリーニョは「レアルには彼が必要」。どちらも残る方を向いている
+watch: 代理人とレアルの話し合い、1月の移籍市場
+
+sections:
+  - id: what
+    main: true
+    heading: エンドリッキに、ミランは何を差し出したのか
+    tier: 報道
+    telop: ミランがおよそ7000万ユーロのオファー、と報道
+    say:
+      - text: ミランが7000万ユーロを用意、と報じられたレアルのエンドリッキ。その前の週、こう話していました。
+      - voice: エンドリッキ
+        text: 出場時間は、モウリーニョ監督が決めることだと思います。
+        image: assets/images/20261126_endrick_milan_70m/05_w.jpg
+      - voice: エンドリッキ
+        text: いつでもレアルを助ける準備はできています。
+        image: assets/images/20261126_endrick_milan_70m/05_w.jpg
+        emph: true
+      - voice: エンドリッキ
+        text: 世界でいちばん大きなクラブですから。
+        cont: true
+      - voice: エンドリッキ
+        text: ここで一生を過ごして、チームを助けたいです。
+        image: assets/images/20261126_endrick_milan_70m_c/01_w.jpg
+      - text: レアルで出番が限られる20歳に、ミランは正式なオファー。1月の移籍を狙っている、と報じられています。
+        image: assets/images/20261126_endrick_milan_70m_c/01_w.jpg
+      - text: ミランはすでに、本人にもこの話を伝えたといいます。
+      - text: 代理人たちも今週、マドリードに来て話し合う予定です。
+        image: assets/images/20261126_endrick_milan_70m/05_w.jpg
+    official: false
+    quotes_from: [カデナ・セール]
+    sources:
+      - https://cadenaser.com/nacional/2026/11/23/la-oferta-del-milan-por-endrick-es-firme-70-millones-de-euros-para-llevarselo-en-invierno-cadena-ser/
+      - https://cadenaser.com/nacional/2026/11/24/la-tentadora-oferta-del-milan-al-real-madrid-por-endrick-setenta-kilos-por-el-futbolista-19-o-20-de-la-plantilla-es-para-tener-en-cuenta-cadena-ser/
+      - https://cadenaser.com/nacional/2026/11/17/endrick-manifiesta-su-compromiso-con-el-real-madrid-y-senala-al-responsable-de-su-falta-de-minutos-es-una-decision-de-mourinho-cadena-ser/
+      - https://football-italia.net/report-milan-have-e70m-endrick-offer-ready/
+  - id: mourinho
+    heading: モウリーニョ監督は、エンドリッキをどう見ているのか
+    tier: 確定
+    telop: モウリーニョ監督「レアルには彼が必要」
+    say:
+      - text: 一方、モウリーニョ監督は20日の会見で、エンドリッキの去就をこう話しました。
+        image: assets/images/20261126_endrick_milan_70m/06_w.jpg
+      - voice: モウリーニョ監督
+        text: エンドリッキのことは大好きです。
+        image: assets/images/20261126_endrick_milan_70m/06_w.jpg
+      - voice: モウリーニョ監督
+        text: でも私にとっては、エンドリッキより、
+        image: assets/images/20261126_endrick_milan_70m_m/01_w.jpg
+      - voice: モウリーニョ監督
+        text: レアル・マドリードのほうが大事です。
+        cont: true
+      - voice: モウリーニョ監督
+        text: つまり、レアルには彼が必要だということです。
+        image: assets/images/20261126_endrick_milan_70m/06_w.jpg
+        cont: true
+        emph: true
+      - voice: モウリーニョ監督
+        text: クラブの上の人たちが違う決断をするなら、それは尊重します。
+        image: assets/images/20261126_endrick_milan_70m_m/01_w.jpg
+      - text: 冬の移籍市場では、同じ力のフォワードは取れない。それが監督の考えだそうです。
+    official: true
+    quotes_from: [Real Madrid CF]
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/ruedas-de-prensa/rp-mourinho-pre-rm-celta-20-11-2026
+      - https://cadenaser.com/nacional/2026/11/20/jose-mourinho-no-descarta-que-el-regreso-de-vinicius-a-laliga-sea-como-suplente-aqui-no-tenemos-jugadores-con-privilegios-cadena-ser/
+  - id: view
+    viewpoint: true
+    heading: 7000万ユーロは、レアルが払った額と比べてどうか
+    tier: 報道
+    telop: 報道の額は、獲ったときより2250万ユーロ多い
+    say:
+      - text: 見立てです。レアルがブラジルのパルメイラスから獲ったときの額は、報道で4750万ユーロ。
+        image: assets/images/20261126_endrick_milan_70m/05_w.jpg
+        card: {type: calc, title: エンドリッキの額（報道）, terms: [[7000万ユーロ, ミランのオファー], [4750万ユーロ, パルメイラスから獲った額], [2250万ユーロ, 差]], ops: [−, ＝]}
+      - text: 今回の額は、そのおよそ1.5倍です。
+      - text: ただ、話し合いの前に、エンドリッキは23日、左脚の内転筋を痛めたとクラブが発表しました。
+        card: none
+      - text: 戻る時期は、まだ決まっていません。
+      - text: 1月の移籍市場までは、あと1か月。まずは代理人とレアルの話し合いが行われます。
+    official: false
+    sources:
+      - https://football-italia.net/report-milan-have-e70m-endrick-offer-ready/
+      - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/partes-medicos/parte-medico-de-endrick-23-11-2026
+      - https://cadenaser.com/nacional/2026/11/24/la-tentadora-oferta-del-milan-al-real-madrid-por-endrick-setenta-kilos-por-el-futbolista-19-o-20-de-la-plantilla-es-para-tener-en-cuenta-cadena-ser/

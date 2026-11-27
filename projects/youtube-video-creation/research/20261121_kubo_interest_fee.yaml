@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月21日）久保建英にトルコの名門ベシクタシュが関心、と報道。ソシエダは2029年まで契約・2000万ユーロ未満は受けない構え（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し）
+# 取材: 2026-11-21。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 元記事の追跡（題材の元は footballnet＝2ch まとめ。まとめは根拠にしていない）:
+#   footballnet 2026-11-21（archives/60144713）→ 引用元 theWORLD（Yahoo!ニュース 2026-11-19 7:11）→ その元 トルコ紙『Fanatik』2026-11-15 → Fanatik が引いたのは スペインの『Todo Mercado』。
+#   ・theWORLD（news.yahoo.co.jp/articles/7d5d7ee44e614ce6184af915b0e52365baa3fb6f、requests で本文全部）:
+#       「『Fanatik』によると、ウイングの補強を目指すベシクタシュは、獲得候補のリストに25歳の久保を加えたという。ソシエダは同選手との契約を2029年まで残しており、移籍金として2000万ユーロを下回るオファーを受け入れる考えはないと伝えられている。」
+#       「現時点ではベシクタシュの関心が伝えられた段階であり、具体的な交渉の進展は明らかになっていない。」「トルコリーグへの移籍を選ぶ可能性については、懐疑的な見方が一般的だ。」（theWORLD の見方）
+#       題の「34億円超」は theWORLD の換算（2000万ユーロ）。本文は「2000万ユーロ」。
+#   ・Fanatik 2026-11-15 06:59「Beşiktaş'tan devre arası transfer operasyonu! Sorun kökten çözülecek」（requests と WebFetch で本文を読んだ。トルコ語）:
+#       https://www.fanatik.com.tr/besiktas/besiktastan-devre-arasi-transfer-operasyonu-sorun-kokten-cozulecek-2644549
+#       「ベシクタシュは冬の移籍期間にウイング（kanat）の補強を目指し、Real Sociedad の日本人の星 久保建英が議題に上った」。
+#       「スペインの Todo Mercado の報道によれば、ベシクタシュは チェルニー と ポク の出来への不満から、25歳の久保を移籍リストに加えた。」
+#       「ラ・リーガの外でキャリアを続けることに前向きだと言われる久保の状況は、1月の計画の枠で検討されている」（Todo Mercado 由来・本人の意向は未確認）。
+#       「ソシエダは20ミリオンユーロを下回るオファーを検討しない、と主張されている。」「久保を迎えるには外国人枠も空ける必要があり、チェルニーかポクとの別れが選択肢に含まれる」。
+#       「ソシエダと2029年まで契約のある25歳は、今季11試合で計458分、1得点1アシスト。」
+#   ・Todo Mercado の元記事は URL が分からず、読めていない（Fanatik 経由の伝聞）。
+# 確度: 報道（Fanatik の記事は読んだ。ただし Fanatik が Todo Mercado を引く二重の伝聞で、クラブの発表も本人の言葉も無い）。「確定」とは言わない。
+#   config/sources.yaml の domain_tiers に fanatik.com.tr は無い（群が無く上限が空）。→ 台本の言い方は「〜と報じています」「関心を寄せている、と伝えられました」に限る。
+# 自分で数えたもの: 458分÷11試合＝1試合あたり約42分（Fanatik の数字から）。2029−2026＝3年先。2000万ユーロ≒34億円は theWORLD の換算。
+# 食い違い（気をつけた点）:
+#   ・依頼文・まとめの題は「名門クラブが関心」「34億円超」。実際は「関心が伝えられた段階」で、「34億円」は金額の要求ではなく『ソシエダが下回るオファーは受けない、と伝えられた下限』。「最低34億円超か」と言い切らない。
+#   ・クラブ名: まとめの題には書かれていない。theWORLD と Fanatik でベシクタシュと確認。
+#   ・久保の出場数: Fanatik は公式戦11試合458分。11/20 のショート（kubo_unexpected_plays）の「リーグ戦12試合」は別の数え方（リーグ戦だけ）→ 混ぜない。今回は Fanatik の数だけを「ファナティクによると」で使う。
+# 前の本との重なり: 20261120_kubo_unexpected_plays（リーグ戦の出番）／20261118_kubo_moriyasu_words／20261106_nakamura_kubo_lyon_sociedad。
+#   → 今回の初出: ベシクタシュの関心・2000万ユーロ・2029年契約。リーグ戦の先発数は繰り返さない。
+# 【言わないこと】久保がトルコ行きを望んでいる（Todo Mercado の主張、本人の言葉ではない）／移籍が近い・決まった／ベシクタシュが正式にオファーを出した／チェルニー・ポクの名前（脇役）／契約解除金（footballnet の引用ツイートにだけあり、確かめていない）／市場価値の下落（まとめ側の記述）。
+# 写真: 4枚（gekisaka の日本代表の写真、11月のシンガポールの試合。前の台本と同じ素材）。_pool.png を目で見た: 本人、透かし無し。Commons の2019年の写真（レアル時代）は古く、外した。
+# 本人の言葉: なし（移籍の報道に本人の発言は無い）。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [久保建英, レアル・ソシエダ, ベシクタシュ]
+
+short_style: X
+short_hook_word: トルコの名門が関心
+short_photos:
+  - assets/images/20261121_kubo_interest_fee/01_v.jpg
+  - assets/images/20261121_kubo_interest_fee/02_v.jpg
+  - assets/images/20261121_kubo_interest_fee/04_v.jpg
+  - assets/images/20261121_kubo_interest_fee/03_v.jpg
+short_question: 久保建英は、ソシエダに残るべきだと思いますか。
+short_telops: []
+
+theme:
+  id: kubo_interest_fee
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: 久保建英にトルコの名門が関心か。ソシエダが示した金額の目安とは
+  hook: ""
+  question: 久保建英に関心を寄せているのはどこで、ソシエダはいくらを求めているのか
+  takeaway: 久保はソシエダと2029年まで契約があり、下限の目安は2000万ユーロ。今季は公式戦11試合で458分と、1試合あたりおよそ42分。ただし伝えられたのは関心の段階で、交渉の進展は分かっていない
+
+thumbnail:
+  layout: face
+  line1: 久保建英 トルコの名門が関心
+  line2: ソシエダの下限は2000万ユーロ
+  tags: [久保建英, レアル・ソシエダ]
+  photo: assets/images/20261121_kubo_interest_fee/01_w.jpg
+  short_photo: assets/images/20261121_kubo_interest_fee/01_v.jpg
+
+answer: トルコのベシクタシュが関心と報道。ソシエダは2000万ユーロ未満は受けない構え。交渉の進展は不明
+watch: 1月の移籍期間
+
+sections:
+  - id: what
+    main: true
+    heading: 久保建英に関心を寄せているのはどこか
+    tier: 報道
+    telop: 久保建英にトルコの名門ベシクタシュが関心、と報道
+    say:
+      - text: ソシエダの久保建英に、トルコの名門が関心を寄せている、と伝えられました。
+        image: assets/images/20261121_kubo_interest_fee/01_w.jpg
+      - text: そのクラブは、ベシクタシュ。出どころは、トルコの『ファナティク』です。
+      - text: ベシクタシュが目指しているのは、サイドで攻める選手の補強です。
+      - text: 獲得候補のリストに、25歳の久保を加えた、といいます。
+        image: assets/images/20261121_kubo_interest_fee/03_w.jpg
+      - text: ソシエダ所属の久保は、2029年まで契約しています。
+      - text: ソシエダは、2000万ユーロを下回るオファーは受け入れない、と伝えられています。
+        emph: true
+      - text: 検討されているのは、1月の移籍期間です。
+      - text: ただし、伝えられたのは関心の段階です。交渉が進んでいるとは、報じられていません。
+        image: assets/images/20261121_kubo_interest_fee/04_w.jpg
+    official: false
+    sources:
+      - https://www.fanatik.com.tr/besiktas/besiktastan-devre-arasi-transfer-operasyonu-sorun-kokten-cozulecek-2644549
+      - https://news.yahoo.co.jp/articles/7d5d7ee44e614ce6184af915b0e52365baa3fb6f
+  - id: fee
+    heading: 久保のソシエダとの契約と、金額の目安はどうなっているのか
+    tier: 報道
+    telop: 久保の契約は2029年まで。ソシエダは2000万ユーロ未満を受けない構え
+    say:
+      - text: ここまでの報道を、表にまとめます。
+        card: {type: table, title: 久保建英の移籍の報道, columns: [項目, 伝えられた内容], rows: [[関心, ベシクタシュ（トルコ）], [契約, ソシエダと2029年まで], [ソシエダの下限, 2000万ユーロ（約34億円）], [状況, 関心の段階]], highlight_row: 2}
+        image: assets/images/20261121_kubo_interest_fee/04_w.jpg
+      - text: 下限の2000万ユーロは、日本円でおよそ34億円です。
+        card: none
+        emph: true
+    official: false
+    sources:
+      - https://www.fanatik.com.tr/besiktas/besiktastan-devre-arasi-transfer-operasyonu-sorun-kokten-cozulecek-2644549
+      - https://news.yahoo.co.jp/articles/7d5d7ee44e614ce6184af915b0e52365baa3fb6f
+  - id: view
+    viewpoint: true
+    heading: 久保の今季の出場から、この関心をどう見るか
+    tier: 背景
+    telop: 今季は公式戦11試合458分。1試合あたり約42分
+    say:
+      - text: 見立てです。久保の今季は、公式戦11試合で458分です。
+        card: {type: table, title: 久保建英 今季の出場（ファナティクの数字）, columns: [項目, 数字], rows: [[公式戦, 11試合], [出場時間, 458分], [1試合あたり, 約42分]], highlight_row: 2}
+        image: assets/images/20261121_kubo_interest_fee/01_w.jpg
+      - text: 1ゴール1アシストを記録しています。
+        card: none
+        image: assets/images/20261121_kubo_interest_fee/03_w.jpg
+      - text: 1試合あたり約42分の出場で、契約は2029年まで、あと3年。
+        emph: true
+      - text: 動きがあるとすれば、冬の移籍期間です。
+    official: false
+    sources:
+      - https://www.fanatik.com.tr/besiktas/besiktastan-devre-arasi-transfer-operasyonu-sorun-kokten-cozulecek-2644549
+      - https://news.yahoo.co.jp/articles/7d5d7ee44e614ce6184af915b0e52365baa3fb6f

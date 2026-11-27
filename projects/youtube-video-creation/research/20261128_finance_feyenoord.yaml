@@ -1,0 +1,421 @@
+# クラブの財政：フェイエノールト（11/28 土、シリーズ「クラブの財政」、key: finance_feyenoord、型は news）。
+#
+# 題材の選び方：デロイトの上位は既出（残るエヴァートンは決算の一次資料が取れず女子チームの売却益が主役＝11/2 アヤックスの控えのとおり）。
+#   11/2 アヤックスと同じく「決算の一次資料が読めるエールディヴィジ」から。フェイエノールトは 2025-26 の年次報告書（監査済み・全文PDF）が公開済み。
+#   ★「収益の大きいクラブから」からは外れる（2025-26 の収入 1億1525万ユーロ）。
+#   11/30 の PSV と対にする：同じ「欧州の賞金が減った年」に、フェイエノールトは赤字、PSV は黒字。
+# 重なりの確認（11/21）：scripts/*finance_* に feyenoord 無し。posted.json・covered.yaml にフェイエノールトの財政の回は無い。
+#   同じ日（11/28）の別シリーズ：クラブ紹介＝ユヴェントス、監督＝アモリム、世界レジェンド＝ベイル（research/20261127_picks.txt）。重ならない。
+# ★今季も1部：年次報告書に「2026-2027 の UEFA チャンピオンズリーグのリーグフェーズに直接出場」。fcupdate.nl の 2026/27 エールディヴィジ順位表（11/21 取得）で12試合・2位。
+# ★日本との接点：年次報告書の「Topscorer Eredivisie Ayase Ueda 25」（2025-26 の得点王）、2025-26 に獲った選手の一覧に Tsuyoshi Watanabe（渡辺剛）、
+#   決算日後に移籍した選手の一覧に Ayase Ueda（リールへ。research/20261120_ueda_lille_stadium.yaml）。題と1行ずつで使う。
+#
+# **決算期**：Feyenoord Rotterdam N.V.、2025-07-01〜2026-06-30。年次報告書は 2026-10-09 ごろ公表（fr12.nl 2026-10-09 の記事が全文PDFへリンク）。
+# **出どころ（読んだもの。2026-11-21 に requests で PDF を取って pypdf で全文を読んだ）**
+#   ○ フェイエノールト 年次報告書 2025-2026（76頁）https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf
+#     KERNCIJFERS（千ユーロ、2025-26／2024-25）：Netto omzet 115.249／166.714、Bedrijfslasten 140.959／140.575、Operationeel resultaat −25.710／26.139、
+#       Spelersresultaat 9.394／5.366、Bedrijfsresultaat −16.316／31.505、Financiële baten en lasten −688／−433、Resultaat voor belastingen −17.004／31.072、
+#       Belastingen 4.388／−8.017、Resultaat na belastingen −12.616／23.055、Eigen vermogen per 30 juni 24.692／37.308、Werkkapitaal −42.582／−40.872、FTE 444／402
+#     OMZET：Wedstrijdbaten 43.245／98.492、Partnerships, business seats, units en boarding 47.028／45.238、Mediabaten 11.791／11.716、Merchandising & B2C 4.618／4.544、Overige baten 8.567／6.724
+#     EUROPEES VOETBAL：Prijzengeld 15.248／62.233、Recettes 7.092／14.464、Partnerships 156／1.083、Mediabaten 193／−、計 22.689／77.780
+#     BEDRIJFSLASTEN：Kostprijs van de omzet 14.290／14.001、Lonen, salarissen en sociale lasten 83.082／84.237、Afschrijvingen 1.979／1.559、Overige bedrijfskosten 41.608／40.778
+#     本文：「De lonen ... daalden met circa EUR 1,1 miljoen. Tegenover een daling als gevolg van lagere premies Europees voetbal aan spelers en staf, is er sprake een stijging door meer fte's en is er verder geïnvesteerd in de selectie en staf van het eerste elftal. Voorts is sprake van beëindigingsvergoedingen voor onder andere de technische staf.」
+#     本文：「Het resultaat vergoedingssommen bedraagt EUR 62,6 miljoen」（パイシャン→マルセイユ、ハンツコ→アトレティコ、ミランボ→ブレントフォード、ハルトマン→バーンリー、ティンバー→マルセイユ）
+#       「De afschrijvingen op vergoedingssommen, inclusief tekengelden en commissies ... EUR 53,2 miljoen ... extra afboeking van EUR 14,4 miljoen」。獲った選手に「Tsuyoshi Watanabe」。
+#     監査役会の報告：「Feyenoord heeft over het boekjaar 2025-2026 een negatief resultaat behaald van EUR 12,6 miljoen. De lagere opbrengsten uit Europees voetbal hadden een wezenlijke impact op het resultaat. Het resultaat is daarmee teleurstellend.」
+#     試合：2025-26 は CL 予選のホーム1試合と、ヨーロッパリーグのリーグフェーズのホーム4試合（前の年は CL のホーム6試合）。fr12：EL はリーグフェーズで敗退、前の年は CL ベスト16（achtste finales）。
+#     見通し：「de omzet in seizoen 2026-2027 naar verwachting naar het niveau van het recordjaar 2024-2025, ruim EUR 160 miljoen. Het operationeel resultaat zal naar verwachting positief zijn.」（スタジアムの会社を2026-07-14に一つにした分を含む）
+#     決算日後：「Ramiz Zerrouki, ... Ayase Ueda, ... getransfereerd. Met deze transfers is een positief resultaat vergoedingssommen gerealiseerd van circa EUR 19 miljoen.」
+#   ○ fr12.nl 2026-10-09「Jaarcijfers Feyenoord: omzet daalt fors, nettoverlies van 12,6 miljoen euro」（数字は報告書と一致。EL リーグフェーズ敗退・前年 CL ベスト16）
+# ★使わなかったもの：スモーレンブルフ財務担当の発言（読みが割れる・記事経由）、個別の移籍金、ファン・ペルシ監督の話、スタジアムの統合の中身（1行だけ）。
+# 自分で計算した数（検算済み）
+#   収入の減り 166.714−115.249=51.465（−30.9%）／試合の収入の減り 98.492−43.245=55.247／欧州の減り 77.780−22.689=55.091／賞金の減り 62.233−15.248=46.985
+#   欧州の割合 77.780÷166.714=46.7%→約47%／22.689÷115.249=19.7%→約20%
+#   人件費÷収入 84.237÷166.714=50.5%→約51%／83.082÷115.249=72.1%→約72%
+#   費用の増え 140.959−140.575=0.384／人件費の減り 84.237−83.082=1.155
+#   本業の悪化 26.139+25.710=51.849／自己資本 37.308−12.616=24.692 ✓
+date: 2026年11月21日
+slot: other_1
+format: news
+series: クラブの財政
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- フェイエノールト
+- 上田綺世
+- 渡辺剛
+theme:
+  end_bg: assets/images/20261128_finance_feyenoord/01_w.jpg
+  id: finance_feyenoord
+  league: netherlands
+  league_name: エールディヴィジ
+  kind: other
+  topic: フェイエノールト
+  title: フェイエノールト、上田綺世が得点王の年に赤字1260万ユーロ。何が消えたのか
+  question: フェイエノールトは2025-26、上田綺世がリーグの得点王になった年に、最終で1260万ユーロの赤字を出した。前の年は2306万ユーロの黒字。収入は1億6671万から1億1525万ユーロへ減った。何が消えたのか
+  lead: 収入は約3割減。最終は赤字1260万ユーロ。フェイエノールト。
+  opening_image: assets/images/20261128_finance_feyenoord/01_w.jpg
+  takeaway: フェイエノールトの2025-26の決算（2026年6月まで、年次報告書）は、最終が1260万ユーロの赤字（前の年は2306万の黒字）。欧州の大会から入った額が7778万から2269万ユーロへ約5509万減り、収入全体の減り約5147万を上回った。費用はほぼ同じまま。給料の費用は収入の約51%から約72%へ。情報は11月21日時点。
+  short_title: フェイエノールト、上田が得点王の年に赤字。何が消えたのか
+thumbnail:
+  layout: number
+  photo: assets/images/20261128_finance_feyenoord/01_w.jpg
+  short_photo: assets/images/20261128_finance_feyenoord/01_w_v.jpg
+  number: −5147万
+  line1: フェイエノールト 収入の減り
+  line2: 上田が得点王の年に赤字
+  callouts:
+  - 最終は赤字1260万
+  tags:
+  - フェイエノールト
+  - クラブの財政
+  - オランダ
+  - エールディヴィジ
+  - 上田綺世
+sections:
+- id: rev
+  heading: フェイエノールトの収入は、どこで減ったのか
+  tier: 確定
+  official: true
+  telop: 収入は約31%減の1億1525万ユーロ
+  narrator: 解説
+  card: &rev
+    type: table
+    title: フェイエノールトの収入（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 収入の合計
+      - '115.2'
+      - '166.7'
+    - - 試合の収入
+      - '43.2'
+      - '98.5'
+    - - スポンサーと法人席
+      - '47.0'
+      - '45.2'
+    - - 放映権など
+      - '11.8'
+      - '11.7'
+    - - グッズなど
+      - '4.6'
+      - '4.5'
+    - - その他
+      - '8.6'
+      - '6.7'
+  say:
+  - text: フェイエノールトの直近の決算は、2026年6月までの1年間のものです。
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 10月に、クラブの年次報告書が出ました。
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 収入は、約1億6700万から、約1億1500万ユーロへ。約31%の減りです。
+    emph: true
+    card:
+      <<: *rev
+      highlight_row: 0
+  - text: いちばん減ったのは、試合の収入。9849万から4325万ユーロへ。
+    card:
+      <<: *rev
+      highlight_row: 1
+  - text: 試合の収入には、欧州の大会の賞金も入ります。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: スポンサーと法人席は、4524万から4703万ユーロへ。少し増えました。
+    card:
+      <<: *rev
+      highlight_row: 2
+  - text: 放映権などの収入は、約1180万ユーロで、ほぼ同じです。
+    card:
+      <<: *rev
+      highlight_row: 3
+  sources:
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf
+  - https://www.fr12.nl/nieuws/jaarcijfers-feyenoord-omzet-daalt-fors-nettoverlies-van-126-miljoen-euro
+- id: euro
+  heading: 欧州の大会のお金は、どこまで減ったのか
+  tier: 確定
+  official: true
+  telop: 欧州の大会から入った額は、7778万から2269万ユーロへ
+  narrator: 解説
+  card: &euro
+    type: table
+    title: 欧州の大会から入った額（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 賞金
+      - '15.2'
+      - '62.2'
+    - - 欧州の試合の入場
+      - '7.1'
+      - '14.5'
+    - - 合計
+      - '22.7'
+      - '77.8'
+  say:
+  - text: 前の年、フェイエノールトはチャンピオンズリーグで、ベスト16まで進みました。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: この年は、チャンピオンズリーグの予選に1試合ホームで出たあと、ヨーロッパリーグへ。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: ヨーロッパリーグでは、最初の段階のリーグフェーズで敗退しました。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 欧州の大会の賞金は、6223万から1525万ユーロへ。
+    emph: true
+    card:
+      <<: *euro
+      highlight_row: 0
+  - text: 欧州の試合の入場の収入も、1446万から709万ユーロへ。
+    card:
+      <<: *euro
+      highlight_row: 1
+  - text: 欧州の大会から入った額は、合わせて7778万から2269万ユーロへ。
+    emph: true
+    card:
+      <<: *euro
+      highlight_row: 2
+  - text: 約5509万の減りです。
+    card:
+      <<: *euro
+      highlight_row: 2
+  - text: 収入全体の減り、約5147万ユーロより大きい額でした。
+    card:
+      <<: *euro
+      highlight_row: 2
+  sources:
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf
+  - https://www.fr12.nl/nieuws/jaarcijfers-feyenoord-omzet-daalt-fors-nettoverlies-van-126-miljoen-euro
+- id: cost
+  heading: フェイエノールトは、費用を減らせたのか
+  tier: 確定
+  official: true
+  telop: 費用は1億4096万ユーロ。前の年とほぼ同じ
+  narrator: 解説
+  card: &cost
+    type: table
+    title: フェイエノールトの費用と本業の収支（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 費用の合計
+      - '141.0'
+      - '140.6'
+    - - 給料と社会保険
+      - '83.1'
+      - '84.2'
+    - - その他の費用
+      - '41.6'
+      - '40.8'
+    - - 本業の収支
+      - −25.7
+      - '+26.1'
+  say:
+  - text: 次に、フェイエノールトの費用です。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 費用の合計は、1億4058万から1億4096万ユーロ。ほぼ同じです。
+    emph: true
+    card:
+      <<: *cost
+      highlight_row: 0
+  - text: 給料と社会保険の費用は、8424万から8308万ユーロへ。約115万の減りでした。
+    card:
+      <<: *cost
+      highlight_row: 1
+  - text: 選手とスタッフへの欧州の大会のボーナスは、減りました。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 一方で、職員が増え、トップチームの選手とスタッフにもお金を使いました。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 技術スタッフなどとの契約を、途中で終えた補償も入っています。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 移籍金を除く本業の収支は、2614万の黒字から、2571万ユーロの赤字へ。
+    emph: true
+    card:
+      <<: *cost
+      highlight_row: 3
+  sources:
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf
+- id: main
+  main: true
+  heading: 上田綺世が得点王になった年に、なぜ赤字になったのか
+  tier: 確定
+  official: true
+  telop: 最終は1260万ユーロの赤字。前の年は2306万の黒字
+  narrator: 解説
+  card: &pl
+    type: table
+    title: フェイエノールトの損益と自己資本（百万ユーロ）
+    columns:
+    - 項目
+    - 2025-26
+    - 前の年
+    rows:
+    - - 本業の収支
+      - −25.7
+      - '+26.1'
+    - - 選手の売買の結果
+      - '+9.4'
+      - '+5.4'
+    - - 税を引く前
+      - −17.0
+      - '+31.1'
+    - - 最終の損益
+      - −12.6
+      - '+23.1'
+    - - 自己資本（6月末）
+      - '24.7'
+      - '37.3'
+  say:
+  - text: フェイエノールトの直近の1年は、1260万ユーロの赤字。
+    short_only: true
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 前の年は、2306万ユーロの黒字でした。
+    short_only: true
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: この年、上田綺世は25点を決め、リーグの得点王に輝きました。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 日本代表の渡辺剛も、この年に加わった選手の一人です。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 選手を売った移籍金の利益は、6260万ユーロ。ハンツコのアトレティコ行きなどです。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: ただ、獲った選手の移籍金は、毎年少しずつ費用にします。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: その分などが、5320万ユーロ。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 差し引きの、選手の売買の結果は、541万から939万ユーロの黒字へ。
+    card:
+      <<: *pl
+      highlight_row: 1
+  - text: それでも、税を引く前の損益は、1700万ユーロの赤字。
+    card:
+      <<: *pl
+      highlight_row: 2
+  - text: 税の戻りが約440万ユーロあり、最終の損益は1260万ユーロの赤字でした。
+    emph: true
+    callword: 赤字
+    card:
+      <<: *pl
+      highlight_row: 3
+  - text: 自己資本、つまり資産から借金などを引いた額は、3731万から2469万ユーロへ。
+    card:
+      <<: *pl
+      highlight_row: 4
+  - text: 1年で、約3分の1が減りました。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 報告書の中で、クラブの監査役会は、この結果をこう書いています。
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: &doc
+      type: document
+      label: フェイエノールト 年次報告書 2025-2026（監査役会の報告、訳）
+      paragraphs:
+      - フェイエノールトは2025-2026年度に、1260万ユーロのマイナスの結果となった。
+      - 欧州の大会からの収入が減ったことが、結果に大きく響いた。結果は、期待を下回るものだ。
+      highlight:
+      - 欧州の大会からの収入が減った
+      - 期待を下回る
+  - text: 欧州の大会からの収入が減ったことが、結果に大きく響いた、と。
+    card: *doc
+  sources:
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf
+  - https://www.fr12.nl/nieuws/jaarcijfers-feyenoord-omzet-daalt-fors-nettoverlies-van-126-miljoen-euro
+- id: view
+  heading: 見立て・フェイエノールトは、欧州の賞金にどこまで頼っていたのか
+  tier: 背景
+  telop: 欧州の大会の分が消え、費用は同じまま残った
+  narrator: 解説
+  viewpoint: true
+  card: &view
+    type: table
+    title: 自分で割ってみた（フェイエノールトの決算）
+    columns:
+    - 比べ
+    - 前の年
+    - 2025-26
+    rows:
+    - - 欧州の大会の分 ÷ 収入
+      - 約47%
+      - 約20%
+    - - 給料の費用 ÷ 収入
+      - 約51%
+      - 約72%
+    - - 欧州の大会の分の減り
+      - ―
+      - 約5509万
+    - - 収入全体の減り
+      - ―
+      - 約5147万
+  say:
+  - text: 見立てに入ります。欧州の大会のお金が、収入のどれだけを占めていたかを比べます。
+    image: assets/images/20261128_finance_feyenoord/03_w.jpg
+    card: none
+  - text: 前の年、欧州の大会の分は、収入の約47%。この年は、約20%でした。
+    emph: true
+    card:
+      <<: *view
+      highlight_row: 0
+  - text: 欧州の分の減りは、収入全体の減りより大きい。表のとおりです。
+    mark:
+      kind: circle
+      row: 2
+      col: 2
+    card:
+      <<: *view
+      highlight_row: 2
+  - text: 給料の費用は、収入の約51%から、約72%へ上がりました。
+    emph: true
+    card:
+      <<: *view
+      highlight_row: 1
+  - text: 題への答えです。消えたのは、チャンピオンズリーグの賞金でした。
+    emph: true
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 費用はほぼ同じまま、収入だけが減りました。
+    emph: true
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: この年のリーグは、2位でした。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 今季は、チャンピオンズリーグのリーグフェーズに直接出ています。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 上田は2026年の夏、リールへ移りました。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: 上田らを決算のあとに手放したことで、約1900万ユーロの利益が出ています。
+    image: assets/images/20261128_finance_feyenoord/02_w.jpg
+    card: none
+  - text: クラブは、スタジアムの会社と一つになった分も入れて、見通しを出しています。
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 今季の収入は、1億6000万ユーロを超える見込みです。
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  - text: 次の決算の注目は、賞金が戻って、本業の収支を黒字にできるのか。
+    emph: true
+    image: assets/images/20261128_finance_feyenoord/01_w.jpg
+    card: none
+  sources:
+  - https://cdn.sanity.io/files/2hlolhb1/production/da0ec2816fdc43c4fdb339df889709ebb39a784e.pdf

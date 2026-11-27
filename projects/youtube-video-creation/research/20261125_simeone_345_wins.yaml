@@ -1,0 +1,143 @@
+# 取材メモ（2026年11月25日）シメオネ、ラ・リーガ通算最多の345勝。「守備だけで345試合も勝てるのか」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-25。requests（ブラウザUA）と WebFetch で本文を全文読んだ。検索エンジンのAI要約は使っていない（WebSearch は記事を見つけるためだけ）。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-24「ラ・リーガ通算最多勝のシメオネ監督、積年の批判に反論「守備だけで345試合も勝てるのか?」」 https://web.gekisaka.jp/news/world/detail/?463811-463811-fl
+#   → ゲキサカは BBC を引いている。ゲキサカの「通算767試合目」「アラゴネスは757試合で344勝」のうち、767は誤り（BBC・マルカ・Infobae はどれも567試合）。台本は567を使う。
+# 本人の言葉（原文。スペイン語）:
+#   El Debate 2026-11-23 09:46Z（試合後のミックスゾーン。全文を読んだ） https://www.eldebate.com/deportes/futbol/20261123/simeone-reivindica-historico-triunfo-ante-getafe-no-ganas-345-partidos-defendiendo_483993.html
+#     «Mucho trabajo detrás, mucho esfuerzo de muchísima gente, muchos futbolistas volcados por una idea. Esa crítica continua que siempre recibimos, que no la valoro, pero sigo observándola: esa fase defensiva que ya nos han impuesto y parece que siempre jugamos defensivamente para defender. No ganas 345 partidos defendiendo. ¿Se puede?»
+#     «Detrás de todo este trabajo en esas 345 victorias hay un montón de gente. Mi mujer, Carla, que es una fuente y una fuerza muy importante para que uno pueda llegar a este lugar. …»
+#   Infobae 2026-11-23（Movistar+ への言葉として）: “No ganas 345 partidos defendiendo. ¿Se puede? Digan la verdad”。“No me suelo alegrar por muchas cosas, pero haber llegado a este lugar hay un trabajo increíble detrás …”
+#     https://www.infobae.com/deportes/2026/11/23/digan-la-verdad-la-respuesta-del-cholo-simeone-para-los-que-lo-tidan-de-defensivo-tras-alcanzar-un-historico-record-en-el-futbol/
+#   BBC 2026-11-23 10:48Z（英訳）: "You don't win 345 matches just by defending. Is that even possible?" / "I don't usually find many things to be happy about, but there is an incredible amount of work behind this."
+#     https://www.bbc.com/sport/football/articles/c5pv9kkwn3y3o
+#   マルカ 2026-11-22（会見）: 「この数字を、トロフィーではないけれど、345勝の後ろにいる全員と分かち合いたい」「だから、守備的という札を説明するより、もっと広い話にしたかった」
+#     https://www.marca.com/futbol/atletico/2026/11/22/simeone-quiero-compartir-345-victorias-toda-gente-hay-detras-te-acompana.html
+#   → 台本の言葉は、El Debate のスペイン語を私が日本語にしたもの（「Digan la verdad（本当のことを言ってくれ）」は Infobae だけにあるので使わない）。
+#   ヴィーキング戦の前日会見（11/24。マルカ） https://www.marca.com/futbol/atletico/2026/11/24/simeone-sobre-renovacion-explicacion-mateu-falta-agregarle-comparto.html
+#     「残っている記録と期限は？」→ "No tengo otro plazo que el de mañana el Viking"（明日のヴィーキング戦のほかに期限は無い）。345勝の話はしていない。
+# 数字の出どころ:
+#   ・BBC: 345勝目は567試合目。アラゴネスは344勝で、そこまでに189試合多くかかった（＝756試合）。
+#   ・マルカ 11/23（https://www.marca.com/futbol/atletico/2026/11/23/simeone-nadie.html）・Infobae: アラゴネスは757試合。→ 756か757かで食い違う。台本は「750試合以上」とだけ言う。
+#   ・beIN 2026-11-01（https://www.beinsports.com/en-us/soccer/la-liga/articles/i-dont-feel-it-as-my-own--simeone-wants-to-share-historic-laliga-record-2026-11-01）: 10/31 レバンテ戦で344勝に並んだ時点で565試合（344勝123分98敗）。
+#   ・ESPN のアトレティコの日程（esp.1 teams/1068/schedule）: 10/31 レバンテ 0-2（勝）→ 11/8 バルセロナ戦 1-2（負）→ 11/22 ヘタフェ 0-3（勝）。565＋2＝567試合・344＋1＝345勝で BBC と合う。
+#   ・ESPN の試合データ（summary event=401882803、2026-11-22 20:00Z）: ヘタフェ 0-3 アトレティコ。10分 バエナ／30分 カルドーゾ／90+2分 グリマルド（PK）。
+#   ・ESPN 順位表（11/25 取得）: アトレティコ 13試合 10勝1分2敗 勝ち点31 3位、得点26・失点10。1位バルセロナ 36、2位レアル 33。
+# 自分で数えたもの: 勝率 345÷567＝約61%（Infobae は「60%」）。アラゴネスは 344÷756〜757＝約45%。
+# 食い違い: ゲキサカの「767試合」は誤り。アラゴネスの試合数（756/757）。BBC の発言は英訳で、スペイン語の原文と言い回しが少し違う → 原文から訳した。
+# 前の本との重なり: 20260922_simeone（ダービーのあと「バルセロナ」）、20261025_manager_simeone（監督紹介。アラゴネスを抜いてクラブ最多勝＝2021年の話、812試合）。
+#   今回の初出: ラ・リーガ通算の最多勝（クラブではなくリーグ全体）、守備的という批判への反論。監督紹介の経歴・タイトルは繰り返さない。
+# 【言わないこと】CL アトレティコ対ヴィーキングの結果（日本時間26日早朝で未了）／契約の延長の話（題から離れる）／家族への感謝の細部。
+# 本人の言葉: あり（スペイン語原文、El Debate）。Y。
+# 写真（目で見た。assets/images/20261125_simeone_345_wins/_pool.png）:
+#   02＝マルカ 11/22 の主写真（会見のシメオネ）、05＝マルカ 11/23 の主写真（ピッチ脇のシメオネ）。どちらも記事に代理店の表記なし・画像に透かしなし。
+#   07＝Commons「25th Laureus World Sports Awards - Red Carpet - Cholo Simeone - 240422 192618-2」CC BY-SA 4.0 Barcex。横の07_wには一般の同伴者が写るので使わず、縦の07_vだけ使う。
+#   外したもの: ゲキサカ（©Getty Images の焼き込み）、BBC（Getty・BBC SPORT の焼き込み）、El Debate（キャプションに AFP）、Infobae（ページに EFE の表記）、Commons のローレウスの全身（同伴者が主に写る）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: world
+date: "2026年11月25日"
+format: news
+no_main: true
+people: [シメオネ監督, アトレティコ・マドリード, ルイス・アラゴネス, ヘタフェ]
+
+short_style: Y
+short_hook_quote: 守るだけで、345試合は勝てません。
+short_photos:
+  - assets/images/20261125_simeone_345_wins/02_v.jpg
+  - assets/images/20261125_simeone_345_wins/07_v.jpg
+  - assets/images/20261125_simeone_345_wins/05_v.jpg
+short_question: シメオネのアトレティコは、守備的なチームだと思いますか。
+short_telops: []
+
+theme:
+  id: simeone_345_wins
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: シメオネ、ラ・リーガ最多の345勝。「守備的」と言われ続けた監督の答え
+  hook: ""
+  question: ラ・リーガの最多勝を塗り替えたシメオネは、守備的という批判に何と答えたのか
+  takeaway: 345勝は567試合目。アラゴネスは344勝に750試合以上かかっていて、勝率にするとシメオネ約61%、アラゴネス約45%。今季も13試合で10勝・26得点
+
+thumbnail:
+  layout: face
+  line1: シメオネ 最多345勝
+  line2: 守備だけで勝てるか
+  tags: [シメオネ監督, アトレティコ・マドリード]
+  photo: assets/images/20261125_simeone_345_wins/02_w.jpg
+  short_photo: assets/images/20261125_simeone_345_wins/02_v.jpg
+
+answer: 守るだけで345試合は勝てない、そんなことができるのか、と言い返した
+watch: 日本時間26日早朝のヴィーキング戦（チャンピオンズリーグ）
+
+sections:
+  - id: what
+    main: true
+    heading: シメオネが最多勝のあとに語ったこと
+    tier: 報道
+    telop: シメオネ「守るだけで345試合は勝てない」
+    say:
+      - text: アトレティコのシメオネ監督が、ラ・リーガ歴代最多の勝利を挙げ、守備的だという声に答えました。
+      - voice: シメオネ監督
+        text: ずっと受け続けている批判があります。
+      - voice: シメオネ監督
+        text: 重くは見ていませんが、目には入っています。
+        cont: true
+      - voice: シメオネ監督
+        text: 守りの型を貼りつけられて、
+        image: assets/images/20261125_simeone_345_wins/05_w.jpg
+        cont: true
+      - voice: シメオネ監督
+        text: まるで守るためだけに戦っているように言われる。
+        cont: true
+      - voice: シメオネ監督
+        text: 守るだけで、345試合は勝てません。
+        emph: true
+      - voice: シメオネ監督
+        text: そんなことが、できますか？
+        cont: true
+      - voice: シメオネ監督
+        text: ふだんは、あまり喜ぶことはありません。
+        image: assets/images/20261125_simeone_345_wins/02_w.jpg
+      - voice: シメオネ監督
+        text: でもこの記録の後ろには、信じられないほどの仕事があります。
+        cont: true
+    official: false
+    quotes_from: [El Debate]
+    sources:
+      - https://www.eldebate.com/deportes/futbol/20261123/simeone-reivindica-historico-triunfo-ante-getafe-no-ganas-345-partidos-defendiendo_483993.html
+      - https://www.bbc.com/sport/football/articles/c5pv9kkwn3y3o
+      - https://www.infobae.com/deportes/2026/11/23/digan-la-verdad-la-respuesta-del-cholo-simeone-para-los-que-lo-tidan-de-defensivo-tras-alcanzar-un-historico-record-en-el-futbol/
+      - https://www.marca.com/futbol/atletico/2026/11/22/simeone-quiero-compartir-345-victorias-toda-gente-hay-detras-te-acompana.html
+      - https://www.espn.com/soccer/match/_/gameId/401882803
+  - id: record
+    heading: 345勝は何試合目で、ルイス・アラゴネスとどれだけ違うのか
+    tier: 報道
+    telop: シメオネ 567試合で345勝
+    say:
+      - text: 記録を塗り替えたのは22日、ヘタフェに3対0で勝った試合。ラ・リーガで567試合目でした。
+        card: {type: table, title: ラ・リーガ 監督の通算勝利, columns: [監督, 勝利, 試合], rows: [[シメオネ, 345, 567], [アラゴネス, 344, 750超]], highlight_row: 0}
+      - text: これまでの記録は、アトレティコやスペイン代表を率いたルイス・アラゴネスの344勝。
+        card: {type: table, title: ラ・リーガ 監督の通算勝利, columns: [監督, 勝利, 試合], rows: [[シメオネ, 345, 567], [アラゴネス, 344, 750超]], highlight_row: 1}
+      - text: アラゴネスは8つのクラブで、750試合以上かかりました。シメオネはアトレティコ1つだけです。
+        card: {type: table, title: ラ・リーガ 監督の通算勝利, columns: [監督, 勝利, 試合], rows: [[シメオネ, 345, 567], [アラゴネス, 344, 750超]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.bbc.com/sport/football/articles/c5pv9kkwn3y3o
+      - https://www.marca.com/futbol/atletico/2026/11/23/simeone-nadie.html
+      - https://www.infobae.com/deportes/2026/11/23/digan-la-verdad-la-respuesta-del-cholo-simeone-para-los-que-lo-tidan-de-defensivo-tras-alcanzar-un-historico-record-en-el-futbol/
+  - id: view
+    viewpoint: true
+    heading: 勝率で並べると、シメオネとアラゴネスはどう違うか
+    tier: 背景
+    telop: 勝率 シメオネ約61% アラゴネス約45%
+    say:
+      - text: 見立てです。勝率にすると、シメオネは約61%、アラゴネスは約45%。
+        image: assets/images/20261125_simeone_345_wins/05_w.jpg
+        card: {type: table, title: ラ・リーガの勝率（自分で計算）, columns: [監督, 勝率], rows: [[シメオネ, 約61%], [アラゴネス, 約45%]], highlight_row: 0}
+      - text: 今季もリーグ戦13試合で10勝。得点26に対して、失点は10。
+        card: none
+      - text: 次は日本時間26日の早朝、チャンピオンズリーグのヴィーキング戦です。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+      - https://www.espn.com/soccer/team/_/id/1068/atletico-madrid

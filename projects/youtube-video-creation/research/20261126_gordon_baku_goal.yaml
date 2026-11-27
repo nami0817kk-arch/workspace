@@ -1,0 +1,142 @@
+# 取材メモ（2026年11月26日）バルセロナのアンソニー・ゴードン、CL第5節サバフ戦で2ゴール。2月にニューカッスルで4点を取ったバクーで、また決めた（ニュースのショート。見せ方 Y＝本人の言葉から）
+# 追記（親・書き出し後）: qc.png で 01 の写真が後半に約20秒続いたので、5行に image: を足した。語りは変えていない。
+# 取材: 2026-11-26。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# ESPN の試合データ（uefa.champions summary event=401915378、2026-11-25 17:45 UTC）: サバフ 1-4 バルセロナ。
+#   31分 ゴードン（右足、エリア中央）／51分 ゴードン（右足、ゴール左下）／55分 アデイェミ（バルデのアシスト）／60分 ジェズス（CKのあと）／63分 ミケルス（サバフ、VARで確認）。
+#   ゴードンは先発、76分にハフィーニャと交代。シュート: バルサ25本（枠内14）、サバフ8本（枠内3）。保持 バルサ71.4%。ヤマルはメンバー外。
+#   ※題材の元の要約は「31分に得点」だけだったが、ESPN では2得点（31分・51分）。→ 2ゴールで作る。
+# 一次: クラブ公式 fcbarcelona.com「Sabah 1-4 FC Barcelona: Gordon strikes again in Baku」（11/25、全文）
+#   クラブ史上いちばん遠い欧州のアウェー。気温は氷点近く。31分、アデイェミの仕掛けのあとのクロスをGKがはじき、ゴードンが押し込む。直後のもう1点はジェズスのオフサイドで取り消し。
+#   後半、ジェズスのシュートのこぼれ球をゴードンが決めて2点目。「2月にニューカッスルでカラバフから前半だけで4ゴール。CLでの直近7ゴールのうち6つをアゼルバイジャンの首都で決めている」。
+#   バルサはリーグフェーズ5試合で4勝・勝ち点12（暫定4位）。次は日曜、敵地でデポルティーボ（ラ・コルーニャ）。
+# ESPN（uefa.champions event=401858736、2026-02-18、トフィク・バフラモフ記念スタジアム＝バクー）: カラバフ 1-6 ニューカッスル。
+#   ゴードン 3分・32分（PK）・33分・45+1分（PK）＝前半だけで4ゴール。→ 公式と一致。
+# マルカ（11/25 19:34「Anthony Gordon, 'non grato' en Azerbaiyán」、試合の論評の記事。全文）:
+#   「non grato（歓迎されない人）」は見出しの言葉あそびで、本文は「イングランド人のウイングはこのコーカサスの国でまた決めた。バルサで初めての1試合2ゴール。2月にニューカッスルで、プレーオフ第1戦のカラバフ戦（6-1）の6点のうち4点を決めていた」。
+#   → 実際に入国を拒まれたなどの出来事は無い。アゼルバイジャンのクラブから点を取り続けている、という意味の見出し。台本では「好ましからざる人物」とは言わない（誤解を生む）。
+# スポルト（11/25 22:02、全文）: 試合のMVP。試合後の本人の言葉（スペイン語で掲載。英語の取材をスペイン語にしたもの）:
+#   「Estoy muy contento. Creo que los últimos días han sido difíciles con el viaje. Muy lejos de la familia durante tres días…」
+#   「¿Rey de Bakú?」と聞かれて「Bueno, no diría eso, pero es un lugar muy especial para mí」
+#   「Tendría que haber marcado otro hat-trick, pero he fallado esa con la pierna izquierda.」
+#   ムンド・デポルティーボの見出しも「¿Rey de Bakú? Es un lugar especial para mí」で一致。
+#   → 台本の言葉は、このスペイン語を私が日本語にしたもの（英語の原文は見つけられなかった。UEFA.com は読み込めず、BBC のライブは本文が取れなかった）。
+# 食い違い:
+#   ・バクーでのCLのゴール数: 公式は「直近7ゴールのうち6つ」。2月の4点（カラバフ戦）＋今回の2点＝6点で一致（自分で数えた）。
+#   ・2月の会場はトフィク・バフラモフ記念スタジアム、今回はバクー・オリンピック・スタジアム。→ 「同じスタジアム」とは言わない（「同じバクーで」）。
+#   ・題材の元は「31分に得点」→ ESPN で2得点。
+# 自分で数えたもの: バクーでのCL 2試合で6ゴール（2月4点＋11月2点）。2試合とも相手はアゼルバイジャンのクラブ（カラバフ・サバフ）。
+# 前の本との重なり: 11/24 yamal_sabah_rest（ヤマルの休み）。→ 今回はゴードンの2得点・バクーとの縁（初出）。ヤマル不在は一言だけ。
+# 【言わないこと】「好ましからざる人物」（言葉あそびを事実のように言わない）／ハットトリックの「もう1点」の場面の細部／順位（暫定）。
+# 本人の言葉: あり（上のスペイン語）。Y。
+# 写真: 3枚。01＝スポルトの主写真（クラブ提供 @FCBarcelona、この試合のゴードン）、02＝ムンド・デポルティーボの主写真（Pere Puntí、この試合）、03＝クラブ公式の試合記事の写真（3000x2000、背中の GORDON 17 とジェズス・アデイェミのハイタッチ）。
+#   01・02 は 1200x675 しか無く、縦に切ると 380x675（ショートで約2.8倍に伸びる）。大きい版は見つからなかった。
+#   外した: マルカの主写真（ページの絵文字ボタンが焼き込まれていた）、クラブ公式ギャラリーの主写真（整列の全景で顔が小さい）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: world
+date: "2026年11月26日"
+format: news
+no_main: true
+people: [アンソニー・ゴードン, バルセロナ, サバフ, ニューカッスル, カラバフ]
+
+short_style: Y
+short_hook_quote: ここは僕にとって、とても特別な場所です。
+short_photos:
+  - assets/images/20261126_gordon_baku_goal/01_v.jpg
+  - assets/images/20261126_gordon_baku_goal/03_v.jpg
+  - assets/images/20261126_gordon_baku_goal/02_v.jpg
+short_question: ゴードンは、バルセロナで次にどこまでゴールを積み上げると思いますか。
+short_telops: []
+
+theme:
+  id: gordon_baku_goal
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ゴードン、またバクーで2ゴール。アゼルバイジャンで点が止まらない男
+  hook: ""
+  question: バルセロナのゴードンは、なぜバクーで「特別な場所」と語ったのか
+  takeaway: 2月にはニューカッスルでカラバフから前半だけで4ゴール。今回のサバフ戦の2点を足すと、バクーで戦ったチャンピオンズリーグ2試合で6ゴールになる
+thumbnail:
+  layout: face
+  line1: ゴードン バクーでまた2点
+  line2: 2試合で6ゴールの街
+  tags: [アンソニー・ゴードン, バルセロナ]
+  photo: assets/images/20261126_gordon_baku_goal/01_w.jpg
+  short_photo: assets/images/20261126_gordon_baku_goal/01_v.jpg
+
+answer: 2月にニューカッスルで4点、今回バルサで2点。バクーでのCL2試合で6ゴール
+watch: 日曜のデポルティーボ戦（敵地）
+sections:
+  - id: what
+    main: true
+    heading: ゴードンは、サバフ戦でどうやって2ゴールを決めたのか
+    tier: 報道
+    telop: サバフ 1-4 バルセロナ。ゴードンが2ゴール
+    say:
+      - text: バルセロナのアンソニー・ゴードンが、アゼルバイジャンのバクーでまた決めました。試合後の言葉です。
+      - voice: ゴードン
+        text: ここは僕にとって、とても特別な場所です。
+      - text: チャンピオンズリーグのサバフ戦。ラミン・ヤマルがいない試合で、先発に入りました。
+        image: assets/images/20261126_gordon_baku_goal/02_w.jpg
+      - text: 31分、クロスを相手のキーパーがはじいたところを、ゴードンが押し込んで先制。
+        image: assets/images/20261126_gordon_baku_goal/03_w.jpg
+      - text: 51分には、ジェズスのシュートのこぼれ球を決めて2点目。
+        emph: true
+      - text: バルセロナに来てから、1試合で2点を取ったのは初めてです。
+        image: assets/images/20261126_gordon_baku_goal/02_w.jpg
+      - text: バルサはこのあと2点を加え、4対1で勝っています。
+        image: assets/images/20261126_gordon_baku_goal/03_w.jpg
+      - text: 2月にもこの街で大量点を取っていたゴードン。今回は、もう1点取れたと悔しがりました。
+        image: assets/images/20261126_gordon_baku_goal/01_w.jpg
+      - voice: ゴードン
+        text: もう一度ハットトリックをするべきでした。
+      - voice: ゴードン
+        text: 左足のチャンスを外してしまった。
+        cont: true
+    official: false
+    quotes_from: [スポルト]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915378
+      - https://www.fcbarcelona.com/en/football/first-team/news/4614625/sabah-1-4-fc-barcelona-gordon-strikes-again-in-baku
+      - https://www.sport.es/es/noticias/barca/confesion-personal-anthony-gordon-doblete-sabah-136858366
+      - https://www.marca.com/futbol/barcelona/2026/11/25/anthony-gordon-non-grato-azerbaiyan.html
+  - id: baku
+    heading: ゴードンにとって、バクーはなぜ「特別な場所」なのか
+    tier: 報道
+    telop: 2月、ニューカッスルでカラバフから前半だけで4ゴール
+    say:
+      - text: その2月の試合です。ゴードンはこのときも、バクーでチャンピオンズリーグを戦っていました。
+        image: assets/images/20261126_gordon_baku_goal/02_w.jpg
+        card: none
+      - text: そのときはニューカッスルの選手。相手は、同じアゼルバイジャンのカラバフです。
+        image: assets/images/20261126_gordon_baku_goal/03_w.jpg
+        card: none
+      - text: この試合でゴードンは、前半だけで4ゴール。ニューカッスルは6対1で勝ちました。
+        card: {type: table, title: ゴードンとバクー, columns: [いつ, 相手, ゴール], rows: [[2026年2月, カラバフ（ニューカッスル）, 4], [2026年11月, サバフ（バルセロナ）, 2]], highlight_row: 0}
+      - text: 試合後、「バクーの王様」かと聞かれたゴードン。そうは言わない、と否定しました。
+        image: assets/images/20261126_gordon_baku_goal/01_w.jpg
+        card: none
+    official: false
+    quotes_from: [スポルト]
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401858736
+      - https://www.fcbarcelona.com/en/football/first-team/news/4614625/sabah-1-4-fc-barcelona-gordon-strikes-again-in-baku
+      - https://www.sport.es/es/noticias/barca/confesion-personal-anthony-gordon-doblete-sabah-136858366
+      - https://www.mundodeportivo.com/futbol/fc-barcelona/20261125/1004255532/anthony-gordon.html
+  - id: view
+    viewpoint: true
+    heading: バクーで戦った2試合で、ゴードンは何点取ったのか
+    tier: 報道
+    telop: バクーでのチャンピオンズリーグ2試合で6ゴール
+    say:
+      - text: 見立てです。バクーで戦ったチャンピオンズリーグの2試合で、ゴードンは合わせて6ゴール。
+        card: {type: stats, title: ゴードンのバクーでの2試合, items: [[2, 試合, クラブは別], [6, ゴール, 4点＋2点], [7, 点中6点, CLの直近のゴール]], focus: 1}
+        emph: true
+      - text: クラブによると、チャンピオンズリーグでの直近7ゴールのうち、6つがバクーで生まれています。
+      - text: バルサはリーグフェーズ5試合で4勝。次は日曜、敵地でデポルティーボと戦います。
+        card: none
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4614625/sabah-1-4-fc-barcelona-gordon-strikes-again-in-baku
+      - https://www.espn.com/soccer/match/_/gameId/401858736
+      - https://www.espn.com/soccer/match/_/gameId/401915378

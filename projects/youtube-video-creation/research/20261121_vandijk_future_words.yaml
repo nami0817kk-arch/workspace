@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月21日）ファン・ダイク「来季どうするかは、いまの私にも分からない」。それでも「まだ何年もプレーできる」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-21。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: スカイスポーツ 2026-11-20 20:53（英国時間）「Liverpool: Virgil van Dijk uncertain on Anfield future beyond the summer but believes he can play for 'many more years'」独占インタビュー（全文を読んだ。英語）。
+#   ・「契約は夏で切れる」（out of contract in the summer）。35歳、プレミア優勝2回・CL優勝をリヴァプールで。
+#   ・本人（英語）: "The main thing for me is that I feel good and I'm looking after myself and I still have many more years in my opinion."
+#       "At this moment of time, if anyone says that or put out that they know what I'm going to do next season, it's untrue because at this moment of time, speaking to you, I've got no idea either."
+#       "But I'm relaxed with it because if you know me, I only focus on what I can control and that's at the moment the Manchester United game."
+#       "It's been an incredible journey, almost 10 years this summer … If it's getting extended, we'll see then. If not, then I'm going to say goodbyes in the summer."
+#       "He's been outstanding so far I must say. Very young but he plays like a very mature player. He's still 21, he's still going to get so much better"（ジャケについて）
+#       → 台本の言葉は、この英語を私が日本語にしたもの。語順はなぞらず日本語として通るようにした。「…」で切れた所は補っていない。
+# 確かめたこと:
+#   ・ESPN（site.api.espn.com eng.1 roster team 364）: ファン・ダイク 35歳（1991-07-08）DF／ジェレミー・ジャケ 21歳（2005-07-13）DF。→ 自分で数えた: 2人の年の差は14歳（生年月日から）。
+#   ・ESPN 順位表（eng.1 standings、11/21 取得）: リヴァプール 10試合 勝ち点18 4位／マンチェスター・U 10試合 勝ち点8 18位。
+#   ・ESPN scoreboard 2026-11-22: Manchester United at Liverpool、2026-11-22 16:30Z キックオフ、アンフィールド（日本時間 11/23 1:30）。スカイの「Sunday 22nd, kick-off 4.30pm」と一致。
+#   ・契約の期限: スカイ本文は「in the summer」。年は本文に無い（11/11 の取材では2027年6月と報道）。台本は「来年の夏」と言う。
+# 食い違い: 特になし。スカイは「almost 10 years this summer」（今夏で10年近く）。2018年1月加入との整合は確かめていないので「10年近く」は本人の言葉としてだけ使う。
+# 前の本との重なり: scripts/20261111_vandijk_contract_words（11/11。「今のところ報告することは何もない」「ストレスは無い」・10試合先発・契約の表）。
+#   → 今回の初出: 11/20 のスカイ独占。「誰かが知っていると言っても事実ではない」「延長されなければ夏にお別れを言う」「まだ何年もできる」・ジャケとの関係。契約の表・先発の数は繰り返さない。
+# 本人の言葉: あり。Y。 反応: 0件（作らない）。
+# 写真: assets/images/20261121_vandijk_future_words/ 01=リヴァプール公式サイト（liverpoolfc.com、11/20 の本人の写真）、02=同サイトの練習写真（顔のアップで縦に切れず横だけ使う）、03=Commons（CC BY-SA、2016年のオランダ代表の写真。古い。他に無かった）。
+#   Getty・AFP 配信の写真は使っていない（Liverpool Echo・サッカーキングは Getty なので外した）。スカイの写真は放送局扱いで取り込まない。
+slot: other_2
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [ファン・ダイク, リヴァプール, ジャケ, マンチェスター・ユナイテッド]
+
+short_style: Y
+short_hook_quote: いまの私にも、来季どうするかは分かりません。
+short_photos:
+  - assets/images/20261121_vandijk_future_words/01_v.jpg
+  - assets/images/20261121_vandijk_future_words/03_v.jpg
+short_question: ファン・ダイクは、来季もリヴァプールでプレーすると思いますか。
+short_telops: []
+
+theme:
+  id: vandijk_future_words
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: リヴァプールのファン・ダイク、将来を語る。「来季は分からない」、それでも
+  hook: ""
+  question: 契約が来夏に切れるファン・ダイクは、自分の将来について何と語ったのか
+  takeaway: 35歳のファン・ダイクは、延長されなければ夏にお別れを言うと語った。センターバックの相棒は、14歳年下の21歳ジャケ。リヴァプールは4位で、日本時間23日にマンチェスター・ユナイテッドを迎える
+
+thumbnail:
+  layout: face
+  line1: ファン・ダイク 去就
+  line2: 夏にお別れを言う
+  tags: [ファン・ダイク, リヴァプール]
+  photo: assets/images/20261121_vandijk_future_words/01_w.jpg
+  short_photo: assets/images/20261121_vandijk_future_words/01_v.jpg
+
+answer: 来季のことは本人にも分からない。それでも、まだ何年もプレーできると考えている
+watch: 日本時間23日1時30分のマンチェスター・ユナイテッド戦（アンフィールド）
+
+sections:
+  - id: what
+    main: true
+    heading: 契約が切れるファン・ダイクは、将来について何と語ったのか
+    tier: 報道
+    telop: ファン・ダイク「いまの私にも分からない」
+    say:
+      - text: リヴァプールのファン・ダイクが、契約が切れる来年の夏以降について、こう語りました。
+      - voice: ファン・ダイク
+        text: いまの私にも、来季どうするかは分かりません。
+        emph: true
+      - voice: ファン・ダイク
+        text: 私の行き先を知っていると誰かが言っても、それは事実ではありません。
+        cont: true
+      - text: 35歳のオランダ代表DFは、迷いのない口調だったと伝えられています。
+        image: assets/images/20261121_vandijk_future_words/02_w.jpg
+      - text: 本人は落ち着いていて、いま集中するのは日曜のマンチェスター・ユナイテッド戦だと話しています。
+        image: assets/images/20261121_vandijk_future_words/01_w.jpg
+      - voice: ファン・ダイク
+        text: 10年近い、素晴らしい旅でした。延長されるなら、そのとき考えます。
+        image: assets/images/20261121_vandijk_future_words/03_w.jpg
+      - voice: ファン・ダイク
+        text: そうでなければ、夏にお別れを言います。
+        cont: true
+        emph: true
+        image: assets/images/20261121_vandijk_future_words/01_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13614508/liverpool-virgil-van-dijk-uncertain-on-anfield-future-beyond-the-summer-but-believes-he-can-play-for-many-more-years
+  - id: game
+    heading: それでも「まだ何年も」と言える理由は何か
+    tier: 報道
+    telop: ファン・ダイク「まだ何年もプレーできる」
+    say:
+      - voice: ファン・ダイク
+        text: 大事なのは、体の調子がいいことと、自分の体をしっかり管理していることです。
+      - voice: ファン・ダイク
+        text: 私の考えでは、まだ何年もプレーできます。
+        cont: true
+      - text: 相棒のジャケについても、こう話しました。
+      - voice: ファン・ダイク
+        text: ここまで素晴らしい。とても若いのに、とても成熟した選手のようにプレーします。
+      - voice: ファン・ダイク
+        text: まだ21歳で、これからもっと良くなります。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13614508/liverpool-virgil-van-dijk-uncertain-on-anfield-future-beyond-the-summer-but-believes-he-can-play-for-many-more-years
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/roster
+  - id: view
+    viewpoint: true
+    heading: 14歳差のセンターバックは、リヴァプールに何をもたらすのか
+    tier: 背景
+    telop: 35歳と21歳。14歳差のコンビ
+    say:
+      - text: 見立てです。ファン・ダイクは35歳、ジャケは21歳。生年月日で数えると、14歳の差があります。
+        card: {type: table, title: リヴァプールのセンターバック, columns: [選手, 年齢, 生年月日], rows: [[ファン・ダイク, 35歳, 1991年7月8日], [ジャケ, 21歳, 2005年7月13日]], highlight_row: 0}
+      - text: そのリヴァプールは10試合を終えて勝ち点18、4位です。
+        card: none
+      - text: 相手のマンチェスター・ユナイテッドは、勝ち点8で18位です。
+      - text: 日本時間23日1時30分、アンフィールドで、2人がどう守るか。注目が集まります。
+        emph: true
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/364/roster
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.espn.com/soccer/scoreboard/_/league/eng.1/date/20261122
