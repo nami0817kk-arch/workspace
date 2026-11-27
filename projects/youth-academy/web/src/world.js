@@ -516,8 +516,13 @@
   ];
   YA.NOTICE_DOWN = NOTICE_DOWN;
   function noteTier(w, tier, text, pid) {
+    // 段5（2026-11-27）：本文に「自信 +3」「信頼+8」のような人の数字を出さない（finish.js の YA.fxStrip）
+    if (typeof text === 'string' && YA.fxStrip) text = YA.fxStrip(text).text;
     if (tier === 1 && typeof text === 'string' && (NOTICE_DOWN.some((re) => re.test(text)) || (/^リーグ戦が終わりました/.test(text) && !/降格/.test(text)))) tier = 2;
-    w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) });
+    const n = { week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) };
+    // 大事なお知らせには、コーチか本人の一言を添える（月ごとのまとめは短いまま）
+    if (YA.noteSay && !YA._minorNow && typeof text === 'string') { const s = YA.noteSay(w, tier, text, pid); if (s) n.say = s; }
+    w.inbox.push(n);
     if (w.inbox.length > 300) w.inbox.splice(0, w.inbox.length - 300);
   }
   // ★以外の子の小さな動き（復帰・成長期・伸び盛り・先発の入れ替え・性格・心の状態）は、月ごとに1件へまとめる
@@ -530,7 +535,8 @@
     const part = { s: short, f: full, y: w.year, wk: w.week };
     const i = w.inbox.findIndex((n) => n.dg === mk && n.tier === tier);
     if (i < 0) {
-      YA.noteTier(w, tier, full, p.id);
+      YA._minorNow = true; // 月ごとのまとめになるものには一言を付けない
+      try { YA.noteTier(w, tier, full, p.id); } finally { YA._minorNow = false; }
       const n = w.inbox[w.inbox.length - 1];
       n.dg = mk;
       n.parts = [part];
@@ -1054,7 +1060,8 @@
     if (o.extra) o.extra(w, p, r);
     p.hist.unshift({ y: w.year, w: w.week, t: def.name + '：' + o.label });
     let leave = '';
-    let line = res.line;
+    // 段5：反応の文に、本人の口調の一言を添える（数字は出さない。finish.js の YA.toneLine）
+    let line = YA.toneLine ? YA.toneLine(w, p, res, o.kind) : res.line;
     if (p._leave) {
       // 去る子の反応：引き止めたのに去るなら断りの言葉、送り出したならお礼（2026-11-17：失敗しても「ほっとした表情で」と出ていた）
       line = LEAVE_LINE[o.kind === 'wait' ? 'bye' : p._qr || '不満'][YA.hash(String(p.id) + w.week) % 2];
@@ -1063,7 +1070,7 @@
       leave = pname(p) + ' はチームを去った。空いた枠は、途中加入で埋まった';
       newcomer(w, r, 1); // 途中加入は高1だけ（同じ学年で埋めると、卒業生が11人を超えていた）
     }
-    return { line, small: leave ? '' : small, leave };
+    return { line, small: leave ? '' : small, leave, toned: true };
   };
   const LEAVE_LINE = {
     不満: ['「……もう決めたんです。すみません」と頭を下げた', '首を横に振った。「ここでは、もう続けられません」'],
@@ -1460,7 +1467,7 @@
     if (k === 'issue' && p.train) {
       // 課題の面談は、重点にする能力を示す（弱い能力を提案）
       const weak = abList(p).filter((n) => p.ab[n] < 12).sort((a, b) => p.ab[a] - p.ab[b])[0];
-      if (weak) extra = '弱点：' + weak + '（' + p.ab[weak] + '）';
+      if (weak) extra = '弱点：' + weak; // 能力の数字は選手の画面で見る（2026-11-27 段5：会話から数字を外す）
       if (res.c >= 0 && weak) p.prog[weak] = (p.prog[weak] || 0) + 0.15;
     }
     if (k === 'listen' && p.unrest > 0) p.unrest = Math.max(0, p.unrest - 1);
@@ -1470,7 +1477,7 @@
     // えこひいき：話す相手が偏ると他の子が感じる（面談が多い子が3人を超える）
     p.talks = (p.talks || 0) + 1;
     if (YA.addCare) YA.addCare(w, p, 3);
-    return { ok: true, line: res.line, small, extra };
+    return { ok: true, line: YA.toneLine ? YA.toneLine(w, p, res, t.kind) : res.line, small, extra, dir: YA.reactDir ? YA.reactDir(res) : null };
   };
 
   // ---------- 重点の方針（まとめて決める）----------

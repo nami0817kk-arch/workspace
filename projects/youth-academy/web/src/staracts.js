@@ -73,7 +73,7 @@
       YA.addTr(w, p, 2);
       if (a && r.chance(0.45 + (lv >= 4 ? 0.15 : lv <= 2 ? -0.15 : 0))) {
         p.ab[a] = Math.min(20, p.ab[a] + 1);
-        msg = `${first(p)}の居残り練習に付き合った。苦手だった「${a}」が少し伸びた（${p.ab[a] - 1}→${p.ab[a]}）。疲れ+10`;
+        msg = `${first(p)}の居残り練習に付き合った。苦手だった「${a}」が少し伸びた。疲れ+10`;
       } else msg = `${first(p)}の居残り練習に付き合った。「${a || '基礎'}」を繰り返した。すぐには伸びないが、続ければ形になりそうだ。疲れ+10`;
       q = pick(w, p, k, ['最後まで付き合ってくれて、ありがとうございます', '明日も、もう少しだけやっていいですか', '一人じゃ、ここまでできませんでした']);
     } else if (k === 'video') {
@@ -137,13 +137,13 @@
         const list = (YA.POS_ABS15[p.main] || []).filter((a) => p.ab[a] != null && p.ab[a] < 20);
         const a = list.length ? list[YA.hash(p.id + w.year + w.week) % list.length] : null;
         if (a) p.ab[a]++;
-        YA.noteTier(w, 1, `${p.num}番 ${p.name}が約束の目標に届いた（${pc.t === 'goals' ? pc.need + '点' : pc.need + '試合'}）。自信+8${a ? `・「${a}」が伸びた` : ''}`, p.id);
+        YA.noteTier(w, 1, `${p.num}番 ${p.name}が約束の目標に届いた（${pc.t === 'goals' ? pc.need + '点' : pc.need + '試合'}）${a ? `。「${a}」が伸びた` : ''}`, p.id);
         if (YA.memAdd) YA.memAdd(w, p, 'sa', 'good', say(p, '約束、守れました'), { sa: 'pactok' });
       } else if (wk(w) >= pc.due) {
         delete p.pact;
         p.conf = clamp(p.conf - 4, 0, 100);
         YA.addTr(w, p, -4, '約束に届かなかった');
-        YA.noteTier(w, 2, `${p.num}番 ${p.name}は約束の目標に届かなかった（${have}/${pc.need}）。自信-4`, p.id);
+        YA.noteTier(w, 2, `${p.num}番 ${p.name}は約束の目標に届かなかった（${have}/${pc.need}）`, p.id);
       }
     }
     return res;

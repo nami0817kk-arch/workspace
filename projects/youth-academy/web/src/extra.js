@@ -376,6 +376,13 @@
           tone(2000, 0.26, 0.34, 'sine', 0.06);
         } else if (kind === 'save') tone(300, 0, 0.12, 'square', 0.05);
         else if (kind === 'miss') tone(190, 0, 0.2, 'sawtooth', 0.04);
+        // 段5（2026-11-27）：気づき・覚醒・あきらめ
+        // 気づき＝「見えた。」の光に合わせて、高い音が2つ澄んで重なる
+        else if (kind === 'kizuki') { tone(1568, 0, 0.5, 'sine', 0.05); tone(2093, 0.07, 0.6, 'sine', 0.04); tone(3136, 0.14, 0.45, 'sine', 0.02); }
+        // 覚醒＝低い響きのあと、和音が下から順に上がる
+        else if (kind === 'awake') { tone(98, 0, 0.9, 'triangle', 0.09); [392, 494, 587, 784, 988].forEach((f, i) => tone(f, 0.18 + i * 0.13, 0.75 - i * 0.05, 'triangle', 0.07)); }
+        // あきらめ＝短調の3つの音がゆっくり下がる
+        else if (kind === 'giveup') [440, 349, 294].forEach((f, i) => tone(f, i * 0.24, 0.5, 'sine', 0.05));
       } catch (e) {}
     },
   };

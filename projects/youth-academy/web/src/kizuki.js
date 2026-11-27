@@ -443,7 +443,8 @@
       out.head = '何かが違う';
       out.text = (talk ? `${sur(p)}は、うなずいた。` : resT) + 'でも、どこかしっくりこない。この課題では、化けるところまではいかないのかもしれない。';
       out.say = V('できた……。でも、なんか違う気がする');
-      out.tag = x ? (x.clue ? `手がかり +1：「${x.clue}」` : '手がかりは出そろっている') + (x.ab ? `・${x.ab}が少し伸びた` : '') : '手がかり +1（試合のあとに見える）・少し伸びる';
+      // 数字は出さない（2026-11-27 段5）
+      out.tag = x ? (x.clue ? `新しい手がかり：「${x.clue}」` : '手がかりは出そろっている') + (x.ab ? `・${x.ab}が少し伸びた` : '') : '新しい手がかりが見える（試合のあとに）・少し伸びる';
     } else if (kind === 'safe') {
       out.head = talk ? 'その場は収まった' : '無難な一手';
       out.text = talk ? `${sur(p)}は小さくうなずいた。話はそれで終わった。` : resT || R_SAFE;
@@ -453,7 +454,7 @@
       out.head = '悔しい';
       out.text = talk ? `${sur(p)}は黙りこんだ。言葉が届かなかった。` : resT || R_BAD;
       out.say = V(talk ? TALK_SAY_BAD[e.seed % 3] : SAY_BAD[e.seed % 3]);
-      out.tag = '自信が少し下がった・気づきは次の機会へ持ち越し';
+      out.tag = '気づきは次の機会へ持ち越し';
     }
     return out;
   }
@@ -700,7 +701,7 @@
       e._m = opt.mate; e._d = opt.ctx.d;
       const res = o.onPick(opt.role);
       pitch.innerHTML = pitchSvg(v, { opt, role: opt.role, kind: res.kind });
-      if (res.kind === 'awake') box.classList.add('kzawake');
+      if (res.kind === 'awake') { box.classList.add('kzawake'); if (YA.kzFlash) YA.kzFlash(); } // 段5：「見えた。」で画面が一瞬白く光る
       stopTx.textContent = o.live ? `▶ 再開 ─ ${res.kind === 'awake' ? sur(p) + 'が化けた' : '試合に戻る'}` : res.kind === 'awake' ? `${sur(p)}が化けた` : '気づきの場面';
       side.replaceChildren(h('div', { class: 'kzres' },
         h('div', { class: 'kzrtop' }, YA.faceEl(w, p, 64), h('h2', { class: res.kind === 'awake' ? '' : 'grey' }, res.head)),
