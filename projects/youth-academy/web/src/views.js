@@ -92,6 +92,8 @@
   //   外したもの：次の実績（→記録）・今週の伸び（→選手）・トップの順位（→クラブ）・ご褒美の動画（→ほかのショップ）
   const nkey = (n) => `${n.year || 0}-${n.week || 0}-${String(n.text).slice(0, 24)}`;
   const nNew = (w, n) => ((n.year || 0) * 100 + (n.week || 0)) > (w.readAt || 0) && YA.noticeTier(w, n) <= 2;
+  // 大事なお知らせに添えた、コーチか本人の一言（2026-11-27 段5。world.js の noteTier → finish.js の YA.noteSay）
+  const nsay = (n) => (n.say ? h('span', { class: 'nsay' }, n.say) : null);
   // お知らせの一覧（窓の中身）
   function noticeList(w, close) {
     const showLog = !!U().app.showLog;
@@ -100,7 +102,7 @@
     w.pins = (w.pins || []).filter((k) => w.inbox.some((n) => nkey(n) === k));
     const pinned = w.inbox.filter((n) => w.pins.indexOf(nkey(n)) >= 0);
     const redraw = () => { close(); openNotices(); };
-    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:11px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); redraw(); } }, '外す')));
+    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:11px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, nsay(n)), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); redraw(); } }, '外す')));
     const items = w.inbox.filter((n) => (showLog || YA.noticeTier(w, n) <= 2) && w.pins.indexOf(nkey(n)) < 0).slice(-40).reverse();
     for (const n of items) {
       const et = YA.noticeTier(w, n);
@@ -108,7 +110,7 @@
       // 重要度は色の点だけでなく短い札で（2026-11-17 点検）。選手につながるお知らせには「›」
       const go = n.pid && w.players[n.pid];
       // 留めるのは行の長押しで（2026-11-18 ユーザビリティ17）
-      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null));
+      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null, nsay(n)));
       let lp = null, held = false;
       if (et <= 2) {
         row.addEventListener('pointerdown', () => { held = false; lp = setTimeout(() => { held = true; w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); if (YA.toast) YA.toast('上に留めました（外すときは「外す」）'); redraw(); }, 550); });
@@ -222,6 +224,7 @@
     page.append(wrap);
     if (YA.kadaiBand) page.append(YA.kadaiBand(w, rerender));
     main.append(page);
+    if (w.fxQ && w.fxQ.length && YA.fxScenePlay) YA.fxScenePlay(w); // 課題をあきらめた子の短い場面（2026-11-27 段5）。出来事の窓の上に重ねる
     if (w.phase === 'event' && w.events.length) showEvent();
     else if (w.kzNow && w.kzNow.length) showEvent('kzNow'); // 試合のあとの気づきの場面と、そこで覚醒した窓（2026-11-27）
     else if (!U().app.holdPrompts) YA.promptsFor();
@@ -301,6 +304,8 @@
       });
       return;
     }
+    // 覚醒：画面いっぱいの演出を、今の覚醒の窓の上に重ねる（2026-11-27 段5。タップで飛ばせる）
+    if (e.id === 'awake' && v.p && !e._fx && YA.awakeShow) { e._fx = 1; YA.awakeShow(w, v.p); }
     modal((close) => {
       const p = v.p;
       const box = h('div', { class: 'sheet-in evbox', style: 'align-self:center;flex:none;width:min(780px,98%);max-height:100%;margin:auto;padding:10px 12px;gap:6px' });
@@ -326,12 +331,12 @@
       const choose = (i) => {
         const r = YA.resolveEvent(w, e, i);
         // 日常の会話で覚醒したら、今の覚醒の窓をすぐ次に見せる
-        if (r.kz && r.kz.kind === 'awake') { const a = YA.kizukiTakeAwake(w, e.pid); if (a) Q.splice(1, 0, a); }
+        if (r.kz && r.kz.kind === 'awake') { const a = YA.kizukiTakeAwake(w, e.pid); if (a) Q.splice(1, 0, a); if (YA.kzFlash) YA.kzFlash(); }
         box.replaceChildren(
           r.kz ? h('div', { class: 'h kzhead' + (r.kz.kind === 'awake' ? ' gold' : '') }, `${v.name}　${r.kz.head}`) : h('div', { class: 'h' }, v.name),
-          h('div', { class: 'card', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, r.kz ? r.kz.text + (r.kz.say ? `「${r.kz.say}」` : '') : (p ? `${p.name.split(' ')[0]}は、` : '') + r.line),
+          h('div', { class: 'card evres', style: 'padding:9px 11px;font-size:13px;line-height:1.6' }, r.kz ? r.kz.text + (r.kz.say ? `「${r.kz.say}」` : '') : (p && r.line && !r.line.startsWith(p.name.split(' ')[0]) && !r.line.startsWith(p.name) ? `${p.name.split(' ')[0]}は、` : '') + r.line),
+          // 自信・信頼などの数字は出さない（2026-11-27 段5）。残るのは「話は続く」「2週間不在」やクラブの数（予算・評判など）だけ
           r.small ? h('div', { class: 'chip trait', style: 'align-self:flex-start' }, r.small) : null,
-          r.small && /自信|調子/.test(r.small) ? h('div', { class: 'note' }, '自信：高いほど試合で力を出せる（低いと出来事が起きやすい）。調子：ここ数週の出来。') : null,
           r.leave ? h('div', { class: 'insight bad' }, r.leave) : null,
           h('button', { class: 'btn pri', onclick: () => { close(); next(); } }, Q.length > 1 ? '次へ' : '閉じる'),
         );
@@ -683,7 +688,7 @@
     const su = YA.talkSetup(w, sel);
     const talkBtns = () => { for (const b of talk.querySelectorAll('button')) b.disabled = true; };
     talk.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;background:#f5f8fd' }, h('b', {}, sel.name.split(' ')[0] + '：'), `「${su.line}」`));
-    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, why: '面談は1人と月1回までです。来月また話せます', onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.small ? '（' + r.small + '）' : ''}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
+    talk.append(h('div', { class: 'fm-row', style: 'margin-top:4px' }, su.opts.map((t) => h('button', { class: 'btn', disabled: !can, why: '面談は1人と月1回までです。来月また話せます', onclick: () => { const r = YA.talk(w, sel.id, t.k); res.replaceChildren(h('div', {}, r.ok ? `${sel.name.split(' ')[0]}は、${r.line}${r.extra ? ' / ' + r.extra : ''}` : r.msg)); YA.saveWorld(); talkBtns(); } }, t.label))));
     talk.append(res);
     if (YA.starActsEl) { const sa = YA.starActsEl(w, sel, rerender); if (sa) talk.append(sa); }
     growT.append(talk);

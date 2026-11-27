@@ -36,6 +36,7 @@ require(path.join(__dirname, '../src/kizuki.js'));
 require(path.join(__dirname, '../src/team2.js'));
 require(path.join(__dirname, '../src/records.js'));
 require(path.join(__dirname, '../src/paper.js'));
+require(path.join(__dirname, '../src/finish.js'));
 require(path.join(__dirname, '../src/imgdata.js'));
 require(path.join(__dirname, '../src/art.js'));
 const YA = globalThis.YA;

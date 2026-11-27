@@ -101,7 +101,8 @@ function measure(YA, data) {
   m.diary = data.notes.filter((n) => /^練習日誌：/.test(n.text)).length;
   // 91：反応の文の偏り（選手に当たった出来事の結果の文で、いちばん多い2つの割合）
   // 反応の文は句点の無い短い文（world.js の react）。「（…）」の中に付いた続き物の反応も数える
-  const lines = data.events.filter((e) => e.line && !e.leave).map((e) => (/（([^（）。]+)）$/.exec(e.line) || [null, e.line])[1]).filter((l) => l && !/。/.test(l) && !/^[^「]*「[^」]*」$/.test(l));
+  // 2026-11-27 段5：反応の文のあとに付く口調の一言（。「…」）は外して数える
+  const lines = data.events.filter((e) => e.line && !e.leave).map((e) => e.line.replace(/。「[^」]*」$/, '')).map((l) => (/（([^（）。]+)）$/.exec(l) || [null, l])[1]).filter((l) => l && !/。/.test(l) && !/^[^「]*「[^」]*」$/.test(l));
   const freq = {};
   for (const l of lines) freq[l] = (freq[l] || 0) + 1;
   const top = Object.values(freq).sort((a, b) => b - a);
@@ -109,6 +110,12 @@ function measure(YA, data) {
   m.reactTop2 = lines.length ? Math.round(((top[0] || 0) + (top[1] || 0)) / lines.length * 100) : 0;
   // 95：選んでも何も起きない（結果の文も小さな効果も空）
   m.empty = data.events.filter((e) => !e.line && !e.small && !e.leave).length;
+  // 2026-11-27 段5：会話の画面（出来事の結果の文・小さな札）とお知らせの本文に、人の数字（自信 +3・信頼+8 など）が出ない
+  const NUM = YA.FX_NUM || /(自信|信頼(?!度)|調子)\s*[+＋−-]\s*\d/;
+  m.numEv = data.events.filter((e) => NUM.test(e.line) || NUM.test(e.small)).length;
+  m.numNote = data.notes.filter((n) => NUM.test(n.text)).length;
+  // 反応の一言（口調）が付いた結果の文の数
+  m.toned = data.events.filter((e) => /。「[^」]+」$/.test(e.line)).length;
   m.events = data.events.length;
   m.notes = data.notes.length;
   return m;
@@ -129,6 +136,10 @@ module.exports = (YA, ok) => {
   ok(m.leftVisit === 0, '文の点検：退団した子が卒業生として顔を出さない ' + m.leftVisit);
   ok(m.leaveThanks === 0, '文の点検：去る子が「ありがとうございます」と言わない ' + m.leaveThanks);
   ok(m.reactN < 20 || m.reactTop2 <= 35, '文の点検：反応の文の上位2つが35%以下 ' + m.reactTop2 + '%');
+  ok(m.numEv === 0, '文の点検：出来事の結果（会話の画面）に人の数字（自信 +3 など）が出ない ' + m.numEv);
+  ok(m.numNote === 0, '文の点検：お知らせの本文に人の数字が出ない ' + m.numNote);
+  ok(m.toned >= 20, '文の点検：反応に本人の口調の一言が付く ' + m.toned);
+  console.log(`  文の点検：出来事${m.events}件・お知らせ${m.notes}件・口調の一言${m.toned}件・人の数字 ${m.numEv}/${m.numNote}`);
   ok(m.spurtLong <= SEEDS.length * 3, '文の点検：成長期の長い説明は初回だけ ' + m.spurtLong);
   ok(m.weekGain <= SEEDS.length * 3 * 25, '文の点検：「今週よく伸びた」がまとめてある ' + m.weekGain);
   ok(!m.diary || m.lightBody / m.diary <= 0.15, '文の点検：日誌の「体が軽い」が多すぎない ' + m.lightBody + '/' + m.diary);
@@ -166,7 +177,7 @@ module.exports.measure = measure;
 
 if (require.main === module) {
   const path = require('path');
-  for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'stars2', 'kadai', 'kizuki']) require(path.join(__dirname, '../../src/' + f + '.js'));
+  for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'core', 'lineage', 'rivals', 'story', 'memory', 'chains', 'chains2', 'events2', 'staff', 'scout2', 'club5', 'life', 'func', 'pronews', 'staracts', 'shop', 'stars2', 'kadai', 'kizuki', 'team2', 'records', 'paper', 'finish']) require(path.join(__dirname, '../../src/' + f + '.js'));
   const YA = globalThis.YA;
   const n = +process.argv[2] || 8;
   const seeds = Array.from({ length: n }, (_, i) => i + 1);

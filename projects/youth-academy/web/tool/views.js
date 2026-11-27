@@ -53,6 +53,7 @@ const html = read('shell.html')
   .replace('/*__TEAM2__*/', () => read('team2.js'))
   .replace('/*__RECORDS__*/', () => read('records.js'))
   .replace('/*__PAPER__*/', () => read('paper.js'))
+  .replace('/*__FINISH__*/', () => read('finish.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -111,6 +112,9 @@ const ptab = (n) => { const b = [...d.querySelectorAll('#main .ptabs button')].f
 // 出来事が出ていたら、最初の選択肢で全部片付ける
 async function clearEvents() {
   let n = 0;
+  // 段5の演出（覚醒・課題の場面）が重なっていたら閉じる
+  const fxOff = () => { for (const o of [...d.querySelectorAll('.fxov')]) { o.click(); o.click(); } };
+  fxOff();
   while (d.querySelector('.sheet') && n++ < 10) {
     const s = d.querySelector('.sheet');
     // 気づきの場面（選手の目）：最初の選択肢 → 次へ／再開
@@ -121,12 +125,17 @@ async function clearEvents() {
     if (next) next.click();
     else if (opts.length) opts[0].click();
     await sleep(10);
+    fxOff();
   }
+  fxOff();
 }
 
 (async () => {
   await sleep(100);
   const A = w.YA._ui.app;
+  // 効果音の呼び出しを記録する（jsdom に WebAudio は無いので、鳴らす種類だけ見る）
+  const sfxLog = [];
+  { const p0 = w.YA.sfx.play.bind(w.YA.sfx); w.YA.sfx.play = (k) => { sfxLog.push(k); return p0(k); }; }
   // 新しく始める：指導者を作る・クラブを選ぶ
   ok(txt().includes('指導者を作る') && txt().includes('最初のクラブを選ぶ') && txt().includes('この指導者で始める') && !A.w, '保存がなければ新しく始める画面');
   w.YA._ui.store.set('legacy', { runs: 1, people: [{ name: '遠藤 光', pos: 'MF', main: 'CM', ovr: 13, bond: 5, form: null, mem: [{ y: 1, w: 3, g: 1, k: 'wall', c: 'warm', q: '必ず越えられる' }], year: 2, club: 'X', from: '前のクラブ' }] });
@@ -299,7 +308,8 @@ async function clearEvents() {
   ok(txt().includes('本人の希望') && txt().includes('トップへの近さ'), '選手の進路（希望・トップへの近さ）');
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
-  ok(txt().includes('自信'), '面談の反応');
+  // 2026-11-27 段5：面談の反応は本人の口調の一言で見せ、「自信 +5」のような数字は出さない
+  { const ml = d.querySelector('#main .msglog'); ok(!!ml && /は、/.test(ml.textContent) && /「[^」]+」/.test(ml.textContent) && !w.YA.FX_NUM.test(ml.textContent) && !/（\d+）/.test(ml.textContent), '面談の反応（本人の口調の一言・数字なし） ' + (ml && ml.textContent)); }
   // 課題を出す（2026-11-26）：コーチの報告の一番上に手がかり欄。10種類の札 → 中身 → 確かめて出す
   {
     const sp = A.w.players[A.pSel];
@@ -323,6 +333,13 @@ async function clearEvents() {
     ok(sh && /課題「.+」を出しますか/.test(sh.textContent), '確かめてから出す ' + (sh && sh.textContent.slice(0, 60)));
     btn('課題を出す', sh).click();
     ok(sp.kd && sp.star && errors.length === 0 && !d.querySelector('.sheet'), '課題が出る ' + errors.slice(0, 2).join('|'));
+    // 2026-11-27 段5：課題を出したら、本人の顔と一言の短い場面（タップで閉じる）
+    {
+      const gs = d.querySelector('.fxov.kzs.give');
+      ok(!!gs && gs.textContent.includes(sp.name) && /課題を出した/.test(gs.textContent) && /「[^」]+」/.test(gs.textContent) && !!gs.querySelector('img.face'), '課題を出すと本人の顔と一言の場面 ' + (gs && gs.textContent.slice(0, 60)));
+      if (gs) gs.click();
+      ok(!d.querySelector('.fxov.kzs'), '課題の場面はタップで閉じる');
+    }
     ptab('コーチの報告');
     const kb2 = d.querySelector('#main .kadaibox');
     console.log(`  課題の画面：札${cards.length}・中身${kopts.length}・出した課題「${w.YA.kadaiLabel(A.w, sp.kd.t, sp.kd.c)}」・手がかり欄「${kb2 ? kb2.textContent.slice(0, 40) : ''}…」`);
@@ -352,7 +369,18 @@ async function clearEvents() {
       const okKey = box._view.opts.find((o) => o.role === 'ok').key;
       box.querySelector(`.kzopt[data-k="${okKey}"]`).click();
       K(box.querySelector('.kzres h2') && box.querySelector('.kzres h2').textContent === '見えた。' && kid.awake && !kid.kd, '正しい手を選ぶと「見えた。」で覚醒する');
+      // 2026-11-27 段5：「見えた。」で画面が一瞬白く光り、気づきの音
+      K(!!d.querySelector('.fxflash') && sfxLog.includes('kizuki'), '「見えた。」で画面が白く光る（選手の目）・気づきの音');
       box.querySelector('.kzgo').click();
+      // 覚醒は画面いっぱいの演出が先に重なる：覚醒 → 形の名前 → 覚醒の特性 → 本人の一言。1回目のタップで全部出し、2回目で閉じる
+      const awk = d.querySelector('.fxov.awk');
+      K(!!awk && ['.awk-big', '.awk-form', '.awk-trait', '.awk-say'].every((c) => !!awk.querySelector(c)) && awk.querySelector('.awk-big').textContent === '覚醒' && awk.textContent.includes(kid.aw.form) && awk.textContent.includes(kid.aw.trait) && /「[^」]+」/.test(awk.querySelector('.awk-say').textContent) && sfxLog.includes('awake'), '覚醒は画面いっぱい（覚醒・形・特性・一言）と覚醒の音');
+      const order = ['.awk-big', '.awk-form', '.awk-trait', '.awk-say'].map((c) => parseFloat((awk.querySelector(c).style.animationDelay || w.getComputedStyle(awk.querySelector(c)).animationDelay || '0').replace(/[^\d.]/g, '')) || 0);
+      K(order.every((x, i) => i === 0 || x >= order[i - 1]), '覚醒の演出は順に出る ' + order.join(','));
+      awk.click();
+      K(awk.classList.contains('all') && !!d.querySelector('.fxov.awk'), '1回目のタップで全部出る（飛ばせる）');
+      awk.click();
+      K(!d.querySelector('.fxov.awk'), '2回目のタップで閉じる');
       const aw = d.querySelector('.sheet');
       K(aw && /覚醒/.test(aw.textContent) && aw.textContent.includes(kid.aw.trait), '続けて今の覚醒の窓が出る');
       await clearEvents();
@@ -368,6 +396,7 @@ async function clearEvents() {
       const okT = tv.opts.find((o) => o.role === 'ok').text;
       [...ev.querySelectorAll('button')].find((b) => b.textContent.includes(okT)).click();
       K(/何かが違う/.test(d.querySelector('.sheet').textContent) && kid2.kd && kid2.kd.ng, '合わない課題で正しい言葉 → 何かが違う（手がかり+1）');
+      K(!/\+\s*\d/.test(d.querySelector('.sheet').textContent), '気づきの結果の札に「+1」のような数字が出ない');
       await clearEvents();
       // 試合の途中の場面（画面で見る A の試合）：「▶ 再開」で戻る。選んだ中身は試合のあとに反映
       kid2.kd.ng = false; kid2.kd.fit = 'yes'; W.kzW = null;
@@ -389,12 +418,75 @@ async function clearEvents() {
       A.tab = 'players'; A.pSel = sp.id; A._pSeen = sp.id; A.pOpen = true; A.pTab = 'rep';
       Y._ui.render();
     }
+    // 段5 文章と演出の仕上げ（2026-11-27。finish.js）：出来事の結果に数字が出ず口調の一言・大事なお知らせの一言・あきらめの場面・おまかせで演出が出ない
+    {
+      const Y = w.YA;
+      const W = A.w;
+      let nF = 0;
+      const F = (c, m) => { nF++; ok(c, '仕上げの画面：' + m); };
+      // 出来事の結果（節目の会話）：数字の札が無く、本人の口調の一言
+      const q = Object.values(W.players).find((p) => p.id !== sp.id && !p.kd && Y.toneOf(p) !== '無口');
+      W.events = [{ id: 'ms', pid: q.id, ms: 'debut', week: W.week, year: W.year }]; W.phase = 'event'; W.kzNow = [];
+      A.tab = 'home'; A.holdPrompts = false;
+      Y._ui.render();
+      const ev = d.querySelector('.sheet .evbox');
+      F(!!ev && /初めての出場/.test(ev.textContent), '節目の会話の窓が出る');
+      const ob = ev ? [...ev.querySelectorAll('button.btn')].find((b) => /肩をたたく/.test(b.textContent)) : null;
+      if (ob) ob.click();
+      const res = d.querySelector('.sheet .evres');
+      const sh1 = d.querySelector('.sheet');
+      F(!!res && /「[^」]+」/.test(res.textContent) && !Y.FX_NUM.test(sh1.textContent) && !/自信：高いほど/.test(sh1.textContent), '出来事の結果に「自信 +5」が出ず、本人の口調の一言 ' + (res && res.textContent));
+      F(res && !new RegExp('^' + q.name.split(' ')[0] + 'は、' + q.name.split(' ')[0]).test(res.textContent), '結果の文で名前が二重にならない');
+      await clearEvents();
+      W.phase = 'after';
+      // お知らせの窓：大事なお知らせの一言が本文の下に出る
+      Y.noteTier(W, 1, `${q.num}番 ${q.name} が練習中に怪我。全治6週`, q.id);
+      const nn = W.inbox[W.inbox.length - 1];
+      F(!!nn.say && /「[^」]+」/.test(nn.say), 'お知らせに一言が付く ' + nn.say);
+      Y.openNotices();
+      const nw = d.querySelector('.noticewin');
+      F(!!nw && [...nw.querySelectorAll('.nsay')].some((x) => x.textContent === nn.say), 'お知らせの一覧に一言が出る');
+      btn('閉じる', nw).click();
+      // 課題をあきらめた場面：週の中で積まれ、ホームで本人の顔と一言・あきらめの音
+      Y.fxPush(W, { k: 'gaveup', pid: q.id, nm: '封印（ドリブル）', t: '本当は、前で勝負したいんです' });
+      Y._ui.render();
+      const gs = d.querySelector('.fxov.kzs.gaveup');
+      F(!!gs && gs.textContent.includes(q.name) && /課題をあきらめた/.test(gs.textContent) && /打ち明けた言葉/.test(gs.textContent) && sfxLog.includes('giveup'), 'あきらめた場面（顔・一言・打ち明けた言葉）とあきらめの音');
+      if (gs) gs.click();
+      F(!d.querySelector('.fxov') && !(W.fxQ || []).length, 'あきらめの場面はタップで閉じ、もう出ない');
+      // 日常の会話で覚醒：画面が光る
+      const fl0 = sfxLog.filter((k) => k === 'kizuki').length;
+      const kid3 = Object.values(W.players).find((p) => p.pos !== 'GK' && !p.kd && !p.awake && p.id !== sp.id && p.id !== q.id);
+      kid3.kd = { t: 'captain', c: null, w0: W.year * 40 + W.week - 8, len: 12, fit: 'yes' }; kid3.star = true; W.kzW = null;
+      const e4 = Y.kizukiMake(W, kid3, 'talk');
+      W.kzNow = [e4];
+      Y._ui.render();
+      const tv4 = Y.kizukiTalkView(W, e4);
+      const okT4 = tv4.opts.find((o) => o.role === 'ok').text;
+      [...d.querySelectorAll('.sheet .evbox button')].find((b) => b.textContent.includes(okT4)).click();
+      F(!!d.querySelector('.fxflash') && sfxLog.filter((k) => k === 'kizuki').length > fl0 && kid3.awake, '日常の会話の「見えた。」でも画面が光る');
+      await clearEvents();
+      F(!d.querySelector('.fxov') && !d.querySelector('.sheet'), '覚醒の演出と窓を片付けられる');
+      kid3.star = false; W.kzNow = []; W.forced = []; W.events = [];
+      // おまかせ進行：演出を出さず止まらない（覚醒・あきらめが起きても）
+      const a0 = sfxLog.length;
+      const ov0 = d.querySelectorAll('.fxov').length;
+      const W2 = Y.testStart({ seed: 11, tier: 2 }).w;
+      const r2 = Y.simulate(W2, { until: 'year', stopOnImportant: false });
+      F(!r2.stopped && d.querySelectorAll('.fxov').length === ov0 && sfxLog.length === a0 && !(W2.fxQ || []).length, 'おまかせ進行では演出も音も出ず、止まらない（年の覚醒 ' + ((W2.awakeN && W2.awakeN.n) || 0) + '人）');
+      // 新聞は出るときに紙が広がる（CSS のアニメーション）
+      F(/\.np\{[^}]*animation:npOpen/.test(d.querySelector('style').textContent) && /@keyframes npOpen/.test(d.querySelector('style').textContent), '新聞の紙が広がる動き（.np の animation）');
+      console.log(`  仕上げの画面：点検 ${nF}件`);
+      ok(nF >= 11 && errors.length === 0, '仕上げの画面の点検が全部走った ' + nF + ' ' + errors.slice(0, 2).join('|'));
+      A.tab = 'players'; A.pSel = sp.id; A._pSeen = sp.id; A.pOpen = true; A.pTab = 'rep';
+      Y._ui.render();
+    }
     A.w.saUsed = null;
     w.YA._ui.render();
     ptab('育成');
     ok(['課題中の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', 'じっくり本音を聞く', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる', '自主練のメニューを一緒に作る', '休ませて話を聞く', '家族と話す', '試合前に声をかける', '別の位置を試させる', '本を薦める'].every((x) => txt().includes(x)), '課題中の子の働きかけが12並ぶ');
     btn('ご飯に連れて行く').click();
-    ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('信頼+8') && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
+    ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('ご飯に連れて行った') && !w.YA.FX_NUM.test(txt()) && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
     const mb = [...d.querySelectorAll('#main button')].find((b) => b.textContent.startsWith('ご飯に連れて行く'));
     ok(mb && mb.disabled && /週に1回/.test(mb.dataset.why || ''), '続けては押せず、理由が付く ' + (mb && [mb.disabled, mb.dataset.why, mb.textContent].join('|')));
   }
@@ -429,7 +521,7 @@ async function clearEvents() {
   ok(txt().includes('トップチーム'), 'クラブの概要にトップの順位（ホームから移した）');
   ok(txt().includes('チームの雰囲気') && /の輪/.test(txt()) && !!btn('チーム全員で話す'), 'クラブの概要にチームの雰囲気と仲良しの輪（2026-11-20）');
   btn('チーム全員で話す').click();
-  { const tb = [...d.querySelectorAll('#main button')].find((b) => b.textContent === 'チーム全員で話す'); ok(txt().includes('雰囲気+') && !!tb && tb.disabled && /月1回/.test(tb.dataset.why || ''), 'チームへの働きかけは月1回 ' + (tb && [tb.disabled, tb.dataset.why].join('|'))); }
+  { const tb = [...d.querySelectorAll('#main button')].find((b) => b.textContent === 'チーム全員で話す'); ok(txt().includes('空気が少し明るくなった') && !/雰囲気\+/.test(txt()) && !!tb && tb.disabled && /月1回/.test(tb.dataset.why || ''), 'チームへの働きかけは月1回 ' + (tb && [tb.disabled, tb.dataset.why].join('|'))); }
   ok(txt().includes('信頼度') && txt().includes('今年の目標') && !txt().includes('undefined'), 'クラブの概要（信頼度の名前が出る）');
   ok(txt().includes('指導の方針') && txt().includes('強化部長') && txt().includes('寄り添い'), 'クラブの概要に指導の方針と強化部長');
   ok(txt().includes('中長期の計画'), 'クラブの概要に中長期の計画');

@@ -93,7 +93,7 @@
         const subs = (p.subs || []).concat(YA.NEAR_POS[best] || []).filter((x) => x !== p.main && x !== 'GK');
         const q2 = subs.length ? subs[Math.floor(r() * subs.length)] : null;
         if (q2) { p.aptX = p.aptX || {}; p.aptX[q2] = (p.aptX[q2] || 0) + 0.6; YA.refreshApt(p); }
-        msg = q2 ? `${first(p)}を練習で${YA.POS_LABEL[q2]}に立たせてみた。少しずつ慣れてきた（適性${Math.round(p.apt[q2])}）` : `${first(p)}を別の位置に立たせてみた。`;
+        msg = q2 ? `${first(p)}を練習で${YA.POS_LABEL[q2]}に立たせてみた。少しずつ慣れてきた` : `${first(p)}を別の位置に立たせてみた。`;
       }
       q = pick(w, p, k, ['こっちの景色も、悪くないです', '新しい自分が見えた気がします', '慣れるまで付き合ってください']);
     } else if (k === 'book') {

@@ -511,7 +511,8 @@
         const t = DEF(f.t).want(w, p, f.c);
         if (p.kc && p.kc.more.indexOf(t) < 0) p.kc.more.push(t);
         w.kadaiN = { y: w.year, n: w.kadaiN && w.kadaiN.y === w.year ? w.kadaiN.n : 0, give: (w.kadaiN && w.kadaiN.y === w.year ? w.kadaiN.give || 0 : 0) + 1 };
-        YA.noteTier(w, 1, `${p.num}番 ${p.name}が課題「${nm}」をあきらめた。信頼と自信が下がった。話の終わりに、ぽつりと言った。「${t}」`, p.id);
+        YA.noteTier(w, 1, `${p.num}番 ${p.name}が課題「${nm}」をあきらめた。話の終わりに、ぽつりと言った。「${t}」`, p.id);
+        if (YA.fxPush) YA.fxPush(w, { k: 'gaveup', pid: p.id, nm, t }); // 段5：本人の顔と一言の短い場面（画面で遊ぶときだけ）
         if (YA.memAdd) YA.memAdd(w, p, 'kgive', null, t);
         continue;
       }
@@ -604,7 +605,7 @@
     const rec = YA.kadaiRec(w, p);
     modal((close) => {
       const body = h('div', { class: 'kpick', style: 'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;overflow:auto;min-height:0' });
-      const done = (t, c) => { close(); YA.confirmBox(`${p.name}に課題「${YA.kadaiLabel(w, t, c)}」を出しますか`, () => { const r = YA.kadaiGive(w, p, t, c); U().app.starMsg = r.msg; YA.saveWorld(); rerender(); }, { yes: '課題を出す', note: '合っているかは、本人の様子と試合で分かってきます。' }); };
+      const done = (t, c) => { close(); YA.confirmBox(`${p.name}に課題「${YA.kadaiLabel(w, t, c)}」を出しますか`, () => { const r = YA.kadaiGive(w, p, t, c); U().app.starMsg = r.msg; YA.saveWorld(); rerender(); if (r.ok && YA.fxScene) YA.fxScene(w, { k: 'give', pid: p.id, nm: YA.kadaiLabel(w, t, c) }); }, { yes: '課題を出す', note: '合っているかは、本人の様子と試合で分かってきます。' }); };
       const pickC = (d) => {
         body.replaceChildren(...YA.kadaiOpts(w, p, d.k).map((c) => h('button', { class: 'btn kopt', style: 'min-height:42px', onclick: () => done(d.k, c) }, d.label(w, c))));
         head.replaceChildren(h('div', { class: 'h grow' }, `${d.name}：${d.pick}`), h('button', { class: 'btn sm', onclick: () => { close(); YA.kadaiPicker(w, p, rerender); } }, '‹ 戻る'), h('button', { class: 'btn sm', onclick: close }, '閉じる'));

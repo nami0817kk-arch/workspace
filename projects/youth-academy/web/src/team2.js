@@ -137,7 +137,7 @@
     w.teamActM = w.year * 100 + (YA.monthIdx ? YA.monthIdx(w.week) : 0);
     w.atmo = clamp((w.atmo == null ? YA.ATMO_START : w.atmo) + d.atmo, 0, 100);
     const r = YA.rngOf((w.seed | 0) * 41 + w.year * 97 + w.week + YA.hash(k));
-    let msg = `${d.name}。雰囲気+${d.atmo}`;
+    let msg = `${d.name}。チームの空気が少し明るくなった`; // 数字（雰囲気+5）は出さない（2026-11-27 段5）。雰囲気の数はクラブの概要に
     if (w.split && r() < d.p * (YA.capEffect(w).k <= 0.7 ? 1.3 : 1)) { endSplit(w, d.name); msg += '。ぎくしゃくがおさまった'; } else if (w.split) msg += '。まだぎくしゃくは残っている';
     return { ok: true, msg };
   };
