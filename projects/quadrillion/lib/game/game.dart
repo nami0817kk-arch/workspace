@@ -694,6 +694,8 @@ class Game {
       if (b.attack > 0) mg *= .7;
       b.profit = b.rev * mg - (b.ad > 0 ? b.adCost : 0) - b.upkeep * (['make', 'food'].contains(ind.cat) && hasDeal('outsrc') ? .7 : 1);
     }
+    // 業種の市場の大きさは、この計算のあいだ変わらないので、業種ごとに1回だけ求める（会社は1000社ほどある）
+    final mk = <String, double>{};
     for (final c in cos) {
       if (!c.alive) continue;
       var rv = 0.0, pr = 0.0;
@@ -704,7 +706,7 @@ class Game {
         if (c.loc != null) {
           r = locRev(c.loc!, ind, e, T);
         } else {
-          final M = mkt(ind) * reg[c.tier];
+          final M = (mk[ind.id] ??= mkt(ind)) * reg[c.tier];
           final tot = T[b.ind]![c.tier];
           r = tot > 0 ? M * e / tot / 3 : 0.0;
         }
