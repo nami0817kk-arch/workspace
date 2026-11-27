@@ -52,6 +52,7 @@ const html = read('shell.html')
   .replace('/*__KIZUKI__*/', () => read('kizuki.js'))
   .replace('/*__TEAM2__*/', () => read('team2.js'))
   .replace('/*__RECORDS__*/', () => read('records.js'))
+  .replace('/*__PAPER__*/', () => read('paper.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -676,6 +677,17 @@ async function clearEvents() {
   }
   btn('結果まで進める').click();
   ok(w.YA._ui.store.get('ask.skipmatch', true) === false, '「次回から聞かない」を選ぶと覚える');
+  // 段4（2026-11-27）：A の公式戦のあとは、最初のページがスポーツ新聞の一面。「概要」から先は試合の数字
+  {
+    const tabs = [...d.querySelectorAll('#main .rtabs2 button')].map((b) => b.textContent.trim());
+    const np = d.querySelector('#main .np');
+    ok(tabs[0] === '新聞' && !!np && np.textContent.includes(w.YA.PAPER_NAME) && !!np.querySelector('.np-hd') && np.querySelectorAll('.np-rr').length >= 11 && np.querySelectorAll('.np-body p').length >= 3 && !!np.querySelector('.np-face img, .np-noface') && np.querySelectorAll('.np-small').length >= 1, '新聞の画面：試合後の最初のページは新聞の一面（見出し・記事・採点・写真・小さな記事）');
+    ok(!/undefined|NaN|null|\[object/.test(np.textContent), '新聞の画面：紙面の文が崩れない');
+    const P = A.w.papers[A.w.papers.length - 1];
+    ok(np.querySelector('.np-sc b').textContent === `${A.w.results.slice(-1)[0].gf}-${A.w.results.slice(-1)[0].ga}` && P.y === A.w.year && P.wk === A.w.week, '新聞の画面：紙面のスコアが試合の結果と同じ');
+    [...d.querySelectorAll('#main .rtabs2 button')].find((b) => b.textContent.trim() === '概要').click();
+    ok(!d.querySelector('#main .np') && [...d.querySelectorAll('#main .rtabs2 button')].find((b) => b.classList.contains('on')).textContent.trim() === '概要', '新聞の画面：「概要」で数字のページへ切り替わる');
+  }
   ok(['概要', '選手', 'チーム', '流れ'].every((n) => [...d.querySelectorAll('#main .rtabs2 button')].some((b) => b.textContent.trim() === n)) && txt().includes('気づき') && txt().includes('採点') && txt().includes('得点'), '試合後の画面（概要・選手・チーム・流れ）');
   // 気づき：効いた特性は子ごとに1行（同じ子が2行に出ない）。不満などの指摘が先（2026-11-21 品質）
   { const ip = [...d.querySelectorAll('[data-insight-player] b')].map((e) => e.textContent); ok(new Set(ip).size === ip.length && !/回効いた/.test(txt()), '気づきは子ごとに1行 ' + ip.join('/'));
@@ -686,6 +698,33 @@ async function clearEvents() {
     rt('流れ'); ok(txt().includes('見どころ') && txt().includes('実況'), '試合後の流れ：見どころと実況');
     rt('概要'); }
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
+  // 段4 新聞：載った記事は選手の「経歴」に残り、そこから紙面を開ける。卒業生の経歴のページにも出る
+  {
+    const Y = w.YA, W = A.w;
+    let nNp = 0;
+    const N = (c, m) => { nNp++; ok(c, '新聞の画面：' + m); };
+    const P = W.papers[W.papers.length - 1];
+    A.tab = 'players'; A.pSel = P.main; A._pSeen = P.main; A.pOpen = true; A.pTab = 'hist';
+    Y._ui.render();
+    const item = d.querySelector('#main .np-item.main');
+    N(txt().includes('新聞の記事') && !!item && item.textContent.includes(Y.paperText(W, P).hd), '主役の子の経歴に記事（見出し）が出る');
+    btn('紙面を開く', item).click();
+    N(!!d.querySelector('.sheet .np') && d.querySelector('.sheet .np-hd').textContent.replace(/\s/g, '') === Y.paperText(W, P).hd.replace(/\s|　/g, ''), '経歴から紙面を開ける');
+    btn('閉じる', d.querySelector('.sheet')).click();
+    N(!d.querySelector('.sheet'), '紙面の窓を閉じられる');
+    const W2 = JSON.parse(JSON.stringify(W));
+    const al = Y.alumniEntry(W2, W2.players[P.main]);
+    N((al.press || []).some((e) => e.m && e.i === P.id), '卒業するとき記事を持っていく');
+    Y.careerPage(W, al);
+    const cp = d.querySelector('.sheet');
+    N(!!cp && cp.textContent.includes('新聞の記事') && cp.textContent.includes(Y.paperText(W, P).hd), '卒業生の経歴のページで記事を読み返せる');
+    [...cp.querySelectorAll('button')].filter((b) => /閉じる/.test(b.textContent)).forEach((b) => b.click());
+    while (d.querySelector('.sheet')) d.querySelector('.sheet').remove();
+    console.log(`  新聞の画面：点検 ${nNp}件`);
+    ok(nNp === 5 && errors.length === 0, '新聞の画面の点検が全部走った ' + errors.slice(0, 2).join('|'));
+    A.tab = 'match'; A.pOpen = false;
+    Y._ui.render();
+  }
   btn('ホームへ（次の週へ）').click();
   ok(txt().includes('次の週へ') && txt().includes('試合が終わりました'), '試合後のホーム');
   // 同じ月なら「次の週へ ▶」1回で練習のまま進む。週のはじめで止まりたいときは下の小さいボタン（2026-11-18）

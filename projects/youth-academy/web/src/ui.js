@@ -1455,13 +1455,17 @@
     );
     const NB = YA.matchNumbers ? YA.matchNumbers(m) : null;
     const hasExp = !!(m.scheduled && app.w);
-    const RT = [['ov', '概要'], ['pl', '選手'], ['tm', 'チーム'], ['fl', '流れ']];
-    app.rt = RT.some((x) => x[0] === app.rt) ? app.rt : 'ov';
+    // 段4（2026-11-27）：A の公式戦のあとは、最初のページをスポーツ新聞の一面に（paper.js）。数字は次のページから
+    const paper = YA.paperOfMatch ? YA.paperOfMatch(app.w, m) : null;
+    const RT = (paper ? [['np', '新聞']] : []).concat([['ov', '概要'], ['pl', '選手'], ['tm', 'チーム'], ['fl', '流れ']]);
+    if (app._rtFor !== m) { app._rtFor = m; app.rt = RT[0][0]; } // 新しい試合の結果は最初のページから
+    app.rt = RT.some((x) => x[0] === app.rt) ? app.rt : RT[0][0];
     const tabs = h('div', { class: 'tabs rtabs2' });
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     const show = () => {
       tabs.replaceChildren(...RT.map(([k, n]) => h('button', { class: 'btn sm' + (app.rt === k ? ' on' : ''), onclick: () => { app.rt = k; show(); } }, n)));
-      body.replaceChildren(app.rt === 'pl' ? playersPane() : app.rt === 'tm' ? teamPane() : app.rt === 'fl' ? flowPane() : overviewPane());
+      body.replaceChildren(app.rt === 'np' && paper ? YA.paperEl(app.w, paper) : app.rt === 'pl' ? playersPane() : app.rt === 'tm' ? teamPane() : app.rt === 'fl' ? flowPane() : overviewPane());
+      body.classList.toggle('npbody', app.rt === 'np' && !!paper);
       body.scrollTop = 0;
     };
     // 概要：得点・最優秀・コーチの一言（効いた戦術と気づき）
